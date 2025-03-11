@@ -11,6 +11,7 @@ type FormInputProps = {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  label?: string;
   className?: string;
   error?: string;
   register?: UseFormRegisterReturn;
@@ -23,11 +24,13 @@ export const FormInput: React.FC<FormInputProps> = ({
   value,
   onFocus,
   onKeyDown,
+  onChange,
   placeholder,
   className = "",
   register,
   error,
   disabled = false,
+  label,
 }) => {
   const [inputType, setInputType] = useState(type);
 
@@ -38,7 +41,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   return (
     <div className="relative max-w-[460px] space-y-2">
       <label htmlFor={id} className="text-base font-medium text-black">
-        {placeholder}
+      {label ? label : placeholder}
       </label>
       <div className="relative">
         <input
@@ -48,6 +51,7 @@ export const FormInput: React.FC<FormInputProps> = ({
           {...register}
           onFocus={onFocus}
           onKeyDown={onKeyDown}
+          onChange={onChange}
           placeholder={placeholder}
           min={type === "number" ? 0 : undefined}
           disabled={disabled}
