@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Outlet } from "react-router-dom"
 import Sidebar from "../../Components/Sidebar"
-import { OnboardingProvider } from "../../Pages/Onboarding/context/onboardingContext"
+import { OnboardingProvider } from "../../Pages/Onboarding/context/OnboardingContext"
 
 const OnboardingLayout = () => {
   // const initialState = {

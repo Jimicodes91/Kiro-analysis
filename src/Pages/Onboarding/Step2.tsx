@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useOnboarding } from './context/onboardingContext';
+import { useOnboarding } from './context/OnboardingContext';
 import ProgressBar from '../../Components/progressBar';
 import FormSelect from '../../Components/select';
 import { FormInput } from '../../Components/input';

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useOnboarding } from './context/onboardingContext';
+import { useOnboarding } from './context/OnboardingContext';
 import ProgressBar from '../../Components/progressBar';
 
 
