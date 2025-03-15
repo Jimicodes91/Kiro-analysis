@@ -1,5 +1,5 @@
 // import React from 'react'
-// import { Link, 
+// import { Link,
 //   // useLocation
 //  } from 'react-router-dom';
 // import { Active_Buildings, Inactive_Users } from '../../assets/icons';
@@ -8,14 +8,14 @@
 // const Sidebar: React.FC = () => {
 //   // const location = useLocation();
 //   // const { state } = useOnboarding();
-  
+
 //   // const isActive = (path: string) => location.pathname.includes(path);
-  
+
 //   return (
 //     <div className="flex flex-col px-4 py-2 w-full text-white">
 //       <Link
 //         to="/onboarding/company-details"
-//         className={`flex items-start space-x-4 mb-10 p-2 rounded 
+//         className={`flex items-start space-x-4 mb-10 p-2 rounded
 //         }`}
 //       >
 //         <div className="bg-[#0000000D] p-2 rounded border border-[#0924281A]">
@@ -26,7 +26,7 @@
 //           <p className="text-sm text-[#00000080]">Provide company detail</p>
 //         </div>
 //       </Link>
-      
+
 //       <Link
 //         to="/onboarding/invite-team"
 //         className={`flex items-start space-x-4 mb-10 p-2 rounded
@@ -40,7 +40,7 @@
 //           <p className="text-sm text-[#00000040]">Start collaborating with your team</p>
 //         </div>
 //       </Link>
-      
+
 //       {/* {state.companyName && state.teamMembers.length > 0 && (
 //         <Link
 //           to="/onboarding/completion"
@@ -68,7 +68,13 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { goToStep } from "../../Redux/store/slices/onboardingSlice";
-import { Active_Buildings, Active_Users, Inactive_Buildings, Inactive_Users } from '../../assets/icons';
+import {
+  Active_Buildings,
+  Active_Users,
+  Inactive_Buildings,
+  Inactive_Users,
+} from "../../assets/icons";
+import { OnBoardingGroup } from "../../assets";
 
 const steps = [
   {
@@ -89,7 +95,9 @@ const steps = [
 
 const Sidebar: React.FC = () => {
   const dispatch = useDispatch();
-  const activeStep = useSelector((state: RootState) => state.onboarding.activeStep);
+  const activeStep = useSelector(
+    (state: RootState) => state.onboarding.activeStep
+  );
 
   return (
     <div className="h-screen py-8 px-4">
@@ -105,19 +113,42 @@ const Sidebar: React.FC = () => {
             >
               {/* Icon */}
               <div
-                className={`p-2 rounded border ${isActive ? "border-[#0924281A] bg-[#0924281A]" : "border-gray-300 bg-[#0000000D]"}`}
+                className={`p-2 rounded border ${
+                  isActive
+                    ? "border-[#0924281A] bg-[#0924281A]"
+                    : "border-gray-300 bg-[#0000000D]"
+                }`}
               >
-                <img src={isActive ? step.activeImage : step.inactiveImage} alt={step.title} />
+                <img
+                  src={isActive ? step.activeImage : step.inactiveImage}
+                  alt={step.title}
+                />
               </div>
 
               {/* Step Info */}
               <div>
-                <h2 className={`font-medium ${isActive ? "text-black" : "text-gray-500"}`}>
+                <h2
+                  className={`font-medium ${
+                    isActive ? "text-black" : "text-gray-500"
+                  }`}
+                >
                   {step.title}
                 </h2>
-                <p className={`text-sm ${isActive ? "text-gray-700" : "text-gray-400"}`}>
+                <p
+                  className={`text-sm ${
+                    isActive ? "text-gray-700" : "text-gray-400"
+                  }`}
+                >
                   {step.description}
                 </p>
+              </div>
+              {/* Image at Bottom Right */}
+              <div className="absolute bottom-0 right-0">
+                <img
+                  src={OnBoardingGroup}
+                  alt="Group Illustration"
+                  className="w-full max-w-[407px]"
+                />
               </div>
             </div>
           );
