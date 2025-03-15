@@ -1,6 +1,6 @@
 import React from "react";
-import { MainButton } from "../../Components/button";
-import { FormInput } from "../../Components/input";
+import { MainButton } from "../../Components/Form/button";
+import { FormInput } from "../../Components/Form/input";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../../assets";
 

@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { Outlet } from "react-router-dom"
 import Sidebar from "../../Components/Sidebar"
-import { OnboardingProvider } from "../../Pages/Onboarding/context/OnboardingContext"
 
 const OnboardingLayout = () => {
   // const initialState = {
@@ -21,7 +20,6 @@ const OnboardingLayout = () => {
 
   return (
     <>
-    <OnboardingProvider>
       <div className="bg-white overflow-x-hidden w-screen h-screen relative">
         <div className="flex p-2 ">
           <nav className=" py-2 z-20 md:flex-[.2] lg:flex-[.15] h-[89vh] mt-14 rounded-lg fixed top-0 w-[19%] hidden md:block">
@@ -42,7 +40,6 @@ const OnboardingLayout = () => {
           </div>
         </div>
       </div>
-      </OnboardingProvider>
     </>
   )
 }

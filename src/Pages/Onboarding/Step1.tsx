@@ -1,124 +1,115 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useOnboarding } from './context/OnboardingContext';
-import ProgressBar from '../../Components/progressBar';
-import FormSelect from '../../Components/select';
-import { FormInput } from '../../Components/input';
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { nextStep, setCompanyDetails } from "../../Redux/store/slices/onboardingSlice";
+import { RootState } from "../../Redux/store";
+import { companyDetailsSchema } from "../../Components/validationSchema/onboarding";
+import { FormInput } from "../../Components/Form/input";
+import { FormSelect } from "../../Components/Form/select";
+import { MainButton } from "../../Components/Form/button";
+import { CompanyDetails } from "../../types";
+import { useEffect } from "react";
 
-const industryOptions = [
-  { value: 'Technology', label: 'Technology' },
-  { value: 'Finance', label: 'Finance' },
-  { value: 'Healthcare', label: 'Healthcare' },
-  { value: 'Education', label: 'Education' },
-  { value: 'Retail', label: 'Retail' }
-];
+const Step1 = () => {
+  const dispatch = useDispatch();
+  const storedCompanyDetails = useSelector((state: RootState) => state.onboarding.companyDetails);
 
-const companySizeOptions = [
-  { value: '1-10', label: '1-10 employees' },
-  { value: '11-50', label: '11-50 employees' },
-  { value: '51-200', label: '51-200 employees' },
-  { value: '201+', label: '201+ employees' }
-];
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(companyDetailsSchema),
+    mode: "onChange",
+    defaultValues: storedCompanyDetails,
+  });
 
-const countryOptions = [
-  { value: 'UAE', label: 'UAE' },
-  { value: 'USA', label: 'USA' },
-  { value: 'UK', label: 'UK' },
-  { value: 'Canada', label: 'Canada' }
-];
+  // Ensure Redux state is loaded into form
+  useEffect(() => {
+    reset(storedCompanyDetails);
+  }, [storedCompanyDetails, reset]);
 
-const cityOptions = [
-  { value: 'Dubai', label: 'Dubai' },
-  { value: 'Abu Dhabi', label: 'Abu Dhabi' },
-  { value: 'Sharjah', label: 'Sharjah' }
-];
 
-const CompanyDetailsPage: React.FC = () => {
-  const { state, dispatch } = useOnboarding();
-  const navigate = useNavigate();
-
-  const handleInputChange = (field: string, value: string) => {
-    dispatch({ type: 'UPDATE_COMPANY_DETAILS', payload: { [field]: value } });
-  };
-
-  const handleNext = () => {
-    navigate('/onboarding/invite-team');
+  const onSubmit = (data: CompanyDetails) => {
+    dispatch(setCompanyDetails(data));
+    dispatch(nextStep());
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto pt-8">
-      <h1 className="text-2xl font-semibold mb-8">Company detail</h1>
-      <ProgressBar currentStep={1} totalSteps={3} />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormSelect
-          label="Company Name"
-          options={[{ value: 'Orizon digital', label: 'Orizon digital' }]}
-          value={state.companyName}
-          onChange={(e) => handleInputChange('companyName', e.target.value)}
-        />
-        
-        <FormSelect
-          label="Industry type"
-          options={industryOptions}
-          value={state.industryType}
-          onChange={(e) => handleInputChange('industryType', e.target.value)}
-          placeholder="Select industry type"
-        />
-        
-        <FormSelect
-          label="Company size"
-          options={companySizeOptions}
-          value={state.companySize}
-          onChange={(e) => handleInputChange('companySize', e.target.value)}
-          placeholder="Select company size"
-        />
-        
-        <FormSelect
-          label="Country"
-          options={countryOptions}
-          value={state.country}
-          onChange={(e) => handleInputChange('country', e.target.value)}
-        />
-      </div>
-      
-      <div className="mt-6">
+    <div>
+         {/* <div className=" bg-white z-10 sticky top-10"> */}
+      <h1 className="text-2xl font-bold mb-6">Company Detail</h1>
+      {/* </div> */}
+      <div className="overflow-y-auto flex-1">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <FormInput
+            label="Company name"
+            placeholder="Company name"
+            {...register("name")}
+            error={errors.name?.message}
+          />
+          <FormInput
+            label="Industry type"
+            placeholder="Industry type"
+            {...register("industry")}
+            error={errors.industry?.message}
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <FormSelect
+            label="Company size"
+            options={[
+              { value: "small", label: "Small" },
+              { value: "medium", label: "Medium" },
+              { value: "large", label: "Large" },
+            ]}
+            {...register("size")}
+            error={errors.size?.message}
+          />
+          <FormSelect
+            label="Country"
+            options={[
+              { value: "usa", label: "United States" },
+              { value: "uk", label: "United Kingdom" },
+              { value: "ca", label: "Canada" },
+            ]}
+            {...register("country")}
+            error={errors.country?.message}
+          />
+        </div>
         <FormInput
           label="Company Address"
-          type="text"
-          value={state.address}
-          onChange={(e) => handleInputChange('address', e.target.value)}
-          placeholder="Enter company address"
+          placeholder="Company Address"
+          {...register("address")}
+          error={errors.address?.message}
         />
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <FormSelect
-          label="City"
-          options={cityOptions}
-          value={state.city}
-          onChange={(e) => handleInputChange('city', e.target.value)}
-          placeholder="Select city"
-        />
-        
-        <FormInput
-          label="Postal code"
-          type="text"
-          value={state.postalCode}
-          onChange={(e) => handleInputChange('postalCode', e.target.value)}
-        />
-      </div>
-      
-      <div className="flex justify-end mt-8">
-        <button 
-          className="bg-black text-white px-6 py-3 rounded-full font-medium hover:bg-gray-800 transition-colors"
-          onClick={handleNext}
-        >
-          Save and continue
-        </button>
+        <div className="grid grid-cols-2 gap-4">
+          <FormSelect
+            label="City"
+            options={[
+              { value: "nyc", label: "New York" },
+              { value: "london", label: "London" },
+              { value: "toronto", label: "Toronto" },
+            ]}
+            {...register("city")}
+            error={errors.city?.message}
+          />
+          <FormInput
+            label="Postal Code"
+            placeholder="Postal Code"
+            {...register("postalCode")}
+            error={errors.postalCode?.message}
+          />
+        </div>
+        <div className="flex justify-end">
+          <MainButton type="submit">Save and continue</MainButton>
+        </div>
+      </form>
       </div>
     </div>
   );
 };
 
-export default CompanyDetailsPage;
+export default Step1;
