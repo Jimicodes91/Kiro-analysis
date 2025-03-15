@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CompanyDetails, TeamMember, OnboardingState } from './../../../types';
+import { OnboardingState, CompanyDetails, TeamMember } from '../../../types';
+
 
 const initialState: OnboardingState = {
   activeStep: 1,

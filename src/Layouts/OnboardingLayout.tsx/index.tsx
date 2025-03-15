@@ -34,7 +34,6 @@ const OnboardingLayout = () => {
               </div>
             </div>
           </nav>
-          {/* <div className="w-[98vw] md:my-[70px] md:pl-48 lg:pl-[21vw] mb-[70px]"> */}
           <div className="w-[98vw] sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:pl-48 md:w-[96vw] lg:pl-[21vw] mb-[70px]">
             <Outlet />
           </div>

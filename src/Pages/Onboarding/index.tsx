@@ -28,7 +28,7 @@ const Onboarding = () => {
 
   return (
     <div className="flex px-8 bg-white overflow-x-hidden w-screen h-screen relative">
-      <nav className=" z-20 md:flex-[.24] lg:flex-[.24] h-[92vh] mt-8 rounded-lg fixed top-0 w-[24%] hidden md:block">
+      <nav className=" z-20 md:flex-[.24] lg:flex-[.24] h-[92vh] mt-8 rounded-lg fixed top-0 md:w-[24%] hidden md:block">
         <div
           className="flex flex-col rounded-lg h-full items-center w-full "
           style={{
@@ -42,7 +42,7 @@ const Onboarding = () => {
       </nav>
 
       {/* Main Onboarding Content */}
-      <div className=" max-w-6xl w-full mx-auto sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:pl-48 md:w-[96vw] lg:pl-[26vw] mb-[70px]">
+      <div className=" max-w-6xl w-full justify-center flex-col flex mx-auto sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:pl-48 md:w-[96vw] lg:pl-[26vw] mb-[70px]">
           
         {/* Progress Bar */}
         {/* <div className="z-10 bg-white sticky top-0"> */}

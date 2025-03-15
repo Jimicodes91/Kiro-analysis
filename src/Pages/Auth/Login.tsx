@@ -32,7 +32,9 @@ const Login: React.FC = () => {
         >
           Forgot password?
         </Link>
-        <MainButton>Login</MainButton>
+        <MainButton 
+           onClick={() => navigate("/onboarding")}
+        >Login</MainButton>
       </form>
 
       <div className="space-x-2 mt-4">
