@@ -22,7 +22,7 @@ export const MainButton: React.FC<MainButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    "p-3 h-[41px] text-[16px] justify-center flex items-center py-6 px-4 rounded-3xl border transition-all duration-200";
+    "p-3 h-[41px] text-[16px] justify-center flex items-center py-6 px-10 rounded-3xl border transition-all duration-200";
   
   const filledStyles =
     "bg-primary text-white border-primary hover:bg-white hover:text-primary";

@@ -26,11 +26,13 @@ const Onboarding = () => {
     }
   };
 
+  console.log(activeStep);
+
   return (
     <div className="flex px-8 bg-white overflow-x-hidden w-screen h-screen relative">
       <nav className=" z-20 md:flex-[.24] lg:flex-[.24] h-[92vh] mt-8 rounded-lg fixed top-0 md:w-[24%] hidden md:block">
         <div
-          className="flex flex-col rounded-lg h-full items-center w-full "
+          className="flex flex-col rounded-[10px] h-full items-center w-full "
           style={{
             background: "#E0EFDE",
           }}
@@ -51,26 +53,6 @@ const Onboarding = () => {
 
         {/* Step Content */}
         {renderStep()}
-
-        {/* Navigation Buttons
-        <div className="flex space-x-4 mt-6">
-          {activeStep > 1 && (
-            <div
-            //  className="flex justify-end mt-6"
-            onClick={() => dispatch(prevStep())}
-            >
-            <MainButton type="button" variant="outlined">Back</MainButton>
-          </div>
-          )}
-          {activeStep < totalSteps && (
-            <div 
-            // className="flex justify-end mt-6"
-            onClick={() => dispatch(nextStep())}
-            >
-            <MainButton type="submit">Save and continue</MainButton>
-          </div>
-          )}
-        </div> */}
 
       </div>
 
