@@ -59,7 +59,7 @@ export const FormInput: React.FC<FormInputProps> = ({
           className={`${className} w-full px-4 py-4 rounded-[100px] font-[400] border h-[48px] border-[#00000033] placeholder-[#00000080] text-[14px] focus:outline-none ${
             disabled
               ? "bg-gray-100 cursor-not-allowed"
-              : "focus:border-gray-400 focus:bg-white"
+              : "focus:border-black focus:bg-white"
           }`}
           {...props}
         />
