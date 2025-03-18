@@ -6,6 +6,7 @@ import Login from "../Pages/Auth/Login";
 import SignUp from "../Pages/Auth/SignUp";
 import NotFound from "../Pages/Notfound";
 import Onboarding from "../Pages/Onboarding/index";
+import SetUp from "../Pages/Auth/SetUp";
 
 export const AuthRoutes: RouteObject[] = [
   {
