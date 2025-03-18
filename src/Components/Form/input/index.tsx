@@ -41,7 +41,7 @@ export const FormInput: React.FC<FormInputProps> = ({
 
   return (
     <div className="relative space-y-2">
-      <label htmlFor={id} className="text-base font-medium text-black">
+      <label htmlFor={id} className="text-[16px] font-medium text-black">
       {label ? label : placeholder}
       </label>
       <div className="relative">
@@ -56,10 +56,10 @@ export const FormInput: React.FC<FormInputProps> = ({
           placeholder={placeholder}
           min={type === "number" ? 0 : undefined}
           disabled={disabled}
-          className={`${className} w-full px-4 py-4 rounded-[100px] font-medium border h-[48px] border-[#00000033] placeholder-[#00000080] text-[16px] focus:outline-none ${
+          className={`${className} w-full px-4 py-4 rounded-[100px] font-[400] border h-[48px] border-[#00000033] placeholder-[#00000080] text-[14px] focus:outline-none ${
             disabled
               ? "bg-gray-100 cursor-not-allowed"
-              : "focus:border-gray-400 focus:bg-white"
+              : "focus:border-black focus:bg-white"
           }`}
           {...props}
         />
@@ -78,7 +78,7 @@ export const FormInput: React.FC<FormInputProps> = ({
           </button>
         )}
       </div>
-      {error && <span className="text-red-500">{error}</span>}
+      {error && <span className="text-[16px] text-red-500">{error}</span>}
     </div>
   );
 };

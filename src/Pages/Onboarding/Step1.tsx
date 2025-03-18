@@ -39,10 +39,11 @@ const Step1 = () => {
   return (
     <div>
          {/* <div className=" bg-white z-10 sticky top-10"> */}
-      <h1 className="text-2xl font-bold mb-6">Company Detail</h1>
+      <h1 className="text-[24px] font-bold mb-12">Company detail</h1>
       {/* </div> */}
       <div className="overflow-y-auto flex-1">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-12 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <FormInput
             label="Company name"
@@ -102,6 +103,7 @@ const Step1 = () => {
             {...register("postalCode")}
             error={errors.postalCode?.message}
           />
+        </div>
         </div>
         <div className="flex justify-end">
           <MainButton type="submit">Save and continue</MainButton>
