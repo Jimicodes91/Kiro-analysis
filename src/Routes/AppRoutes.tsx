@@ -5,7 +5,7 @@ import ForgotPassword from "../Pages/Auth/ForgotPassword";
 import Login from "../Pages/Auth/Login";
 import SignUp from "../Pages/Auth/SignUp";
 import NotFound from "../Pages/Notfound";
-import Onboarding from "../Pages/Onboarding/index.tsx";
+import Onboarding from "../Pages/Onboarding/index";
 
 export const AuthRoutes: RouteObject[] = [
   {
