@@ -11,7 +11,7 @@ export default {
         'secondary': '#E0EFDE',
       },
       fontFamily: {
-        'body': ['Nunito']
+        'body': ['42dot Sans', 'sans-serif'],
       },
     },
   },
