@@ -7,12 +7,7 @@ import VerificationCard from "./VerificationCard";
 import { useForm } from "react-hook-form";
 import { signupSchema } from "../../Components/validationSchema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-interface SignUpProps {
-email: string
-password: string
-confirmPassword: string
-}
+import { SignUpProps } from "../../types";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
