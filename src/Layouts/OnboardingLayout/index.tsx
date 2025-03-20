@@ -1,18 +1,18 @@
-import { useReducer, useEffect } from "react"
+import { useEffect } from "react"
 import { Outlet } from "react-router-dom"
 import Sidebar from "../../Components/Sidebar"
 
-const DashboardLayout = () => {
-  const initialState = {
-    openMobileSideBar: false,
-  }
-  const [
-    _,
-    // setState
-  ] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    initialState,
-  )
+const OnboardingLayout = () => {
+  // const initialState = {
+  //   openMobileSideBar: false,
+  // }
+  // const [
+  //   _,
+  //   // setState
+  // ] = useReducer(
+  //   (state: any, newState: any) => ({ ...state, ...newState }),
+  //   initialState,
+  // )
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -26,15 +26,14 @@ const DashboardLayout = () => {
             <div
               className="flex flex-col rounded-lg h-full items-center w-full "
               style={{
-                background: "linear-gradient(180deg, #0078FF 0%, #0146D9 100%)",
+                background: "#E0EFDE",
               }}
             >
-              <div className="w-full mt-24 h-full">
+              <div className="w-full mt-12 h-full">
                 <Sidebar />
               </div>
             </div>
           </nav>
-          {/* <div className="w-[98vw] md:my-[70px] md:pl-48 lg:pl-[21vw] mb-[70px]"> */}
           <div className="w-[98vw] sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:pl-48 md:w-[96vw] lg:pl-[21vw] mb-[70px]">
             <Outlet />
           </div>
@@ -44,4 +43,4 @@ const DashboardLayout = () => {
   )
 }
 
-export default DashboardLayout
+export default OnboardingLayout

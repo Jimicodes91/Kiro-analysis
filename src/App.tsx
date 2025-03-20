@@ -1,11 +1,9 @@
-import Routes from "./Routes/Index"
+import Routes from "./Routes/Index";
 
-  
+const App = () => (
+  <>
+    <Routes />
+  </>
+);
 
-const App = () => 
-    <>
-        <Routes />
-    </>
-
-
-export default App
+export default App;
