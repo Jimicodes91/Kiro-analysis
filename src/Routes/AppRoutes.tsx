@@ -7,41 +7,26 @@ import SignUp from "../Pages/Auth/SignUp";
 import NotFound from "../Pages/Notfound";
 import Onboarding from "../Pages/Onboarding/index";
 import SetUp from "../Pages/Auth/SetUp";
-import DashboardLayout from "../Layouts/DashboardLayout";
-import Home from "../Pages/Home";
 
 export const AuthRoutes: RouteObject[] = [
   {
     path: "/",
     element: <AuthLayout />,
     children: [
-      { index: true, element: <Login /> },
-      {
-        path: "auth",
-        children: [
-          { path: "register", element: <SignUp /> },
-          { path: "setup", element: <SetUp /> },
-          { path: "forgot-password", element: <ForgotPassword /> },
-        ],
-      },
+      { index: true, element: <Login /> }, 
+      { path: "auth", children: [
+        { path: "register", element: <SignUp /> },
+        { path: "setup", element: <SetUp /> },
+        { path: "forgot-password", element: <ForgotPassword /> },
+      ]},
     ],
   },
   {
     path: "onboarding",
     element: <Onboarding />,
-  },
+    },
   {
     path: "*",
     element: <NotFound />,
   },
 ];
-
-export const HomeRoutes = {
-  element: <DashboardLayout />,
-  children: [
-    {
-      path: "home",
-      element: <Home />,
-    },
-  ],
-};
