@@ -23,3 +23,11 @@ export interface CompanyDetails {
    companyDetails: CompanyDetails;
    teamMembers: TeamMember[];
  }
+
+ export interface SidebarLinks {
+  id: number;
+  title: string;
+  url: string
+  image?: string; 
+  headingText: string;
+}
