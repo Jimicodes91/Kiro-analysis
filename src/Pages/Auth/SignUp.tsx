@@ -7,12 +7,14 @@ import VerificationCard from "./VerificationCard";
 import { useForm } from "react-hook-form";
 import { signupSchema } from "../../Components/validationSchema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AdminSignUpProps } from "../../types";
+import { AdminSignUpFormProps } from "../../types";
+import { resendVerificationEmailApi, signUpAdminUserApi, verifyEmailApi } from "../../Services";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -22,9 +24,37 @@ const SignUp: React.FC = () => {
     resolver: yupResolver(signupSchema),
   });
 
-  const onSubmit = (data: AdminSignUpProps) => {
-    setShowConfirmation(true);
-    setEmail(data.email);
+  const onSubmit = async (data: AdminSignUpFormProps) => {
+    setLoading(true);
+    try {
+
+      const payload = {
+        email: data.email,
+        password: data.password,
+      };
+
+    const response = await signUpAdminUserApi(payload);
+
+    if (response && response.data.verification_token) {
+      await verifyEmailApi({ token: response.data.verification_token });
+    }
+
+      setShowConfirmation(true);
+      setEmail(data.email);
+
+    } catch (error) {
+      console.error("Error signing up:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resendVerification = async () => {
+    try {
+      await resendVerificationEmailApi({ email });
+    } catch (error) {
+      console.error("Error resending verification:", error);
+    }
   };
 
   return (
@@ -60,7 +90,9 @@ const SignUp: React.FC = () => {
               error={errors.confirmPassword?.message}
             />
 
-            <MainButton type="submit">Sign Up</MainButton>
+            <MainButton type="submit" isLoading={loading}>
+              Sign Up
+            </MainButton>
           </form>
           <div className="space-x-2 mt-4">
             <p className="text-center mt-4 text-black">
@@ -81,7 +113,7 @@ const SignUp: React.FC = () => {
           buttonText="Back"
           onButtonClick={() => setShowConfirmation(false)}
           showResend={true}
-          onResend={() => alert("Resending email...")}
+          onResend={() => resendVerification()}
         />
       )}
     </>

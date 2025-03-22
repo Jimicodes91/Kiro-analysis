@@ -1,5 +1,5 @@
 
-import { AddClientProp, AdminSignUpProps, CompanyAdminSignUpProps, CompanyProps, CompleteRegProps, EmailProp, LoginUser, ResetPasswordProps, SendConsultantInviteProps, UpdatePasswordProps } from "../../types";
+import { AddClientProp, AdminSignUpProps, CompanyAdminSignUpProps, CompanyProps, CompleteRegProps, EmailProp, LoginUser, ResetPasswordProps, SendConsultantInviteProps, TokenProp, UpdatePasswordProps } from "../../types";
 import axiosInstance from "../../Utils/Https";
 
 const authBaseEndpoint = 'api/v1/auth/';
@@ -22,8 +22,8 @@ const apiRequest = async (endpoint: string, payload: object) => {
   export const loginUserApi = (payload: LoginUser) => 
     apiRequest(`${authBaseEndpoint}login`, payload);
 
-  export const verifiyEmailApi = (payload: EmailProp) => 
-    apiRequest(`${authBaseEndpoint}verify`, payload);         // Passing token but no email
+  export const verifyEmailApi = (param: TokenProp) => 
+    axiosInstance.get(`${authBaseEndpoint}verify?token=${param.token}`);  
 
   export const resendVerificationEmailApi = (payload: EmailProp) => 
     apiRequest(`${authBaseEndpoint}resend-verification`, payload);

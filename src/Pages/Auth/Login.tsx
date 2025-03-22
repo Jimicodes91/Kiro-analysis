@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MainButton } from "../../Components/Form/button";
 import { FormInput } from "../../Components/Form/input";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,9 +6,12 @@ import { Logo } from "../../assets";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../Components/validationSchema/auth";
 import { useForm } from "react-hook-form";
+import { LoginUser } from "../../types";
+import { loginUserApi } from "../../Services";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+const [loading, setLoading] = useState(false);
 
    const {
           register,
@@ -17,10 +20,23 @@ const Login: React.FC = () => {
         } = useForm({
           resolver: yupResolver(loginSchema),
         });
-    
-    const onSubmit = () => {
-      navigate("/onboarding")
-      };
+
+       const onSubmit = async (data: LoginUser) => {
+          setLoading(true);
+          try {
+          const response = await loginUserApi(data);
+      
+          // Will change this to the right field later
+          if (response && response.data.firstTimeUser) {
+          navigate("/onboarding")
+          }           
+      
+          } catch (error) {
+            console.error("Error logging in:", error);
+          } finally {
+            setLoading(false);
+          }
+        };
 
   return (
     <div className=" flex flex-col">
@@ -50,7 +66,9 @@ const Login: React.FC = () => {
         </Link>
         <MainButton 
         type="submit"
-        >Login</MainButton>
+        isLoading={loading}>
+        Login
+        </MainButton>
       </form>
 
       <div className="space-x-2 mt-4">
