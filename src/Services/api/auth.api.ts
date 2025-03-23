@@ -23,7 +23,7 @@ const apiRequest = async (endpoint: string, payload: object) => {
     apiRequest(`${authBaseEndpoint}login`, payload);
 
   export const verifiyEmailApi = (payload: EmailProp) => 
-    apiRequest(`${authBaseEndpoint}verify`, payload);         // Passing token but no email
+    apiRequest(`${authBaseEndpoint}verify`, payload);         
 
   export const resendVerificationEmailApi = (payload: EmailProp) => 
     apiRequest(`${authBaseEndpoint}resend-verification`, payload);
