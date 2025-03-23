@@ -1,6 +1,6 @@
 export interface CompanyDetails {
         name: string;
-        industry: string;
+        industryType: string;
         size: string;
         country: string;
         address: string;

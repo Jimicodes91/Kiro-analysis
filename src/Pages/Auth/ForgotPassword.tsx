@@ -7,11 +7,14 @@ import VerificationCard from "./VerificationCard";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { forgetPasswordSchema } from "../../Components/validationSchema/auth";
+import { forgotPasswordApi } from "../../Services";
+import { EmailProp } from "../../types";
 
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [loading, setLoading] = useState(false);
 
     const {
         register,
@@ -20,9 +23,19 @@ const ForgotPassword: React.FC = () => {
       } = useForm({
         resolver: yupResolver(forgetPasswordSchema),
       });
+
+    const onSubmit = async (data: EmailProp) => {
+      setLoading(true);
+      try {
+      await forgotPasswordApi(data);
+
+      setShowConfirmation(true);
   
-  const onSubmit = () => {
-    setShowConfirmation(true);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
   return (
@@ -42,7 +55,7 @@ const ForgotPassword: React.FC = () => {
           error={errors.email?.message}
         />
 
-        <MainButton type="submit">Send reset link</MainButton>
+        <MainButton type="submit" isLoading={loading}>Send reset link</MainButton>
       </form>
       <div className="space-x-2 mt-4">
         <p className="text-center mt-4 text-black">
