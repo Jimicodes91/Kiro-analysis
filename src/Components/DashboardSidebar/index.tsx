@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useCurrentPath from '../../Hooks/useCurrentPath';
 import { DashboardBottomLinks, DashboardSidebarLinks } from './data';
 import { FaArrowLeftLong, FaArrowRightLong } from 'react-icons/fa6';
+import { Logo } from '../../assets';
 
 
 interface SidebarProps {
@@ -27,7 +28,9 @@ const Sidebar = ({ isCollapsed, toggleSidebar }: SidebarProps) => {
 
   return (
     <div className="flex flex-col h-full justify-between">
-
+        <div className='my-3 flex justify-center'>
+            <img src={Logo} alt="" className='w-9 h-7' />
+        </div>
       <div>
         {DashboardSidebarLinks.map(({ id, title, image, url }) => (
           <div
@@ -40,6 +43,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }: SidebarProps) => {
             style={{
               background: url === activeLink[1]
                 ? 'linear-gradient(180deg, #092228 0%, #1A4A52 100%);'
+                
                 : '',
             }}
           >
