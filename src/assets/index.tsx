@@ -8,6 +8,8 @@ import Client from "./svg/Client.svg";
 import Event from "./svg/Event.svg";
 import House from "./svg/House.svg";
 import Finance from "./svg/Finance.svg";
+import Avatar from "./svg/Avatar.svg";
+import Orizonal from "./svg/orizonal.svg";
 
 export {
   Logo,
@@ -20,4 +22,6 @@ export {
   Event,
   House,
   Finance,
+  Avatar,
+  Orizonal,
 };

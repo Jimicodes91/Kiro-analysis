@@ -14,7 +14,7 @@ const DashboardLayout = () => {
   return (
     <div className="bg-white overflow-x-hidden w-screen h-screen relative">
       <div>
-                <header className="bg-white p-5 fixed w-full z-10 top-0 lg:pl-[21%]">
+                <header className="bg-white py-5  fixed w-full z-10 top-0 lg:pl-[15%]">
                     <DashBoardHeader />
                 </header>
             </div>
