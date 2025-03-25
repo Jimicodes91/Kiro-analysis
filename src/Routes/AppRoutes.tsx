@@ -14,7 +14,7 @@ import Client from "../Pages/Home/Client";
 import Event from "../Pages/Home/Event";
 import Message from "../Pages/Home/Message";
 import Project from "../Pages/Home/Project";
-import Finance from "../Pages/Home/FInance";
+import Finance from "../Pages/Home/Finance";
 
 
 export const AuthRoutes: RouteObject[] = [
