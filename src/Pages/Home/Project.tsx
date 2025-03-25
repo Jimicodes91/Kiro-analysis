@@ -11,7 +11,7 @@ import TableView from "../../Components/Cards/TableView";
 import ViewToggle from "../../Components/Cards/ViewToggle";
 
 const Project: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("board");
 
   const handleSearch = (query: string) => {

@@ -1,18 +1,5 @@
 import React from "react";
-
-interface TableRowProps {
-  row: {
-    id: number;
-    title: string;
-    organization: string;
-    startDate: string;
-    dueDate: string;
-    completedDate: string;
-    status: string;
-    projectTeam?: string[];
-    clientTeam?: string[];
-  };
-}
+import { TableRowProps } from "../../types";
 
 const TableRow: React.FC<TableRowProps> = ({ row }) => {
   return (

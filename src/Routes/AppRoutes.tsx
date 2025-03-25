@@ -9,12 +9,12 @@ import Onboarding from "../Pages/Onboarding/index";
 import SetUp from "../Pages/Auth/SetUp";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import Home from "../Pages/Home";
-import Admin from "../Pages/Home/Admin";
 import Client from "../Pages/Home/Client";
 import Event from "../Pages/Home/Event";
 import Message from "../Pages/Home/Message";
 import Project from "../Pages/Home/Project";
 import Finance from "../Pages/Home/Finance";
+import Admin from "../Pages/Home/Admin";
 
 
 export const AuthRoutes: RouteObject[] = [
