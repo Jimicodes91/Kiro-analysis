@@ -1,4 +1,3 @@
-// src/Routes.tsx
 import { RouteObject } from "react-router-dom";
 import AuthLayout from "../Layouts/AuthLayout";
 import ForgotPassword from "../Pages/Auth/ForgotPassword";
