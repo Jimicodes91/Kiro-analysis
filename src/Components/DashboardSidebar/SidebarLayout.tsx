@@ -7,7 +7,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
   isCollapsed,
 }) => (
   <div
-    className={`flex items-center my-4 px-1 ${isCollapsed ? "justify-center" : "px-3"}`}
+    className={`flex items-center my-4 px-1 ${isCollapsed ? "justify-center" : "px-5"}`}
   >
     {image && (
       <div className="flex items-center">

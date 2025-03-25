@@ -14,8 +14,12 @@ const DashboardLayout = () => {
   return (
     <div className="bg-white overflow-x-hidden w-screen h-screen relative">
       <div>
-                <header className="bg-white py-5  fixed w-full z-10 top-0 lg:pl-[15%]">
-                    <DashBoardHeader />
+                <header 
+                  className={`bg-white fixed w-full z-10 top-0 ${
+                  isSidebarCollapsed ? 'lg:pl-[7rem]' : 'lg:pl-[15%]'
+                  }`}
+                >
+                  <DashBoardHeader />
                 </header>
             </div>
       <div className="flex p-2 md:p-5">
@@ -44,7 +48,10 @@ const DashboardLayout = () => {
         <div className={`w-[98vw] sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:w-[96vw] mb-[70px] ${
           isSidebarCollapsed ? 'md:pl-24' : 'md:pl-[3vw] lg:pl-[16vw]'
         }`}>
+          <div className="mt-4">
           <Outlet />
+          </div>
+        
         </div>
       </div>
     </div>
