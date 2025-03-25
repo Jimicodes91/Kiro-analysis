@@ -1,29 +1,30 @@
-import React from 'react';
-import { SidebarLayoutProps } from '../../types';
+import React from "react";
+import { SidebarLayoutProps } from "../../types";
 
-
-const SidebarLayout: React.FC<SidebarLayoutProps> = ({ 
-  image, 
-  title, 
-  isCollapsed 
+const SidebarLayout: React.FC<SidebarLayoutProps> = ({
+  image,
+  title,
+  isCollapsed,
 }) => (
-  <div className={`flex ${isCollapsed ? 'pl-3 justify-center' : 'pl-6'} my-4 items-center`}>
+  <div
+    className={`flex items-center my-4 px-1 ${isCollapsed ? "justify-center" : "px-3"}`}
+  >
     {image && (
-      typeof image === "string" ? (
-        <img 
-          src={image} 
-          alt={title} 
-          className={isCollapsed ? 'w-6 h-6' : ''}
-        />
-      ) : (
-        <span className="text-dark">{image}</span>
-      )
+      <div className="flex items-center">
+        {typeof image === "string" ? (
+          <img
+            src={image}
+            alt={title}
+            className="w-[24px] h-[24px] transition-all"
+          />
+        ) : (
+          <span className="text-dark">{image}</span>
+        )}
+      </div>
     )}
 
-    {!isCollapsed && title && (
-      <h1 className="pl-4 text-base text-dark">
-        {title}
-      </h1>
+    {!isCollapsed && (
+      <h1 className="pl-2 text-base text-dark whitespace-nowrap">{title}</h1>
     )}
   </div>
 );

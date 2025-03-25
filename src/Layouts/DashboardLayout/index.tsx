@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../../Components/DashboardSidebar';
+import DashBoardHeader from '../../Components/Header';
 
 
 const DashboardLayout = () => {
@@ -12,9 +13,14 @@ const DashboardLayout = () => {
 
   return (
     <div className="bg-white overflow-x-hidden w-screen h-screen relative">
-      <div className="flex p-2">
+      <div>
+                <header className="bg-white p-5 fixed w-full z-10 top-0 lg:pl-[21%]">
+                    <DashBoardHeader />
+                </header>
+            </div>
+      <div className="flex p-2 md:p-5">
         <nav 
-          className="py-2 z-20 h-[95vh] mt-6 rounded-lg fixed top-0 hidden md:block"
+          className="py-2 z-20 h-[95vh] mt-6 rounded-lg fixed top-0 hidden lg:block"
           style={{
             width: isSidebarCollapsed ? '80px' : '13%',
             transition: 'width 0.3s ease-in-out',
@@ -36,7 +42,7 @@ const DashboardLayout = () => {
         </nav>
         
         <div className={`w-[98vw] sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:w-[96vw] mb-[70px] ${
-          isSidebarCollapsed ? 'md:pl-24' : 'md:pl-48 lg:pl-[21vw]'
+          isSidebarCollapsed ? 'md:pl-24' : 'md:pl-[3vw] lg:pl-[16vw]'
         }`}>
           <Outlet />
         </div>

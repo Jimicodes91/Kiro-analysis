@@ -39,11 +39,10 @@ const Sidebar = ({ isCollapsed, toggleSidebar }: SidebarProps) => {
             tabIndex={0}
             onKeyDown={() => handleLinkClick(url)}
             key={id}
-            className="py-[1px] cursor-pointer hover:bg-white/10 transition-all"
+            className="py-[1px] cursor-pointer hover:bg-primary/20 transition-all"
             style={{
               background: url === activeLink[1]
                 ? 'linear-gradient(180deg, #092228 0%, #1A4A52 100%);'
-                
                 : '',
             }}
           >
