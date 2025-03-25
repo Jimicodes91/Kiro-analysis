@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BsSearch } from "react-icons/bs";
 
 interface SearchProps {
   placeholder?: string;
@@ -14,7 +15,8 @@ const Search: React.FC<SearchProps> = ({ placeholder = "Search...", onSearch }) 
   };
 
   return (
-    <div className="bg-[#F3F3F3] p-2 rounded-lg w-full max-w-md">
+    <div className="bg-[#F3F3F3] p-2 rounded-full w-full h-[40px] max-w-xs flex items-center">
+      <BsSearch className="text-gray-500 mr-2" />
       <input
         type="text"
         value={query}
