@@ -2,7 +2,7 @@ import React from 'react'
 
 const Finance: React.FC = () => {
   return (
-    <div>Finance</div>
+    <div>Finance page</div>
   )
 }
 
