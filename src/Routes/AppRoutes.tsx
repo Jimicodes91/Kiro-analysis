@@ -1,4 +1,3 @@
-// src/Routes.tsx
 import { RouteObject } from "react-router-dom";
 import AuthLayout from "../Layouts/AuthLayout";
 import ForgotPassword from "../Pages/Auth/ForgotPassword";
@@ -9,6 +8,13 @@ import Onboarding from "../Pages/Onboarding/index";
 import SetUp from "../Pages/Auth/SetUp";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import Home from "../Pages/Home";
+import Client from "../Pages/Home/Client";
+import Event from "../Pages/Home/Event";
+import Message from "../Pages/Home/Message";
+import Project from "../Pages/Home/Project";
+import Finance from "../Pages/Home/Finance";
+import Admin from "../Pages/Home/Admin";
+
 
 export const AuthRoutes: RouteObject[] = [
   {
@@ -43,5 +49,29 @@ export const HomeRoutes = {
       path: "home",
       element: <Home />,
     },
+    {
+      path: "admin",
+      element: <Admin />,
+    },
+    {
+      path: "client",
+      element: <Client />,
+    },
+    {
+      path: "event",
+      element: <Event />,
+    },
+    {
+      path: "finance",
+      element: <Finance />
+    },
+    {
+      path :"message",
+      element: <Message/>
+    },
+    {
+      path: "project",
+      element: <Project />
+    }
   ],
 };
