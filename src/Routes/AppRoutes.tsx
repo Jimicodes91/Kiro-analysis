@@ -15,7 +15,6 @@ import Project from "../Pages/Home/Project";
 import Finance from "../Pages/Home/Finance";
 import Admin from "../Pages/Home/Admin";
 
-
 export const AuthRoutes: RouteObject[] = [
   {
     path: "/",
@@ -63,15 +62,15 @@ export const HomeRoutes = {
     },
     {
       path: "finance",
-      element: <Finance />
+      element: <Finance />,
     },
     {
-      path :"message",
-      element: <Message/>
+      path: "message",
+      element: <Message />,
     },
     {
       path: "project",
-      element: <Project />
-    }
+      element: <Project />,
+    },
   ],
 };
