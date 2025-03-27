@@ -1,4 +1,3 @@
-// pages/Home.tsx
 import React, { useState } from "react";
 import Search from "../../Components/Form/search";
 import { FormSelect } from "../../Components/Form/select";
@@ -53,6 +52,17 @@ const Project: React.FC = () => {
       projectTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
       clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
     },
+    {
+      id: 4, 
+      title: "Dubai Registration",
+      organization: "Orizon Digital",
+      startDate: "02 Nov 2023 ",
+      dueDate: "02 Nov 2023 ",
+      completedDate: "02 Nov 2023 ",
+      status: "Completed",
+      projectTeam: ["New Horizon", "Orizon Digital", "Stellar Solutions Inc."],
+      clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
+    },
   ];
 
   const [columns, setColumns] = useState<
@@ -76,7 +86,7 @@ const Project: React.FC = () => {
     "column-4": {
       id: "column-4",
       title: "Travel",
-      cards: [],
+      cards: [tableData[3]],
     },
     "column-5": {
       id: "column-5",
