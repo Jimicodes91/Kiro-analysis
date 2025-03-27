@@ -1,7 +1,9 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, 
+  // useDispatch
+ } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { goToStep } from "../../Redux/store/slices/onboardingSlice";
+// import { goToStep } from "../../Redux/store/slices/onboardingSlice";
 import {
   Active_Buildings,
   Active_Users,
@@ -28,7 +30,7 @@ const steps = [
 ];
 
 const Sidebar: React.FC = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const activeStep = useSelector(
     (state: RootState) => state.onboarding.activeStep
   );
@@ -44,7 +46,7 @@ const Sidebar: React.FC = () => {
             <React.Fragment key={step.id}>
             <div
               className={`flex items-start space-x-4 mb-1 p-2`}
-              onClick={() => dispatch(goToStep(step.id))}
+              // onClick={() => dispatch(goToStep(step.id))}
             >
               {/* Icon */}
               <div
