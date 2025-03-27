@@ -9,9 +9,15 @@ import { FormInput } from "../../Components/Form/input";
 import { FormSelect } from "../../Components/Form/select";
 import { MainButton } from "../../Components/Form/button";
 import { TeamMember } from "../../types";
+import { useNavigate } from "react-router-dom";
+import Toast from "../../Components/Toast";
+import { sendConsultantInviteApi } from "../../Services";
+import { useState } from "react";
 
 const Step2 = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const storedTeamMembers = useSelector((state: RootState) => state.onboarding.teamMembers);
 
   const {
@@ -30,9 +36,48 @@ const Step2 = () => {
     name: "teamMembers",
   });
 
-  const onSubmit = (data: { teamMembers?: TeamMember[] }) => {
+  const onSubmit = async (data: { teamMembers?: TeamMember[] }) => {
     const teamMembers = data.teamMembers || [];
+    
+    // Update team members in Redux store
     dispatch(setTeamMembers(teamMembers));
+    
+    // Set loading state
+    setLoading(true);
+  
+    try {
+      // Detailed invite process with individual error handling
+      await Promise.all(
+        teamMembers.map(async (member) => {
+          try {
+            await sendConsultantInviteApi({
+              email: member.email,
+              role: member.role
+            });
+          } catch (error) {
+            // Log the error for debugging
+            console.error(`Failed to invite ${member.email}:`, error);
+            // Rethrow to trigger the catch block in the main try-catch
+            throw error;
+          }
+        })
+      );
+  
+      // Show success toast
+      Toast.success("Team members invited successfully");
+  
+      // Navigate to home screen
+      navigate('/home');
+    } catch (error) {
+      // Handle any errors during invitation
+      console.error("Error inviting team members:", error);
+      
+      // Generic error toast
+      Toast.error("Failed to invite team members");
+    } finally {
+      // Reset loading state
+      setLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -93,7 +138,10 @@ const Step2 = () => {
         </div>
         <div className="flex justify-between mt-12">
           <MainButton variant="outlined" onClick={handleBack} type="button">Back</MainButton>
-          <MainButton type="submit">Save and continue</MainButton>
+          <div className="flex gap-2">
+          <MainButton variant="outlined" onClick={()=>navigate('/home')} type="button">Skip</MainButton>
+          <MainButton type="submit" isLoading={loading}>Save and continue</MainButton>
+          </div>
         </div>
       </form>
     </div>

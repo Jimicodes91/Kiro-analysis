@@ -13,7 +13,9 @@ import Event from "../Pages/Home/Event";
 import Message from "../Pages/Home/Message";
 import Project from "../Pages/Home/Project";
 import Finance from "../Pages/Home/Finance";
-import Admin from "../Pages/Home/Admin";
+import Admin from "../Pages/Home/Admin";import ResetPassword from "../Pages/Auth/ResetPassword";
+import VerifyEmail from "../Pages/Auth/VerifyEmail";
+
 
 export const AuthRoutes: RouteObject[] = [
   {
@@ -27,9 +29,13 @@ export const AuthRoutes: RouteObject[] = [
           { path: "register", element: <SignUp /> },
           { path: "setup", element: <SetUp /> },
           { path: "forgot-password", element: <ForgotPassword /> },
+          { path: "reset-password", element: <ResetPassword /> },
         ],
       },
     ],
+  },
+  { path: "verify-account", 
+    element: <VerifyEmail /> 
   },
   {
     path: "onboarding",

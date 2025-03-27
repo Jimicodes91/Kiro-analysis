@@ -6,10 +6,12 @@ interface VerificationCardProps {
   title: string;
   description?: string;
   email?: string;
-  buttonText: string;
-  onButtonClick: () => void;
+  buttonText?: string;
+  onButtonClick?: () => void;
   showResend?: boolean;
   onResend?: () => void;
+  noButton?: boolean;
+  children?: React.ReactElement;
 }
 
 const VerificationCard: React.FC<VerificationCardProps> = ({
@@ -20,6 +22,8 @@ const VerificationCard: React.FC<VerificationCardProps> = ({
   onButtonClick,
   showResend = false,
   onResend,
+  noButton = false,
+  children
 }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-96">
@@ -37,7 +41,8 @@ const VerificationCard: React.FC<VerificationCardProps> = ({
     description
   )}
 </p>
-
+{!noButton && 
+<>
         <div className="mt-8">
         <MainButton 
           onClick={onButtonClick} 
@@ -55,6 +60,11 @@ const VerificationCard: React.FC<VerificationCardProps> = ({
             </button>
           </p>
         )}
+        </>
+        }
+
+        {children}
+
       </div>
     </div>
   );

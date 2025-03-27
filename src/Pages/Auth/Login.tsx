@@ -8,35 +8,44 @@ import { loginSchema } from "../../Components/validationSchema/auth";
 import { useForm } from "react-hook-form";
 import { LoginUser } from "../../types";
 import { loginUserApi } from "../../Services";
+import store from "store";
+import Toast from "../../Components/Toast";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-   const {
-          register,
-          handleSubmit,
-          formState: { errors },
-        } = useForm({
-          resolver: yupResolver(loginSchema),
-        });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
 
-       const onSubmit = async (data: LoginUser) => {
-          setLoading(true);
-          try {
-          const response = await loginUserApi(data);
-      
-          // Will change this to the right field later
-          if (response && response.data.firstTimeUser) {
-          navigate("/onboarding")
-          }           
-      
-          } catch (error) {
-            console.error("Error logging in:", error);
-          } finally {
-            setLoading(false);
-          }
-        };
+  const onSubmit = async (data: LoginUser) => {
+    setLoading(true);
+    try {
+      const response = await loginUserApi(data);
+
+   // Store tokens in local storage
+   store.set("atk", response.data.token);
+   store.set("rtk", response.data.user.refresh_token);
+
+      if (response && response.data.company_id !== null) {
+        navigate("/onboarding");
+      } else {
+        navigate("/home");
+      }
+      Toast.success(response.message || "Login successful");
+    } catch (error) {
+      console.error("Error logging in:", error);
+      const errorMessage = (error as { data?: string })?.data || "Login failed";
+      Toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className=" flex flex-col">
@@ -45,7 +54,10 @@ const [loading, setLoading] = useState(false);
       </div>
       <h1 className="text-3xl font-medium">Welcome back</h1>
       <p>Login to your account</p>
-      <form className="flex flex-col w-96 space-y-4 mt-4" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="flex flex-col w-96 space-y-4 mt-4"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <FormInput
           type="email"
           placeholder="Email"
@@ -64,10 +76,8 @@ const [loading, setLoading] = useState(false);
         >
           Forgot password?
         </Link>
-        <MainButton 
-        type="submit"
-        isLoading={loading}>
-        Login
+        <MainButton type="submit" isLoading={loading}>
+          Login
         </MainButton>
       </form>
 

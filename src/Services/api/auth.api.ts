@@ -12,6 +12,7 @@ const apiRequest = async (endpoint: string, payload: object) => {
       throw error.response?.data || error;
     }
   };
+  
 
   export const signUpAdminUserApi = (payload: AdminSignUpProps) => 
     apiRequest(`${authBaseEndpoint}admin-signup`, payload);
@@ -49,4 +50,4 @@ const apiRequest = async (endpoint: string, payload: object) => {
 
   //Onboarding step 1 (company details)
   export const createCompanyApi = (payload: CompanyProps) => 
-    apiRequest("/api/v1/company/", payload);
+    apiRequest("/api/v1/company/create", payload);
