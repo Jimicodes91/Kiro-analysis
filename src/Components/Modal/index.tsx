@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { BsArrowsAngleExpand } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
@@ -44,19 +45,7 @@ const Modal = ({
                   className="text-light hover:text-gray-700 focus:outline-none"
                   title="Expand"
                 >
-                  <svg
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                    />
-                  </svg>
+                 <BsArrowsAngleExpand />
                 </button>
               )}
               <div className="text-lg font-medium text-[#19181980]">{title}</div>
@@ -81,7 +70,7 @@ const Modal = ({
             </button>
           </div>
 
-          <div className=" border-[1px] rounded-lg p-4 m-2 mt-4 ">{children}</div>
+          <div >{children}</div>
         </div>
       </div>
     </div>

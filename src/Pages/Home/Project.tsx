@@ -191,11 +191,16 @@ const Project: React.FC = () => {
       </div>
       <div className="border-[1px] border-[#0000001A] rounded-lg mt-4 p-4">
         <div className="flex justify-between items-center">
-          <ViewToggle activeTab={activeTab} setActiveTab={setActiveTab} />
+          <ViewToggle
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            options={[
+              { value: "board", label: "Board" },
+              { value: "table", label: "Table" },
+            ]}
+          />
           <div className="flex justify-between space-x-2">
-            <FormSelect
-              options={[{ value: "all", label: "All project" }]}
-            />
+            <FormSelect options={[{ value: "all", label: "All project" }]} />
             <button
               className="mr-5 cursor-pointer relative border-2 border-[#0000001A] bg-[#0923270F] p-2 rounded-full"
               type="button"
