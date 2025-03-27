@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 export const companyDetailsSchema = yup.object().shape({
     name: yup.string().required("Company name is required"),
-    industry: yup.string().required("Industry type is required"),
+    industryType: yup.string().required("Industry type is required"),
     size: yup.string().required("Company size is required"),
     country: yup.string().required("Country is required"),
     address: yup.string().required("Company address is required"),

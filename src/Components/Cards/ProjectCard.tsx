@@ -1,0 +1,203 @@
+import React, { useState } from "react";
+import { Draggable } from "@hello-pangea/dnd";
+import Modal from "../Modal";
+import { LuCalendar, LuUserRound } from "react-icons/lu";
+import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
+import ViewToggle from "./ViewToggle";
+
+interface ProjectCardProps {
+  card: {
+    id: number;
+    title: string;
+    organization: string;
+    status: string;
+    clientTeam?: string[];
+    projectTeam?: string[];
+    description?: string; // Added for modal content
+  };
+  index: number;
+}
+
+const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState("task");
+
+  return (
+    <>
+      <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
+        {(provided) => (
+          <div
+            className="bg-white p-3 rounded shadow mb-2 flex flex-col h-52 justify-between cursor-pointer hover:shadow-md transition-shadow"
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <div className="mt-2">
+              <span
+                className={`p-1 px-3 inline-flex text-xs leading-5 mb-2 font-semibold rounded-full 
+                  ${
+                    card.status === "Completed"
+                      ? "bg-green-100 text-green-800"
+                      : card.status === "In progress"
+                      ? "bg-[#F1E6D4] text-[#B78026]"
+                      : "bg-[#FB002B1A] text-[#FB002B]"
+                  }`}
+              >
+                {card.status}
+              </span>
+            </div>
+            <div className="font-semibold text-lg mb-1">{card.title}</div>
+            <div className="text-sm text-gray-500 mb-1">
+              {card.organization}
+            </div>
+            <div className="flex justify-between text-xs space-x-2 mb-1">
+              <div className="flex flex-col">
+                <p>Client team</p>
+                <div className="flex -space-x-2">
+                  {card.clientTeam?.map((member, index) => (
+                    <div
+                      key={index}
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                    >
+                      {member.substring(0, 2)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex justify-between text-xs mb-1">
+                <div className="flex flex-col">
+                  <p>Project team</p>
+                  <div className="flex -space-x-2">
+                    {card.projectTeam?.map((member, index) => (
+                      <div
+                        key={index}
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                      >
+                        {member.substring(0, 2)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </Draggable>
+
+      {/* Modal for project details */}
+      {isModalOpen && (
+        <Modal
+          title="Project detail"
+          closeModal={() => setIsModalOpen(false)}
+          showExpandButton={true}
+          expandRoute={`/projects/${card.id}`}
+        >
+          <div className=" border-[1px] rounded-lg p-4 m-2 mt-4 ">
+            <div className="space-y-4">
+              <div className="flex flex-col">
+                <p className="text-[#191819] font-bold text-2xl">
+                  {card.title}
+                </p>
+                <p className="text-[#19181980] text-base font-medium">
+                  {card.organization}
+                </p>
+              </div>
+              <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-[#0000001A] border-[1px]">
+                <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
+                  <div className="flex items-center gap-2">
+                    <LuUserRound className="text-[#19181980] w-4 h-4" />
+                    <h3 className="text-sm text-[#19181980]">Owner</h3>
+                  </div>
+                  <div>
+                    <p>Uchenna Okenwa</p>
+                  </div>
+                </div>
+                <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
+                  <div className="flex items-center gap-2">
+                    <LuCalendar className="text-[#19181980] w-4 h-4" />
+                    <h3 className="text-sm text-[#19181980]">Timeline</h3>
+                  </div>
+                  <div>
+                    <p>6 months</p>
+                  </div>
+                </div>
+                <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
+                  <div className="flex items-center gap-2">
+                    <PiSpinner className="text-[#19181980] w-4 h-4" />
+                    <h3 className="text-sm text-[#19181980]">Status</h3>
+                  </div>
+                  <div>
+                    <span
+                      className={`p-1 px-3 inline-flex text-xs leading-5 font-semibold rounded-full 
+                  ${
+                    card.status === "Completed"
+                      ? "bg-green-100 text-green-800"
+                      : card.status === "In progress"
+                      ? "bg-[#F1E6D4] text-[#B78026]"
+                      : "bg-[#FB002B1A] text-[#FB002B]"
+                  }`}
+                    >
+                      {card.status}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 lg:gap-11 md:gap-1">
+                  <div className="flex items-center gap-2">
+                    <PiUsersThreeLight className="text-[#19181980] w-4 h-4" />
+                    <h3 className="text-sm text-[#19181980]">Assigned</h3>
+                  </div>
+                  <div>
+                    <div className="flex -space-x-2">
+                      {card.clientTeam?.map((member, index) => (
+                        <div
+                          key={index}
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                        >
+                          {member.substring(0, 2)}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className=" border-[1px] rounded-lg p-4 m-2 mt-4 ">
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <p className="text-[#19181980] text-sm font-semibold">
+                  Phase:
+                  <span className="text-[#000] mx-1 text-sm font-semibold">
+                    Pre travel
+                  </span>
+                </p>
+
+                <p className="text-[#000] mx-1 text-sm font-semibold">40%</p>
+              </div>
+
+              <p className="text-[#19181980] text-sm font-semibold">
+                32 days to completion
+              </p>
+            </div>
+          </div>
+          <div className=" border-[1px] rounded-lg p-4 m-2 mt-4 ">
+            <div className="space-y-4">
+              <ViewToggle
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                options={[
+                  { value: "task", label: "Task" },
+                  { value: "notes", label: "Notes" },
+                  { value: "activity", label: "Activity" },
+                ]}
+              />
+            </div>
+          </div>
+        </Modal>
+      )}
+    </>
+  );
+};
+
+export default ProjectCard;

@@ -4,7 +4,7 @@ import { OnboardingState, CompanyDetails, TeamMember } from '../../../types';
 
 const initialState: OnboardingState = {
   activeStep: 1,
-  companyDetails: { name: "", industry: "", size: "", country: "", address: "", city: "", postalCode: "" },
+  companyDetails: { name: "", industryType: "", size: "", country: "", address: "", city: "", postalCode: "" },
   teamMembers: [{ email: "", role: "" }],
 };
 

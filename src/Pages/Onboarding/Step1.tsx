@@ -8,10 +8,12 @@ import { FormInput } from "../../Components/Form/input";
 import { FormSelect } from "../../Components/Form/select";
 import { MainButton } from "../../Components/Form/button";
 import { CompanyDetails } from "../../types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createCompanyApi } from "../../Services";
 
 const Step1 = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const storedCompanyDetails = useSelector((state: RootState) => state.onboarding.companyDetails);
 
   const {
@@ -30,10 +32,17 @@ const Step1 = () => {
     reset(storedCompanyDetails);
   }, [storedCompanyDetails, reset]);
 
-
-  const onSubmit = (data: CompanyDetails) => {
-    dispatch(setCompanyDetails(data));
-    dispatch(nextStep());
+  const onSubmit = async (data: CompanyDetails) => {
+    setLoading(true);
+    try {
+      await createCompanyApi(data);
+      dispatch(setCompanyDetails(data));
+      dispatch(nextStep());
+    } catch (error) {
+      console.error("Error creating company:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,15 +63,15 @@ const Step1 = () => {
           <FormInput
             label="Industry type"
             placeholder="Industry type"
-            {...register("industry")}
-            error={errors.industry?.message}
+            {...register("industryType")}
+            error={errors.industryType?.message}
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <FormSelect
             label="Company size"
             options={[
-              { value: "small", label: "Small" },
+              { value: "20", label: "Small" },
               { value: "medium", label: "Medium" },
               { value: "large", label: "Large" },
             ]}
@@ -72,6 +81,7 @@ const Step1 = () => {
           <FormSelect
             label="Country"
             options={[
+              { value: "Nigeria", label: "Nigeria" },
               { value: "usa", label: "United States" },
               { value: "uk", label: "United Kingdom" },
               { value: "ca", label: "Canada" },
@@ -90,6 +100,7 @@ const Step1 = () => {
           <FormSelect
             label="City"
             options={[
+              { value: "lagos", label: "Lagos" },
               { value: "nyc", label: "New York" },
               { value: "london", label: "London" },
               { value: "toronto", label: "Toronto" },
@@ -106,7 +117,7 @@ const Step1 = () => {
         </div>
         </div>
         <div className="flex justify-end">
-          <MainButton type="submit">Save and continue</MainButton>
+          <MainButton type="submit" isLoading={loading}>Save and continue</MainButton>
         </div>
       </form>
       </div>
