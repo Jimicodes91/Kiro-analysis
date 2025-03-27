@@ -1,8 +1,9 @@
-import { useSelector, 
-    // useDispatch
- } from "react-redux";
+import {
+  useSelector,
+  // useDispatch
+} from "react-redux";
 import { RootState } from "../../Redux/store";
-// import { nextStep, prevStep } from "../../Redux/store/slices/onboardingSlice";  
+// import { nextStep, prevStep } from "../../Redux/store/slices/onboardingSlice";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Sidebar from "../../Components/Sidebar";
@@ -10,8 +11,10 @@ import ProgressBar from "../../Components/progressBar";
 // import { MainButton } from "../../Components/Form/button";
 
 const Onboarding = () => {
-  const activeStep = useSelector((state: RootState) => state.onboarding.activeStep);
-//   const dispatch = useDispatch();
+  const activeStep = useSelector(
+    (state: RootState) => state.onboarding.activeStep
+  );
+  //   const dispatch = useDispatch();
 
   const totalSteps = 2;
 
@@ -37,15 +40,12 @@ const Onboarding = () => {
             background: "#E0EFDE",
           }}
         >
-
-        <Sidebar />
-
-      </div>
+          <Sidebar />
+        </div>
       </nav>
 
       {/* Main Onboarding Content */}
       <div className=" max-w-6xl w-full flex-col flex mx-auto sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:pl-48 md:w-[96vw] lg:pl-[26vw] mb-[70px]">
-          
         {/* Progress Bar */}
         {/* <div className="z-10 bg-white sticky top-0"> */}
         <ProgressBar currentStep={activeStep} totalSteps={totalSteps} />
@@ -53,9 +53,7 @@ const Onboarding = () => {
 
         {/* Step Content */}
         {renderStep()}
-
       </div>
-
     </div>
   );
 };
