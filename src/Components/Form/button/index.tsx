@@ -25,10 +25,10 @@ export const MainButton: React.FC<MainButtonProps> = ({
     "p-3 h-[41px] text-[16px] justify-center flex items-center py-6 px-10 rounded-3xl border transition-all duration-200";
   
   const filledStyles =
-    "bg-primary text-white border-primary hover:bg-white hover:text-primary";
+    "bg-primary text-white border-primary";
   
   const outlinedStyles =
-    "bg-transparent text-primary border-primary hover:bg-primary hover:text-white";
+    "bg-transparent text-primary border-primary hover:bg-[#E0EFDE] hover:text-primary hover:border-[#E0EFDE]";
 
   return (
     <button

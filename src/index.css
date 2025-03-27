@@ -15,3 +15,27 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.custom-toast {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.toast-icon {
+  margin-right: 0px;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background-color: #CACCCF;
+  margin: 0 8px;
+}
+
+.toast-message {
+  color: #082A4B;
+  font-weight: 500;
+  font-size: 13px;
+}
+

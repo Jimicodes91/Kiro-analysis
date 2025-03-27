@@ -8,7 +8,8 @@ import { useForm } from "react-hook-form";
 import { signupSchema } from "../../Components/validationSchema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AdminSignUpFormProps } from "../../types";
-import { resendVerificationEmailApi, signUpAdminUserApi, verifyEmailApi } from "../../Services";
+import { resendVerificationEmailApi, signUpAdminUserApi } from "../../Services";
+import Toast from "../../Components/Toast";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -27,23 +28,18 @@ const SignUp: React.FC = () => {
   const onSubmit = async (data: AdminSignUpFormProps) => {
     setLoading(true);
     try {
-
       const payload = {
         email: data.email,
         password: data.password,
       };
-
-    const response = await signUpAdminUserApi(payload);
-
-    if (response && response.data.verification_token) {
-      await verifyEmailApi({ token: response.data.verification_token });
-    }
-
+      const response = await signUpAdminUserApi(payload);
       setShowConfirmation(true);
       setEmail(data.email);
-
+      Toast.success(response.message || "Signup Successful");
     } catch (error) {
       console.error("Error signing up:", error);
+      const errorMessage = (error as { data?: string })?.data || "Error signing up";
+      Toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -51,9 +47,12 @@ const SignUp: React.FC = () => {
 
   const resendVerification = async () => {
     try {
-      await resendVerificationEmailApi({ email });
+      const response = await resendVerificationEmailApi({ email });
+      Toast.success(response.message || "Verification link sent")
     } catch (error) {
       console.error("Error resending verification:", error);
+      const errorMessage = (error as { data?: string })?.data || "Error sending verification link";
+      Toast.error(errorMessage);
     }
   };
 

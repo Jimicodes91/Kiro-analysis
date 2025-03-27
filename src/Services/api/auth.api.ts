@@ -12,6 +12,7 @@ const apiRequest = async (endpoint: string, payload: object) => {
       throw error.response?.data || error;
     }
   };
+  
 
   export const signUpAdminUserApi = (payload: AdminSignUpProps) => 
     apiRequest(`${authBaseEndpoint}admin-signup`, payload);

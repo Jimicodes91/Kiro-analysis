@@ -30,6 +30,11 @@ export interface ResetPasswordProps {
   token: string;
   newPassword: string;
 }
+
+export interface ResetPasswordFormProps {
+  newPassword: string;
+  confirmNewPassword: string;
+}
 export interface TokenProp {
   token: string;
 }
