@@ -34,7 +34,7 @@ const Modal = ({
         className="absolute w-full h-full bg-gray-900 opacity-50"
         onClick={closeModal}
       ></div>
-      <div className="bg-white  border-[1px] rounded-lg p-4 z-50 w-[90%] md:w-[40%] h-full max-h-[90%] mx-[3%] overflow-y-auto">
+      <div className="bg-white  border-[1px] rounded-lg p-4 z-50 w-[90%] md:w-[60%] lg:w-[40%] h-full max-h-[90%] mx-[3%] overflow-y-auto">
         <div className=" border-[1px] rounded-lg">
           <div className="flex justify-between pb-4 p-3  border-b border-[1px] border-t-0">
             <div className="flex items-center gap-4">
