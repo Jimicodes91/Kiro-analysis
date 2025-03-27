@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Draggable } from "@hello-pangea/dnd";
+import Modal from "../Modal";
 
 interface ProjectCardProps {
   card: {
@@ -9,55 +10,48 @@ interface ProjectCardProps {
     status: string;
     clientTeam?: string[];
     projectTeam?: string[];
+    description?: string; // Added for modal content
   };
   index: number;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
-      {(provided) => (
-        <div
-          className="bg-white p-3 rounded shadow mb-2 flex flex-col h-52 justify-between"
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <div className="mt-2">
-            <span
-              className={`p-1 px-3 inline-flex text-xs leading-5 mb-2 font-semibold rounded-full 
-                ${
-                  card.status === "Completed"
-                    ? "bg-green-100 text-green-800"
-                    : card.status === "In progress"
-                    ? "bg-[#F1E6D4] text-[#B78026]"
-                    : "bg-[#FB002B1A] text-[#FB002B]"
-                }`}
-            >
-              {card.status}
-            </span>
-          </div>
-          <div className="font-semibold text-lg mb-1">{card.title}</div>
-          <div className="text-sm text-gray-500 mb-1">{card.organization}</div>
-          <div className="flex justify-between text-xs space-x-2 mb-1">
-            <div className="flex flex-col">
-              <p>Client team</p>
-              <div className="flex -space-x-2">
-                {card.clientTeam?.map((member, index) => (
-                  <div
-                    key={index}
-                    className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
-                  >
-                    {member.substring(0, 2)}
-                  </div>
-                ))}
-              </div>
+    <>
+      <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
+        {(provided) => (
+          <div
+            className="bg-white p-3 rounded shadow mb-2 flex flex-col h-52 justify-between cursor-pointer hover:shadow-md transition-shadow"
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <div className="mt-2">
+              <span
+                className={`p-1 px-3 inline-flex text-xs leading-5 mb-2 font-semibold rounded-full 
+                  ${
+                    card.status === "Completed"
+                      ? "bg-green-100 text-green-800"
+                      : card.status === "In progress"
+                      ? "bg-[#F1E6D4] text-[#B78026]"
+                      : "bg-[#FB002B1A] text-[#FB002B]"
+                  }`}
+              >
+                {card.status}
+              </span>
             </div>
-            <div className="flex justify-between text-xs mb-1">
+            <div className="font-semibold text-lg mb-1">{card.title}</div>
+            <div className="text-sm text-gray-500 mb-1">
+              {card.organization}
+            </div>
+            <div className="flex justify-between text-xs space-x-2 mb-1">
               <div className="flex flex-col">
-                <p>Project team</p>
+                <p>Client team</p>
                 <div className="flex -space-x-2">
-                  {card.projectTeam?.map((member, index) => (
+                  {card.clientTeam?.map((member, index) => (
                     <div
                       key={index}
                       className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
@@ -67,11 +61,100 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                   ))}
                 </div>
               </div>
+              <div className="flex justify-between text-xs mb-1">
+                <div className="flex flex-col">
+                  <p>Project team</p>
+                  <div className="flex -space-x-2">
+                    {card.projectTeam?.map((member, index) => (
+                      <div
+                        key={index}
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                      >
+                        {member.substring(0, 2)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+      </Draggable>
+
+      {/* Modal for project details */}
+      {isModalOpen && (
+        <Modal
+          title= "Project detail"
+          closeModal={() => setIsModalOpen(false)}
+          showExpandButton={true}
+          expandRoute={`/projects/${card.id}`} // Adjust this route as needed
+       
+       >
+          <div className="space-y-4">
+            <div className="flex flex-col">
+            {card.title}
+            <p>{card.organization}</p>
+            </div>
+            <div>
+         
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-gray-500">Status</h3>
+              <span
+                className={`p-1 px-3 inline-flex text-xs leading-5 font-semibold rounded-full 
+                  ${
+                    card.status === "Completed"
+                      ? "bg-green-100 text-green-800"
+                      : card.status === "In progress"
+                      ? "bg-[#F1E6D4] text-[#B78026]"
+                      : "bg-[#FB002B1A] text-[#FB002B]"
+                  }`}
+              >
+                {card.status}
+              </span>
+            </div>
+
+            {card.description && (
+              <div>
+                <h3 className="font-semibold text-gray-500">Description</h3>
+                <p>{card.description}</p>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h3 className="font-semibold text-gray-500">Client Team</h3>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {card.clientTeam?.map((member, index) => (
+                    <div
+                      key={index}
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium"
+                    >
+                      {member.substring(0, 2)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-500">Project Team</h3>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {card.projectTeam?.map((member, index) => (
+                    <div
+                      key={index}
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium"
+                    >
+                      {member.substring(0, 2)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
       )}
-    </Draggable>
+    </>
   );
 };
 

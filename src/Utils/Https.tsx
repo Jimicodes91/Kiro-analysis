@@ -25,7 +25,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if ((error.response.status === 401 || error.response.status === 403) && !error.config.url.includes('/auth')) {
+      if ((error.response.status === 401 ) && !error.config.url.includes('/auth')) {
         store.remove("atk");
         store.remove("rtk");
         window.location.href = "/";

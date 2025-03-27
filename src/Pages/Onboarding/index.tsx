@@ -44,7 +44,7 @@ const Onboarding = () => {
       </nav>
 
       {/* Main Onboarding Content */}
-      <div className=" max-w-6xl w-full justify-center flex-col flex mx-auto sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:pl-48 md:w-[96vw] lg:pl-[26vw] mb-[70px]">
+      <div className=" max-w-6xl w-full flex-col flex mx-auto sm:w-[97vw] lg:w-[98vw] md:my-[70px] md:pl-48 md:w-[96vw] lg:pl-[26vw] mb-[70px]">
           
         {/* Progress Bar */}
         {/* <div className="z-10 bg-white sticky top-0"> */}
