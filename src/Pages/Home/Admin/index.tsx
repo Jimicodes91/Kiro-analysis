@@ -3,7 +3,7 @@ import UserTab from "./User";
 
 type TabType = "User" | "Project" | "Document" | "Event" | "Note" | "Task";
 
-const TabsComponent: React.FC = () => {
+const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("User");
 
   const tabs: TabType[] = [
@@ -63,4 +63,4 @@ const TabsComponent: React.FC = () => {
   );
 };
 
-export default TabsComponent;
+export default Admin;
