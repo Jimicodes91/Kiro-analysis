@@ -87,7 +87,16 @@ const Step1 = () => {
   const onSubmit = async (data: CompanyDetails) => {
     setLoading(true);
     try {
-      const response = await createCompanyApi(data);
+      const payload = {
+        industry_type: data.industryType,
+        postal_code: data.postalCode,
+        name: data.name,
+        country: data.country,
+        city: data.city,
+        size: data.size,
+        address: data.address
+      }
+      const response = await createCompanyApi(payload);
       dispatch(setCompanyDetails(data));
       dispatch(nextStep());
       Toast.success(response.message || "Company created successfully")
