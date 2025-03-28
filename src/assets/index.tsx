@@ -10,6 +10,9 @@ import House from "./svg/House.svg";
 import Finance from "./svg/Finance.svg";
 import Avatar from "./svg/Avatar.svg";
 import Orizonal from "./svg/orizonal.svg";
+import LogoWithText from "./svg/logoWithText.svg";
+import LeftArrow from "./svg/leftArrow.svg";
+import RightArrow from "./svg/rightArrow.svg";
 
 export {
   Logo,
@@ -24,4 +27,7 @@ export {
   Finance,
   Avatar,
   Orizonal,
+  LogoWithText,
+  LeftArrow,
+  RightArrow
 };

@@ -5,9 +5,10 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
   image,
   title,
   isCollapsed,
+  isActive = false,
 }) => (
   <div
-    className={`flex items-center my-4 px-1 ${isCollapsed ? "justify-center" : "px-5"}`}
+    className={`flex items-center my-1 px-1 ${isCollapsed ? "justify-center" : "px-5"}`}
   >
     {image && (
       <div className="flex items-center">
@@ -15,16 +16,19 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
           <img
             src={image}
             alt={title}
-            className="w-[24px] h-[24px] transition-all"
+            className={`w-[24px] h-[24px] transition-all  ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100 hover:opacity-100'}`}
+            
           />
         ) : (
-          <span className="text-dark">{image}</span>
+          <span className={`
+            ${isActive ? 'text-[#191819]' : 'text-gray-500 group-hover:text-gray-700'}
+          `}>{image}</span>
         )}
       </div>
     )}
 
     {!isCollapsed && (
-      <h1 className="pl-2 text-base text-dark whitespace-nowrap">{title}</h1>
+      <h1 className={`pl-2 text-base whitespace-nowrap text-[#191819] font-semibold text-["16px"] ${isActive ? ' opacity-100' : ' opacity-60 group-hover:text-[[#191819]] hover:opacity-100'}`}>{title}</h1>
     )}
   </div>
 );

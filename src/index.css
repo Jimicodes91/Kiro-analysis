@@ -39,3 +39,25 @@
   font-size: 13px;
 }
 
+/* Custom thin scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px; /* Keep the width */
+  display: none; /* Hide scrollbar by default */
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar {
+  display: block; /* Show scrollbar on hover */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
