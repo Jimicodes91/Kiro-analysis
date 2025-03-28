@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Search from "../../Components/Form/search";
-import { FormSelect } from "../../Components/Form/select";
-import { MainButton } from "../../Components/Form/button";
+import Search from "../../../Components/Form/search";
+import { FormSelect } from "../../../Components/Form/select";
+import { MainButton } from "../../../Components/Form/button";
 import { IoAdd } from "react-icons/io5";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
-import BoardView from "../../Components/Cards/BoardView";
-import TableView from "../../Components/Cards/TableView";
-import ViewToggle from "../../Components/Cards/ViewToggle";
+import BoardView from "../../../Components/Cards/BoardView";
+import TableView from "../../../Components/Cards/TableView";
+import ViewToggle from "../../../Components/Cards/ViewToggle";
 
 const Project: React.FC = () => {
   const [, setSearchQuery] = useState("");
