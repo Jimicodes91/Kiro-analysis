@@ -10,9 +10,12 @@ import { LoginUser } from "../../types";
 import { loginUserApi } from "../../Services";
 import store from "store";
 import Toast from "../../Components/Toast";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "../../Redux/store/slices/authSlice";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -28,6 +31,7 @@ const Login: React.FC = () => {
     try {
       const response = await loginUserApi(data);
 
+  dispatch(setAuthUser(response.data)); // Dispatch action to update Redux store
    // Store tokens in local storage
    store.set("atk", response.data.token);
    store.set("rtk", response.data.user.refresh_token);
