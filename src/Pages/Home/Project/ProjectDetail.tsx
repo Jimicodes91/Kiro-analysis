@@ -10,6 +10,8 @@ import { BsActivity } from "react-icons/bs";
 import { IoSettingsOutline, IoArrowBack } from "react-icons/io5";
 import { TableRowProps } from "../../../types";
 import ViewToggle from "../../../Components/Cards/ViewToggle";
+import Detail from "./Detail";
+import ContactInfo from "./Contactinfo";
 
 interface Task {
   id: number;
@@ -35,7 +37,6 @@ interface Activity {
   user: string;
 }
 
-// Mock data - in a real app, you'd fetch this from an API
 const mockProjects: TableRowProps["row"][] = [
   {
     id: 1,
@@ -82,6 +83,8 @@ const mockProjects: TableRowProps["row"][] = [
     clientTeam: ["Client C"],
   },
 ];
+
+type TabType = "Project detail" | "Contact info";
 
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -161,6 +164,40 @@ const ProjectDetail: React.FC = () => {
     );
   };
 
+  const [activeTab2, setActiveTab2] = useState<TabType>("Project detail");
+
+  const tabs: TabType[] = ["Project detail", "Contact info"];
+
+  const renderTabContent = () => {
+    if (!project) return null;
+
+    switch (activeTab2) {
+      case "Project detail":
+        return (
+          <Detail
+            title={project.title}
+            organization={project.organization}
+            startDate={project.startDate}
+            client="John Doe"
+            dueDate={project.dueDate}
+            status={project.status}
+            projectTeam={project.projectTeam || []}
+            description="A document is a written or digital file that records information, data, or ideas. It can take various forms, such as a report, letter, proposal, article, or presentation."
+          />
+        );
+      case "Contact info":
+        return (
+          <ContactInfo
+            projectTeam={project.projectTeam || []}
+            clientTeam={project.clientTeam || []}
+            owner="Uchenna Okenwa"
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   if (!project) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -212,6 +249,24 @@ const ProjectDetail: React.FC = () => {
               data, or ideas. It can take various forms, such as a report,
               letter, proposal, article, or presentation,
             </p>
+          </div>
+          <div className="bg-white rounded-lg shadow-md overflow-hidden mt-5">
+            <div className="flex border-b border-gray-200">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  className={`px-6 py-3 text-sm font-medium focus:outline-none transition-colors duration-200 ${
+                    activeTab2 === tab
+                      ? "text-primary border-b-2 border-primary"
+                      : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  }`}
+                  onClick={() => setActiveTab2(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+            <div className="p-6">{renderTabContent()}</div>
           </div>
         </div>
         <div className="w-3/4">
