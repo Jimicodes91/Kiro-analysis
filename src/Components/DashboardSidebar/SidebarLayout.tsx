@@ -6,9 +6,10 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
   title,
   isCollapsed,
   isActive = false,
+  isHovered
 }) => (
   <div
-    className={`flex items-center my-1 px-1 ${isCollapsed ? "justify-center" : "px-5"}`}
+    className={`flex items-center my-2 px-1 ${isCollapsed ? "justify-center" : "px-5"}`}
   >
     {image && (
       <div className="flex items-center">
@@ -16,19 +17,19 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
           <img
             src={image}
             alt={title}
-            className={`w-[24px] h-[24px] transition-all  ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100 hover:opacity-100'}`}
+            className={`w-[24px] h-[24px] transition-all ${isHovered ? "opacity-100" : ""}  ${isActive ? 'opacity-100' : 'opacity-60'}`}
             
           />
         ) : (
           <span className={`
-            ${isActive ? 'text-[#191819]' : 'text-gray-500 group-hover:text-gray-700'}
+            ${isActive ? 'text-[#191819]' : 'text-gray-500'} ${isHovered ? "opacity-100" : ""} 
           `}>{image}</span>
         )}
       </div>
     )}
 
     {!isCollapsed && (
-      <h1 className={`pl-2 text-base whitespace-nowrap text-[#191819] font-semibold text-["16px"] ${isActive ? ' opacity-100' : ' opacity-60 group-hover:text-[[#191819]] hover:opacity-100'}`}>{title}</h1>
+      <h1 className={`pl-2 text-base whitespace-nowrap text-[#191819] font-semibold text-["16px"] ${isHovered ? "opacity-100" : ""}    ${isActive ? ' opacity-100' : ' opacity-60 group-hover:text-[[#191819]] hover:opacity-100'}`}>{title}</h1>
     )}
   </div>
 );

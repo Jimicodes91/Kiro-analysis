@@ -13,6 +13,7 @@ import Orizonal from "./svg/orizonal.svg";
 import LogoWithText from "./svg/logoWithText.svg";
 import LeftArrow from "./svg/leftArrow.svg";
 import RightArrow from "./svg/rightArrow.svg";
+import Logout from "./svg/logout.svg";
 
 export {
   Logo,
@@ -29,5 +30,6 @@ export {
   Orizonal,
   LogoWithText,
   LeftArrow,
-  RightArrow
+  RightArrow,
+  Logout
 };

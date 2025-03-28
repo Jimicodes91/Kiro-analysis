@@ -3,6 +3,7 @@ export interface SidebarLayoutProps {
   title: string;
   isCollapsed?: boolean;
   isActive?: boolean;
+  isHovered?: boolean;
 }
 
 export interface TableRowProps {
