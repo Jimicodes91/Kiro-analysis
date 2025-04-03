@@ -4,8 +4,9 @@ import DocumentTab from "./Document";
 import EventTab from "./Event";
 import TaskTab from "./Task";
 import AuditTrailTab from "./AuditTrail";
+import SettingsTab from "./Settings";
 
-type TabType = "User" | "Project" | "Document" | "Event" | "Note" | "Task" | "AuditTrail";
+type TabType = "User" | "Project" | "Document" | "Event" | "Note" | "Task" | "AuditTrail" | "Account" | "Settings";
 
 const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("User");
@@ -18,6 +19,8 @@ const Admin: React.FC = () => {
     "Note",
     "Task",
     "AuditTrail",
+    "Account",
+    "Settings",
   ];
 
   const renderTabContent = () => {
@@ -40,6 +43,10 @@ const Admin: React.FC = () => {
         return <div> <TaskTab /> </div>;
       case "AuditTrail":
         return <div> <AuditTrailTab /> </div>;
+      case "Account":
+        return <div> Account </div>;
+      case "Settings":
+        return <div> <SettingsTab /> </div>;
       default:
         return;
     }
