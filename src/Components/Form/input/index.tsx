@@ -41,7 +41,7 @@ export const FormInput: React.FC<FormInputProps> = ({
 
   return (
     <div className="relative space-y-2">
-      <label htmlFor={id} className="text-[16px] font-medium text-black">
+      <label htmlFor={id} className="text-[16px] font-medium text-[#00000099]">
       {label ? label : placeholder}
       </label>
       <div className="relative">

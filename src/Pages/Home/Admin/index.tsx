@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import UserTab from "./User";
+import UserTab from "./User/index";
 
 type TabType = "User" | "Project" | "Document" | "Event" | "Note" | "Task";
 

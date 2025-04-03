@@ -41,7 +41,7 @@
 
 /* Custom thin scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px; /* Keep the width */
+  width: 5px; /* Keep the width */
   display: none; /* Hide scrollbar by default */
 }
 
@@ -55,7 +55,7 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
