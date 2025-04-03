@@ -1,4 +1,4 @@
-import { Admin, Client, Event, Finance, House, Message, Project } from "../../assets";
+import { Admin, Client, Event, Finance, House, Message, Project, Logout } from "../../assets";
 import { SidebarLinks } from "../../types";
 
 export const DashboardSidebarLinks: SidebarLinks[] = [
@@ -59,7 +59,7 @@ export const DashboardBottomLinks: SidebarLinks[] = [
     id: 1,
     title: "Logout",
     url: "/",
-    // image: Logout,
+    image: Logout,
     headingText: "Logout",
   },
 ];

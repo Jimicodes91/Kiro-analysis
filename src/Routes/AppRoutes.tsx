@@ -15,6 +15,7 @@ import Project from "../Pages/Home/Project";
 import Finance from "../Pages/Home/Finance";
 import Admin from "../Pages/Home/Admin";import ResetPassword from "../Pages/Auth/ResetPassword";
 import VerifyEmail from "../Pages/Auth/VerifyEmail";
+import ProjectDetail from "../Pages/Home/Project/ProjectDetail";
 
 
 export const AuthRoutes: RouteObject[] = [
@@ -77,6 +78,10 @@ export const HomeRoutes = {
     {
       path: "project",
       element: <Project />,
+    },
+    {
+      path: "projects/:id",
+      element: <ProjectDetail />, 
     },
   ],
 };

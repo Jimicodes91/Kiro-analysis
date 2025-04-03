@@ -1,14 +1,13 @@
-// pages/Home.tsx
 import React, { useState } from "react";
-import Search from "../../Components/Form/search";
-import { FormSelect } from "../../Components/Form/select";
-import { MainButton } from "../../Components/Form/button";
+import Search from "../../../Components/Form/search";
+import { FormSelect } from "../../../Components/Form/select";
+import { MainButton } from "../../../Components/Form/button";
 import { IoAdd } from "react-icons/io5";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
-import BoardView from "../../Components/Cards/BoardView";
-import TableView from "../../Components/Cards/TableView";
-import ViewToggle from "../../Components/Cards/ViewToggle";
+import BoardView from "../../../Components/Cards/BoardView";
+import TableView from "../../../Components/Cards/TableView";
+import ViewToggle from "../../../Components/Cards/ViewToggle";
 
 const Project: React.FC = () => {
   const [, setSearchQuery] = useState("");
@@ -53,6 +52,17 @@ const Project: React.FC = () => {
       projectTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
       clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
     },
+    {
+      id: 4, 
+      title: "Dubai Registration",
+      organization: "Orizon Digital",
+      startDate: "02 Nov 2023 ",
+      dueDate: "02 Nov 2023 ",
+      completedDate: "02 Nov 2023 ",
+      status: "Completed",
+      projectTeam: ["New Horizon", "Orizon Digital", "Stellar Solutions Inc."],
+      clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
+    },
   ];
 
   const [columns, setColumns] = useState<
@@ -76,7 +86,7 @@ const Project: React.FC = () => {
     "column-4": {
       id: "column-4",
       title: "Travel",
-      cards: [],
+      cards: [tableData[3]],
     },
     "column-5": {
       id: "column-5",
