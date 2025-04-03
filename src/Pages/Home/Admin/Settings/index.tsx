@@ -69,12 +69,12 @@ const SettingsTab: React.FC = () => {
 
   return (
     <div className="">
-      <h1 className="text-lg font-semibold mb-6">Settings</h1>
+      <h1 className="text-[16px] font-[600] text-black mb-4">Settings</h1>
       
       <div className="bg-white p-4 rounded-[10px] border border-[#0000001A] flex flex-row gap-52">
 
       <div className="space-y-1">
-        <div className="text-[16px] font-semibold mb-1">Project setting</div>
+        <div className="text-[16px] font-semibold mb-1 text-[#191819]">Project setting</div>
         <div className="text-sm font-medium text-[#00000066] mb-4">
           A list of all tasks linked to the project,<br/> including their status.
         </div>
