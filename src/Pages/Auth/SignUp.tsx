@@ -18,12 +18,12 @@ const SignUp: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(signupSchema),
-  });
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+      resolver: yupResolver(signupSchema),
+    });
 
   const onSubmit = async (data: AdminSignUpFormProps) => {
     setLoading(true);
@@ -106,17 +106,18 @@ const SignUp: React.FC = () => {
           </div>
         </div>
       ) : (
-        <VerificationCard
-          title="Email verification"
-          email={email}
-          buttonText="Back"
-          onButtonClick={() => setShowConfirmation(false)}
-          showResend={true}
-          onResend={() => resendVerification()}
-        />
-      )}
-    </>
-  );
-};
+            <VerificationCard
+              title="Email verification"
+              email={email}
+              buttonText="Back"
+              onButtonClick={() => setShowConfirmation(false)}
+              showResend={true}
+              onResend={() => resendVerification()}
+            />
+          )}
+        </>
+      );
+    };
+
 
 export default SignUp;

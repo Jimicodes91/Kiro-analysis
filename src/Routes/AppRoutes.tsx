@@ -41,7 +41,7 @@ export const AuthRoutes: RouteObject[] = [
   {
     path: "onboarding",
     element: <Onboarding />,
-  },
+    },
   {
     path: "*",
     element: <NotFound />,
