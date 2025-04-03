@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import UserTab from "./User";
+import UserTab from "./User/index";
+import DocumentTab from "./Document";
+import EventTab from "./Event";
+import TaskTab from "./Task";
+import AuditTrailTab from "./AuditTrail";
+import SettingsTab from "./Settings";
 
-type TabType = "User" | "Project" | "Document" | "Event" | "Note" | "Task";
+type TabType = "User" | "Project" | "Document" | "Event" | "Note" | "Task" | "AuditTrail" | "Account" | "Settings";
 
 const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("User");
@@ -13,6 +18,9 @@ const Admin: React.FC = () => {
     "Event",
     "Note",
     "Task",
+    "AuditTrail",
+    "Account",
+    "Settings",
   ];
 
   const renderTabContent = () => {
@@ -26,13 +34,19 @@ const Admin: React.FC = () => {
       case "Project":
         return <div className="p-4">Project</div>;
       case "Document":
-        return <div className="p-4">Document </div>;
+        return <div> <DocumentTab /> </div>;
       case "Event":
-        return <div className="p-4">Event </div>;
+        return <div> <EventTab /> </div>;
       case "Note":
         return <div className="p-4">Note</div>;
       case "Task":
-        return <div className="p-4">Task</div>;
+        return <div> <TaskTab /> </div>;
+      case "AuditTrail":
+        return <div> <AuditTrailTab /> </div>;
+      case "Account":
+        return <div> Account </div>;
+      case "Settings":
+        return <div> <SettingsTab /> </div>;
       default:
         return;
     }
@@ -40,16 +54,16 @@ const Admin: React.FC = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-6">Admin</h1>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <h1 className="text-2xl font-[600] mb-6">Admin</h1>
+      <div className="bg-white rounded-[6px] overflow-hidden border-[1.5px] border-[#0000001A]">
         <div className="flex border-b border-gray-200">
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={`px-6 py-3 text-sm font-medium focus:outline-none transition-colors duration-200 ${
+              className={`px-6 py-3 text-[14px] text-black focus:outline-none transition-colors duration-200 ${
                 activeTab === tab
-                  ? "text-primary border-b-2 border-primary "
-                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  ? "border-b-2 border-black font-[600]"
+                  : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"
               }`}
               onClick={() => setActiveTab(tab)}
             >

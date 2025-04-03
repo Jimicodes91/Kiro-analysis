@@ -134,7 +134,7 @@ const Step1 = () => {
               { value: "consulting", label: "Consulting" },
               { value: "entertainment", label: "Entertainment" },
             ]}
-            {...register("industryType")}
+            register={register("industryType")}
             error={errors.industryType?.message}
           />
         </div>
@@ -149,7 +149,7 @@ const Step1 = () => {
               { value: "251-500", label: "251-500 Employees" },
               { value: "500+", label: "500+ Employees" },
             ]}
-            {...register("size")}
+            register={register("size")}
             error={errors.size?.message}
           />
           <FormSelect
@@ -160,7 +160,7 @@ const Step1 = () => {
               { value: "uk", label: "United Kingdom" },
               { value: "ca", label: "Canada" },
             ]}
-            {...register("country")}
+            register={register("country")}
             error={errors.country?.message}
           />
         </div>
@@ -174,7 +174,7 @@ const Step1 = () => {
           <FormSelect
             label="City"
             options={states}
-            {...register("city")}
+            register={register("city")}
             error={errors.city?.message}
             // disabled={states.length === 0}
             placeholder={states.length === 0 ? "Select Country First" : "Select City"}

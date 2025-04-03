@@ -31,15 +31,15 @@ const Login: React.FC = () => {
     try {
       const response = await loginUserApi(data);
 
-  dispatch(setAuthUser(response.data)); // Dispatch action to update Redux store
-   // Store tokens in local storage
-   store.set("atk", response.data.token);
-   store.set("rtk", response.data.user.refresh_token);
+      dispatch(setAuthUser(response.data)); // Dispatch action to update Redux store
+      // Store tokens in local storage
+      store.set("atk", response.data.token);
+      store.set("rtk", response.data.user.refresh_token);
 
-      if (response && response.data.company_id !== null) {
-        navigate("/onboarding");
-      } else {
+      if (response && (response.data.company_id !== null || response.data.company_id !== undefined)) {
         navigate("/home");
+      } else {
+        navigate("/onboarding");
       }
       Toast.success(response.message || "Login successful");
     } catch (error) {

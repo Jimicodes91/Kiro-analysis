@@ -4,18 +4,19 @@ import { IoEyeOff, IoEye } from "react-icons/io5";
 import type { ChangeEvent, FocusEvent, KeyboardEvent } from "react";
 
 type FormInputProps = {
-  type?: "text" | "email" | "password" | "number";
+  type?: "text" | "email" | "password" | "number" | "textarea";
   id?: string;
   value?: string;
-  onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   placeholder?: string;
   label?: string;
   className?: string;
   error?: string;
   register?: UseFormRegisterReturn;
   disabled?: boolean;
+  rows?: number;
 };
 
 export const FormInput: React.FC<FormInputProps> = ({
@@ -31,6 +32,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   error,
   disabled = false,
   label,
+  rows=3,
   ...props
 }) => {
   const [inputType, setInputType] = useState(type);
@@ -39,12 +41,33 @@ export const FormInput: React.FC<FormInputProps> = ({
     setInputType(inputType === "password" ? "text" : "password");
   };
 
+  const isTextarea = type === "textarea";
+
   return (
     <div className="relative space-y-2">
-      <label htmlFor={id} className="text-[16px] font-medium text-black">
+      <label htmlFor={id} className="text-[16px] font-medium text-[#00000099]">
       {label ? label : placeholder}
       </label>
       <div className="relative">
+      {isTextarea ? (
+          <textarea
+            id={id}
+            value={value}
+            {...register}
+            onFocus={onFocus}
+            onKeyDown={onKeyDown}
+            onChange={onChange}
+            placeholder={placeholder}
+            disabled={disabled}
+            rows={rows}
+            className={`${className} w-full px-4 py-4 rounded-[16px] font-[400] border border-[#00000033] placeholder-[#00000080] text-[14px] focus:outline-none resize-none ${
+              disabled
+                ? "bg-gray-100 cursor-not-allowed"
+                : "focus:border-black focus:bg-white"
+            }`}
+            {...props}
+          />
+        ) : (
         <input
           type={inputType}
           id={id}
@@ -63,7 +86,8 @@ export const FormInput: React.FC<FormInputProps> = ({
           }`}
           {...props}
         />
-        {type === "password" && (
+        )}
+        {type === "password" && !isTextarea  && (
           <button
             type="button"
             onClick={togglePasswordVisibility}

@@ -110,10 +110,11 @@ const Step2 = () => {
                     <FormSelect
                       label="Role"
                       options={[
-                        { value: "admin", label: "Admin" },
-                        { value: "member", label: "Member" },
+                        { value: "consultant", label: "Consultant" },
+                        { value: "client", label: "Client" },
+                        { value: "customer", label: "Customer" },
                       ]}
-                      {...register(`teamMembers.${index}.role`)}
+                      register={register(`teamMembers.${index}.role`)}
                       error={errors.teamMembers?.[index]?.role?.message}
                     />
                   </div>
