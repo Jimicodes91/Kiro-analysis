@@ -36,10 +36,10 @@ const Login: React.FC = () => {
       store.set("atk", response.data.token);
       store.set("rtk", response.data.user.refresh_token);
 
-      if ((response && response.data.company_id !== null) || undefined) {
-        navigate("/onboarding");
-      } else {
+      if (response && (response.data.company_id !== null || response.data.company_id !== undefined)) {
         navigate("/home");
+      } else {
+        navigate("/onboarding");
       }
       Toast.success(response.message || "Login successful");
     } catch (error) {
