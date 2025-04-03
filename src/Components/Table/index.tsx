@@ -23,8 +23,8 @@ const Table = <T, K extends keyof T>({
   columns,
   emptyMessage = "No data available",
   className = "",
-  headerClassName = "bg-gray-100 text-left p-4 font-semibold",
-  rowClassName = "border-b hover:bg-gray-50",
+  headerClassName = "bg-gray-100 text-left p-4 font-[600] text-[14px]",
+  rowClassName = "border-b hover:bg-gray-50 text-[12px] font-[500]",
   cellClassName = "p-4",
   onRowClick,
 }: TableProps<T, K>) => {

@@ -120,7 +120,7 @@ const UserTab: React.FC = () => {
     {
       key: "action",
       header: "",
-      render: (_value) => <BsThreeDotsVertical />,
+      render: () => <BsThreeDotsVertical />,
     },
   ];
 
@@ -139,7 +139,7 @@ const UserTab: React.FC = () => {
   return (
     <>
       <div className="flex justify-between items-center my-2">
-        <h1 className="text-xl font-bold">Manage user </h1>
+        <h1 className="text-[16px] font-[600]">Manage user </h1>
         <MainButton onClick={() => setIsModalOpen(true)}>
           {" "}
           <span className="mr-3 text-xl">

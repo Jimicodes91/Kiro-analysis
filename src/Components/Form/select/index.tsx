@@ -101,7 +101,9 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         onClick={toggleDropdown}
       >
         <div className={selectedValue ? "text-black" : "text-gray-400"}>
-          {selectedLabel || placeholder || (label ? `Select ${label}` : "Select")}
+          {selectedLabel || placeholder || label
+          // (label ? `Select ${label}` : "Select")
+          }
         </div>
         <div className="flex items-center pointer-events-none">
           <IoIosArrowDown className={`h-5 w-5 text-black transition-transform ${isOpen ? "transform rotate-180" : ""}`} />
