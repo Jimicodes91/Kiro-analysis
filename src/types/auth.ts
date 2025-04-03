@@ -55,3 +55,43 @@ export interface CompanyProps {
   city: string;
   postalCode: string;
 }
+export interface CompanyApiProps {
+  name: string;
+  industry_type: string;
+  size: string;
+  country: string;
+  address: string;
+  city: string;
+  postal_code: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  pfp: string | null;
+  name: string | null;
+}
+
+export interface AuthData {
+  token: string;
+  user: User;
+  company_id: string | null;
+  created_at: string;
+  currency: string;
+  deleted_at: string | null;
+  is_active: number;
+  is_blocked: number;
+  is_verified: number;
+  language: string;
+  last_login: string;
+  login_count: number;
+  password_setup_token: string | null;
+  password_setup_token_expires: string | null;
+  refresh_token: string | null;
+  refresh_token_expires: string | null;
+  role: "ADMIN" | "USER" | "OTHER_ROLE";
+  timezone: string | null;
+  token_expires: string | null;
+  updated_at: string;
+  verification_token: string | null;
+}

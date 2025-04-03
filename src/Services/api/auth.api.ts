@@ -1,5 +1,5 @@
 
-import { AddClientProp, AdminSignUpProps, CompanyAdminSignUpProps, CompanyProps, CompleteRegProps, EmailProp, LoginUser, ResetPasswordProps, SendConsultantInviteProps, TokenProp, UpdatePasswordProps } from "../../types";
+import { AddClientProp, AdminSignUpProps, CompanyAdminSignUpProps, CompanyApiProps, CompleteRegProps, EmailProp, LoginUser, ResetPasswordProps, SendConsultantInviteProps, TokenProp, UpdatePasswordProps } from "../../types";
 import axiosInstance from "../../Utils/Https";
 
 
@@ -48,7 +48,6 @@ const apiRequest = async (endpoint: string, payload: object) => {
   export const addClientApi = (payload: AddClientProp) => 
     apiRequest(`${authBaseEndpoint}add-client`, payload);
 
-
-  //Onboarding step 1 (company details)
-  export const createCompanyApi = (payload: CompanyProps) => 
+  export const createCompanyApi = (payload: CompanyApiProps) => 
     apiRequest("/api/v1/company/create", payload);
+
