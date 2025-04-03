@@ -41,10 +41,10 @@ const Modal = ({
         onClick={closeModal}
       ></div>
       <div className={`bg-white  border-[1px] rounded-lg p-4 z-50 w-[90%] md:w-[60%] lg:w-[40%] ${
-        fullHeight ? 'h-full max-h-[90%]' : 'auto max-h-[90%] mt-6'
-      } mx-[3%] flex flex-col`}>
+        fullHeight ? 'h-full max-h-[90%]' : ' max-h-[90%] mt-6'
+      } mx-[3%] flex flex-col overflow-hidden`}>
+        <div className=" border-[1px] rounded-lg flex flex-col h-full">
         {/* Fixed Header */}
-        <div className=" border-[1px] rounded-lg">
           <div className="flex justify-between pb-4 p-3  border-b border-[1px] bg-white sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
             <div className="flex items-center gap-4">
               {showExpandButton && (

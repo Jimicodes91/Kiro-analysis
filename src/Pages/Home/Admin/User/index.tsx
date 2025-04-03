@@ -126,15 +126,14 @@ const UserTab: React.FC = () => {
 
   const onSubmit = async (data: TeamMember) => {
     setLoading(true);
-     try {
-                await sendConsultantInviteApi(data);
-    setIsModalOpen(false);
-
-              } catch (error) {
-                console.error(`Failed to invite ${data.email}:`, error);
-              } finally {
-                setLoading(false);
-              } 
+    try {
+      await sendConsultantInviteApi(data);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error(`Failed to invite ${data.email}:`, error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -166,7 +165,10 @@ const UserTab: React.FC = () => {
           closeModal={() => setIsModalOpen(false)}
           fullHeight={false}
         >
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4 p-4"
+          >
             <FormInput
               label="Email"
               placeholder="Email"
@@ -183,7 +185,9 @@ const UserTab: React.FC = () => {
               register={register("role")}
               error={errors.role?.message}
             />
-            <MainButton type="submit" isLoading={loading}>Add User</MainButton>
+            <MainButton type="submit" isLoading={loading}>
+              Add User
+            </MainButton>
           </form>
         </Modal>
       )}
