@@ -9,7 +9,7 @@ type FormSelectProps = {
   options: { value: string | number; label: string }[];
   placeholder?: string;
   className?: string;
-  error?: string;
+  error?: string | { message?: string };
   register?: UseFormRegisterReturn;
   disabled?: boolean;
   value?: string | number;
@@ -148,7 +148,11 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         </div>
       )}
       
-      {error && <span className="text-[16px] text-red-500">{error}</span>}
+      {error && (
+        <span className="text-[16px] text-red-500">
+          {typeof error === "string" ? error : error.message}
+        </span>
+      )}
     </div>
   );
 };
