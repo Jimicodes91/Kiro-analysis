@@ -184,6 +184,7 @@ const Project: React.FC = () => {
         <div className="flex items-center space-x-4 mt-5 md:mt-0">
           <FormSelect
             label=""
+            value={"db"}
             options={[
               { value: "Nigeria", label: "Nigeria Registration" },
               { value: "usa", label: "United States Registration" },
@@ -210,7 +211,7 @@ const Project: React.FC = () => {
             ]}
           />
           <div className="flex justify-between space-x-2">
-            <FormSelect options={[{ value: "all", label: "All project" }]} />
+            <FormSelect value={"all"} options={[{ value: "all", label: "All project" }]} />
             <button
               className="mr-5 cursor-pointer relative border-2 border-[#0000001A] bg-[#0923270F] p-2 rounded-full"
               type="button"

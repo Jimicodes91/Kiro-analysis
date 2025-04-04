@@ -13,7 +13,7 @@ type FormInputProps = {
   placeholder?: string;
   label?: string;
   className?: string;
-  error?: string;
+  error?: string | { message?: string };
   register?: UseFormRegisterReturn;
   disabled?: boolean;
   rows?: number;
@@ -102,7 +102,11 @@ export const FormInput: React.FC<FormInputProps> = ({
           </button>
         )}
       </div>
-      {error && <span className="text-[16px] text-red-500">{error}</span>}
+      {error && (
+        <span className="text-[16px] text-red-500">
+          {typeof error === "string" ? error : error.message}
+        </span>
+      )}
     </div>
   );
 };

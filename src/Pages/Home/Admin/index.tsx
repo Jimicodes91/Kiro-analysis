@@ -5,6 +5,7 @@ import EventTab from "./Event";
 import TaskTab from "./Task";
 import AuditTrailTab from "./AuditTrail";
 import SettingsTab from "./Settings";
+import ProjectTab from "./Project";
 
 type TabType = "User" | "Project" | "Document" | "Event" | "Note" | "Task" | "AuditTrail" | "Account" | "Settings";
 
@@ -16,10 +17,10 @@ const Admin: React.FC = () => {
     "Project",
     "Document",
     "Event",
-    "Note",
+    // "Note",
     "Task",
     "AuditTrail",
-    "Account",
+    // "Account",
     "Settings",
   ];
 
@@ -32,19 +33,19 @@ const Admin: React.FC = () => {
           </div>
         );
       case "Project":
-        return <div className="p-4">Project</div>;
+        return <div> <ProjectTab /> </div>;
       case "Document":
         return <div> <DocumentTab /> </div>;
       case "Event":
         return <div> <EventTab /> </div>;
-      case "Note":
-        return <div className="p-4">Note</div>;
+      // case "Note":
+      //   return <div className="p-4">Note</div>;
       case "Task":
         return <div> <TaskTab /> </div>;
       case "AuditTrail":
         return <div> <AuditTrailTab /> </div>;
-      case "Account":
-        return <div> Account </div>;
+      // case "Account":
+      //   return <div> Account </div>;
       case "Settings":
         return <div> <SettingsTab /> </div>;
       default:
