@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { FaToggleOn, FaToggleOff } from "react-icons/fa";
-import Table from "../../../Components/Table";
+import Table from "../../../../Components/Table";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { MainButton } from "../../../Components/Form/button";
+import { MainButton } from "../../../../Components/Form/button";
 import { IoAdd } from "react-icons/io5";
+import Switch from "../../../../Components/Form/switch";
+import Modal from "../../../../Components/Modal";
+import { FormInput } from "../../../../Components/Form/input";
+import { FormSelect } from "../../../../Components/Form/select";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { addUserSchema } from "../../../../Components/validationSchema/admin";
+import { TeamMember } from "../../../../types";
+import { sendConsultantInviteApi } from "../../../../Services";
 
 interface ColumnDefinition<T, K extends keyof T> {
   key: K;
@@ -24,6 +32,8 @@ interface User {
 }
 
 const UserTab: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([
     {
       id: 1,
@@ -46,6 +56,14 @@ const UserTab: React.FC = () => {
       action: "",
     },
   ]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(addUserSchema),
+  });
 
   const handleToggle = (userId: number) => {
     setUsers((prevUsers) =>
@@ -96,34 +114,36 @@ const UserTab: React.FC = () => {
       key: "toggle",
       header: "Action",
       render: (value, row: User) => (
-        <button
-          onClick={() => handleToggle(row.id)}
-          className="text-3xl focus:outline-none"
-          aria-label={value ? "Deactivate user" : "Activate user"}
-        >
-          {value ? (
-            <FaToggleOn className="text-[#092327]" />
-          ) : (
-            <FaToggleOff className="text-[#09232733] " />
-          )}
-        </button>
+        <Switch isOn={!!value} onChange={() => handleToggle(row.id)} />
       ),
     },
     {
       key: "action",
       header: "",
-      render: (_value) => <BsThreeDotsVertical />,
+      render: () => <BsThreeDotsVertical />,
     },
   ];
+
+  const onSubmit = async (data: TeamMember) => {
+    setLoading(true);
+    try {
+      await sendConsultantInviteApi(data);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error(`Failed to invite ${data.email}:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
       <div className="flex justify-between items-center my-2">
-        <h1 className="text-xl font-bold">Manage user </h1>
-        <MainButton>
+        <h1 className="text-[16px] font-[600]">Manage user </h1>
+        <MainButton onClick={() => setIsModalOpen(true)}>
           {" "}
           <span className="mr-3 text-xl">
-            <IoAdd />
+            <IoAdd className="text-white" />
           </span>
           Add user
         </MainButton>
@@ -138,6 +158,39 @@ const UserTab: React.FC = () => {
           />
         </div>
       </div>
+      {/* Modal to add user */}
+      {isModalOpen && (
+        <Modal
+          title="Add User"
+          closeModal={() => setIsModalOpen(false)}
+          fullHeight={false}
+        >
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4 p-4"
+          >
+            <FormInput
+              label="Email"
+              placeholder="Email"
+              {...register("email")}
+              error={errors.email?.message}
+            />
+            <FormSelect
+              label="Role"
+              options={[
+                { value: "consultant", label: "Consultant" },
+                { value: "client", label: "Client" },
+                { value: "customer", label: "Customer" },
+              ]}
+              register={register("role")}
+              error={errors.role?.message}
+            />
+            <MainButton type="submit" isLoading={loading}>
+              Add User
+            </MainButton>
+          </form>
+        </Modal>
+      )}
     </>
   );
 };

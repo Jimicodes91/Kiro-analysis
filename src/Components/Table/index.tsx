@@ -23,14 +23,14 @@ const Table = <T, K extends keyof T>({
   columns,
   emptyMessage = "No data available",
   className = "",
-  headerClassName = "bg-gray-100 text-left p-4 font-semibold",
-  rowClassName = "border-b hover:bg-gray-50",
+  headerClassName = "bg-gray-100 text-left p-4 font-[600] text-[14px]",
+  rowClassName = "border-b hover:bg-gray-50 text-[12px] font-[500]",
   cellClassName = "p-4",
   onRowClick,
 }: TableProps<T, K>) => {
   return (
-    <div className={`overflow-x-auto rounded-lg border ${className}`}>
-      <table className="min-w-full divide-y divide-gray-200">
+    <div className={`overflow-x-auto rounded-lg ${className}`}>
+      <table className="min-w-full">
         <thead>
           <tr>
             {columns.map((column, index) => (
@@ -38,7 +38,7 @@ const Table = <T, K extends keyof T>({
                 key={`header-${index}`}
                 className={`${headerClassName} ${
                   column.width ? column.width : ""
-                }`}
+                } `}
               >
                 {column.header}
               </th>
@@ -50,7 +50,9 @@ const Table = <T, K extends keyof T>({
             data.map((row, rowIndex) => (
               <tr
                 key={`row-${rowIndex}`}
-                className={`${rowClassName} ${
+                className={`${
+                  rowIndex % 2 === 0 ? "bg-white" : "bg-[#F8F8F8]"
+                } ${rowClassName} ${
                   onRowClick ? "cursor-pointer" : ""
                 }`}
                 onClick={() => onRowClick && onRowClick(row)}
