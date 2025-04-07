@@ -100,16 +100,12 @@ const EventTab: React.FC = () => {
           Add event type
         </MainButton>
       </div>
-      <div className="border-[1px] p-1 rounded-lg">
-        <div className="bg-white   rounded-lg shadow">
           <Table
             data={event}
             columns={columns}
             className="border-none"
             rowClassName="border-b hover:bg-gray-50 transition-colors"
           />
-        </div>
-      </div>
       {/* Modal to add document type */}
       {isModalOpen && (
         <Modal
