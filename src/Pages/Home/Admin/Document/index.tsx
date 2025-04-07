@@ -112,16 +112,12 @@ const DocumentTab: React.FC = () => {
           Document type
         </MainButton>
       </div>
-      <div className="border-[1px] p-1 rounded-lg">
-        <div className="bg-white   rounded-lg shadow">
           <Table
             data={document}
             columns={columns}
             className="border-none"
             rowClassName="border-b hover:bg-gray-50 transition-colors"
           />
-        </div>
-      </div>
       {/* Modal to add document type */}
       {isModalOpen && (
         <Modal

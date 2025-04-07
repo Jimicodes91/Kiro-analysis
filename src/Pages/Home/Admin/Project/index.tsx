@@ -10,7 +10,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addMilestoneSchema, addProjectTypeSchema, addStepSchema } from "../../../../Components/validationSchema/admin";
 
-
 interface ColumnDefinition<T, K extends keyof T> {
   key: K;
   header: string;
@@ -169,6 +168,26 @@ const [activeTab, setActiveTab] = useState("table");
       setLoadingMilestone(false);
     }
   };
+
+  // Function to get sub-table data for each row
+  const getSubTableData = () => {
+    // Return specific sub-table data based on row
+    return [
+      { item: "Item A", quantity: 10, price: 5 },
+      { item: "Item B", quantity: 20, price: 7 },
+    ];
+  };
+
+  // Function to get sub-table columns for each row
+  const getSubTableColumns = () => {
+    // Return specific columns for the sub-table based on row
+    return [
+      { key: "item", header: "Item" },
+      { key: "quantity", header: "Quantity" },
+      { key: "price", header: "Price" },
+    ];
+  };
+
   return (
     <>
         <div className="flex justify-between items-center">
@@ -201,16 +220,16 @@ const [activeTab, setActiveTab] = useState("table");
                Create milestone
              </MainButton>
            </div>
-           <div className="border-[1px] p-1 rounded-lg">
-             <div className="bg-white rounded-lg shadow">
                <Table
                  data={project}
                  columns={columns}
                  className="border-none"
-                 rowClassName="border-b hover:bg-gray-50 transition-colors"
+                 rowClassName="hover:bg-gray-50 transition-colors"
+                expandable={true} // Enable expandable functionality
+        subData={getSubTableData} // Pass row-specific sub-table data
+        subColumns={getSubTableColumns} // Pass row-specific sub-table columns
+         
                />
-             </div>
-           </div>
            </>
           ) : (
             <div> Form </div>
