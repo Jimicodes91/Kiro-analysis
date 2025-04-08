@@ -1,7 +1,7 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
 
-const useGetprojectTypeDetails = (projectTypeId: string) => {
+const useGetProjectTypeDetails = (projectTypeId: string) => {
   return useQueryActionHook({
     method: "get",
     endpoint: ENDPOINTS.GET_PROJECT_TYPE_DETAILS(projectTypeId),
@@ -9,4 +9,4 @@ const useGetprojectTypeDetails = (projectTypeId: string) => {
   });
 };
 
-export default useGetprojectTypeDetails;
+export default useGetProjectTypeDetails;
