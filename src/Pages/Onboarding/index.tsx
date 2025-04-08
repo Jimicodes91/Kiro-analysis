@@ -1,19 +1,14 @@
-import {
-  useSelector,
-  // useDispatch
-} from "react-redux";
-import { RootState } from "../../Redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 // import { nextStep, prevStep } from "../../Redux/store/slices/onboardingSlice";
+import Sidebar from "../../components/Sidebar";
+import ProgressBar from "../../components/progressBar";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
-import Sidebar from "../../Components/Sidebar";
-import ProgressBar from "../../Components/progressBar";
 // import { MainButton } from "../../Components/Form/button";
 
 const Onboarding = () => {
-  const activeStep = useSelector(
-    (state: RootState) => state.onboarding.activeStep
-  );
+  const activeStep = useSelector((state: RootState) => state.onboarding.activeStep);
   //   const dispatch = useDispatch();
 
   const totalSteps = 2;

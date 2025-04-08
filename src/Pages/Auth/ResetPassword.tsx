@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { MainButton } from "../../Components/Form/button";
-import { FormInput } from "../../Components/Form/input";
+import { MainButton } from "../../components/Form/button";
+import { FormInput } from "../../components/Form/input";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Logo } from "../../assets";
 import { useForm } from "react-hook-form";
-import { resetPasswordSchema } from "../../Components/validationSchema/auth";
+import { resetPasswordSchema } from "../../components/validationSchema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ResetPasswordFormProps } from "../../types";
-import { resetPasswordApi } from "../../Services";
-import Toast from "../../Components/Toast";
+import { resetPasswordApi } from "../../services";
+import Toast from "../../components/Toast";
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -19,12 +19,11 @@ const ResetPassword: React.FC = () => {
   useEffect(() => {
     // Extract token from URL query parameters
     const searchParams = new URLSearchParams(location.search);
-    const urlToken = searchParams.get('token');
-    
+    const urlToken = searchParams.get("token");
+
     if (urlToken) {
       setToken(urlToken);
-    } 
-
+    }
   }, [location, navigate]);
 
   const {
@@ -39,14 +38,14 @@ const ResetPassword: React.FC = () => {
     setLoading(true);
     try {
       if (!token) {
-        throw new Error('No token available');
+        throw new Error("No token available");
       }
       const payload = {
         token: token,
         newPassword: data.newPassword,
       };
       const response = await resetPasswordApi(payload);
-      navigate('/');
+      navigate("/");
       Toast.success(response.message || "Password Reset Successful");
     } catch (error) {
       console.error("Error resetting password:", error);

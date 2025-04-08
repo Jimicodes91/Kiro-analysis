@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { MainButton } from "../../Components/Form/button";
-import { FormInput } from "../../Components/Form/input";
-import { Link, useNavigate } from "react-router-dom";
-import { Logo } from "../../assets";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { loginSchema } from "../../Components/validationSchema/auth";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { LoginUser } from "../../types";
-import { loginUserApi } from "../../Services";
-import store from "store";
-import Toast from "../../Components/Toast";
 import { useDispatch } from "react-redux";
-import { setAuthUser } from "../../Redux/store/slices/authSlice";
+import { Link, useNavigate } from "react-router-dom";
+import store from "store";
+import { Logo } from "../../assets";
+import { MainButton } from "../../components/Form/button";
+import { FormInput } from "../../components/Form/input";
+import Toast from "../../components/Toast";
+import { loginSchema } from "../../components/validationSchema/auth";
+import { loginUserApi } from "../../services";
+import { setAuthUser } from "../../store/slices/authSlice";
+import { LoginUser } from "../../types";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -36,7 +36,10 @@ const Login: React.FC = () => {
       store.set("atk", response.data.token);
       store.set("rtk", response.data.user.refresh_token);
 
-      if (response && (response.data.company_id !== null || response.data.company_id !== undefined)) {
+      if (
+        response &&
+        (response.data.company_id !== null || response.data.company_id !== undefined)
+      ) {
         navigate("/project");
       } else {
         navigate("/onboarding");
@@ -74,10 +77,7 @@ const Login: React.FC = () => {
           {...register("password")}
           error={errors.password?.message}
         />{" "}
-        <Link
-          to="/auth/forgot-password"
-          className="text-end text-black  cursor-pointer "
-        >
+        <Link to="/auth/forgot-password" className="text-end text-black  cursor-pointer ">
           Forgot password?
         </Link>
         <MainButton type="submit" isLoading={loading}>

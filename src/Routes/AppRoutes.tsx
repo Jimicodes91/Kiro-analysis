@@ -1,22 +1,22 @@
 import { RouteObject } from "react-router-dom";
-import AuthLayout from "../Layouts/AuthLayout";
-import ForgotPassword from "../Pages/Auth/ForgotPassword";
-import Login from "../Pages/Auth/Login";
-import SignUp from "../Pages/Auth/SignUp";
-import NotFound from "../Pages/Notfound";
-import Onboarding from "../Pages/Onboarding/index";
-import SetUp from "../Pages/Auth/SetUp";
-import DashboardLayout from "../Layouts/DashboardLayout";
-import Home from "../Pages/Home";
-import Client from "../Pages/Home/Client";
-import Event from "../Pages/Home/Event";
-import Message from "../Pages/Home/Message";
-import Project from "../Pages/Home/Project";
-import Finance from "../Pages/Home/Finance";
-import Admin from "../Pages/Home/Admin";import ResetPassword from "../Pages/Auth/ResetPassword";
-import VerifyEmail from "../Pages/Auth/VerifyEmail";
-import ProjectDetail from "../Pages/Home/Project/ProjectDetail";
-
+import AuthLayout from "../layouts/AuthLayout";
+import DashboardLayout from "../layouts/DashboardLayout";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import Login from "../pages/Auth/Login";
+import ResetPassword from "../pages/Auth/ResetPassword";
+import SetUp from "../pages/Auth/SetUp";
+import SignUp from "../pages/Auth/SignUp";
+import VerifyEmail from "../pages/Auth/VerifyEmail";
+import Home from "../pages/Home";
+import Admin from "../pages/Home/Admin";
+import Client from "../pages/Home/Client";
+import Event from "../pages/Home/Event";
+import Finance from "../pages/Home/Finance";
+import Message from "../pages/Home/Message";
+import Project from "../pages/Home/Project";
+import ProjectDetail from "../pages/Home/Project/ProjectDetail";
+import NotFound from "../pages/Notfound";
+import Onboarding from "../pages/Onboarding/index";
 
 export const AuthRoutes: RouteObject[] = [
   {
@@ -35,13 +35,11 @@ export const AuthRoutes: RouteObject[] = [
       },
     ],
   },
-  { path: "verify-account", 
-    element: <VerifyEmail /> 
-  },
+  { path: "verify-account", element: <VerifyEmail /> },
   {
     path: "onboarding",
     element: <Onboarding />,
-    },
+  },
   {
     path: "*",
     element: <NotFound />,
@@ -81,7 +79,7 @@ export const HomeRoutes = {
     },
     {
       path: "projects/:id",
-      element: <ProjectDetail />, 
+      element: <ProjectDetail />,
     },
   ],
 };

@@ -1,24 +1,26 @@
-import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
-import { AiOutlineDelete } from "react-icons/ai";
-import { prevStep, setTeamMembers } from "../../Redux/store/slices/onboardingSlice";
-import { RootState } from "../../Redux/store";
-import { inviteTeamSchema } from "../../Components/validationSchema/onboarding";
-import { FormInput } from "../../Components/Form/input";
-import { FormSelect } from "../../Components/Form/select";
-import { MainButton } from "../../Components/Form/button";
-import { TeamMember } from "../../types";
-import { useNavigate } from "react-router-dom";
-import Toast from "../../Components/Toast";
-import { sendConsultantInviteApi } from "../../Services";
 import { useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { AiOutlineDelete } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { MainButton } from "../../components/Form/button";
+import { FormInput } from "../../components/Form/input";
+import { FormSelect } from "../../components/Form/select";
+import Toast from "../../components/Toast";
+import { inviteTeamSchema } from "../../components/validationSchema/onboarding";
+import { sendConsultantInviteApi } from "../../services";
+import { RootState } from "../../store";
+import { prevStep, setTeamMembers } from "../../store/slices/onboardingSlice";
+import { TeamMember } from "../../types";
 
 const Step2 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const storedTeamMembers = useSelector((state: RootState) => state.onboarding.teamMembers);
+  const storedTeamMembers = useSelector(
+    (state: RootState) => state.onboarding.teamMembers
+  );
 
   const {
     register,
@@ -38,13 +40,13 @@ const Step2 = () => {
 
   const onSubmit = async (data: { teamMembers?: TeamMember[] }) => {
     const teamMembers = data.teamMembers || [];
-    
+
     // Update team members in Redux store
     dispatch(setTeamMembers(teamMembers));
-    
+
     // Set loading state
     setLoading(true);
-  
+
     try {
       // Detailed invite process with individual error handling
       await Promise.all(
@@ -52,7 +54,7 @@ const Step2 = () => {
           try {
             await sendConsultantInviteApi({
               email: member.email,
-              role: member.role
+              role: member.role,
             });
           } catch (error) {
             // Log the error for debugging
@@ -62,16 +64,16 @@ const Step2 = () => {
           }
         })
       );
-  
+
       // Show success toast
       Toast.success("Team members invited successfully");
-  
+
       // Navigate to home screen
-      navigate('/home');
+      navigate("/home");
     } catch (error) {
       // Handle any errors during invitation
       console.error("Error inviting team members:", error);
-      
+
       // Generic error toast
       Toast.error("Failed to invite team members");
     } finally {
@@ -93,11 +95,13 @@ const Step2 = () => {
         <div className="mb-12 space-y-4">
           {fields.map((item, index) => {
             const showDeleteButton = fields.length > 1;
-            
+
             return (
-              <div 
-                key={item.id} 
-                className={showDeleteButton ? "grid grid-cols-2 gap-4" : "grid grid-cols-2 gap-4"}
+              <div
+                key={item.id}
+                className={
+                  showDeleteButton ? "grid grid-cols-2 gap-4" : "grid grid-cols-2 gap-4"
+                }
               >
                 <FormInput
                   label="Email"
@@ -133,15 +137,29 @@ const Step2 = () => {
               </div>
             );
           })}
-          <button type="button" onClick={() => append({ email: "", role: "" })} className="text-primary font-bold">
+          <button
+            type="button"
+            onClick={() => append({ email: "", role: "" })}
+            className="text-primary font-bold"
+          >
             + Add another user
           </button>
         </div>
         <div className="flex justify-between mt-12">
-          <MainButton variant="outlined" onClick={handleBack} type="button">Back</MainButton>
+          <MainButton variant="outlined" onClick={handleBack} type="button">
+            Back
+          </MainButton>
           <div className="flex gap-2">
-          <MainButton variant="outlined" onClick={()=>navigate('/home')} type="button">Skip</MainButton>
-          <MainButton type="submit" isLoading={loading}>Save and continue</MainButton>
+            <MainButton
+              variant="outlined"
+              onClick={() => navigate("/home")}
+              type="button"
+            >
+              Skip
+            </MainButton>
+            <MainButton type="submit" isLoading={loading}>
+              Save and continue
+            </MainButton>
           </div>
         </div>
       </form>

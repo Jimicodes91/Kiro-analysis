@@ -1,16 +1,14 @@
 import React from "react";
-import { useSelector, 
-  // useDispatch
- } from "react-redux";
-import { RootState } from "../../Redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 // import { goToStep } from "../../Redux/store/slices/onboardingSlice";
+import { OnBoardingGroup } from "../../assets";
 import {
   Active_Buildings,
   Active_Users,
   Inactive_Buildings,
   Inactive_Users,
 } from "../../assets/icons";
-import { OnBoardingGroup } from "../../assets";
 
 const steps = [
   {
@@ -31,9 +29,7 @@ const steps = [
 
 const Sidebar: React.FC = () => {
   // const dispatch = useDispatch();
-  const activeStep = useSelector(
-    (state: RootState) => state.onboarding.activeStep
-  );
+  const activeStep = useSelector((state: RootState) => state.onboarding.activeStep);
 
   return (
     <div className="h-screen py-8 px-4">
@@ -44,56 +40,56 @@ const Sidebar: React.FC = () => {
 
           return (
             <React.Fragment key={step.id}>
-            <div
-              className={`flex items-start space-x-4 mb-1 p-2`}
-              // onClick={() => dispatch(goToStep(step.id))}
-            >
-              {/* Icon */}
               <div
-                className={`p-2 rounded border ${
-                  isActive
-                    ? "border-[#0924281A] bg-[#0924281A]"
-                    : "border-gray-300 bg-[#0000000D]"
-                }`}
+                className={`flex items-start space-x-4 mb-1 p-2`}
+                // onClick={() => dispatch(goToStep(step.id))}
               >
-                <img
-                  src={isActive ? step.activeImage : step.inactiveImage}
-                  alt={step.title}
-                />
-              </div>
-
-              {/* Step Info */}
-              <div>
-                <h2
-                  className={`font-bold text-[18px] ${
-                    isActive ? "text-black" : "text-gray-500"
+                {/* Icon */}
+                <div
+                  className={`p-2 rounded border ${
+                    isActive
+                      ? "border-[#0924281A] bg-[#0924281A]"
+                      : "border-gray-300 bg-[#0000000D]"
                   }`}
                 >
-                  {step.title}
-                </h2>
-                <p
-                  className={`text-[14px] font-medium ${
-                    isActive ? "text-gray-700" : "text-gray-400"
-                  }`}
-                >
-                  {step.description}
-                </p>
-              </div>
-              {/* Image at Bottom Right */}
-              <div className="absolute bottom-0 right-0">
-                <img
-                  src={OnBoardingGroup}
-                  alt="Group Illustration"
-                  className="w-full max-w-[407px]"
-                />
-              </div>
-            </div>
+                  <img
+                    src={isActive ? step.activeImage : step.inactiveImage}
+                    alt={step.title}
+                  />
+                </div>
 
-             {/* Vertical Line (not rendered after the last step) */}
-             {!isLastStep && (
-               <div className="ml-7 h-10 w-[2px] bg-[#0924281A] mb-1"></div>
-            )}
-          </React.Fragment>
+                {/* Step Info */}
+                <div>
+                  <h2
+                    className={`font-bold text-[18px] ${
+                      isActive ? "text-black" : "text-gray-500"
+                    }`}
+                  >
+                    {step.title}
+                  </h2>
+                  <p
+                    className={`text-[14px] font-medium ${
+                      isActive ? "text-gray-700" : "text-gray-400"
+                    }`}
+                  >
+                    {step.description}
+                  </p>
+                </div>
+                {/* Image at Bottom Right */}
+                <div className="absolute bottom-0 right-0">
+                  <img
+                    src={OnBoardingGroup}
+                    alt="Group Illustration"
+                    className="w-full max-w-[407px]"
+                  />
+                </div>
+              </div>
+
+              {/* Vertical Line (not rendered after the last step) */}
+              {!isLastStep && (
+                <div className="ml-7 h-10 w-[2px] bg-[#0924281A] mb-1"></div>
+              )}
+            </React.Fragment>
           );
         })}
       </ul>

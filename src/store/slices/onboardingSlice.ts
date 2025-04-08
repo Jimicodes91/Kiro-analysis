@@ -1,10 +1,17 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { OnboardingState, CompanyDetails, TeamMember } from '../../../types';
-
+import { CompanyDetails, OnboardingState, TeamMember } from "@/types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: OnboardingState = {
   activeStep: 1,
-  companyDetails: { name: "", industryType: "", size: "", country: "", address: "", city: "", postalCode: "" },
+  companyDetails: {
+    name: "",
+    industryType: "",
+    size: "",
+    country: "",
+    address: "",
+    city: "",
+    postalCode: "",
+  },
   teamMembers: [{ email: "", role: "" }],
 };
 
@@ -30,5 +37,6 @@ const onboardingSlice = createSlice({
   },
 });
 
-export const { nextStep, prevStep, goToStep, setCompanyDetails, setTeamMembers } = onboardingSlice.actions;
+export const { nextStep, prevStep, goToStep, setCompanyDetails, setTeamMembers } =
+  onboardingSlice.actions;
 export default onboardingSlice.reducer;

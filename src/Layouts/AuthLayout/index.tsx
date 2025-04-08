@@ -7,6 +7,7 @@ const AuthLayout = () => {
     openMobileSideBar: false,
   };
   const [, setState] = useReducer(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (state: any, newState: any) => ({ ...state, ...newState }),
     initialState
   );
@@ -38,8 +39,8 @@ const AuthLayout = () => {
             The All-in-One <br /> Relocation & <br /> Business Setup <br /> Platform
           </h1>
           <p className="text-[18px] font-[300] leading-[normal] pr-8 mt-6">
-            Manage projects, CRM, documents, and <br /> compliance in one
-            integrated solution.
+            Manage projects, CRM, documents, and <br /> compliance in one integrated
+            solution.
           </p>
         </div>
 

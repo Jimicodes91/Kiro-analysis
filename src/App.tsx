@@ -1,4 +1,4 @@
-import Routes from "./Routes/Index";
+import Routes from "./routes/Index";
 
 const App = () => (
   <>

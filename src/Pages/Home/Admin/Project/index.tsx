@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import Table from "../../../../Components/Table";
-import { MainButton } from "../../../../Components/Form/button";
-import { FormSelect } from "../../../../Components/Form/select";
-import ViewToggle from "../../../../Components/Cards/ViewToggle";
+import Table from "../../../../components/Table";
+import { MainButton } from "../../../../components/Form/button";
+import { FormSelect } from "../../../../components/Form/select";
+import ViewToggle from "../../../../components/Cards/ViewToggle";
 import { IoAdd } from "react-icons/io5";
-import Modal from "../../../../Components/Modal";
-import { FormInput } from "../../../../Components/Form/input";
+import Modal from "../../../../components/Modal";
+import { FormInput } from "../../../../components/Form/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addMilestoneSchema, addProjectTypeSchema, addStepSchema } from "../../../../Components/validationSchema/admin";
-
+import {
+  addMilestoneSchema,
+  addProjectTypeSchema,
+  addStepSchema,
+} from "../../../../components/validationSchema/admin";
 
 interface ColumnDefinition<T, K extends keyof T> {
   key: K;
@@ -21,20 +24,20 @@ interface ColumnDefinition<T, K extends keyof T> {
 // Interfaces for the form data
 // interface ProjectTypeFormData {
 //     projectName: string;
-//     assignTo: "consultant" | "client" | "customer"; 
-//     billingType: "consultant" | "client" | "customer"; 
+//     assignTo: "consultant" | "client" | "customer";
+//     billingType: "consultant" | "client" | "customer";
 //   }
-  
+
 //   interface StepFormData {
 //     stepName: string;
-//     duration: number; 
-//     assignTo: "consultant" | "client" | "customer"; 
+//     duration: number;
+//     assignTo: "consultant" | "client" | "customer";
 //   }
-  
+
 //   interface MilestoneFormData {
 //     milestoneName: string;
-//     duration: number; 
-//     assignTo: "consultant" | "client" | "customer"; 
+//     duration: number;
+//     assignTo: "consultant" | "client" | "customer";
 //   }
 
 interface Project {
@@ -47,7 +50,7 @@ interface Project {
 }
 
 const ProjectTab: React.FC = () => {
-const [activeTab, setActiveTab] = useState("table");
+  const [activeTab, setActiveTab] = useState("table");
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const [isMilestoneModalOpen, setIsMilestoneModalOpen] = useState(false);
   const [isStepModalOpen, setIsStepModalOpen] = useState(false);
@@ -87,24 +90,34 @@ const [activeTab, setActiveTab] = useState("table");
       duration: 8,
       date: "02 Nov 2023",
     },
-   
   ];
 
   // Project type form
-  const { register: registerType, handleSubmit: handleSubmitType, formState: { errors: errorsType } } = useForm({
+  const {
+    register: registerType,
+    handleSubmit: handleSubmitType,
+    formState: { errors: errorsType },
+  } = useForm({
     resolver: yupResolver(addProjectTypeSchema),
   });
 
   // Step form
-  const { register: registerStep, handleSubmit: handleSubmitStep, formState: { errors: errorsStep } } = useForm({
+  const {
+    register: registerStep,
+    handleSubmit: handleSubmitStep,
+    formState: { errors: errorsStep },
+  } = useForm({
     resolver: yupResolver(addStepSchema),
   });
 
   // Milestone form
-  const { register: registerMilestone, handleSubmit: handleSubmitMilestone, formState: { errors: errorsMilestone } } = useForm({
+  const {
+    register: registerMilestone,
+    handleSubmit: handleSubmitMilestone,
+    formState: { errors: errorsMilestone },
+  } = useForm({
     resolver: yupResolver(addMilestoneSchema),
   });
-
 
   const columns: ColumnDefinition<Project, keyof Project>[] = [
     {
@@ -171,59 +184,95 @@ const [activeTab, setActiveTab] = useState("table");
   };
   return (
     <>
-        <div className="flex justify-between items-center">
-          <ViewToggle
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            options={[
-              { value: "table", label: "Project type" },
-              { value: "form", label: "Project form" },
-            ]}
+      <div className="flex justify-between items-center">
+        <ViewToggle
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          options={[
+            { value: "table", label: "Project type" },
+            { value: "form", label: "Project form" },
+          ]}
+        />
+        <div className="flex justify-between space-x-2">
+          <FormSelect
+            value={"dubai"}
+            options={[{ value: "dubai", label: "Dubai Registration" }]}
           />
-          <div className="flex justify-between space-x-2">
-            <FormSelect value={"dubai"} options={[{ value: "dubai", label: "Dubai Registration" }]} />
-           <MainButton  onClick={() => setIsTypeModalOpen(true)}>
-                     {" "}
-                     <span className="mr-3 text-xl">
-                       <IoAdd className="text-white" />
-                     </span>
-                     Add project type
-                   </MainButton>
-          </div>
+          <MainButton onClick={() => setIsTypeModalOpen(true)}>
+            {" "}
+            <span className="mr-3 text-xl">
+              <IoAdd className="text-white" />
+            </span>
+            Add project type
+          </MainButton>
         </div>
+      </div>
 
-    <div className="border-[1px] border-[#0000001A] rounded-lg mt-4 p-4">
-          {activeTab === "table" ? (
-           <>
-           <div className="flex justify-between items-center my-2">
-             <h1 className="text-[16px] font-[600]">Milestone </h1>
-             <MainButton variant="outlined" onClick={() => setIsMilestoneModalOpen(true)}>
-               Create milestone
-             </MainButton>
-           </div>
-           <div className="border-[1px] p-1 rounded-lg">
-             <div className="bg-white rounded-lg shadow">
-               <Table
-                 data={project}
-                 columns={columns}
-                 className="border-none"
-                 rowClassName="border-b hover:bg-gray-50 transition-colors"
-               />
-             </div>
-           </div>
-           </>
-          ) : (
-            <div> Form </div>
-          )}
-        </div>
-      
- {/* Modal to add project type */}
- {isTypeModalOpen && (
-        <Modal title="Add project type" closeModal={() => setIsTypeModalOpen(false)} fullHeight={false}>
-          <form onSubmit={handleSubmitType(onSubmitType)} className="flex flex-col gap-4 p-4">
-            <FormInput label="Project name" placeholder="Project name" {...registerType("projectName")} error={errorsType.projectName?.message} />
-            <FormSelect label="Assign to" options={[{ value: "consultant", label: "Consultant" }, { value: "client", label: "Client" }, { value: "customer", label: "Customer" }]} register={registerType("assignTo")} error={errorsType.assignTo?.message} />
-            <FormSelect label="Billing type" options={[{ value: "consultant", label: "Consultant" }, { value: "client", label: "Client" }, { value: "customer", label: "Customer" }]} register={registerType("billingType")} error={errorsType.billingType?.message} />
+      <div className="border-[1px] border-[#0000001A] rounded-lg mt-4 p-4">
+        {activeTab === "table" ? (
+          <>
+            <div className="flex justify-between items-center my-2">
+              <h1 className="text-[16px] font-[600]">Milestone </h1>
+              <MainButton
+                variant="outlined"
+                onClick={() => setIsMilestoneModalOpen(true)}
+              >
+                Create milestone
+              </MainButton>
+            </div>
+            <div className="border-[1px] p-1 rounded-lg">
+              <div className="bg-white rounded-lg shadow">
+                <Table
+                  data={project}
+                  columns={columns}
+                  className="border-none"
+                  rowClassName="border-b hover:bg-gray-50 transition-colors"
+                />
+              </div>
+            </div>
+          </>
+        ) : (
+          <div> Form </div>
+        )}
+      </div>
+
+      {/* Modal to add project type */}
+      {isTypeModalOpen && (
+        <Modal
+          title="Add project type"
+          closeModal={() => setIsTypeModalOpen(false)}
+          fullHeight={false}
+        >
+          <form
+            onSubmit={handleSubmitType(onSubmitType)}
+            className="flex flex-col gap-4 p-4"
+          >
+            <FormInput
+              label="Project name"
+              placeholder="Project name"
+              {...registerType("projectName")}
+              error={errorsType.projectName?.message}
+            />
+            <FormSelect
+              label="Assign to"
+              options={[
+                { value: "consultant", label: "Consultant" },
+                { value: "client", label: "Client" },
+                { value: "customer", label: "Customer" },
+              ]}
+              register={registerType("assignTo")}
+              error={errorsType.assignTo?.message}
+            />
+            <FormSelect
+              label="Billing type"
+              options={[
+                { value: "consultant", label: "Consultant" },
+                { value: "client", label: "Client" },
+                { value: "customer", label: "Customer" },
+              ]}
+              register={registerType("billingType")}
+              error={errorsType.billingType?.message}
+            />
             <MainButton type="submit" isLoading={loadingType}>
               Add project type
             </MainButton>
@@ -233,11 +282,41 @@ const [activeTab, setActiveTab] = useState("table");
 
       {/* Modal to add step */}
       {isStepModalOpen && (
-        <Modal title="Add step" closeModal={() => setIsStepModalOpen(false)} fullHeight={false}>
-          <form onSubmit={handleSubmitStep(onSubmitStep)} className="flex flex-col gap-4 p-4">
-            <FormInput label="Step name" placeholder="Step name" {...registerStep("stepName")} error={errorsStep.stepName?.message} />
-            <FormSelect label="Duration (days)" options={[{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }]} register={registerStep("duration")} error={errorsStep.duration?.message} />
-            <FormSelect label="Assign to" options={[{ value: "consultant", label: "Consultant" }, { value: "client", label: "Client" }, { value: "customer", label: "Customer" }]} register={registerStep("assignTo")} error={errorsStep.assignTo?.message} />
+        <Modal
+          title="Add step"
+          closeModal={() => setIsStepModalOpen(false)}
+          fullHeight={false}
+        >
+          <form
+            onSubmit={handleSubmitStep(onSubmitStep)}
+            className="flex flex-col gap-4 p-4"
+          >
+            <FormInput
+              label="Step name"
+              placeholder="Step name"
+              {...registerStep("stepName")}
+              error={errorsStep.stepName?.message}
+            />
+            <FormSelect
+              label="Duration (days)"
+              options={[
+                { value: "1", label: "1" },
+                { value: "2", label: "2" },
+                { value: "3", label: "3" },
+              ]}
+              register={registerStep("duration")}
+              error={errorsStep.duration?.message}
+            />
+            <FormSelect
+              label="Assign to"
+              options={[
+                { value: "consultant", label: "Consultant" },
+                { value: "client", label: "Client" },
+                { value: "customer", label: "Customer" },
+              ]}
+              register={registerStep("assignTo")}
+              error={errorsStep.assignTo?.message}
+            />
             <MainButton type="submit" isLoading={loadingStep}>
               Add step
             </MainButton>
@@ -247,11 +326,41 @@ const [activeTab, setActiveTab] = useState("table");
 
       {/* Modal to add milestone */}
       {isMilestoneModalOpen && (
-        <Modal title="Add milestone" closeModal={() => setIsMilestoneModalOpen(false)} fullHeight={false}>
-          <form onSubmit={handleSubmitMilestone(onSubmitMilestone)} className="flex flex-col gap-4 p-4">
-            <FormInput label="Milestone name" placeholder="Milestone name" {...registerMilestone("milestoneName")} error={errorsMilestone.milestoneName?.message} />
-            <FormSelect label="Duration (days)" options={[{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }]} register={registerMilestone("duration")} error={errorsMilestone.duration?.message} />
-            <FormSelect label="Assign to" options={[{ value: "consultant", label: "Consultant" }, { value: "client", label: "Client" }, { value: "customer", label: "Customer" }]} register={registerMilestone("assignTo")} error={errorsMilestone.assignTo?.message} />
+        <Modal
+          title="Add milestone"
+          closeModal={() => setIsMilestoneModalOpen(false)}
+          fullHeight={false}
+        >
+          <form
+            onSubmit={handleSubmitMilestone(onSubmitMilestone)}
+            className="flex flex-col gap-4 p-4"
+          >
+            <FormInput
+              label="Milestone name"
+              placeholder="Milestone name"
+              {...registerMilestone("milestoneName")}
+              error={errorsMilestone.milestoneName?.message}
+            />
+            <FormSelect
+              label="Duration (days)"
+              options={[
+                { value: "1", label: "1" },
+                { value: "2", label: "2" },
+                { value: "3", label: "3" },
+              ]}
+              register={registerMilestone("duration")}
+              error={errorsMilestone.duration?.message}
+            />
+            <FormSelect
+              label="Assign to"
+              options={[
+                { value: "consultant", label: "Consultant" },
+                { value: "client", label: "Client" },
+                { value: "customer", label: "Customer" },
+              ]}
+              register={registerMilestone("assignTo")}
+              error={errorsMilestone.assignTo?.message}
+            />
             <MainButton type="submit" isLoading={loadingMilestone}>
               Add milestone
             </MainButton>

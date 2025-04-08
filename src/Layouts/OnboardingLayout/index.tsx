@@ -1,6 +1,6 @@
-import { useEffect } from "react"
-import { Outlet } from "react-router-dom"
-import Sidebar from "../../Components/Sidebar"
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import Sidebar from "../../components/Sidebar";
 
 const OnboardingLayout = () => {
   // const initialState = {
@@ -15,8 +15,8 @@ const OnboardingLayout = () => {
   // )
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
@@ -40,7 +40,7 @@ const OnboardingLayout = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default OnboardingLayout
+export default OnboardingLayout;

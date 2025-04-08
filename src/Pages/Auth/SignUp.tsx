@@ -1,15 +1,15 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
-import { MainButton } from "../../Components/Form/button";
-import { FormInput } from "../../Components/Form/input";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../../assets";
-import VerificationCard from "./VerificationCard";
-import { useForm } from "react-hook-form";
-import { signupSchema } from "../../Components/validationSchema/auth";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { MainButton } from "../../components/Form/button";
+import { FormInput } from "../../components/Form/input";
+import Toast from "../../components/Toast";
+import { signupSchema } from "../../components/validationSchema/auth";
+import { resendVerificationEmailApi, signUpAdminUserApi } from "../../services";
 import { AdminSignUpFormProps } from "../../types";
-import { resendVerificationEmailApi, signUpAdminUserApi } from "../../Services";
-import Toast from "../../Components/Toast";
+import VerificationCard from "./VerificationCard";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -18,12 +18,12 @@ const SignUp: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm({
-      resolver: yupResolver(signupSchema),
-    });
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(signupSchema),
+  });
 
   const onSubmit = async (data: AdminSignUpFormProps) => {
     setLoading(true);
@@ -48,10 +48,11 @@ const SignUp: React.FC = () => {
   const resendVerification = async () => {
     try {
       const response = await resendVerificationEmailApi({ email });
-      Toast.success(response.message || "Verification link sent")
+      Toast.success(response.message || "Verification link sent");
     } catch (error) {
       console.error("Error resending verification:", error);
-      const errorMessage = (error as { data?: string })?.data || "Error sending verification link";
+      const errorMessage =
+        (error as { data?: string })?.data || "Error sending verification link";
       Toast.error(errorMessage);
     }
   };
@@ -106,18 +107,17 @@ const SignUp: React.FC = () => {
           </div>
         </div>
       ) : (
-            <VerificationCard
-              title="Email verification"
-              email={email}
-              buttonText="Back"
-              onButtonClick={() => setShowConfirmation(false)}
-              showResend={true}
-              onResend={() => resendVerification()}
-            />
-          )}
-        </>
-      );
-    };
-
+        <VerificationCard
+          title="Email verification"
+          email={email}
+          buttonText="Back"
+          onButtonClick={() => setShowConfirmation(false)}
+          showResend={true}
+          onResend={() => resendVerification()}
+        />
+      )}
+    </>
+  );
+};
 
 export default SignUp;

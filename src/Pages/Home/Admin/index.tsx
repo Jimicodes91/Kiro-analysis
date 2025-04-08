@@ -1,13 +1,22 @@
 import React, { useState } from "react";
-import UserTab from "./User/index";
+import AuditTrailTab from "./AuditTrail";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
-import TaskTab from "./Task";
-import AuditTrailTab from "./AuditTrail";
-import SettingsTab from "./Settings";
 import ProjectTab from "./Project";
+import SettingsTab from "./Settings";
+import TaskTab from "./Task";
+import UserTab from "./User/index";
 
-type TabType = "User" | "Project" | "Document" | "Event" | "Note" | "Task" | "AuditTrail" | "Account" | "Settings";
+type TabType =
+  | "User"
+  | "Project"
+  | "Document"
+  | "Event"
+  | "Note"
+  | "Task"
+  | "AuditTrail"
+  | "Account"
+  | "Settings";
 
 const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("User");
@@ -33,21 +42,51 @@ const Admin: React.FC = () => {
           </div>
         );
       case "Project":
-        return <div> <ProjectTab /> </div>;
+        return (
+          <div>
+            {" "}
+            <ProjectTab />{" "}
+          </div>
+        );
       case "Document":
-        return <div> <DocumentTab /> </div>;
+        return (
+          <div>
+            {" "}
+            <DocumentTab />{" "}
+          </div>
+        );
       case "Event":
-        return <div> <EventTab /> </div>;
+        return (
+          <div>
+            {" "}
+            <EventTab />{" "}
+          </div>
+        );
       // case "Note":
       //   return <div className="p-4">Note</div>;
       case "Task":
-        return <div> <TaskTab /> </div>;
+        return (
+          <div>
+            {" "}
+            <TaskTab />{" "}
+          </div>
+        );
       case "AuditTrail":
-        return <div> <AuditTrailTab /> </div>;
+        return (
+          <div>
+            {" "}
+            <AuditTrailTab />{" "}
+          </div>
+        );
       // case "Account":
       //   return <div> Account </div>;
       case "Settings":
-        return <div> <SettingsTab /> </div>;
+        return (
+          <div>
+            {" "}
+            <SettingsTab />{" "}
+          </div>
+        );
       default:
         return;
     }

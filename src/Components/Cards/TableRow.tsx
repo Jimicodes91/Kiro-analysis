@@ -1,14 +1,14 @@
 // tablerow.tsx
+import ViewToggle from "@/components/Cards/ViewToggle";
+import Modal from "@/components/Modal";
+import { TableRowProps } from "@/types/components";
 import React, { useState } from "react";
-import { TableRowProps } from "../../types";
-import Modal from "../Modal";
-import { LuCalendar, LuUserRound } from "react-icons/lu";
-import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
-import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
-import { RiStickyNoteLine } from "react-icons/ri";
 import { BsActivity } from "react-icons/bs";
-import ViewToggle from "./ViewToggle";
 import { IoSettingsOutline } from "react-icons/io5";
+import { LuCalendar, LuUserRound } from "react-icons/lu";
+import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
+import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
+import { RiStickyNoteLine } from "react-icons/ri";
 
 interface Task {
   id: number;
@@ -47,15 +47,13 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
     {
       id: 2,
       title: "Team Meeting",
-      description:
-        "Attend the weekly team meeting to discuss project progress.",
+      description: "Attend the weekly team meeting to discuss project progress.",
       completed: false,
     },
     {
       id: 3,
       title: "Code Review",
-      description:
-        "Review pull requests and provide feedback on recent code changes.",
+      description: "Review pull requests and provide feedback on recent code changes.",
       completed: false,
     },
   ]);
@@ -138,8 +136,8 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
               row.status === "Completed"
                 ? "bg-green-100 text-green-800"
                 : row.status === "In progress"
-                ? "bg-[#F1E6D4] text-[#B78026]"
-                : "bg-[#FB002B1A] text-[#FB002B]"
+                  ? "bg-[#F1E6D4] text-[#B78026]"
+                  : "bg-[#FB002B1A] text-[#FB002B]"
             }`}
           >
             {row.status}
@@ -221,8 +219,8 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
                     row.status === "Completed"
                       ? "bg-green-100 text-green-800"
                       : row.status === "In progress"
-                      ? "bg-[#F1E6D4] text-[#B78026]"
-                      : "bg-[#FB002B1A] text-[#FB002B]"
+                        ? "bg-[#F1E6D4] text-[#B78026]"
+                        : "bg-[#FB002B1A] text-[#FB002B]"
                   }`}
                     >
                       {row.status}
@@ -318,17 +316,14 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
                             {task.title}
                           </h4>
                           {task.description && (
-                            <p className="text-sm text-gray-500">
-                              {task.description}
-                            </p>
+                            <p className="text-sm text-gray-500">{task.description}</p>
                           )}
                           <div className="flex flex-wrap gap-4 mt-2">
                             {task.dueDate && (
                               <div className="flex items-center gap-1 text-xs text-gray-500">
                                 <LuCalendar size={14} />
                                 <span>
-                                  Due:{" "}
-                                  {new Date(task.dueDate).toLocaleDateString()}
+                                  Due: {new Date(task.dueDate).toLocaleDateString()}
                                 </span>
                               </div>
                             )}
@@ -367,9 +362,7 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
                             </p>
                             <div className="flex justify-between mt-2 text-xs text-gray-500">
                               <span>{note.createdBy}</span>
-                              <span>
-                                {new Date(note.createdAt).toLocaleString()}
-                              </span>
+                              <span>{new Date(note.createdAt).toLocaleString()}</span>
                             </div>
                           </div>
                         </div>
@@ -383,9 +376,7 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
               {activeTab === "activity" && (
                 <div className="space-y-4">
                   {activities.length === 0 ? (
-                    <div className="text-center py-4 text-gray-500">
-                      No activity yet.
-                    </div>
+                    <div className="text-center py-4 text-gray-500">No activity yet.</div>
                   ) : (
                     activities.map((activity) => (
                       <div
@@ -404,12 +395,8 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
                               {new Date(activity.timestamp).toLocaleString()}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600">
-                            {activity.details}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            by {activity.user}
-                          </p>
+                          <p className="text-sm text-gray-600">{activity.details}</p>
+                          <p className="text-xs text-gray-500 mt-1">by {activity.user}</p>
                         </div>
                       </div>
                     ))

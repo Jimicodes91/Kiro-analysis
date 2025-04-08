@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { TableRowProps } from "../../../types";
-
-import Detail from "./Detail";
-import ContactInfo from "./Contactinfo";
+import { TableRowProps } from "@/types/components";
 import { GoShare } from "react-icons/go";
-import { MainButton } from "../../../Components/Form/button";
 import { IoArrowBack } from "react-icons/io5";
+import { MainButton } from "../../../components/Form/button";
+import ContactInfo from "./Contactinfo";
+import Detail from "./Detail";
 
 const mockProjects: TableRowProps["row"][] = [
   {
@@ -72,8 +71,7 @@ const ProjectDetail: React.FC = () => {
 
   const project = mockProjects.find((p) => p.id === parseInt(id || ""));
   const [activeSubTab, setActiveSubTab] = useState<SubTabType>("Task");
-  const [activeMainTab, setActiveMainTab] =
-    useState<MainTabType>("Project detail");
+  const [activeMainTab, setActiveMainTab] = useState<MainTabType>("Project detail");
 
   const mainTabs: MainTabType[] = ["Project detail", "Contact info"];
   const subTabs: SubTabType[] = [
@@ -141,9 +139,7 @@ const ProjectDetail: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Project not found
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-800">Project not found</h2>
           <button
             onClick={() => navigate(-1)}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -167,9 +163,7 @@ const ProjectDetail: React.FC = () => {
         </button>
       </div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold text-[#191819] ">
-          Project detail
-        </h1>
+        <h1 className="text-2xl font-semibold text-[#191819] ">Project detail</h1>
         <MainButton className="flex items-center text-dark bg-white text-primary hover:text-[#191819B2] transition-colors">
           <GoShare className="mr-2 text-primary" />
           <span className="text-primary">Export</span>
@@ -179,9 +173,7 @@ const ProjectDetail: React.FC = () => {
       <div className="bg-white flex rounded-lg shadow-md border border-[#0000001A] p-3 overflow-hidden">
         <div className="w-1/4 mb-8 p-4 rounded-lg border mr-5 ">
           <div className="flex flex-col gap-1 mb-4">
-            <p className="text-[#191819] font-medium text-lg">
-              {project.title}
-            </p>
+            <p className="text-[#191819] font-medium text-lg">{project.title}</p>
             <p className="text-[#19181980] text-base font-medium">
               {project.organization}
             </p>
@@ -190,9 +182,9 @@ const ProjectDetail: React.FC = () => {
           <div className="bg-[#F8F8F8] p-4 rounded-lg border">
             <h3 className="text-xs mb-1">Description</h3>
             <p className="text-xs text-[#191819B2]">
-              A document is a written or digital file that records information,
-              data, or ideas. It can take various forms, such as a report,
-              letter, proposal, article, or presentation,
+              A document is a written or digital file that records information, data, or
+              ideas. It can take various forms, such as a report, letter, proposal,
+              article, or presentation,
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden mt-5">
@@ -229,9 +221,7 @@ const ProjectDetail: React.FC = () => {
                   style={{ width: "40%" }}
                 ></div>
               </div>
-              <p className="mt-2 text-sm text-gray-500">
-                32 days to completion
-              </p>
+              <p className="mt-2 text-sm text-gray-500">32 days to completion</p>
             </div>
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="flex border-b border-gray-200">

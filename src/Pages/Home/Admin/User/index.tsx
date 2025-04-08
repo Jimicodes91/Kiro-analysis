@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import Table from "../../../../Components/Table";
+import Table from "../../../../components/Table";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { MainButton } from "../../../../Components/Form/button";
+import { MainButton } from "../../../../components/Form/button";
 import { IoAdd } from "react-icons/io5";
-import Switch from "../../../../Components/Form/switch";
-import Modal from "../../../../Components/Modal";
-import { FormInput } from "../../../../Components/Form/input";
-import { FormSelect } from "../../../../Components/Form/select";
+import Switch from "../../../../components/Form/switch";
+import Modal from "../../../../components/Modal";
+import { FormInput } from "../../../../components/Form/input";
+import { FormSelect } from "../../../../components/Form/select";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addUserSchema } from "../../../../Components/validationSchema/admin";
+import { addUserSchema } from "../../../../components/validationSchema/admin";
 import { TeamMember } from "../../../../types";
-import { sendConsultantInviteApi } from "../../../../Services";
+import { sendConsultantInviteApi } from "../../../../services";
 
 interface ColumnDefinition<T, K extends keyof T> {
   key: K;
@@ -165,10 +165,7 @@ const UserTab: React.FC = () => {
           closeModal={() => setIsModalOpen(false)}
           fullHeight={false}
         >
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 p-4"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
             <FormInput
               label="Email"
               placeholder="Email"

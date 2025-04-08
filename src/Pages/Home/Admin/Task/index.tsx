@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Table from "../../../../Components/Table";
+import Table from "../../../../components/Table";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { MainButton } from "../../../../Components/Form/button";
+import { MainButton } from "../../../../components/Form/button";
 import { IoAdd } from "react-icons/io5";
-import Modal from "../../../../Components/Modal";
-import { FormInput } from "../../../../Components/Form/input";
+import Modal from "../../../../components/Modal";
+import { FormInput } from "../../../../components/Form/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addTaskTypeSchema } from "../../../../Components/validationSchema/admin";
+import { addTaskTypeSchema } from "../../../../components/validationSchema/admin";
 
 interface ColumnDefinition<T, K extends keyof T> {
   key: K;
@@ -17,13 +17,13 @@ interface ColumnDefinition<T, K extends keyof T> {
 }
 
 interface TaskType {
-    typeName: string;
-    description: string;
-    }
+  typeName: string;
+  description: string;
+}
 
 interface Task extends TaskType {
-    id: number,
-    action: string,
+  id: number;
+  action: string;
 }
 
 const TaskTab: React.FC = () => {
@@ -79,7 +79,7 @@ const TaskTab: React.FC = () => {
   const onSubmit = async (data: TaskType) => {
     setLoading(true);
     try {
-    //   await sendConsultantInviteApi(data);
+      //   await sendConsultantInviteApi(data);
       setIsModalOpen(false);
     } catch (error) {
       console.error(`${data}`, error);
@@ -117,10 +117,7 @@ const TaskTab: React.FC = () => {
           closeModal={() => setIsModalOpen(false)}
           fullHeight={false}
         >
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 p-4"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
             <FormInput
               label="Type name"
               placeholder="Type name"
@@ -133,9 +130,9 @@ const TaskTab: React.FC = () => {
               type="textarea"
               rows={4}
               {...register("description")}
-              error={errors.description?.message}            
-              />
-            
+              error={errors.description?.message}
+            />
+
             <MainButton type="submit" isLoading={loading}>
               Add task type
             </MainButton>

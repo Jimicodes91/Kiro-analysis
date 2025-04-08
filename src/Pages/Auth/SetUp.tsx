@@ -1,6 +1,6 @@
 import React from "react";
-import { MainButton } from "../../Components/Form/button";
-import { FormInput } from "../../Components/Form/input";
+import { MainButton } from "../../components/Form/button";
+import { FormInput } from "../../components/Form/input";
 import { Logo } from "../../assets";
 
 const SetUp: React.FC = () => {

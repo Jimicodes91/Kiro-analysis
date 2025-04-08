@@ -1,15 +1,15 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
-import { MainButton } from "../../Components/Form/button";
-import { FormInput } from "../../Components/Form/input";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../../assets";
-import VerificationCard from "./VerificationCard";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { forgetPasswordSchema } from "../../Components/validationSchema/auth";
-import { forgotPasswordApi } from "../../Services";
+import { MainButton } from "../../components/Form/button";
+import { FormInput } from "../../components/Form/input";
+import Toast from "../../components/Toast";
+import { forgetPasswordSchema } from "../../components/validationSchema/auth";
+import { forgotPasswordApi } from "../../services";
 import { EmailProp } from "../../types";
-import Toast from "../../Components/Toast";
+import VerificationCard from "./VerificationCard";
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const ForgotPassword: React.FC = () => {
   const onSubmit = async (data: EmailProp) => {
     setLoading(true);
     try {
-    const response = await forgotPasswordApi(data);
+      const response = await forgotPasswordApi(data);
       setShowConfirmation(true);
       Toast.success(response.message || "Reset link sent");
     } catch (error) {

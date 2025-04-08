@@ -1,8 +1,16 @@
-import { Admin, Client, Event, Finance, House, Message, Project, Logout } from "../../assets";
+import {
+  Admin,
+  Client,
+  Event,
+  Finance,
+  House,
+  Logout,
+  Message,
+  Project,
+} from "../../assets";
 import { SidebarLinks } from "../../types";
 
 export const DashboardSidebarLinks: SidebarLinks[] = [
-
   {
     id: 1,
     title: "Home",

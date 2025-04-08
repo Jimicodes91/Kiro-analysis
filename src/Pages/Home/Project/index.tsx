@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Search from "../../../Components/Form/search";
-import { FormSelect } from "../../../Components/Form/select";
-import { MainButton } from "../../../Components/Form/button";
+import Search from "../../../components/Form/search";
+import { FormSelect } from "../../../components/Form/select";
+import { MainButton } from "../../../components/Form/button";
 import { IoAdd } from "react-icons/io5";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
-import BoardView from "../../../Components/Cards/BoardView";
-import TableView from "../../../Components/Cards/TableView";
-import ViewToggle from "../../../Components/Cards/ViewToggle";
+import BoardView from "../../../components/Cards/BoardView";
+import TableView from "../../../components/Cards/TableView";
+import ViewToggle from "../../../components/Cards/ViewToggle";
 
 const Project: React.FC = () => {
   const [, setSearchQuery] = useState("");
@@ -53,7 +53,7 @@ const Project: React.FC = () => {
       clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
     },
     {
-      id: 4, 
+      id: 4,
       title: "Dubai Registration",
       organization: "Orizon Digital",
       startDate: "02 Nov 2023 ",
@@ -211,7 +211,10 @@ const Project: React.FC = () => {
             ]}
           />
           <div className="flex justify-between space-x-2">
-            <FormSelect value={"all"} options={[{ value: "all", label: "All project" }]} />
+            <FormSelect
+              value={"all"}
+              options={[{ value: "all", label: "All project" }]}
+            />
             <button
               className="mr-5 cursor-pointer relative border-2 border-[#0000001A] bg-[#0923270F] p-2 rounded-full"
               type="button"
