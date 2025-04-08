@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import Table from "../../../../components/Table";
-import { MainButton } from "../../../../components/Form/button";
-import { FormSelect } from "../../../../components/Form/select";
-import ViewToggle from "../../../../components/Cards/ViewToggle";
-import { IoAdd } from "react-icons/io5";
-import Modal from "../../../../components/Modal";
-import { FormInput } from "../../../../components/Form/input";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { IoAdd } from "react-icons/io5";
+import ViewToggle from "../../../../components/Cards/ViewToggle";
+import { MainButton } from "../../../../components/Form/button";
+import { FormInput } from "../../../../components/Form/input";
+import { FormSelect } from "../../../../components/Form/select";
+import Modal from "../../../../components/Modal";
+import Table from "../../../../components/Table";
 import {
   addMilestoneSchema,
   addProjectTypeSchema,
@@ -182,6 +182,26 @@ const ProjectTab: React.FC = () => {
       setLoadingMilestone(false);
     }
   };
+
+  // Function to get sub-table data for each row
+  const getSubTableData = () => {
+    // Return specific sub-table data based on row
+    return [
+      { item: "Item A", quantity: 10, price: 5 },
+      { item: "Item B", quantity: 20, price: 7 },
+    ];
+  };
+
+  // Function to get sub-table columns for each row
+  const getSubTableColumns = () => {
+    // Return specific columns for the sub-table based on row
+    return [
+      { key: "item", header: "Item" },
+      { key: "quantity", header: "Quantity" },
+      { key: "price", header: "Price" },
+    ];
+  };
+
   return (
     <>
       <div className="flex justify-between items-center">
@@ -220,16 +240,15 @@ const ProjectTab: React.FC = () => {
                 Create milestone
               </MainButton>
             </div>
-            <div className="border-[1px] p-1 rounded-lg">
-              <div className="bg-white rounded-lg shadow">
-                <Table
-                  data={project}
-                  columns={columns}
-                  className="border-none"
-                  rowClassName="border-b hover:bg-gray-50 transition-colors"
-                />
-              </div>
-            </div>
+            <Table
+              data={project}
+              columns={columns}
+              className="border-none"
+              rowClassName="hover:bg-gray-50 transition-colors"
+              expandable={true} // Enable expandable functionality
+              subData={getSubTableData} // Pass row-specific sub-table data
+              subColumns={getSubTableColumns} // Pass row-specific sub-table columns
+            />
           </>
         ) : (
           <div> Form </div>

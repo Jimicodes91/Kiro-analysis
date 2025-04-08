@@ -78,26 +78,27 @@ const UserTab: React.FC = () => {
     {
       key: "name",
       header: "Name",
-      width: "w-1/4",
+      width: "w-1/6",
     },
     {
       key: "email",
       header: "Email",
-      width: "w-1/4",
+      width: "w-1/6",
     },
     {
       key: "role",
       header: "Role",
-      width: "w-1/4",
+      width: "w-1/6",
     },
     {
       key: "department",
       header: "Department",
-      width: "w-1/4",
+      width: "w-1/6",
     },
     {
       key: "status",
       header: "Status",
+      width: "w-1/6",
       render: (value) => (
         <span
           className={`px-2 py-1 rounded-full text-xs ${
@@ -113,6 +114,7 @@ const UserTab: React.FC = () => {
     {
       key: "toggle",
       header: "Action",
+      width: "w-1/12",
       render: (value, row: User) => (
         <Switch isOn={!!value} onChange={() => handleToggle(row.id)} />
       ),
@@ -120,6 +122,7 @@ const UserTab: React.FC = () => {
     {
       key: "action",
       header: "",
+      width: "w-1/12",
       render: () => <BsThreeDotsVertical />,
     },
   ];
@@ -148,16 +151,12 @@ const UserTab: React.FC = () => {
           Add user
         </MainButton>
       </div>
-      <div className="border-[1px] p-1 rounded-lg">
-        <div className="bg-white   rounded-lg shadow">
-          <Table
-            data={users}
-            columns={columns}
-            className="border-none"
-            rowClassName="border-b hover:bg-gray-50 transition-colors"
-          />
-        </div>
-      </div>
+      <Table
+        data={users}
+        columns={columns}
+        className="border-none"
+        rowClassName="border-b hover:bg-gray-50 transition-colors"
+      />
       {/* Modal to add user */}
       {isModalOpen && (
         <Modal
