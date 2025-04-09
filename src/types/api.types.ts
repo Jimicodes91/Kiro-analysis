@@ -263,3 +263,34 @@ export interface Pagination {
   total: number;
   totalPages: number;
 }
+
+export interface ProjectDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  client_id?: string;
+  company_id: string;
+  consultant_id?: string;
+  milestone_id?: string;
+  project_type_id: string;
+  status: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  completed_at?: string;
+  custom_fields: CustomFields;
+  documents: Document[];
+  stage_id?: string;
+  description?: string;
+  milestone?: string;
+  timeline: string;
+}
+
+export interface CustomFields {
+  tax_id: string;
+  company_name: string;
+  articles_file: string[];
+  legal_structure: string;
+  incorporation_date: string;
+}

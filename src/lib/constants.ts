@@ -1,3 +1,10 @@
+export enum ProjectStatus {
+  NOT_STARTED = "not_started",
+  IN_PROGRESS = "in_progress",
+  BLOCKED = "blocked",
+  COMPLETED = "completed",
+}
+
 export const ENDPOINTS = {
   // Auth Endpoint
   ADMIN_SIGNUP: "auth/admin-signup",
@@ -36,6 +43,12 @@ export const ENDPOINTS = {
     11. Task Types
     12. Activity Logs
   */
+  // 0. Project Module Collection
+  CREATE_PROJECT: "projects",
+  GET_ALL_PROJECTS: (projectTypeId: string, status: ProjectStatus) =>
+    `projects?project_type_id=${projectTypeId}&status=${status}`,
+  GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
+  UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
 
   // 1. Project Types
   GET_ALL_PROJECT_TYPES: "projects/types",
@@ -151,6 +164,10 @@ export const QUERYKEYS = {
 
   // User Endpoints
   GET_USER: "GET_USER",
+
+  // 0. Project Module Collection
+  GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
+  GET_PROJECT_DETAILS: "GET_PROJECT_DETAILS",
 
   // 1. Project Types
   GET_ALL_PROJECT_TYPES: "GET_ALL_PROJECT_TYPES",

@@ -17,3 +17,11 @@ const useGetAuditTrail = (projectId: string, page: number, limit: number) => {
 };
 
 export default useGetAuditTrail;
+
+export enum AUDIT_TRAIL_ACTION {
+  TASK_ADDED = "TASK_ADDED",
+  NOTE_PINNED = "NOTE_PINNED",
+  NOTE_CREATED = "NOTE_CREATED",
+  COMMENT_CREATED = "COMMENT_CREATED",
+  COMMENT_DELETED = "COMMENT_DELETED",
+}
