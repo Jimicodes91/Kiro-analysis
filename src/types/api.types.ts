@@ -193,3 +193,16 @@ export interface Setting {
   client_can_view_documents: number;
   client_can_view_activity: number;
 }
+
+export interface DocumentTypeDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  company_id: string;
+  project_id: string;
+  name: string;
+  is_system: number;
+  type: string;
+  description: string;
+}

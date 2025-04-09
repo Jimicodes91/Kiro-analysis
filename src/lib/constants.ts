@@ -124,6 +124,12 @@ export const ENDPOINTS = {
   // 8. Project Settings
   SET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
   GET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
+
+  // 9. Document Types
+  CREATE_DOCUMENT_TYPE: (projectId: string) =>
+    `metadata/projects/${projectId}/type/documents`,
+  GET_DOCUMENT_TYPES: (projectId: string) =>
+    `metadata/projects/${projectId}/type/documents`,
 };
 
 // for GET requests
@@ -166,6 +172,9 @@ export const QUERYKEYS = {
 
   // 8. Project Settings
   GET_PROJECT_SETTINGS: "GET_PROJECT_SETTINGS",
+
+  // 9. Document Types
+  GET_DOCUMENT_TYPES: "GET_DOCUMENT_TYPES",
 };
 
 export const PAGES = {
