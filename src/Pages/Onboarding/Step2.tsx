@@ -68,8 +68,8 @@ const Step2 = () => {
       // Show success toast
       Toast.success("Team members invited successfully");
 
-      // Navigate to home screen
-      navigate("/home");
+      // Navigate to project screen
+      navigate("/project");
     } catch (error) {
       // Handle any errors during invitation
       console.error("Error inviting team members:", error);
@@ -152,7 +152,7 @@ const Step2 = () => {
           <div className="flex gap-2">
             <MainButton
               variant="outlined"
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/project")}
               type="button"
             >
               Skip

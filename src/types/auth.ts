@@ -1,4 +1,5 @@
 export interface AdminSignUpProps {
+  name: string;
   email: string;
   password: string;
 }
