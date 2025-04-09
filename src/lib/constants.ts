@@ -120,6 +120,10 @@ export const ENDPOINTS = {
   GET_PROJECT_MEMBERS: (projectId: string) => `projects/${projectId}/members`,
   REMOVE_PROJECT_MEMBER: (projectId: string, memberId: string) =>
     `projects/${projectId}/members/${memberId}`,
+
+  // 8. Project Settings
+  SET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
+  GET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
 };
 
 // for GET requests
@@ -159,6 +163,9 @@ export const QUERYKEYS = {
 
   // 7. Project Members
   GET_PROJECT_MEMBERS: "GET_PROJECT_MEMBERS",
+
+  // 8. Project Settings
+  GET_PROJECT_SETTINGS: "GET_PROJECT_SETTINGS",
 };
 
 export const PAGES = {

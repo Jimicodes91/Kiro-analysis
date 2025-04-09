@@ -180,3 +180,16 @@ export interface Creator {
   name: string;
   role: string;
 }
+
+export interface Setting {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  project_id: string;
+  company_id: string;
+  client_can_view_task: number;
+  client_can_view_notes: number;
+  client_can_view_documents: number;
+  client_can_view_activity: number;
+}
