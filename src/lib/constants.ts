@@ -28,6 +28,7 @@ export const ENDPOINTS = {
       1. Comments
     5. Tasks
     6. Documents
+      1. Document Request
     7. Project Members
     8. Project Settings
     9. Document Types
@@ -89,6 +90,30 @@ export const ENDPOINTS = {
     `projects/${projectId}/tasks/${taskId}`,
   DELETE_TASK_ATTACHMENT: (projectId: string, taskId: string, attachmentId: string) =>
     `projects/${projectId}/tasks/${taskId}/attachments/${attachmentId}`,
+
+  // 6. Documents
+  UPLOAD_DOCUMENT: (projectId: string) => `projects/${projectId}/documents`,
+  GET_ALL_PROJECT_DOCUMENTS: (projectId: string) => `projects/${projectId}/documents`,
+  GET_DOCUMENT_DETAILS: (projectId: string, documentId: string) =>
+    `projects/${projectId}/documents/${documentId}`,
+  UPDATE_DOCUMENT_DETAILS: (projectId: string, documentId: string) =>
+    `projects/${projectId}/documents/${documentId}`,
+  DELETE_DOCUMENT: (projectId: string, documentId: string) =>
+    `projects/${projectId}/documents/${documentId}`,
+  DELETE_DOCUMENT_ATTACHMENT: (
+    projectId: string,
+    documentId: string,
+    attachmentId: string
+  ) => `projects/${projectId}/documents/${documentId}/attachments/${attachmentId}`,
+  UPDATE_DOCUMENT_ATTACHMENT: (
+    projectId: string,
+    documentId: string,
+    attachmentId: string
+  ) => `projects/${projectId}/documents/${documentId}/attachments/${attachmentId}`,
+
+  // 6.1 Document Request
+  CREATE_DOCUMENT_REQUEST: (projectId: string) =>
+    `projects/${projectId}/document-requestS`,
 };
 
 // for GET requests
@@ -121,6 +146,10 @@ export const QUERYKEYS = {
   // 5. Tasks
   GET_ALL_PROJECT_TASKS: "GET_ALL_PROJECT_TASKS",
   GET_TASK_DETAILS: "GET_TASK_DETAILS",
+
+  // 6. Documents
+  GET_ALL_PROJECT_DOCUMENTS: "GET_ALL_PROJECT_DOCUMENTS",
+  GET_DOCUMENT_DETAILS: "GET_DOCUMENT_DETAILS",
 };
 
 export const PAGES = {
