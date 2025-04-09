@@ -21,19 +21,19 @@ export const ENDPOINTS = {
 
   /* 
   Project Module Collection
-  
-  1. Project Types
-  2. Milestones
-  3. Events
-  4. Notes
-  5. Tasks
-  6. Documents
-  7. Project Members
-  8. Project Settings
-  9. Document Types
-  10. Event Types
-  11. Task Types
-  12. Activity Logs
+    1. Project Types
+    2. Milestones
+    3. Events
+    4. Notes
+      1. Comments
+    5. Tasks
+    6. Documents
+    7. Project Members
+    8. Project Settings
+    9. Document Types
+    10. Event Types
+    11. Task Types
+    12. Activity Logs
   */
 
   // 1. Project Types
@@ -61,6 +61,18 @@ export const ENDPOINTS = {
     `projects/${projectId}/events/${eventId}`,
   DELETE_EVENT: (projectId: string, eventId: string) =>
     `projects/${projectId}/events/${eventId}`,
+
+  // 5. Tasks
+  CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_TASK_DETAILS: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}`,
+  UPDATE_TASK_DETAILS: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}`,
+  DELETE_TASK: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}`,
+  DELETE_TASK_ATTACHMENT: (projectId: string, taskId: string, attachmentId: string) =>
+    `projects/${projectId}/tasks/${taskId}/attachments/${attachmentId}`,
 };
 
 // for GET requests
@@ -82,6 +94,10 @@ export const QUERYKEYS = {
   // 3. Events
   GET_ALL_PROJECT_EVENTS: "GET_ALL_PROJECT_EVENTS",
   GET_EVENT_DETAILS: "GET_EVENT_DETAILS",
+
+  // 5. Tasks
+  GET_ALL_PROJECT_TASKS: "GET_ALL_PROJECT_TASKS",
+  GET_TASK_DETAILS: "GET_TASK_DETAILS",
 };
 
 export const PAGES = {

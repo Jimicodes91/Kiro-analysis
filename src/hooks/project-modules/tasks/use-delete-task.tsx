@@ -1,11 +1,11 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS } from "@/lib/constants";
 
-const useDeleteEvent = (projectId: string, eventId: string) => {
+const useDeleteTask = (projectId: string, taskId: string) => {
   return useCustomMutation({
     method: "delete",
-    endpoint: ENDPOINTS.DELETE_EVENT(projectId, eventId),
+    endpoint: ENDPOINTS.DELETE_TASK(projectId, taskId),
   });
 };
 
-export default useDeleteEvent;
+export default useDeleteTask;
