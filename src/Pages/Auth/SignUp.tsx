@@ -29,6 +29,7 @@ const SignUp: React.FC = () => {
     setLoading(true);
     try {
       const payload = {
+        name: data.name,
         email: data.email,
         password: data.password,
       };
@@ -69,6 +70,13 @@ const SignUp: React.FC = () => {
             className="flex flex-col w-96 space-y-4 mt-4"
             onSubmit={handleSubmit(onSubmit)}
           >
+            <FormInput
+              type="text"
+              placeholder="Name"
+              {...register("name")}
+              error={errors.name?.message}
+            />
+
             <FormInput
               type="email"
               placeholder="Email"

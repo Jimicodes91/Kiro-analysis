@@ -36,7 +36,7 @@ const Login: React.FC = () => {
       store.set("atk", response.data.token);
       store.set("rtk", response.data.user.refresh_token);
 
-      if (response && (response.data.company_id !== null || response.data.company_id !== undefined)) {
+      if (response && (response.data.company_id !== null && response.data.company_id !== undefined)) {
         navigate("/project");
       } else {
         navigate("/onboarding");
