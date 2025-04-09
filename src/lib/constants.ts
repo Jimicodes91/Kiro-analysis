@@ -113,7 +113,13 @@ export const ENDPOINTS = {
 
   // 6.1 Document Request
   CREATE_DOCUMENT_REQUEST: (projectId: string) =>
-    `projects/${projectId}/document-requestS`,
+    `projects/${projectId}/document-requests`,
+
+  // 7. Project Members
+  ADD_PROJECT_MEMBER: (projectId: string) => `projects/${projectId}/members`,
+  GET_PROJECT_MEMBERS: (projectId: string) => `projects/${projectId}/members`,
+  REMOVE_PROJECT_MEMBER: (projectId: string, memberId: string) =>
+    `projects/${projectId}/members/${memberId}`,
 };
 
 // for GET requests
@@ -150,6 +156,9 @@ export const QUERYKEYS = {
   // 6. Documents
   GET_ALL_PROJECT_DOCUMENTS: "GET_ALL_PROJECT_DOCUMENTS",
   GET_DOCUMENT_DETAILS: "GET_DOCUMENT_DETAILS",
+
+  // 7. Project Members
+  GET_PROJECT_MEMBERS: "GET_PROJECT_MEMBERS",
 };
 
 export const PAGES = {

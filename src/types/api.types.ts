@@ -152,3 +152,31 @@ export interface CommentDetails {
   content: string;
   author: Author;
 }
+
+export interface Member {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  company_id: string;
+  project_id: string;
+  user_id: string;
+  is_visible_to_client: number;
+  added_by: string;
+  users: User[];
+  creator: Creator;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+}
+
+export interface Creator {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+}
