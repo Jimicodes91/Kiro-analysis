@@ -121,3 +121,34 @@ export interface AttendanceStats {
   tentative: number;
   no_response: number;
 }
+
+export interface NoteDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  project_id: string;
+  note_id: string;
+  author_id: string;
+  content: string;
+  author: Author;
+}
+
+export interface Author {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+}
+
+export interface CommentDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  project_id: string;
+  note_id: string;
+  author_id: string;
+  content: string;
+  author: Author;
+}

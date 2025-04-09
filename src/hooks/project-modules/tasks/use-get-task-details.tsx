@@ -8,7 +8,7 @@ export interface TaskDetailsResponse {
   data: TaskDetails;
 }
 
-const useGetAllProjectTaskDetails = (projectId: string, taskId: string) => {
+const useGetProjectTaskDetails = (projectId: string, taskId: string) => {
   return useQueryActionHook<TaskDetailsResponse>({
     method: "get",
     endpoint: ENDPOINTS.GET_TASK_DETAILS(projectId, taskId),
@@ -16,4 +16,4 @@ const useGetAllProjectTaskDetails = (projectId: string, taskId: string) => {
   });
 };
 
-export default useGetAllProjectTaskDetails;
+export default useGetProjectTaskDetails;

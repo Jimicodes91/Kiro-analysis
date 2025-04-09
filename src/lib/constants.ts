@@ -62,6 +62,22 @@ export const ENDPOINTS = {
   DELETE_EVENT: (projectId: string, eventId: string) =>
     `projects/${projectId}/events/${eventId}`,
 
+  // 4. Notes
+  CREATE_NOTE: (projectId: string) => `projects/${projectId}/notes`,
+  GET_ALL_PROJECT_NOTES: (projectId: string) => `projects/${projectId}/notes`,
+  GET_NOTE_DETAILS: (projectId: string, noteId: string) =>
+    `projects/${projectId}/notes/${noteId}`,
+  TOGGLE_NOTE_PIN_STATE: (projectId: string, noteId: string) =>
+    `projects/${projectId}/notes/${noteId}/pin`,
+
+  // 4.1 Notes => Comments
+  ADD_NOTE_COMMENT: (projectId: string, noteId: string) =>
+    `projects/${projectId}/notes/${noteId}/comments`,
+  GET_NOTE_COMMENTS: (projectId: string, noteId: string) =>
+    `projects/${projectId}/notes/${noteId}/comments`,
+  DELETE_NOTE_COMMENT: (projectId: string, noteId: string, commentId: string) =>
+    `projects/${projectId}/notes/${noteId}/comments/${commentId}`,
+
   // 5. Tasks
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
   GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
@@ -94,6 +110,13 @@ export const QUERYKEYS = {
   // 3. Events
   GET_ALL_PROJECT_EVENTS: "GET_ALL_PROJECT_EVENTS",
   GET_EVENT_DETAILS: "GET_EVENT_DETAILS",
+
+  // 4. Notes
+  GET_ALL_PROJECT_NOTES: "GET_ALL_PROJECT_NOTES",
+  GET_NOTE_DETAILS: "GET_NOTE_DETAILS",
+
+  // 4.1 Notes => Comments
+  GET_NOTE_COMMENTS: "GET_NOTE_COMMENTS",
 
   // 5. Tasks
   GET_ALL_PROJECT_TASKS: "GET_ALL_PROJECT_TASKS",
