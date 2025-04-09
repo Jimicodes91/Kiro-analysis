@@ -138,6 +138,10 @@ export const ENDPOINTS = {
   // 11. Task Types
   CREATE_TASK_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
   GET_TASK_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
+
+  // 12. Activity Logs
+  GET_AUDIT_TRAIL: (projectId: string, page = 1, limit = 20) =>
+    `audit-trail/projects?project_id=${projectId}&page=${page}&limit=${limit}`,
 };
 
 // for GET requests
@@ -189,6 +193,9 @@ export const QUERYKEYS = {
 
   // 11. Task Types
   GET_TASK_TYPES: "GET_TASK_TYPES",
+
+  // 12. Activity Logs
+  GET_AUDIT_TRAIL: "GET_AUDIT_TRAIL",
 };
 
 export const PAGES = {

@@ -232,3 +232,34 @@ export interface TaskTypeDetails {
   type: string;
   description: string;
 }
+
+export interface Activity {
+  trails: Trail[];
+  pagination: Pagination;
+}
+
+export interface Trail {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  company_id: string;
+  user_id: string;
+  project_id: string;
+  name: string;
+  description: string;
+  entity: Entity;
+}
+
+export interface Entity {
+  id: string;
+  description: string;
+  name: string;
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
