@@ -130,6 +130,14 @@ export const ENDPOINTS = {
     `metadata/projects/${projectId}/type/documents`,
   GET_DOCUMENT_TYPES: (projectId: string) =>
     `metadata/projects/${projectId}/type/documents`,
+
+  // 10. Event Types
+  CREATE_EVENT_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/events`,
+  GET_EVENT_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/events`,
+
+  // 11. Task Types
+  CREATE_TASK_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
+  GET_TASK_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
 };
 
 // for GET requests
@@ -175,6 +183,12 @@ export const QUERYKEYS = {
 
   // 9. Document Types
   GET_DOCUMENT_TYPES: "GET_DOCUMENT_TYPES",
+
+  // 10. Event Types
+  GET_EVENT_TYPES: "GET_EVENT_TYPES",
+
+  // 11. Task Types
+  GET_TASK_TYPES: "GET_TASK_TYPES",
 };
 
 export const PAGES = {

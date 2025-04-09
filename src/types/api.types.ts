@@ -206,3 +206,29 @@ export interface DocumentTypeDetails {
   type: string;
   description: string;
 }
+
+export interface EventTypeDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  company_id: string;
+  project_id: string;
+  name: string;
+  is_system: number;
+  type: string;
+  description: string;
+}
+
+export interface TaskTypeDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  company_id: string;
+  project_id: string;
+  name: string;
+  is_system: number;
+  type: string;
+  description: string;
+}
