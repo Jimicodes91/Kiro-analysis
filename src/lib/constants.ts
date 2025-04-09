@@ -51,6 +51,16 @@ export const ENDPOINTS = {
     `projects/types/${projectTypeId}/milestones/${milestoneId}`,
   UPDATE_MILESTONE_DETAILS: (milestoneId: string) =>
     `projects/types/milestones/${milestoneId}`,
+
+  // 3. Events
+  CREATE_EVENT: (projectId: string) => `projects/${projectId}/events`,
+  GET_ALL_PROJECT_EVENTS: (projectId: string) => `projects/${projectId}/events`,
+  UPDATE_PROJECT_EVENT: (projectId: string, eventId: string) =>
+    `projects/${projectId}/events/${eventId}`,
+  GET_EVENT_DETAILS: (projectId: string, eventId: string) =>
+    `projects/${projectId}/events/${eventId}`,
+  DELETE_EVENT: (projectId: string, eventId: string) =>
+    `projects/${projectId}/events/${eventId}`,
 };
 
 // for GET requests
@@ -68,6 +78,10 @@ export const QUERYKEYS = {
   // 2. Milestones
   GET_ALL_PROJECT_TYPE_MILESTONES: "GET_ALL_PROJECT_TYPE_MILESTONES",
   GET_MILESTONE_DETAILS: "GET_MILESTONE_DETAILS",
+
+  // 3. Events
+  GET_ALL_PROJECT_EVENTS: "GET_ALL_PROJECT_EVENTS",
+  GET_EVENT_DETAILS: "GET_EVENT_DETAILS",
 };
 
 export const PAGES = {
