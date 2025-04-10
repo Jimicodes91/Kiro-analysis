@@ -1,0 +1,10 @@
+package.json
+package-lock.json
+node_modules
+yarn.lock
+
+.husky
+public
+.prettierrc
+README.md 
+tsconfig.json

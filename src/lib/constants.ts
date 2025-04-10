@@ -1,0 +1,250 @@
+export enum ProjectStatus {
+  NOT_STARTED = "not_started",
+  IN_PROGRESS = "in_progress",
+  BLOCKED = "blocked",
+  COMPLETED = "completed",
+}
+
+export const ENDPOINTS = {
+  // Auth Endpoint
+  ADMIN_SIGNUP: "auth/admin-signup",
+  VERIFY_EMAIL: (token: string) => `auth/verify?token=${token}`,
+  RESEND_VERIFICATION_EMAIL: "auth/resend-verification",
+  FORGOT_PASSWORD: "auth/forgot-password",
+  RESET_PASSWORD: "auth/reset-password",
+  UPDATE_PASSWORD: "auth/update-password",
+  AUTH_LOGIN: "auth/login",
+  COMPANY_ADMIN_SIGNUP: "auth/company-admin-signup",
+  SEND_CONSULTANT_INVITE: "auth/send-consultant-invite",
+  COMPLETE_REGISTRATION: "auth/complete-registration",
+  ADD_CLIENT: "auth/add-client",
+
+  // Admin Endpoints
+  GET_DASHBOARD_DETAILS: "admin/dashboard",
+  GET_ALL_COMPANIES: "admin/companies",
+  GET_COMPANY_DETAILS: (companyId: string) => `admin/companies/${companyId}`,
+  UPDATE_COMPANY_STATUS: (companyId: string) => `admin/companies/${companyId}/status`,
+  SUBSCRIBE_COMPANY: (companyId: string) => `admin/companies/${companyId}/subscribe`,
+  CANCEL_COMPANY_SUBSCRIPTION: (companyId: string) =>
+    `admin/companies/${companyId}/cancel-subscription`,
+  RENEW_COMPANY_SUBSCRIPTION: (companyId: string) =>
+    `admin/companies/${companyId}/renew-subscription`,
+  ADD_SYSTEM_ADMIN: "admin/sysadmins",
+  DEACTIVATE_SYSTEM_ADMIN: (adminId: string) => `admin/sysadmins/${adminId}/deactivate`,
+  GET_ACTIVE_ORGANIZATIONS: "admin/active-organization",
+  GET_INACTIVE_ORGANIZATIONS: "admin/inactive-organization",
+  GET_ALL_USERS: `admin/all`,
+  GET_ACTIVE_USERS: `admin/active-users`,
+  GET_ALL_ADMINS: `admin/all-admin`,
+
+  // Company Endpoints
+  CREATE_COMPANY: "company/create",
+
+  // User Endpoints
+  GET_USER: (userId: string) => `user/${userId}`,
+  UPDATE_PROFILE: (userId: string) => `user/profile/${userId}`,
+
+  /* 
+  Project Module Collection
+    1. Project Types
+    2. Milestones
+    3. Events
+    4. Notes
+      1. Comments
+    5. Tasks
+    6. Documents
+      1. Document Request
+    7. Project Members
+    8. Project Settings
+    9. Document Types
+    10. Event Types
+    11. Task Types
+    12. Activity Logs
+  */
+  // 0. Project Module Collection
+  CREATE_PROJECT: "projects",
+  GET_ALL_PROJECTS: (projectTypeId: string, status: ProjectStatus) =>
+    `projects?project_type_id=${projectTypeId}&status=${status}`,
+  GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
+  UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
+
+  // 1. Project Types
+  GET_ALL_PROJECT_TYPES: "projects/types",
+  GET_PROJECT_TYPE_DETAILS: (projectTypeId: string) => `projects/types/${projectTypeId}`,
+  UPDATE_PROJECT_TYPE_DETAILS: (projectTypeId: string) =>
+    `projects/types/${projectTypeId}`,
+  CREATE_PROJECT_TYPE: "projects/types",
+
+  // 2. Milestones
+  CREATE_MILESTONE: "projects/types/milestones",
+  GET_ALL_PROJECT_TYPE_MILESTONES: (projectTypeId: string) =>
+    `projects/types/${projectTypeId}/milestones`,
+  GET_MILESTONE_DETAILS: (projectTypeId: string, milestoneId: string) =>
+    `projects/types/${projectTypeId}/milestones/${milestoneId}`,
+  UPDATE_MILESTONE_DETAILS: (milestoneId: string) =>
+    `projects/types/milestones/${milestoneId}`,
+
+  // 3. Events
+  CREATE_EVENT: (projectId: string) => `projects/${projectId}/events`,
+  GET_ALL_PROJECT_EVENTS: (projectId: string) => `projects/${projectId}/events`,
+  UPDATE_PROJECT_EVENT: (projectId: string, eventId: string) =>
+    `projects/${projectId}/events/${eventId}`,
+  GET_EVENT_DETAILS: (projectId: string, eventId: string) =>
+    `projects/${projectId}/events/${eventId}`,
+  DELETE_EVENT: (projectId: string, eventId: string) =>
+    `projects/${projectId}/events/${eventId}`,
+
+  // 4. Notes
+  CREATE_NOTE: (projectId: string) => `projects/${projectId}/notes`,
+  GET_ALL_PROJECT_NOTES: (projectId: string) => `projects/${projectId}/notes`,
+  GET_NOTE_DETAILS: (projectId: string, noteId: string) =>
+    `projects/${projectId}/notes/${noteId}`,
+  TOGGLE_NOTE_PIN_STATE: (projectId: string, noteId: string) =>
+    `projects/${projectId}/notes/${noteId}/pin`,
+
+  // 4.1 Notes => Comments
+  ADD_NOTE_COMMENT: (projectId: string, noteId: string) =>
+    `projects/${projectId}/notes/${noteId}/comments`,
+  GET_NOTE_COMMENTS: (projectId: string, noteId: string) =>
+    `projects/${projectId}/notes/${noteId}/comments`,
+  DELETE_NOTE_COMMENT: (projectId: string, noteId: string, commentId: string) =>
+    `projects/${projectId}/notes/${noteId}/comments/${commentId}`,
+
+  // 5. Tasks
+  CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_TASK_DETAILS: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}`,
+  UPDATE_TASK_DETAILS: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}`,
+  DELETE_TASK: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}`,
+  DELETE_TASK_ATTACHMENT: (projectId: string, taskId: string, attachmentId: string) =>
+    `projects/${projectId}/tasks/${taskId}/attachments/${attachmentId}`,
+
+  // 6. Documents
+  UPLOAD_DOCUMENT: (projectId: string) => `projects/${projectId}/documents`,
+  GET_ALL_PROJECT_DOCUMENTS: (projectId: string) => `projects/${projectId}/documents`,
+  GET_DOCUMENT_DETAILS: (projectId: string, documentId: string) =>
+    `projects/${projectId}/documents/${documentId}`,
+  UPDATE_DOCUMENT_DETAILS: (projectId: string, documentId: string) =>
+    `projects/${projectId}/documents/${documentId}`,
+  DELETE_DOCUMENT: (projectId: string, documentId: string) =>
+    `projects/${projectId}/documents/${documentId}`,
+  DELETE_DOCUMENT_ATTACHMENT: (
+    projectId: string,
+    documentId: string,
+    attachmentId: string
+  ) => `projects/${projectId}/documents/${documentId}/attachments/${attachmentId}`,
+  UPDATE_DOCUMENT_ATTACHMENT: (
+    projectId: string,
+    documentId: string,
+    attachmentId: string
+  ) => `projects/${projectId}/documents/${documentId}/attachments/${attachmentId}`,
+
+  // 6.1 Document Request
+  CREATE_DOCUMENT_REQUEST: (projectId: string) =>
+    `projects/${projectId}/document-requests`,
+
+  // 7. Project Members
+  ADD_PROJECT_MEMBER: (projectId: string) => `projects/${projectId}/members`,
+  GET_PROJECT_MEMBERS: (projectId: string) => `projects/${projectId}/members`,
+  REMOVE_PROJECT_MEMBER: (projectId: string, memberId: string) =>
+    `projects/${projectId}/members/${memberId}`,
+
+  // 8. Project Settings
+  SET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
+  GET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
+
+  // 9. Document Types
+  CREATE_DOCUMENT_TYPE: (projectId: string) =>
+    `metadata/projects/${projectId}/type/documents`,
+  GET_DOCUMENT_TYPES: (projectId: string) =>
+    `metadata/projects/${projectId}/type/documents`,
+
+  // 10. Event Types
+  CREATE_EVENT_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/events`,
+  GET_EVENT_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/events`,
+
+  // 11. Task Types
+  CREATE_TASK_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
+  GET_TASK_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
+
+  // 12. Activity Logs
+  GET_AUDIT_TRAIL: (projectId: string, page = 1, limit = 20) =>
+    `audit-trail/projects?project_id=${projectId}&page=${page}&limit=${limit}`,
+};
+
+// for GET requests
+export const QUERYKEYS = {
+  // Auth Query keys
+  VERIFY_EMAIL: "VERIFY_EMAIL",
+
+  // Admin Query keys
+  GET_DASHBOARD_DETAILS: "GET_DASHBOARD_DETAILS",
+  GET_ALL_COMPANIES: "GET_ALL_COMPANIES",
+  GET_COMPANY_DETAILS: "GET_COMPANY_DETAILS",
+  GET_ACTIVE_ORGANIZATIONS: "GET_ACTIVE_ORGANIZATIONS",
+  GET_INACTIVE_ORGANIZATIONS: "GET_INACTIVE_ORGANIZATIONS",
+  GET_ALL_USERS: "GET_ALL_USERS",
+  GET_ACTIVE_USERS: "GET_ACTIVE_USERS",
+  GET_ALL_ADMINS: "GET_ALL_ADMINS",
+
+  // User Query keys
+  GET_USER: "GET_USER",
+
+  // 0. Project Module Collection
+  GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
+  GET_PROJECT_DETAILS: "GET_PROJECT_DETAILS",
+
+  // 1. Project Types Query keys
+  GET_ALL_PROJECT_TYPES: "GET_ALL_PROJECT_TYPES",
+  GET_PROJECT_TYPE_DETAILS: "GET_PROJECT_TYPE_DETAILS",
+
+  // 2. Milestones Query keys
+  GET_ALL_PROJECT_TYPE_MILESTONES: "GET_ALL_PROJECT_TYPE_MILESTONES",
+  GET_MILESTONE_DETAILS: "GET_MILESTONE_DETAILS",
+
+  // 3. Events Query keys
+  GET_ALL_PROJECT_EVENTS: "GET_ALL_PROJECT_EVENTS",
+  GET_EVENT_DETAILS: "GET_EVENT_DETAILS",
+
+  // 4. Notes Query keys
+  GET_ALL_PROJECT_NOTES: "GET_ALL_PROJECT_NOTES",
+  GET_NOTE_DETAILS: "GET_NOTE_DETAILS",
+
+  // 4.1 Notes => Comments Query keys
+  GET_NOTE_COMMENTS: "GET_NOTE_COMMENTS",
+
+  // 5. Tasks Query keys
+  GET_ALL_PROJECT_TASKS: "GET_ALL_PROJECT_TASKS",
+  GET_TASK_DETAILS: "GET_TASK_DETAILS",
+
+  // 6. Documents Query keys
+  GET_ALL_PROJECT_DOCUMENTS: "GET_ALL_PROJECT_DOCUMENTS",
+  GET_DOCUMENT_DETAILS: "GET_DOCUMENT_DETAILS",
+
+  // 7. Project Members Query keys
+  GET_PROJECT_MEMBERS: "GET_PROJECT_MEMBERS",
+
+  // 8. Project Settings Query keys
+  GET_PROJECT_SETTINGS: "GET_PROJECT_SETTINGS",
+
+  // 9. Document Types Query keys
+  GET_DOCUMENT_TYPES: "GET_DOCUMENT_TYPES",
+
+  // 10. Event Types Query keys
+  GET_EVENT_TYPES: "GET_EVENT_TYPES",
+
+  // 11. Task Types Query keys
+  GET_TASK_TYPES: "GET_TASK_TYPES",
+
+  // 12. Activity Logs Query keys
+  GET_AUDIT_TRAIL: "GET_AUDIT_TRAIL",
+};
+
+export const PAGES = {
+  FORGET_PASSWORD_SUCCESS: "/forgot-password/success",
+  PROJECT_PAGE: "/projects",
+  ONBOARDING_PAGE: "/onboarding",
+};
