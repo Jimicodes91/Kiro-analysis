@@ -26,11 +26,7 @@ interface BoardViewProps {
   }) => void;
 }
 
-const BoardView: React.FC<BoardViewProps> = ({
-  columns,
-  columnOrder,
-  onDragEnd,
-}) => {
+const BoardView: React.FC<BoardViewProps> = ({ columns, columnOrder, onDragEnd }) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="all-columns" direction="horizontal" type="column">
@@ -43,18 +39,13 @@ const BoardView: React.FC<BoardViewProps> = ({
             {columnOrder.map((columnId, index) => {
               const column = columns[columnId];
               return (
-                <Draggable
-                  key={column.id}
-                  draggableId={column.id}
-                  index={index}
-                >
+                <Draggable key={column.id} draggableId={column.id} index={index}>
                   {(provided) => (
                     <div
                       className="flex flex-col bg-[#F7F7F7] rounded-lg p-3 mr-4 w-64 flex-shrink-0"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                     >
-                  
                       <ProjectColumn column={column} />
                     </div>
                   )}

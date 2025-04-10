@@ -26,9 +26,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({ column }) => {
       <Droppable droppableId={column.id} type="card">
         {(provided, snapshot) => (
           <div
-            className={`flex-1 min-h-40 ${
-              snapshot.isDraggingOver ? "bg-white" : ""
-            }`}
+            className={`flex-1 min-h-40 ${snapshot.isDraggingOver ? "bg-white" : ""}`}
             ref={provided.innerRef}
             {...provided.droppableProps}
           >

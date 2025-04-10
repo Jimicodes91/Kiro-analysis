@@ -58,15 +58,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
     {
       id: 2,
       title: "Team Meeting",
-      description:
-        "Attend the weekly team meeting to discuss project progress.",
+      description: "Attend the weekly team meeting to discuss project progress.",
       completed: false,
     },
     {
       id: 3,
       title: "Code Review",
-      description:
-        "Review pull requests and provide feedback on recent code changes.",
+      description: "Review pull requests and provide feedback on recent code changes.",
       completed: false,
     },
   ]);
@@ -138,17 +136,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                     card.status === "Completed"
                       ? "bg-green-100 text-green-800"
                       : card.status === "In progress"
-                      ? "bg-[#F1E6D4] text-[#B78026]"
-                      : "bg-[#FB002B1A] text-[#FB002B]"
+                        ? "bg-[#F1E6D4] text-[#B78026]"
+                        : "bg-[#FB002B1A] text-[#FB002B]"
                   }`}
               >
                 {card.status}
               </span>
             </div>
             <div className="font-semibold text-lg mb-1">{card.title}</div>
-            <div className="text-sm text-gray-500 mb-1">
-              {card.organization}
-            </div>
+            <div className="text-sm text-gray-500 mb-1">{card.organization}</div>
             <div className="flex justify-between text-xs space-x-2 mb-1">
               <div className="flex flex-col">
                 <p>Client team</p>
@@ -194,9 +190,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
           <div className="border-[1px] rounded-lg p-4 m-2 mt-4">
             <div className="space-y-4">
               <div className="flex flex-col">
-                <p className="text-[#191819] font-bold text-2xl">
-                  {card.title}
-                </p>
+                <p className="text-[#191819] font-bold text-2xl">{card.title}</p>
                 <p className="text-[#19181980] text-base font-medium">
                   {card.organization}
                 </p>
@@ -232,8 +226,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                     card.status === "Completed"
                       ? "bg-green-100 text-green-800"
                       : card.status === "In progress"
-                      ? "bg-[#F1E6D4] text-[#B78026]"
-                      : "bg-[#FB002B1A] text-[#FB002B]"
+                        ? "bg-[#F1E6D4] text-[#B78026]"
+                        : "bg-[#FB002B1A] text-[#FB002B]"
                   }`}
                     >
                       {card.status}
@@ -329,17 +323,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                             {task.title}
                           </h4>
                           {task.description && (
-                            <p className="text-sm text-gray-500">
-                              {task.description}
-                            </p>
+                            <p className="text-sm text-gray-500">{task.description}</p>
                           )}
                           <div className="flex flex-wrap gap-4 mt-2">
                             {task.dueDate && (
                               <div className="flex items-center gap-1 text-xs text-gray-500">
                                 <LuCalendar size={14} />
                                 <span>
-                                  Due:{" "}
-                                  {new Date(task.dueDate).toLocaleDateString()}
+                                  Due: {new Date(task.dueDate).toLocaleDateString()}
                                 </span>
                               </div>
                             )}
@@ -378,9 +369,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                             </p>
                             <div className="flex justify-between mt-2 text-xs text-gray-500">
                               <span>{note.createdBy}</span>
-                              <span>
-                                {new Date(note.createdAt).toLocaleString()}
-                              </span>
+                              <span>{new Date(note.createdAt).toLocaleString()}</span>
                             </div>
                           </div>
                         </div>
@@ -394,9 +383,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
               {activeTab === "activity" && (
                 <div className="space-y-4">
                   {activities.length === 0 ? (
-                    <div className="text-center py-4 text-gray-500">
-                      No activity yet.
-                    </div>
+                    <div className="text-center py-4 text-gray-500">No activity yet.</div>
                   ) : (
                     activities.map((activity) => (
                       <div
@@ -415,12 +402,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                               {new Date(activity.timestamp).toLocaleString()}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600">
-                            {activity.details}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            by {activity.user}
-                          </p>
+                          <p className="text-sm text-gray-600">{activity.details}</p>
+                          <p className="text-xs text-gray-500 mt-1">by {activity.user}</p>
                         </div>
                       </div>
                     ))

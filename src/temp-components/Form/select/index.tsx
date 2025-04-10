@@ -37,7 +37,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
   // Update selected label when value or options change
   useEffect(() => {
     if (value !== undefined) {
-      const option = options.find(opt => opt.value === value);
+      const option = options.find((opt) => opt.value === value);
       setSelectedValue(value);
       setSelectedLabel(option ? option.label : "");
     }
@@ -50,7 +50,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -62,15 +62,15 @@ export const FormSelect: React.FC<FormSelectProps> = ({
     setSelectedValue(optionValue);
     setSelectedLabel(optionLabel);
     setIsOpen(false);
-    
+
     if (onChange) {
       onChange(optionValue);
     }
-    
+
     // If using react-hook-form
     if (register && register.onChange) {
       const event = {
-        target: { value: optionValue, name: register.name }
+        target: { value: optionValue, name: register.name },
       } as unknown as React.ChangeEvent<HTMLSelectElement>;
       register.onChange(event);
     }
@@ -82,7 +82,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
       setIsOpen(!isOpen);
     }
   };
-  
+
   return (
     <div className="relative space-y-2" ref={dropdownRef}>
       {label && (
@@ -90,7 +90,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
           {label}
         </label>
       )}
-      
+
       {/* Custom select control */}
       <div
         className={`relative w-full px-4 py-3 rounded-[100px] font-[400] border h-[48px] border-[#00000033] text-[14px] flex items-center justify-between cursor-pointer ${
@@ -101,14 +101,17 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         onClick={toggleDropdown}
       >
         <div className={selectedValue ? "text-black" : "text-gray-400"}>
-          {selectedLabel || placeholder || label
-          // (label ? `Select ${label}` : "Select")
+          {
+            selectedLabel || placeholder || label
+            // (label ? `Select ${label}` : "Select")
           }
         </div>
         <div className="flex items-center pointer-events-none">
-          <IoIosArrowDown className={`h-5 w-5 text-black transition-transform ${isOpen ? "transform rotate-180" : ""}`} />
+          <IoIosArrowDown
+            className={`h-5 w-5 text-black transition-transform ${isOpen ? "transform rotate-180" : ""}`}
+          />
         </div>
-        
+
         {/* Hidden actual select - properly hidden with sr-only utility */}
         <select
           id={id}
@@ -124,11 +127,13 @@ export const FormSelect: React.FC<FormSelectProps> = ({
             <option value="">{placeholder ? placeholder : `Select ${label}`}</option>
           )}
           {options.map(({ value, label }) => (
-            <option key={value} value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
       </div>
-      
+
       {/* Custom dropdown */}
       {isOpen && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-[#0000001A] rounded-lg shadow-lg overflow-hidden">
@@ -147,7 +152,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
           </div>
         </div>
       )}
-      
+
       {error && (
         <span className="text-[16px] text-red-500">
           {typeof error === "string" ? error : error.message}

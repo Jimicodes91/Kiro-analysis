@@ -10,7 +10,7 @@ interface ModalProps {
   className?: string;
   expandRoute?: string;
   showExpandButton?: boolean;
-  fullHeight?: boolean; 
+  fullHeight?: boolean;
 }
 
 const Modal = ({
@@ -33,18 +33,20 @@ const Modal = ({
   return (
     <div
       className={`fixed top-0 right-0 w-full h-full flex  ${
-        fullHeight ? 'items-center' : 'items-start'
+        fullHeight ? "items-center" : "items-start"
       } justify-end z-50 bg-[#00000033] ${className}`}
     >
       <div
         className="absolute w-full h-full bg-gray-900 opacity-50"
         onClick={closeModal}
       ></div>
-      <div className={`bg-white  border-[1px] rounded-lg p-4 z-50 w-[90%] md:w-[60%] lg:w-[40%] ${
-        fullHeight ? 'h-full max-h-[90%]' : ' max-h-[90%] mt-6'
-      } mx-[3%] flex flex-col overflow-hidden`}>
+      <div
+        className={`bg-white  border-[1px] rounded-lg p-4 z-50 w-[90%] md:w-[60%] lg:w-[40%] ${
+          fullHeight ? "h-full max-h-[90%]" : " max-h-[90%] mt-6"
+        } mx-[3%] flex flex-col overflow-hidden`}
+      >
         <div className=" border-[1px] rounded-lg flex flex-col h-full">
-        {/* Fixed Header */}
+          {/* Fixed Header */}
           <div className="flex justify-between pb-4 p-3  border-b border-[1px] bg-white sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
             <div className="flex items-center gap-4">
               {showExpandButton && (
@@ -53,7 +55,7 @@ const Modal = ({
                   className="text-light hover:text-gray-700 focus:outline-none"
                   title="Expand"
                 >
-                 <BsArrowsAngleExpand />
+                  <BsArrowsAngleExpand />
                 </button>
               )}
               <div className="text-[18px] font-medium text-[#191819]">{title}</div>
@@ -78,11 +80,10 @@ const Modal = ({
             </button>
           </div>
 
- {/* Scrollable Content Area */}
- <div className="overflow-y-auto flex-grow custom-scrollbar">
-          <div >{children}</div>
+          {/* Scrollable Content Area */}
+          <div className="overflow-y-auto flex-grow custom-scrollbar">
+            <div>{children}</div>
           </div>
-
         </div>
       </div>
     </div>
