@@ -1,7 +1,7 @@
-import { UseFormRegisterReturn } from "react-hook-form";
-import { useState } from "react";
-import { IoEyeOff, IoEye } from "react-icons/io5";
 import type { ChangeEvent, FocusEvent, KeyboardEvent } from "react";
+import { useState } from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
+import { IoEye, IoEyeOff } from "react-icons/io5";
 
 type FormInputProps = {
   type?: "text" | "email" | "password" | "number" | "textarea";
@@ -32,7 +32,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   error,
   disabled = false,
   label,
-  rows=3,
+  rows = 3,
   ...props
 }) => {
   const [inputType, setInputType] = useState(type);
@@ -46,10 +46,10 @@ export const FormInput: React.FC<FormInputProps> = ({
   return (
     <div className="relative space-y-2">
       <label htmlFor={id} className="text-[16px] font-medium text-[#00000099]">
-      {label ? label : placeholder}
+        {label ? label : placeholder}
       </label>
       <div className="relative">
-      {isTextarea ? (
+        {isTextarea ? (
           <textarea
             id={id}
             value={value}
@@ -68,26 +68,26 @@ export const FormInput: React.FC<FormInputProps> = ({
             {...props}
           />
         ) : (
-        <input
-          type={inputType}
-          id={id}
-          value={value}
-          {...register}
-          onFocus={onFocus}
-          onKeyDown={onKeyDown}
-          onChange={onChange}
-          placeholder={placeholder}
-          min={type === "number" ? 0 : undefined}
-          disabled={disabled}
-          className={`${className} w-full px-4 py-4 rounded-[100px] font-[400] border h-[48px] border-[#00000033] placeholder-[#00000080] text-[14px] focus:outline-none ${
-            disabled
-              ? "bg-gray-100 cursor-not-allowed"
-              : "focus:border-black focus:bg-white"
-          }`}
-          {...props}
-        />
+          <input
+            type={inputType}
+            id={id}
+            value={value}
+            {...register}
+            onFocus={onFocus}
+            onKeyDown={onKeyDown}
+            onChange={onChange}
+            placeholder={placeholder}
+            min={type === "number" ? 0 : undefined}
+            disabled={disabled}
+            className={`${className} w-full px-4 py-4 rounded-[100px] font-[400] border h-[48px] border-[#00000033] placeholder-[#00000080] text-[14px] focus:outline-none ${
+              disabled
+                ? "bg-gray-100 cursor-not-allowed"
+                : "focus:border-black focus:bg-white"
+            }`}
+            {...props}
+          />
         )}
-        {type === "password" && !isTextarea  && (
+        {type === "password" && !isTextarea && (
           <button
             type="button"
             onClick={togglePasswordVisibility}
