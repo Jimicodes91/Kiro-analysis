@@ -19,6 +19,24 @@ export const ENDPOINTS = {
   COMPLETE_REGISTRATION: "auth/complete-registration",
   ADD_CLIENT: "auth/add-client",
 
+  // Admin Endpoints
+  GET_DASHBOARD_DETAILS: "admin/dashboard",
+  GET_ALL_COMPANIES: "admin/companies",
+  GET_COMPANY_DETAILS: (companyId: string) => `admin/companies/${companyId}`,
+  UPDATE_COMPANY_STATUS: (companyId: string) => `admin/companies/${companyId}/status`,
+  SUBSCRIBE_COMPANY: (companyId: string) => `admin/companies/${companyId}/subscribe`,
+  CANCEL_COMPANY_SUBSCRIPTION: (companyId: string) =>
+    `admin/companies/${companyId}/cancel-subscription`,
+  RENEW_COMPANY_SUBSCRIPTION: (companyId: string) =>
+    `admin/companies/${companyId}/renew-subscription`,
+  ADD_SYSTEM_ADMIN: "admin/sysadmins",
+  DEACTIVATE_SYSTEM_ADMIN: (adminId: string) => `admin/sysadmins/${adminId}/deactivate`,
+  GET_ACTIVE_ORGANIZATIONS: "admin/active-organization",
+  GET_INACTIVE_ORGANIZATIONS: "admin/inactive-organization",
+  GET_ALL_USERS: `admin/all`,
+  GET_ACTIVE_USERS: `admin/active-users`,
+  GET_ALL_ADMINS: `admin/all-admin`,
+
   // Company Endpoints
   CREATE_COMPANY: "company/create",
 
@@ -162,56 +180,66 @@ export const QUERYKEYS = {
   // Auth Query keys
   VERIFY_EMAIL: "VERIFY_EMAIL",
 
-  // User Endpoints
+  // Admin Query keys
+  GET_DASHBOARD_DETAILS: "GET_DASHBOARD_DETAILS",
+  GET_ALL_COMPANIES: "GET_ALL_COMPANIES",
+  GET_COMPANY_DETAILS: "GET_COMPANY_DETAILS",
+  GET_ACTIVE_ORGANIZATIONS: "GET_ACTIVE_ORGANIZATIONS",
+  GET_INACTIVE_ORGANIZATIONS: "GET_INACTIVE_ORGANIZATIONS",
+  GET_ALL_USERS: "GET_ALL_USERS",
+  GET_ACTIVE_USERS: "GET_ACTIVE_USERS",
+  GET_ALL_ADMINS: "GET_ALL_ADMINS",
+
+  // User Query keys
   GET_USER: "GET_USER",
 
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
   GET_PROJECT_DETAILS: "GET_PROJECT_DETAILS",
 
-  // 1. Project Types
+  // 1. Project Types Query keys
   GET_ALL_PROJECT_TYPES: "GET_ALL_PROJECT_TYPES",
   GET_PROJECT_TYPE_DETAILS: "GET_PROJECT_TYPE_DETAILS",
 
-  // 2. Milestones
+  // 2. Milestones Query keys
   GET_ALL_PROJECT_TYPE_MILESTONES: "GET_ALL_PROJECT_TYPE_MILESTONES",
   GET_MILESTONE_DETAILS: "GET_MILESTONE_DETAILS",
 
-  // 3. Events
+  // 3. Events Query keys
   GET_ALL_PROJECT_EVENTS: "GET_ALL_PROJECT_EVENTS",
   GET_EVENT_DETAILS: "GET_EVENT_DETAILS",
 
-  // 4. Notes
+  // 4. Notes Query keys
   GET_ALL_PROJECT_NOTES: "GET_ALL_PROJECT_NOTES",
   GET_NOTE_DETAILS: "GET_NOTE_DETAILS",
 
-  // 4.1 Notes => Comments
+  // 4.1 Notes => Comments Query keys
   GET_NOTE_COMMENTS: "GET_NOTE_COMMENTS",
 
-  // 5. Tasks
+  // 5. Tasks Query keys
   GET_ALL_PROJECT_TASKS: "GET_ALL_PROJECT_TASKS",
   GET_TASK_DETAILS: "GET_TASK_DETAILS",
 
-  // 6. Documents
+  // 6. Documents Query keys
   GET_ALL_PROJECT_DOCUMENTS: "GET_ALL_PROJECT_DOCUMENTS",
   GET_DOCUMENT_DETAILS: "GET_DOCUMENT_DETAILS",
 
-  // 7. Project Members
+  // 7. Project Members Query keys
   GET_PROJECT_MEMBERS: "GET_PROJECT_MEMBERS",
 
-  // 8. Project Settings
+  // 8. Project Settings Query keys
   GET_PROJECT_SETTINGS: "GET_PROJECT_SETTINGS",
 
-  // 9. Document Types
+  // 9. Document Types Query keys
   GET_DOCUMENT_TYPES: "GET_DOCUMENT_TYPES",
 
-  // 10. Event Types
+  // 10. Event Types Query keys
   GET_EVENT_TYPES: "GET_EVENT_TYPES",
 
-  // 11. Task Types
+  // 11. Task Types Query keys
   GET_TASK_TYPES: "GET_TASK_TYPES",
 
-  // 12. Activity Logs
+  // 12. Activity Logs Query keys
   GET_AUDIT_TRAIL: "GET_AUDIT_TRAIL",
 };
 
