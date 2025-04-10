@@ -245,4 +245,6 @@ export const QUERYKEYS = {
 
 export const PAGES = {
   FORGET_PASSWORD_SUCCESS: "/forgot-password/success",
+  PROJECT_PAGE: "/projects",
+  ONBOARDING_PAGE: "/onboarding",
 };

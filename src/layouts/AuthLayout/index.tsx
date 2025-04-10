@@ -22,15 +22,12 @@ const AuthLayout = () => {
   }, []);
 
   return (
-    <div className="fixed grid w-screen h-screen p-5 rounded-lg md:grid-cols-[40%_60%]">
+    <div className="fixed flex w-screen h-screen p-5 rounded-lg md:grid md:grid-cols-[40%_60%]">
       {/* Left Side (Background Image and Text) */}
       <div
-        className="relative hidden rounded-lg md:flex md:flex-col"
+        className="relative hidden rounded-lg md:flex md:flex-col bg-center bg-cover bg-no-repeat"
         style={{
           background: `rgba(9, 35, 39, 1)`,
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
         }}
       >
         {/* Text Content */}
@@ -51,7 +48,7 @@ const AuthLayout = () => {
       </div>
 
       {/* Right Side (Form Content) */}
-      <div className="flex flex-col p-9 justify-center place-self-center overflow-y-auto overflow-x-hidden">
+      <div className="flex flex-col w-full max-w-lg p-9 justify-center place-self-center overflow-y-auto overflow-x-hidden">
         <Outlet />
       </div>
     </div>

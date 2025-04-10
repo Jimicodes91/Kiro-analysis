@@ -13,7 +13,7 @@ type MutatationParam = Partial<UseMutationOptions> &
 function getMutationAction<P, T>(mutationData: Partial<SecureRequestProps>) {
   const { endpoint, method, headers, extraConfig = {} } = mutationData;
 
-  const url = (import.meta.env.VITE_API_BASE_URL as string) + endpoint;
+  const url = (import.meta.env.VITE_API_BASE_URL_TWO as string) + endpoint;
 
   return {
     mutationFn: (body: Record<string, unknown>) =>
