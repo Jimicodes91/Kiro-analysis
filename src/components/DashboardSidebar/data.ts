@@ -21,7 +21,7 @@ export const DashboardSidebarLinks: SidebarLinks[] = [
   {
     id: 2,
     title: "Project",
-    url: "project",
+    url: "projects",
     image: Project,
     headingText: "Project",
   },
