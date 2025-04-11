@@ -50,7 +50,7 @@ export const updatePasswordApi = (payload: UpdatePasswordProps) =>
   apiRequest(`${authBaseEndpoint}update-password`, payload);
 
 export const sendConsultantInviteApi = (payload: SendConsultantInviteProps) =>
-  apiRequest(`${authBaseEndpoint}send-consultant-invite`, payload);
+  apiRequest(`${authBaseEndpoint}send-invite`, payload);
 
 export const completeRegistrationApi = (payload: CompleteRegProps) =>
   apiRequest(`${authBaseEndpoint}complete-registration`, payload);

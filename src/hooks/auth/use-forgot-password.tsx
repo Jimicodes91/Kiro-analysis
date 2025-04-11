@@ -10,6 +10,7 @@ const useForgotPassword = () => {
   >({
     method: "post",
     endpoint: ENDPOINTS.FORGOT_PASSWORD,
+    message: "Reset link sent",
   });
 };
 

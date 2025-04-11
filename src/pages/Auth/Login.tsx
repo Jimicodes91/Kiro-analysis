@@ -41,7 +41,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className=" flex flex-col">
+    <div className="flex flex-col animate-in fade-in-0 duration-700 ease-in-out">
       <div className="my-3 flex">
         <img src={Logo} alt="Logo" className="w-12" />
       </div>
@@ -63,7 +63,10 @@ const Login: React.FC = () => {
           {...register("password")}
           error={errors.password?.message}
         />{" "}
-        <Link to="/auth/forgot-password" className="text-end text-black  cursor-pointer ">
+        <Link
+          to={PAGES.FORGOT_PASSWORD_PAGE}
+          className="text-end text-black -top-3 relative text-sm font-bold cursor-pointer"
+        >
           Forgot password?
         </Link>
         <MainButton type="submit" isLoading={authLogin.isPending}>
@@ -72,14 +75,14 @@ const Login: React.FC = () => {
       </form>
 
       <div className="space-x-2 mt-4">
-        <p className="text-center mt-4 text-black">
+        <p className="text-center mt-4 text-sm text-black">
           Don't have an account?
-          <span
-            className="text-primary ml-1 font-bold cursor-pointer"
-            onClick={() => navigate("/auth/register")}
+          <Link
+            className="text-primary pl-1 font-bold cursor-pointer"
+            to={PAGES.REGISTER_PAGE}
           >
             Sign Up
-          </span>
+          </Link>
         </p>
       </div>
     </div>

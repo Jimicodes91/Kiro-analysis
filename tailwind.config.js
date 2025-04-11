@@ -67,14 +67,17 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        brand: {
+          faint: "#0000004D",
+          placeholder: "#00000080",
+          border: "00000033",
+        },
       },
       fontFamily: {
         body: ["42dot Sans", "sans-serif"],
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+      gridTemplateColumns: {
+        "auth-layout": "minmax(350px, 500px) 1fr",
       },
     },
   },

@@ -1,8 +1,10 @@
+import { Button } from "@/components/ui/button";
+import { PAGES } from "@/lib/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
@@ -10,7 +12,6 @@ import { FormSelect } from "../../components/Form/select";
 import Toast from "../../components/Toast";
 import { inviteTeamSchema } from "../../components/validationSchema/onboarding";
 import { sendConsultantInviteApi } from "../../services";
-import { RootState } from "../../store";
 import { prevStep, setTeamMembers } from "../../store/slices/onboardingSlice";
 import { TeamMember } from "../../types";
 
@@ -18,9 +19,6 @@ const Step2 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const storedTeamMembers = useSelector(
-    (state: RootState) => state.onboarding.teamMembers
-  );
 
   const {
     register,
@@ -30,9 +28,15 @@ const Step2 = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(inviteTeamSchema),
-    defaultValues: { teamMembers: storedTeamMembers },
+    defaultValues: {
+      teamMembers: [
+        {
+          email: "",
+          role: "",
+        },
+      ],
+    },
   });
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "teamMembers",
@@ -40,7 +44,7 @@ const Step2 = () => {
 
   const onSubmit = async (data: { teamMembers?: TeamMember[] }) => {
     const teamMembers = data.teamMembers || [];
-
+    console.log(data, "teamMembers");
     // Update team members in Redux store
     dispatch(setTeamMembers(teamMembers));
 
@@ -69,7 +73,7 @@ const Step2 = () => {
       Toast.success("Team members invited successfully");
 
       // Navigate to project screen
-      navigate("/project");
+      navigate(PAGES.PROJECT_PAGE);
     } catch (error) {
       // Handle any errors during invitation
       console.error("Error inviting team members:", error);
@@ -95,7 +99,6 @@ const Step2 = () => {
         <div className="mb-12 space-y-4">
           {fields.map((item, index) => {
             const showDeleteButton = fields.length > 1;
-
             return (
               <div
                 key={item.id}
@@ -152,14 +155,14 @@ const Step2 = () => {
           <div className="flex gap-2">
             <MainButton
               variant="outlined"
-              onClick={() => navigate("/project")}
+              onClick={() => navigate(PAGES.PROJECT_PAGE)}
               type="button"
             >
               Skip
             </MainButton>
-            <MainButton type="submit" isLoading={loading}>
+            <Button type="submit" isLoading={loading}>
               Save and continue
-            </MainButton>
+            </Button>
           </div>
         </div>
       </form>

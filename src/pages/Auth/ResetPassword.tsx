@@ -1,30 +1,21 @@
-import React, { useState, useEffect } from "react";
+import useResetPassword from "@/hooks/auth/use-reset-password";
+import { PAGES } from "@/lib/constants";
+import { yupResolver } from "@hookform/resolvers/yup";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Logo } from "../../assets";
-import { useForm } from "react-hook-form";
-import { resetPasswordSchema } from "../../components/validationSchema/auth";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { ResetPasswordFormProps } from "../../types";
-import { resetPasswordApi } from "../../services";
 import Toast from "../../components/Toast";
+import { resetPasswordSchema } from "../../components/validationSchema/auth";
+import { ResetPasswordFormProps } from "../../types";
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Extract token from URL query parameters
-    const searchParams = new URLSearchParams(location.search);
-    const urlToken = searchParams.get("token");
-
-    if (urlToken) {
-      setToken(urlToken);
-    }
-  }, [location, navigate]);
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const resetPassword = useResetPassword();
 
   const {
     register,
@@ -34,30 +25,21 @@ const ResetPassword: React.FC = () => {
     resolver: yupResolver(resetPasswordSchema),
   });
 
-  const onSubmit = async (data: ResetPasswordFormProps) => {
-    setLoading(true);
-    try {
-      if (!token) {
-        throw new Error("No token available");
-      }
-      const payload = {
+  const onSubmit = (data: ResetPasswordFormProps) => {
+    if (!token) {
+      return Toast.error("No token available");
+    }
+    resetPassword
+      .mutateAsync({
         token: token,
         newPassword: data.newPassword,
-      };
-      const response = await resetPasswordApi(payload);
-      navigate("/");
-      Toast.success(response.message || "Password Reset Successful");
-    } catch (error) {
-      console.error("Error resetting password:", error);
-      const errorMessage = (error as { data?: string })?.data || "Password Reset Failed";
-      Toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+      })
+      .catch(console.error)
+      .then(() => navigate(PAGES.LOGIN_PAGE));
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col animate-in fade-in-0 duration-700 ease-in-out">
       <div className="my-3 flex">
         <img src={Logo} alt="Logo" className="w-12" />
       </div>
@@ -80,7 +62,7 @@ const ResetPassword: React.FC = () => {
           error={errors.confirmNewPassword?.message}
         />
 
-        <MainButton type="submit" isLoading={loading}>
+        <MainButton type="submit" isLoading={resetPassword.isPending}>
           Reset Password
         </MainButton>
       </form>
