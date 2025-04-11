@@ -1,4 +1,5 @@
 // src/Pages/NotFound.tsx
+import { PAGES } from "@/lib/constants";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
@@ -9,7 +10,7 @@ const NotFound = () => {
         The page you're looking for doesn't exist.
       </p>
       <Link
-        to="/"
+        to={PAGES.LOGIN_PAGE}
         className="mt-6 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
       >
         Go to Home

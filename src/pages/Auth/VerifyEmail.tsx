@@ -1,12 +1,10 @@
+import { PAGES } from "@/lib/constants";
 import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import {
-  FaSpinner,
-  // FaCheckCircle, FaTimesCircle
-} from "react-icons/fa";
+import { FaSpinner } from "react-icons/fa";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Toast from "../../components/Toast";
 import { resendVerificationEmailApi, verifyEmailApi } from "../../services";
 import VerificationCard from "./VerificationCard";
-import Toast from "../../components/Toast";
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
@@ -24,7 +22,7 @@ const VerifyEmail = () => {
       try {
         await verifyEmailApi({ token });
         setStatus("success");
-        setTimeout(() => navigate("/"), 2000);
+        setTimeout(() => navigate(PAGES.LOGIN_PAGE), 2000);
       } catch (error) {
         console.log(error);
         setStatus("error");

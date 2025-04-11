@@ -1,8 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
 import { FormSelect } from "../../components/Form/select";
 import Toast from "../../components/Toast";
@@ -190,9 +190,9 @@ const Step1 = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <MainButton type="submit" isLoading={loading}>
+            <Button type="submit" isLoading={loading}>
               Save and continue
-            </MainButton>
+            </Button>
           </div>
         </form>
       </div>

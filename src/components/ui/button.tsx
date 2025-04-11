@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { Icons } from "./icons";
+import { BeatLoader } from "react-spinners";
 
 const buttonVariants = cva(
   "inline-flex items-center relative justify-center transition-all text-md duration-200 rounded-lg gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-90 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -103,8 +103,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </span>
         )}
         {isLoading && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <Icons.spinner className={cn("animate-spin", "text-white")} />
+          <div className="absolute top-1/2 pt-1 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <BeatLoader className="text-white" color="white" size={10} />
           </div>
         )}
       </Comp>
