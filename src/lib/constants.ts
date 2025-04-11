@@ -244,7 +244,12 @@ export const QUERYKEYS = {
 };
 
 export const PAGES = {
-  FORGET_PASSWORD_SUCCESS: "/forgot-password/success",
+  // auth pages
+  LOGIN_PAGE: "/",
+  REGISTER_PAGE: "/register",
+  FORGOT_PASSWORD_PAGE: "/forgot-password",
+  RESET_PASSWORD_PAGE: "/reset-password",
+
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
 };

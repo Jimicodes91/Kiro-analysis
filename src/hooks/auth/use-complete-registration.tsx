@@ -6,6 +6,7 @@ const useCompleteRegistration = () => {
     Record<string, string>,
     {
       email: string;
+      role: string;
       password: string;
       companyId: string;
     }

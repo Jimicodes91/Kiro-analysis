@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -157,9 +158,9 @@ const Step2 = () => {
             >
               Skip
             </MainButton>
-            <MainButton type="submit" isLoading={loading}>
+            <Button type="submit" isLoading={loading}>
               Save and continue
-            </MainButton>
+            </Button>
           </div>
         </div>
       </form>

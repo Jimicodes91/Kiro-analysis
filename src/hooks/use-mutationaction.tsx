@@ -1,3 +1,4 @@
+import Toast from "@/components/Toast";
 import { secureRequest } from "@/services/api.service";
 import {
   PylottResponseType,
@@ -5,7 +6,6 @@ import {
   SecureRequestProps,
 } from "@/types/api.types";
 import { MutationFunction, UseMutationOptions, useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 
 type MutatationParam = Partial<UseMutationOptions> &
   Partial<SecureRequestProps> & { endpoint: string };
@@ -68,7 +68,7 @@ function useCustomMutation<P = Record<string, unknown>, T = Record<string, unkno
       if (showFailureToast) {
         const errorMsg = errorFormatter(err?.response?.data);
 
-        toast.error(errorMsg);
+        Toast.error(errorMsg);
       }
       mutatationResult.reset();
     },
@@ -78,7 +78,7 @@ function useCustomMutation<P = Record<string, unknown>, T = Record<string, unkno
     ) => {
       if (err) mutatationResult.reset();
       if (!err && (showSuccessToast || message)) {
-        toast.success(`${message ?? res?.data?.message}`);
+        Toast.success(`${message ?? res?.data?.message}`);
       }
       return;
     },
