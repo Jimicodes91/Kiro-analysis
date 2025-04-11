@@ -44,8 +44,8 @@ export const FormInput: React.FC<FormInputProps> = ({
   const isTextarea = type === "textarea";
 
   return (
-    <div className="relative space-y-2">
-      <label htmlFor={id} className="text-[16px] font-medium text-[#00000099]">
+    <div className="relative space-y-1">
+      <label htmlFor={id} className="text-sm font-medium text-[#00000099]">
         {label ? label : placeholder}
       </label>
       <div className="relative">
@@ -79,7 +79,7 @@ export const FormInput: React.FC<FormInputProps> = ({
             placeholder={placeholder}
             min={type === "number" ? 0 : undefined}
             disabled={disabled}
-            className={`${className} w-full px-4 py-4 rounded-[100px] font-[400] border h-[48px] border-[#00000033] placeholder-[#00000080] text-[14px] focus:outline-none ${
+            className={`${className} w-full px-4 py-4 rounded-[100px] font-[400] border h-12 border-[#00000033] placeholder-[#00000080] text-[14px] focus:outline-none ${
               disabled
                 ? "bg-gray-100 cursor-not-allowed"
                 : "focus:border-black focus:bg-white"
@@ -103,7 +103,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         )}
       </div>
       {error && (
-        <span className="text-[16px] text-red-500">
+        <span className="text-xs text-red-500 relative">
           {typeof error === "string" ? error : error.message}
         </span>
       )}

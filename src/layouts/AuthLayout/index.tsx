@@ -1,28 +1,9 @@
-import { useEffect, useReducer } from "react";
 import { Outlet } from "react-router-dom";
 import { Group } from "../../assets";
 
 const AuthLayout = () => {
-  const initialState = {
-    openMobileSideBar: false,
-  };
-  const [, setState] = useReducer(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    initialState
-  );
-
-  useEffect(() => {
-    // Cleanup method
-    return () => {
-      setState({
-        ...initialState,
-      });
-    };
-  }, []);
-
   return (
-    <div className="fixed flex w-screen h-screen p-5 rounded-lg md:grid md:grid-cols-[40%_60%]">
+    <div className="fixed flex justify-center items-center md:justify-normal md:items-stretch  w-screen h-screen p-5 rounded-lg md:grid md:grid-cols-[40%_60%]">
       {/* Left Side (Background Image and Text) */}
       <div
         className="relative hidden rounded-lg md:flex md:flex-col bg-center bg-cover bg-no-repeat"
@@ -48,7 +29,7 @@ const AuthLayout = () => {
       </div>
 
       {/* Right Side (Form Content) */}
-      <div className="flex flex-col w-full max-w-lg p-9 justify-center place-self-center overflow-y-auto overflow-x-hidden">
+      <div className="flex flex-col w-full max-w-lg p-5 md:p-9 justify-center self-center place-self-center overflow-y-auto overflow-x-hidden">
         <Outlet />
       </div>
     </div>

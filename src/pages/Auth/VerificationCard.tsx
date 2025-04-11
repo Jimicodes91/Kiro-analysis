@@ -26,8 +26,8 @@ const VerificationCard: React.FC<VerificationCardProps> = ({
   children,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-96">
-      <div className="bg-[#E0EFDE80] border border-[#0000001A] rounded-[10px] p-10 text-center max-w-sm w-full">
+    <div className="flex flex-col items-center justify-center min-h-screen w-full animate-in fade-in-0 duration-700 ease-in-out">
+      <div className="bg-[#E0EFDE80] border border-[#0000001A] rounded-[10px] p-10 text-center w-full">
         <div className="flex justify-center mb-4">
           <img src={Logo} alt="Logo" className="w-12" />
         </div>

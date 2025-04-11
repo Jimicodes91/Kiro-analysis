@@ -1,10 +1,10 @@
 import AuthLayout from "@/layouts/AuthLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { RouteObject } from "react-router-dom";
+import CompleteInvite from "../pages/Auth/CompleteInvite";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import Login from "../pages/Auth/Login";
 import ResetPassword from "../pages/Auth/ResetPassword";
-import SetUp from "../pages/Auth/SetUp";
 import SignUp from "../pages/Auth/SignUp";
 import VerifyEmail from "../pages/Auth/VerifyEmail";
 import Home from "../pages/Home";
@@ -25,10 +25,10 @@ export const AuthRoutes: RouteObject[] = [
     children: [
       { index: true, element: <Login /> },
       {
-        path: "auth",
+        path: "/",
         children: [
           { path: "register", element: <SignUp /> },
-          { path: "setup", element: <SetUp /> },
+          { path: "complete-invite", element: <CompleteInvite /> },
           { path: "forgot-password", element: <ForgotPassword /> },
           { path: "reset-password", element: <ResetPassword /> },
         ],

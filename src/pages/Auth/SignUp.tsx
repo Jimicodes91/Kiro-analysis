@@ -1,130 +1,108 @@
+import useAdminSignup from "@/hooks/auth/use-admin-signup";
+import useResendVerificationEmail from "@/hooks/auth/use-resend-verification-email";
+import { PAGES } from "@/lib/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
-import Toast from "../../components/Toast";
 import { signupSchema } from "../../components/validationSchema/auth";
-import { resendVerificationEmailApi, signUpAdminUserApi } from "../../services";
 import { AdminSignUpFormProps } from "../../types";
 import VerificationCard from "./VerificationCard";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [loading, setLoading] = useState(false);
-
+  const resendVerificationEmail = useResendVerificationEmail();
+  const adminSignup = useAdminSignup();
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(signupSchema),
   });
 
   const onSubmit = async (data: AdminSignUpFormProps) => {
-    setLoading(true);
-    try {
-      const payload = {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      };
-      const response = await signUpAdminUserApi(payload);
-      setShowConfirmation(true);
-      setEmail(data.email);
-      Toast.success(response.message || "Signup Successful");
-    } catch (error) {
-      console.error("Error signing up:", error);
-      const errorMessage = (error as { data?: string })?.data || "Error signing up";
-      Toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+    adminSignup.mutateAsync(data).catch(console.error);
   };
 
   const resendVerification = async () => {
-    try {
-      const response = await resendVerificationEmailApi({ email });
-      Toast.success(response.message || "Verification link sent");
-    } catch (error) {
-      console.error("Error resending verification:", error);
-      const errorMessage =
-        (error as { data?: string })?.data || "Error sending verification link";
-      Toast.error(errorMessage);
-    }
+    resendVerificationEmail.mutateAsync({ email: watch("email") }).catch(console.error);
   };
 
+  if (adminSignup.isSuccess && adminSignup.data) {
+    return (
+      <VerificationCard
+        title="Email verification"
+        email={watch("email")}
+        buttonText="Back to login"
+        onResend={() => resendVerification()}
+        showResend={true}
+        onButtonClick={() => navigate(PAGES.LOGIN_PAGE)}
+      />
+    );
+  }
+
   return (
-    <>
-      {!showConfirmation ? (
-        <div className=" flex flex-col">
-          <div className="my-3 flex">
-            <img src={Logo} alt="Logo" className="w-12" />
-          </div>
-          <h1 className="text-3xl font-medium">Get started</h1>
-          <p>Welcome to Pylot - Lets create your account</p>
-          <form
-            className="flex flex-col w-96 space-y-4 mt-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <FormInput
-              type="text"
-              placeholder="Name"
-              {...register("name")}
-              error={errors.name?.message}
-            />
+    <div className=" flex flex-col space-y-8 animate-in fade-in-0 duration-700 ease-in-out">
+      <div>
+        <div className="my-3 flex">
+          <img src={Logo} alt="Logo" className="w-12" />
+        </div>
+        <h1 className="text-3xl font-medium">Get started</h1>
+        <p className="text-brand-faint font-[500]">
+          Welcome to Pylot - Lets create your account
+        </p>
+      </div>
+      <form className="flex flex-col space-y-5" onSubmit={handleSubmit(onSubmit)}>
+        <FormInput
+          type="text"
+          placeholder="Name"
+          {...register("name")}
+          error={errors.name?.message}
+        />
 
-            <FormInput
-              type="email"
-              placeholder="Email"
-              {...register("email")}
-              error={errors.email?.message}
-            />
+        <FormInput
+          type="email"
+          placeholder="Email"
+          {...register("email")}
+          error={errors.email?.message}
+        />
 
-            <FormInput
-              type="password"
-              placeholder="Password"
-              {...register("password")}
-              error={errors.password?.message}
-            />
-            <FormInput
-              type="password"
-              placeholder="Confirm Password"
-              {...register("confirmPassword")}
-              error={errors.confirmPassword?.message}
-            />
+        <FormInput
+          type="password"
+          placeholder="Password"
+          {...register("password")}
+          error={errors.password?.message}
+        />
+        <FormInput
+          type="password"
+          placeholder="Confirm Password"
+          {...register("confirmPassword")}
+          error={errors.confirmPassword?.message}
+        />
 
-            <MainButton type="submit" isLoading={loading}>
-              Sign Up
-            </MainButton>
-          </form>
-          <div className="space-x-2 mt-4">
-            <p className="text-center mt-4 text-black">
+        <div className="flex flex-col pt-4 space-y-2">
+          <MainButton type="submit" isLoading={adminSignup.isPending}>
+            Sign Up
+          </MainButton>
+          <div className="space-x-2">
+            <p className="text-center text-sm text-black">
               Already have an account?
-              <span
+              <Link
                 className="text-primary ml-1 font-bold cursor-pointer"
-                onClick={() => navigate("/")}
+                to={PAGES.LOGIN_PAGE}
               >
                 Login
-              </span>
+              </Link>
             </p>
           </div>
         </div>
-      ) : (
-        <VerificationCard
-          title="Email verification"
-          email={email}
-          buttonText="Back"
-          onButtonClick={() => setShowConfirmation(false)}
-          showResend={true}
-          onResend={() => resendVerification()}
-        />
-      )}
-    </>
+      </form>
+    </div>
   );
 };
 
