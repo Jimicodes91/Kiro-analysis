@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 // Column Definition for the main table
@@ -9,15 +9,16 @@ type ColumnDefinition<T, K extends keyof T> = {
   render?: (value: T[K], row: T) => React.ReactNode;
 };
 
-// Column Definition for the sub-table
-type SubColumnDefinition<K extends string> = {
-  key: K;
+// Column Definition for the sub-table with proper typing
+type SubColumnDefinition<T> = {
+  key: string;
   header: string;
-  width?: string; // Added width property for consistency
+  width?: string;
+  render?: (value: unknown, row: T) => React.ReactNode;
 };
 
-// Row Data for the sub-table
-type SubTableRowData = { [key: string]: string | number | boolean | null | undefined };
+// Row Data for the sub-table with better typing
+type SubTableRowData = Record<string, unknown>;
 
 // Table Props
 type TableProps<T, K extends keyof T> = {
@@ -31,7 +32,7 @@ type TableProps<T, K extends keyof T> = {
   onRowClick?: (row: T) => void;
   expandable?: boolean;
   subData?: (row: T) => SubTableRowData[];
-  subColumns?: (row: T) => SubColumnDefinition<string>[];
+  subColumns?: (row: T) => SubColumnDefinition<SubTableRowData>[];
 };
 
 const Table = <T, K extends keyof T>({
@@ -122,7 +123,10 @@ const Table = <T, K extends keyof T>({
                             className={`${rowBgColor} ${rowClassName} ${isExpanded && expandable ? "border-0" : "border-b"} ${
                               onRowClick ? "cursor-pointer" : ""
                             }`}
-                            onClick={() => onRowClick && onRowClick(row)}
+                            onClick={() => {
+                              if (onRowClick) onRowClick(row);
+                              if (expandable) toggleRowExpansion(rowIndex);
+                            }}
                           >
                             {columns.map((column, colIndex) => (
                               <td
@@ -135,14 +139,14 @@ const Table = <T, K extends keyof T>({
                               </td>
                             ))}
                             {expandable && subData && subColumns && (
-                              <td className={`${cellClassName} w-12`}>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation(); // Prevent row click event
-                                    toggleRowExpansion(rowIndex);
-                                  }}
-                                  className="text-black flex justify-center w-full"
-                                >
+                              <td
+                                className={`${cellClassName} w-12`}
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent row click event
+                                  toggleRowExpansion(rowIndex);
+                                }}
+                              >
+                                <button className="text-black flex justify-center w-full">
                                   {isExpanded ? (
                                     <IoIosArrowUp /> // Up arrow
                                   ) : (
@@ -192,14 +196,13 @@ const Table = <T, K extends keyof T>({
   );
 };
 
-// Improved Sub-table Component with consistent alignment
-const SubTable = ({
+const SubTable = <T extends SubTableRowData>({
   data,
   columns,
   parentCellClassName = "p-4",
 }: {
-  data: SubTableRowData[];
-  columns: SubColumnDefinition<string>[];
+  data: T[];
+  columns: SubColumnDefinition<T>[];
   parentCellClassName?: string;
 }) => {
   return (
@@ -224,7 +227,9 @@ const SubTable = ({
                 key={`sub-cell-${rowIndex}-${colIndex}`}
                 className={`${parentCellClassName} ${column.width || ""}`}
               >
-                {row[column.key]}
+                {column.render
+                  ? column.render(row[column.key], row)
+                  : (row[column.key] as React.ReactNode)}
               </td>
             ))}
           </tr>

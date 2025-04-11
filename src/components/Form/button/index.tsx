@@ -9,6 +9,7 @@ type MainButtonProps = {
   isLoading?: boolean;
   style?: React.CSSProperties;
   variant?: "filled" | "outlined";
+  modalButton?: boolean;
 };
 
 export const MainButton: React.FC<MainButtonProps> = ({
@@ -19,12 +20,13 @@ export const MainButton: React.FC<MainButtonProps> = ({
   className = "",
   disabled = false,
   variant = "filled",
+  modalButton = false,
   ...props
 }) => {
   const baseStyles =
     "p-3 h-[41px] text-[16px] justify-center flex items-center py-6 px-10 rounded-3xl border transition-all duration-200";
 
-  const filledStyles = "bg-primary text-white border-primary";
+  const filledStyles = `${modalButton ? "bg-[#191819] border-[#191819]" : "bg-primary border-primary"} text-white`;
 
   const outlinedStyles =
     "bg-transparent text-primary border-primary hover:bg-[#E0EFDE] hover:text-primary hover:border-[#E0EFDE]";

@@ -24,7 +24,11 @@ export const addTaskTypeSchema = yup.object().shape({
 export const addProjectTypeSchema = yup.object().shape({
   projectName: yup.string().required("Project name is required"),
   assignTo: yup.string().required("Assign to is required"),
-  billingType: yup.string().required("Billing type is required"),
+  milestones: yup.array().of(
+    yup.object().shape({
+      value: yup.string().required("Milestone is required"),
+    })
+  ),
 });
 
 export const addMilestoneSchema = yup.object().shape({

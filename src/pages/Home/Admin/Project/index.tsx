@@ -1,18 +1,18 @@
+import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import {
+  // useFieldArray,
+  useForm,
+} from "react-hook-form";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoAdd } from "react-icons/io5";
-import ViewToggle from "../../../../components/Cards/ViewToggle";
 import { MainButton } from "../../../../components/Form/button";
 import { FormInput } from "../../../../components/Form/input";
 import { FormSelect } from "../../../../components/Form/select";
 import Modal from "../../../../components/Modal";
 import Table from "../../../../components/Table";
-import {
-  addMilestoneSchema,
-  addProjectTypeSchema,
-  addStepSchema,
-} from "../../../../components/validationSchema/admin";
+import { addMilestoneSchema } from "../../../../components/validationSchema/admin";
 
 interface ColumnDefinition<T, K extends keyof T> {
   key: K;
@@ -23,10 +23,10 @@ interface ColumnDefinition<T, K extends keyof T> {
 
 // Interfaces for the form data
 // interface ProjectTypeFormData {
-//     projectName: string;
-//     assignTo: "consultant" | "client" | "customer";
-//     billingType: "consultant" | "client" | "customer";
-//   }
+//   projectName: string;
+//   assignTo: string;
+//   milestones: { value: string }[]; // Array of milestones
+// }
 
 //   interface StepFormData {
 //     stepName: string;
@@ -42,73 +42,52 @@ interface ColumnDefinition<T, K extends keyof T> {
 
 interface Project {
   id: number;
-  phase: string;
-  milestone: string;
-  steps: number;
-  duration: number;
-  date: string;
+  typeName: string;
+  action: string;
 }
 
 const ProjectTab: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("table");
-  const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+  //   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const [isMilestoneModalOpen, setIsMilestoneModalOpen] = useState(false);
-  const [isStepModalOpen, setIsStepModalOpen] = useState(false);
-  const [loadingType, setLoadingType] = useState(false);
+  //   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
+  //   const [loadingType, setLoadingType] = useState(false);
   const [loadingMilestone, setLoadingMilestone] = useState(false);
-  const [loadingStep, setLoadingStep] = useState(false);
   const project = [
     {
       id: 1,
-      phase: "Onboarding",
-      milestone: "Pretravel",
-      steps: 6,
-      duration: 8,
-      date: "02 Nov 2023",
+      typeName: "Dubai Registration",
+      action: "",
     },
     {
       id: 2,
-      phase: "Licensing",
-      milestone: "Pretravel",
-      steps: 6,
-      duration: 8,
-      date: "02 Nov 2023",
+      typeName: "Dubai Registration",
+      action: "",
     },
     {
       id: 3,
-      phase: "Permit",
-      milestone: "Pretravel",
-      steps: 6,
-      duration: 8,
-      date: "02 Nov 2023",
-    },
-    {
-      id: 4,
-      phase: "Travel",
-      milestone: "Pretravel",
-      steps: 6,
-      duration: 8,
-      date: "02 Nov 2023",
+      typeName: "Dubai Registration",
+      action: "",
     },
   ];
 
   // Project type form
-  const {
-    register: registerType,
-    handleSubmit: handleSubmitType,
-    formState: { errors: errorsType },
-  } = useForm({
-    resolver: yupResolver(addProjectTypeSchema),
-  });
+  //   const {
+  //     register: registerType,
+  //     handleSubmit: handleSubmitType,
+  //     control: typeControl,
+  //     formState: { errors: errorsType },
+  //   } = useForm<ProjectTypeFormData>({
+  //     resolver: yupResolver(addProjectTypeSchema),
+  //     defaultValues: {
+  //       milestones: [{ value: "" }],
+  //     },
+  //   });
 
-  // Step form
-  const {
-    register: registerStep,
-    handleSubmit: handleSubmitStep,
-    formState: { errors: errorsStep },
-  } = useForm({
-    resolver: yupResolver(addStepSchema),
-  });
+  // Field array for milestones
+  //   const { fields, append } = useFieldArray({
+  //     control: typeControl,
+  //     name: "milestones",
+  //   });
 
   // Milestone form
   const {
@@ -121,55 +100,33 @@ const ProjectTab: React.FC = () => {
 
   const columns: ColumnDefinition<Project, keyof Project>[] = [
     {
-      key: "phase",
-      header: "Phase",
-      width: "w-1/5",
+      key: "typeName",
+      header: "Type Name",
+      width: "w-2/3",
     },
     {
-      key: "milestone",
-      header: "Milestone",
-      width: "w-1/5",
-    },
-    {
-      key: "steps",
-      header: "Steps",
-      width: "w-1/5",
-    },
-    {
-      key: "duration",
-      header: "Duration (days)",
-      width: "w-1/5",
-    },
-    {
-      key: "date",
-      header: "",
-      width: "w-1/5",
+      key: "action",
+      header: "Action",
+      width: "w-1/3",
+      render: () => (
+        <Button variant="outline" onClick={() => {}}>
+          View project form{" "}
+        </Button>
+      ),
     },
   ];
 
-  const onSubmitType = async () => {
-    setLoadingType(true);
-    try {
-      // Your API call or actions here
-      setIsTypeModalOpen(false);
-    } catch (error) {
-      console.error(`Failed to add project type:`, error);
-    } finally {
-      setLoadingType(false);
-    }
-  };
-
-  const onSubmitStep = async () => {
-    setLoadingStep(true);
-    try {
-      // Your API call or actions here
-      setIsStepModalOpen(false);
-    } catch (error) {
-      console.error(`Failed to add step:`, error);
-    } finally {
-      setLoadingStep(false);
-    }
-  };
+  //   const onSubmitType = async () => {
+  //     setLoadingType(true);
+  //     try {
+  //       // Your API call or actions here
+  //       setIsTypeModalOpen(false);
+  //     } catch (error) {
+  //       console.error(`Failed to add project type:`, error);
+  //     } finally {
+  //       setLoadingType(false);
+  //     }
+  //   };
 
   const onSubmitMilestone = async () => {
     setLoadingMilestone(true);
@@ -187,8 +144,9 @@ const ProjectTab: React.FC = () => {
   const getSubTableData = () => {
     // Return specific sub-table data based on row
     return [
-      { item: "Item A", quantity: 10, price: 5 },
-      { item: "Item B", quantity: 20, price: 7 },
+      { milestone: "Onboarding", duration: 2, action: "" },
+      { milestone: "Design", duration: 3, action: "" },
+      { milestone: "Development", duration: 5, action: "" },
     ];
   };
 
@@ -196,67 +154,41 @@ const ProjectTab: React.FC = () => {
   const getSubTableColumns = () => {
     // Return specific columns for the sub-table based on row
     return [
-      { key: "item", header: "Item" },
-      { key: "quantity", header: "Quantity" },
-      { key: "price", header: "Price" },
+      { key: "milestone", header: "Milestone", width: "w-1/2" },
+      { key: "duration", header: "Duration", width: "w-1/2" },
+      { key: "action", header: "", render: () => <BsThreeDotsVertical /> },
     ];
   };
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <ViewToggle
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          options={[
-            { value: "table", label: "Project type" },
-            { value: "form", label: "Project form" },
-          ]}
-        />
-        <div className="flex justify-between space-x-2">
-          <FormSelect
-            value={"dubai"}
-            options={[{ value: "dubai", label: "Dubai Registration" }]}
-          />
-          <MainButton onClick={() => setIsTypeModalOpen(true)}>
-            {" "}
-            <span className="mr-3 text-xl">
-              <IoAdd className="text-white" />
-            </span>
-            Add project type
-          </MainButton>
-        </div>
+      <div className="flex justify-between items-center my-2">
+        <h1 className="text-[16px] font-[600]">Project type </h1>
+        <MainButton
+          onClick={
+            () => {}
+            // setIsTypeModalOpen(true)
+          }
+        >
+          {" "}
+          <span className="mr-3 text-xl">
+            <IoAdd className="text-white" />
+          </span>
+          Add project type
+        </MainButton>
       </div>
-
-      <div className="border-[1px] border-[#0000001A] rounded-lg mt-4 p-4">
-        {activeTab === "table" ? (
-          <>
-            <div className="flex justify-between items-center my-2">
-              <h1 className="text-[16px] font-[600]">Milestone </h1>
-              <MainButton
-                variant="outlined"
-                onClick={() => setIsMilestoneModalOpen(true)}
-              >
-                Create milestone
-              </MainButton>
-            </div>
-            <Table
-              data={project}
-              columns={columns}
-              className="border-none"
-              rowClassName="hover:bg-gray-50 transition-colors"
-              expandable={true} // Enable expandable functionality
-              subData={getSubTableData} // Pass row-specific sub-table data
-              subColumns={getSubTableColumns} // Pass row-specific sub-table columns
-            />
-          </>
-        ) : (
-          <div> Form </div>
-        )}
-      </div>
+      <Table
+        data={project}
+        columns={columns}
+        className="border-none"
+        rowClassName="hover:bg-gray-50 transition-colors"
+        expandable={true} // Enable expandable functionality
+        subData={getSubTableData} // Pass row-specific sub-table data
+        subColumns={getSubTableColumns} // Pass row-specific sub-table columns
+      />
 
       {/* Modal to add project type */}
-      {isTypeModalOpen && (
+      {/* {isTypeModalOpen && (
         <Modal
           title="Add project type"
           closeModal={() => setIsTypeModalOpen(false)}
@@ -282,66 +214,32 @@ const ProjectTab: React.FC = () => {
               register={registerType("assignTo")}
               error={errorsType.assignTo?.message}
             />
-            <FormSelect
-              label="Billing type"
-              options={[
-                { value: "consultant", label: "Consultant" },
-                { value: "client", label: "Client" },
-                { value: "customer", label: "Customer" },
-              ]}
-              register={registerType("billingType")}
-              error={errorsType.billingType?.message}
-            />
-            <MainButton type="submit" isLoading={loadingType}>
+            <div className="flex flex-col gap-2"> */}
+      {/* <label className="text-sm font-medium text-gray-700">Milestone</label> */}
+      {/* {fields.map((field, index) => (
+                <FormInput
+                  key={field.id}
+                  placeholder="Milestone"
+                  {...registerType(`milestones.${index}.value`)}
+                  error={errorsType?.milestones?.[index]?.value?.message}
+                />
+              ))} */}
+
+      {/* <button
+                type="button"
+                onClick={() => append({ value: "" })}
+                className="flex items-center text-[14px] font-[600] text-black hover:text-primary my-3"
+              >
+                <IoAdd className="mr-2 text-[14px] font-[600] text-black hover:text-primary" />
+                Add milestone
+              </button>
+            </div>
+            <MainButton modalButton type="submit" isLoading={loadingType}>
               Add project type
             </MainButton>
           </form>
         </Modal>
-      )}
-
-      {/* Modal to add step */}
-      {isStepModalOpen && (
-        <Modal
-          title="Add step"
-          closeModal={() => setIsStepModalOpen(false)}
-          fullHeight={false}
-        >
-          <form
-            onSubmit={handleSubmitStep(onSubmitStep)}
-            className="flex flex-col gap-4 p-4"
-          >
-            <FormInput
-              label="Step name"
-              placeholder="Step name"
-              {...registerStep("stepName")}
-              error={errorsStep.stepName?.message}
-            />
-            <FormSelect
-              label="Duration (days)"
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3" },
-              ]}
-              register={registerStep("duration")}
-              error={errorsStep.duration?.message}
-            />
-            <FormSelect
-              label="Assign to"
-              options={[
-                { value: "consultant", label: "Consultant" },
-                { value: "client", label: "Client" },
-                { value: "customer", label: "Customer" },
-              ]}
-              register={registerStep("assignTo")}
-              error={errorsStep.assignTo?.message}
-            />
-            <MainButton type="submit" isLoading={loadingStep}>
-              Add step
-            </MainButton>
-          </form>
-        </Modal>
-      )}
+      )} */}
 
       {/* Modal to add milestone */}
       {isMilestoneModalOpen && (
@@ -380,7 +278,7 @@ const ProjectTab: React.FC = () => {
               register={registerMilestone("assignTo")}
               error={errorsMilestone.assignTo?.message}
             />
-            <MainButton type="submit" isLoading={loadingMilestone}>
+            <MainButton modalButton type="submit" isLoading={loadingMilestone}>
               Add milestone
             </MainButton>
           </form>
