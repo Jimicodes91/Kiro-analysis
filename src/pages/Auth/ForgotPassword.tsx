@@ -32,7 +32,7 @@ const ForgotPassword: React.FC = () => {
         title="Reset link sent"
         description="Please click the link in the email sent to you to continue"
         buttonText="Back to login"
-        onButtonClick={() => navigate("/")}
+        onButtonClick={() => navigate(PAGES.LOGIN_PAGE)}
       />
     );
   }

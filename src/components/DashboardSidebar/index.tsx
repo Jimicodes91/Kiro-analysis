@@ -1,9 +1,10 @@
-import SidebarLayout from "./SidebarLayout";
-import { useNavigate } from "react-router-dom";
-import { DashboardBottomLinks, DashboardSidebarLinks } from "./data";
-import { Logo, LogoWithText, LeftArrow, RightArrow } from "../../assets";
-import "../../index.css";
+import { PAGES } from "@/lib/constants";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { LeftArrow, Logo, LogoWithText, RightArrow } from "../../assets";
+import "../../index.css";
+import { DashboardBottomLinks, DashboardSidebarLinks } from "./data";
+import SidebarLayout from "./SidebarLayout";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -16,7 +17,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }: SidebarProps) => {
   const handleLinkClick = (url: string) => {
     if (url === "logout") {
       localStorage.clear();
-      navigate("/");
+      navigate(PAGES.LOGIN_PAGE);
     } else if (url === "toggle") {
       toggleSidebar();
     } else {
