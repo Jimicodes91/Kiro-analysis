@@ -1,5 +1,6 @@
 import AuthLayout from "@/layouts/AuthLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
 import { RouteObject } from "react-router-dom";
 import CompleteInvite from "../pages/Auth/CompleteInvite";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
@@ -76,6 +77,10 @@ export const HomeRoutes = {
     {
       path: "projects",
       element: <Project />,
+    },
+    {
+      path: "projects/create",
+      element: <CreateProjectTemplate />,
     },
     {
       path: "projects/:id",

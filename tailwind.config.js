@@ -71,6 +71,9 @@ export default {
           faint: "#0000004D",
           placeholder: "#00000080",
           border: "00000033",
+          primary: "#E0EFDE",
+          text: "#74757F",
+          gray: "#F4F4F4",
         },
       },
       fontFamily: {

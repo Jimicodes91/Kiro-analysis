@@ -1,7 +1,11 @@
+import { Button } from "@/components/ui/button";
+import useGetAllCompanies from "@/hooks/admin/use-get-all-companies";
+import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoAdd } from "react-icons/io5";
+import { InferType } from "yup";
 import ViewToggle from "../../../../components/Cards/ViewToggle";
 import { MainButton } from "../../../../components/Form/button";
 import { FormInput } from "../../../../components/Form/input";
@@ -54,9 +58,10 @@ const ProjectTab: React.FC = () => {
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const [isMilestoneModalOpen, setIsMilestoneModalOpen] = useState(false);
   const [isStepModalOpen, setIsStepModalOpen] = useState(false);
-  const [loadingType, setLoadingType] = useState(false);
   const [loadingMilestone, setLoadingMilestone] = useState(false);
   const [loadingStep, setLoadingStep] = useState(false);
+  const createProjectType = useCreateProjectType();
+  useGetAllCompanies();
   const project = [
     {
       id: 1,
@@ -106,6 +111,7 @@ const ProjectTab: React.FC = () => {
     register: registerStep,
     handleSubmit: handleSubmitStep,
     formState: { errors: errorsStep },
+    reset,
   } = useForm({
     resolver: yupResolver(addStepSchema),
   });
@@ -147,16 +153,16 @@ const ProjectTab: React.FC = () => {
     },
   ];
 
-  const onSubmitType = async () => {
-    setLoadingType(true);
-    try {
-      // Your API call or actions here
-      setIsTypeModalOpen(false);
-    } catch (error) {
-      console.error(`Failed to add project type:`, error);
-    } finally {
-      setLoadingType(false);
-    }
+  const onSubmitType = async (data: InferType<typeof addProjectTypeSchema>) => {
+    createProjectType
+      .mutateAsync({
+        name: data.projectName,
+      })
+      .then(() => {
+        reset();
+        setIsTypeModalOpen(false);
+      })
+      .catch(console.error);
   };
 
   const onSubmitStep = async () => {
@@ -258,7 +264,7 @@ const ProjectTab: React.FC = () => {
       {/* Modal to add project type */}
       {isTypeModalOpen && (
         <Modal
-          title="Add project type"
+          title="Create Pipeline"
           closeModal={() => setIsTypeModalOpen(false)}
           fullHeight={false}
         >
@@ -272,29 +278,10 @@ const ProjectTab: React.FC = () => {
               {...registerType("projectName")}
               error={errorsType.projectName?.message}
             />
-            <FormSelect
-              label="Assign to"
-              options={[
-                { value: "consultant", label: "Consultant" },
-                { value: "client", label: "Client" },
-                { value: "customer", label: "Customer" },
-              ]}
-              register={registerType("assignTo")}
-              error={errorsType.assignTo?.message}
-            />
-            <FormSelect
-              label="Billing type"
-              options={[
-                { value: "consultant", label: "Consultant" },
-                { value: "client", label: "Client" },
-                { value: "customer", label: "Customer" },
-              ]}
-              register={registerType("billingType")}
-              error={errorsType.billingType?.message}
-            />
-            <MainButton type="submit" isLoading={loadingType}>
-              Add project type
-            </MainButton>
+
+            <Button type="submit" isLoading={createProjectType.isPending}>
+              Create Pipeline
+            </Button>
           </form>
         </Modal>
       )}

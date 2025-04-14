@@ -1,17 +1,15 @@
 import { CustomMethod, SecureRequestProps } from "@/types/api.types";
 import axios from "axios";
-import { deleteCookie, getCookie, setCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 
 export async function logout() {
   // Destroy the session
-  setCookie("wema-auth-session", "", { expires: new Date(0) });
-  setCookie("wema-user-id", "", { expires: new Date(0) });
-  deleteCookie("wema-auth-session");
-  deleteCookie("wema-user-id");
+  deleteCookie("user_session_token");
+  deleteCookie("user_session");
 }
 
-export async function getSession() {
-  const session = await getCookie("wema-auth-session");
+export async function getSessionToken() {
+  const session = await getCookie("user_session_token");
   if (!session) {
     return null;
   } else {
@@ -38,7 +36,7 @@ export async function getSession() {
 
 axios.interceptors.request.use(
   async (config) => {
-    const session = await getSession();
+    const session = await getSessionToken();
     const token = session;
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
@@ -66,7 +64,7 @@ axios.interceptors.response.use(
       //   return Promise.reject(err); // Handle refresh token failure
       // }
       logout().finally(() => {
-        window.location.href = `/login?callback=${window.location.href}`;
+        window.location.href = `/?callback=${window.location.href}`;
       });
     }
     return Promise.reject(error);

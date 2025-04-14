@@ -6,7 +6,7 @@ export interface CreateProjectSchema {
   project_type_id: string;
   start_date: string;
   end_date: string;
-  custom_fields: CustomFields;
+  custom_fields?: CustomFields;
 }
 
 export interface CustomFields {

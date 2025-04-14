@@ -252,4 +252,5 @@ export const PAGES = {
 
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
+  PROJECT_CREATE_PAGE: "/projects/create",
 };
