@@ -1,3 +1,4 @@
+import { LoginResponse } from "@/hooks/auth/use-auth-login";
 import { CustomMethod, SecureRequestProps } from "@/types/api.types";
 import axios from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
@@ -15,6 +16,18 @@ export async function getSessionToken() {
   } else {
     return session;
   }
+}
+
+export function getUserSession() {
+  const session = getCookie("user_session");
+  if (!session) {
+    logout().finally(() => {
+      window.location.href = `/?callback=${window.location.href}`;
+    });
+    return;
+  }
+
+  return JSON.parse(session as string) as LoginResponse["data"]["user"];
 }
 
 // const refreshAccessToken = async () => {

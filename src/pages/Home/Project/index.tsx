@@ -176,8 +176,8 @@ const Project: React.FC = () => {
   const columnOrder = Object.keys(columns);
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row items-center justify-between ">
+    <div className="grid relative">
+      <div className="flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center space-x-4  mt-5 md:mt-0">
           <h1 className="text-2xl font-bold mr-5">Project</h1>
           <Search placeholder="Search keyword" onSearch={handleSearch} />

@@ -1,17 +1,19 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS } from "@/lib/constants";
 
-const useCreateProjectType = () => {
+const useToggleProjectFieldRequirement = () => {
   return useCustomMutation<
     Record<string, string>,
     {
       name: string;
-      company_id: string;
+      type: string;
+      options: string[];
+      is_required: boolean;
     }
   >({
     method: "post",
-    endpoint: ENDPOINTS.CREATE_PROJECT_TYPE,
+    endpoint: ENDPOINTS.ADD_FORM_FIELDS,
   });
 };
 
-export default useCreateProjectType;
+export default useToggleProjectFieldRequirement;

@@ -16,8 +16,8 @@ export default function DashboardLayoutTwo() {
     <div className="relative flex min-h-svh flex-col bg-background">
       <div className="themes-wrapper bg-background">
         <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
+          <AppSidebar className="bg-slate-300" />
+          <SidebarInset className="flex-1 space-y-4">
             <header className="flex h-16 border-b shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
               <div className="flex items-center gap-2 px-4">
                 <SidebarTrigger className="-ml-1" />

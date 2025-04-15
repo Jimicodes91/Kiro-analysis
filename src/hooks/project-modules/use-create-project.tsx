@@ -1,5 +1,6 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS } from "@/lib/constants";
+import { Given } from "@/lib/utils";
 
 export interface CreateProjectSchema {
   name: string;
@@ -18,7 +19,7 @@ export interface CustomFields {
 }
 
 const useCreateProject = () => {
-  return useCustomMutation<Record<string, string>, CreateProjectSchema>({
+  return useCustomMutation<Record<string, string>, Record<string, Given>>({
     method: "post",
     endpoint: ENDPOINTS.CREATE_PROJECT,
   });

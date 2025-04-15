@@ -110,7 +110,6 @@ export default function CreateProjectForm() {
                         <SelectItem value="user">User</SelectItem>
                       </SelectContent>
                     </Select>
-
                     <FormMessage />
                   </FormItem>
                 )}

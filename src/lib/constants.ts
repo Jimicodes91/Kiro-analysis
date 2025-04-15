@@ -38,7 +38,7 @@ export const ENDPOINTS = {
   GET_ALL_ADMINS: `admin/all-admin`,
 
   // Company Endpoints
-  CREATE_COMPANY: "company/create",
+  CREATE_COMPANY: (userId: string) => `create/${userId}`,
 
   // User Endpoints
   GET_USER: (userId: string) => `user/${userId}`,
@@ -60,6 +60,7 @@ export const ENDPOINTS = {
     10. Event Types
     11. Task Types
     12. Activity Logs
+    13. Project Forms
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
@@ -173,6 +174,13 @@ export const ENDPOINTS = {
   // 12. Activity Logs
   GET_AUDIT_TRAIL: (projectId: string, page = 1, limit = 20) =>
     `audit-trail/projects?project_id=${projectId}&page=${page}&limit=${limit}`,
+
+  // 13. Project Forms
+  GET_PROJECT_FORMS: `projects/forms`,
+  GET_PROJECT_FORM_FIELDS: "projects/forms/fields",
+  ADD_FORM_FIELDS: `projects/forms/fields`,
+  TOGGLE_PROJECT_FIELD_REQUIREMENT: (fieldId: string) =>
+    `projects/forms/fields/${fieldId}/requirement`,
 };
 
 // for GET requests
@@ -241,6 +249,10 @@ export const QUERYKEYS = {
 
   // 12. Activity Logs Query keys
   GET_AUDIT_TRAIL: "GET_AUDIT_TRAIL",
+
+  // 13. Project Forms
+  GET_PROJECT_FORMS: "GET_PROJECT_FORMS",
+  GET_PROJECT_FORM_FIELDS: "GET_PROJECT_FORM_FIELDS",
 };
 
 export const PAGES = {

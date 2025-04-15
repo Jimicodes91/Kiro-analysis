@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import useGetAllCompanies from "@/hooks/admin/use-get-all-companies";
 import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
+import { getUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -60,6 +61,7 @@ const ProjectTab: React.FC = () => {
   const [isStepModalOpen, setIsStepModalOpen] = useState(false);
   const [loadingMilestone, setLoadingMilestone] = useState(false);
   const [loadingStep, setLoadingStep] = useState(false);
+  const session = getUserSession();
   const createProjectType = useCreateProjectType();
   useGetAllCompanies();
   const project = [
@@ -153,10 +155,12 @@ const ProjectTab: React.FC = () => {
     },
   ];
 
+  console.log(session);
   const onSubmitType = async (data: InferType<typeof addProjectTypeSchema>) => {
     createProjectType
       .mutateAsync({
         name: data.projectName,
+        company_id: session?.company_id ?? "",
       })
       .then(() => {
         reset();

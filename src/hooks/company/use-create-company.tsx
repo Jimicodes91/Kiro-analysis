@@ -1,7 +1,7 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS } from "@/lib/constants";
 
-const useCreateCompany = () => {
+const useCreateCompany = (userId: string) => {
   return useCustomMutation<
     Record<string, string>,
     {
@@ -15,7 +15,7 @@ const useCreateCompany = () => {
     }
   >({
     method: "post",
-    endpoint: ENDPOINTS.CREATE_COMPANY,
+    endpoint: ENDPOINTS.CREATE_COMPANY(userId),
   });
 };
 
