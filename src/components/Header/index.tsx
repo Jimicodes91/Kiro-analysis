@@ -9,7 +9,6 @@ import { UserNav } from "../ui/user-avatar-nav";
 const DashBoardHeader: React.FC = () => {
   const user = getUserSession();
   const company = useGetCompanyDetails(user?.company_id ?? "");
-  console.log(company?.value, "company?.value");
 
   return (
     <div className="flex w-full md:flex justify-between md:items-center mb-3 border-b border-[#0000001A] p-3 ">

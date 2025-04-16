@@ -8,11 +8,12 @@ export interface ProjectListResponse {
   data: ProjectDetails[];
 }
 
-const useGetAllProjects = (projectTypeId: string, status: ProjectStatus) => {
+const useGetAllProjects = (projectTypeId: string, status?: ProjectStatus) => {
+  const statusKey = status ?? "";
   return useQueryActionHook<ProjectListResponse>({
     method: "get",
     endpoint: ENDPOINTS.GET_ALL_PROJECTS(projectTypeId, status),
-    queryKey: [QUERYKEYS.GET_ALL_PROJECTS, projectTypeId, status],
+    queryKey: [QUERYKEYS.GET_ALL_PROJECTS, projectTypeId, statusKey],
   });
 };
 
