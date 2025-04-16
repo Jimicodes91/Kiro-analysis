@@ -9,8 +9,8 @@ export interface User {
   email: string;
   pfp: unknown;
   name: string;
-  role: string;
-  compunknown_id: unknown;
+  role: "ADMIN";
+  company_id: string;
   is_blocked: number;
   is_verified: number;
   timezone: unknown;

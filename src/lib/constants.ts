@@ -1,3 +1,56 @@
+import { IconProps, Icons } from "@/components/ui/icons";
+import { JSX } from "react";
+
+export type UserType = "ADMIN" | "CLIENT";
+
+export type DashboardLinkType = {
+  title: string;
+  icon: (props: IconProps) => JSX.Element;
+  path: string;
+  exact?: boolean;
+};
+
+const universalRoutes = [
+  {
+    title: "Home",
+    icon: Icons.dashboard,
+    path: "/home",
+    exact: true,
+  },
+  {
+    title: "Projects",
+    icon: Icons.project,
+    path: "/projects",
+  },
+  {
+    title: "Client",
+    icon: Icons.users,
+    path: "/client",
+  },
+  {
+    title: "Event",
+    icon: Icons.event,
+    path: "/event",
+  },
+  {
+    title: "Finance",
+    icon: Icons.coins,
+    path: "/finance",
+  },
+];
+
+export const topNavData: Record<UserType, DashboardLinkType[]> = {
+  CLIENT: [...universalRoutes],
+  ADMIN: [
+    ...universalRoutes,
+    {
+      title: "Admin",
+      icon: Icons.admin,
+      path: "/admin",
+    },
+  ],
+};
+
 export enum ProjectStatus {
   NOT_STARTED = "not_started",
   IN_PROGRESS = "in_progress",
@@ -38,7 +91,7 @@ export const ENDPOINTS = {
   GET_ALL_ADMINS: `admin/all-admin`,
 
   // Company Endpoints
-  CREATE_COMPANY: "company/create",
+  CREATE_COMPANY: (userId: string) => `create/${userId}`,
 
   // User Endpoints
   GET_USER: (userId: string) => `user/${userId}`,
@@ -60,11 +113,12 @@ export const ENDPOINTS = {
     10. Event Types
     11. Task Types
     12. Activity Logs
+    13. Project Forms
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
-  GET_ALL_PROJECTS: (projectTypeId: string, status: ProjectStatus) =>
-    `projects?project_type_id=${projectTypeId}&status=${status}`,
+  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatus) =>
+    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status ? `?status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
 
@@ -173,6 +227,13 @@ export const ENDPOINTS = {
   // 12. Activity Logs
   GET_AUDIT_TRAIL: (projectId: string, page = 1, limit = 20) =>
     `audit-trail/projects?project_id=${projectId}&page=${page}&limit=${limit}`,
+
+  // 13. Project Forms
+  GET_PROJECT_FORMS: `projects/forms`,
+  GET_PROJECT_FORM_FIELDS: "projects/forms/fields",
+  ADD_FORM_FIELDS: `projects/forms/fields`,
+  TOGGLE_PROJECT_FIELD_REQUIREMENT: (fieldId: string) =>
+    `projects/forms/fields/${fieldId}/requirement`,
 };
 
 // for GET requests
@@ -241,6 +302,10 @@ export const QUERYKEYS = {
 
   // 12. Activity Logs Query keys
   GET_AUDIT_TRAIL: "GET_AUDIT_TRAIL",
+
+  // 13. Project Forms
+  GET_PROJECT_FORMS: "GET_PROJECT_FORMS",
+  GET_PROJECT_FORM_FIELDS: "GET_PROJECT_FORM_FIELDS",
 };
 
 export const PAGES = {
@@ -252,4 +317,5 @@ export const PAGES = {
 
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
+  PROJECT_CREATE_PAGE: "/projects/create",
 };

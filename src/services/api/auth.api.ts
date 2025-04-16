@@ -58,5 +58,5 @@ export const completeRegistrationApi = (payload: CompleteRegProps) =>
 export const addClientApi = (payload: AddClientProp) =>
   apiRequest(`${authBaseEndpoint}add-client`, payload);
 
-export const createCompanyApi = (payload: CompanyApiProps) =>
-  apiRequest("/api/v1/company/create", payload);
+export const createCompanyApi = (payload: CompanyApiProps, userId: string) =>
+  apiRequest(`/api/v1/company/create/${userId}`, payload);

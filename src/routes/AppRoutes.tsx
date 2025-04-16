@@ -1,5 +1,7 @@
 import AuthLayout from "@/layouts/AuthLayout";
-import DashboardLayout from "@/layouts/DashboardLayout";
+import AccountLayout from "@/layouts/dashboard-layout/lol";
+import ProjectContextProvider from "@/pages/Home/Project/project-context";
+import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
 import { RouteObject } from "react-router-dom";
 import CompleteInvite from "../pages/Auth/CompleteInvite";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
@@ -47,7 +49,7 @@ export const AuthRoutes: RouteObject[] = [
 ];
 
 export const HomeRoutes = {
-  element: <DashboardLayout />,
+  element: <AccountLayout />,
   children: [
     {
       path: "home",
@@ -70,16 +72,25 @@ export const HomeRoutes = {
       element: <Finance />,
     },
     {
+      element: <ProjectContextProvider />,
+      children: [
+        {
+          path: "projects",
+          element: <Project />,
+        },
+        {
+          path: "projects/create",
+          element: <CreateProjectTemplate />,
+        },
+        {
+          path: "projects/:id",
+          element: <ProjectDetail />,
+        },
+      ],
+    },
+    {
       path: "message",
       element: <Message />,
-    },
-    {
-      path: "projects",
-      element: <Project />,
-    },
-    {
-      path: "projects/:id",
-      element: <ProjectDetail />,
     },
   ],
 };

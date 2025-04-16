@@ -1,387 +1,371 @@
+import { addProjectPipelineSchema } from "@/components/validationSchema/admin";
+import useGetAllCompanies from "@/hooks/admin/use-get-all-companies";
+import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
+import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
+import { getUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoAdd } from "react-icons/io5";
+import { InferType } from "yup";
 import ViewToggle from "../../../../components/Cards/ViewToggle";
 import { MainButton } from "../../../../components/Form/button";
 import { FormInput } from "../../../../components/Form/input";
-import { FormSelect } from "../../../../components/Form/select";
 import Modal from "../../../../components/Modal";
-import Table from "../../../../components/Table";
-import {
-  addMilestoneSchema,
-  addProjectTypeSchema,
-  addStepSchema,
-} from "../../../../components/validationSchema/admin";
+import Table, { ColumnDefinition } from "../../../../components/Table";
+import FormCustomization from "./Form";
 
-interface ColumnDefinition<T, K extends keyof T> {
-  key: K;
-  header: string;
-  width?: string;
-  render?: (value: T[K], row: T) => React.ReactNode;
+interface ProjectPipelineFormData {
+  pipelineName: string;
 }
 
-// Interfaces for the form data
-// interface ProjectTypeFormData {
-//     projectName: string;
-//     assignTo: "consultant" | "client" | "customer";
-//     billingType: "consultant" | "client" | "customer";
-//   }
+interface StageFormData {
+  stageName: string;
+  duration: string;
+}
 
-//   interface StepFormData {
-//     stepName: string;
-//     duration: number;
-//     assignTo: "consultant" | "client" | "customer";
-//   }
-
-//   interface MilestoneFormData {
-//     milestoneName: string;
-//     duration: number;
-//     assignTo: "consultant" | "client" | "customer";
-//   }
-
-interface Project {
+interface Pipeline {
   id: number;
-  phase: string;
-  milestone: string;
-  steps: number;
+  pipelineName: string;
   duration: number;
-  date: string;
+  action: string;
+}
+
+interface Stage {
+  stage: string;
+  duration: number;
+  action: string;
 }
 
 const ProjectTab: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("table");
-  const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
-  const [isMilestoneModalOpen, setIsMilestoneModalOpen] = useState(false);
-  const [isStepModalOpen, setIsStepModalOpen] = useState(false);
-  const [loadingType, setLoadingType] = useState(false);
-  const [loadingMilestone, setLoadingMilestone] = useState(false);
-  const [loadingStep, setLoadingStep] = useState(false);
-  const project = [
+  const [activeTab, setActiveTab] = useState("pipeline");
+  const [isPipelineModalOpen, setIsPipelineModalOpen] = useState(false);
+  const [activePipelineId, setActivePipelineId] = useState<number | null>(null);
+  const [stageFormData, setStageFormData] = useState<StageFormData>({
+    stageName: "",
+    duration: "",
+  });
+  const [pipelineStages, setPipelineStages] = useState<Record<number, Stage[]>>({
+    1: [
+      { stage: "Onboarding", duration: 2, action: "" },
+      { stage: "Design", duration: 3, action: "" },
+      { stage: "Development", duration: 5, action: "" },
+    ],
+    2: [
+      { stage: "Research", duration: 3, action: "" },
+      { stage: "Prototyping", duration: 4, action: "" },
+      { stage: "Testing", duration: 3, action: "" },
+    ],
+    3: [
+      { stage: "Planning", duration: 1, action: "" },
+      { stage: "Implementation", duration: 6, action: "" },
+      { stage: "Evaluation", duration: 3, action: "" },
+    ],
+  });
+
+  const session = getUserSession();
+  const createProjectType = useCreateProjectType();
+  useGetAllCompanies();
+  const projectTypes = useGetAllProjectTypes();
+  console.log(projectTypes.data, "project types");
+  // Project pipeline form
+  const {
+    register: registerPipeline,
+    handleSubmit: handleSubmitPipeline,
+    formState: { errors: errorsPipeline },
+    reset,
+  } = useForm<ProjectPipelineFormData>({
+    resolver: yupResolver(addProjectPipelineSchema),
+  });
+
+  // Table data
+  const pipelineData: Pipeline[] = [
     {
       id: 1,
-      phase: "Onboarding",
-      milestone: "Pretravel",
-      steps: 6,
-      duration: 8,
-      date: "02 Nov 2023",
+      pipelineName: "Dubai Registration",
+      duration: 27,
+      action: "",
     },
     {
       id: 2,
-      phase: "Licensing",
-      milestone: "Pretravel",
-      steps: 6,
-      duration: 8,
-      date: "02 Nov 2023",
+      pipelineName: "Dubai Registration",
+      duration: 27,
+      action: "",
     },
     {
       id: 3,
-      phase: "Permit",
-      milestone: "Pretravel",
-      steps: 6,
-      duration: 8,
-      date: "02 Nov 2023",
+      pipelineName: "Dubai Registration",
+      duration: 27,
+      action: "",
     },
     {
       id: 4,
-      phase: "Travel",
-      milestone: "Pretravel",
-      steps: 6,
-      duration: 8,
-      date: "02 Nov 2023",
+      pipelineName: "Dubai Registration",
+      duration: 27,
+      action: "",
     },
   ];
 
-  // Project type form
-  const {
-    register: registerType,
-    handleSubmit: handleSubmitType,
-    formState: { errors: errorsType },
-  } = useForm({
-    resolver: yupResolver(addProjectTypeSchema),
-  });
-
-  // Step form
-  const {
-    register: registerStep,
-    handleSubmit: handleSubmitStep,
-    formState: { errors: errorsStep },
-  } = useForm({
-    resolver: yupResolver(addStepSchema),
-  });
-
-  // Milestone form
-  const {
-    register: registerMilestone,
-    handleSubmit: handleSubmitMilestone,
-    formState: { errors: errorsMilestone },
-  } = useForm({
-    resolver: yupResolver(addMilestoneSchema),
-  });
-
-  const columns: ColumnDefinition<Project, keyof Project>[] = [
+  // Table columns
+  const columns: ColumnDefinition<Pipeline, keyof Pipeline>[] = [
     {
-      key: "phase",
-      header: "Phase",
-      width: "w-1/5",
-    },
-    {
-      key: "milestone",
-      header: "Milestone",
-      width: "w-1/5",
-    },
-    {
-      key: "steps",
-      header: "Steps",
-      width: "w-1/5",
+      key: "pipelineName",
+      header: "Pipeline name",
+      width: "w-2/3",
     },
     {
       key: "duration",
-      header: "Duration (days)",
-      width: "w-1/5",
-    },
-    {
-      key: "date",
-      header: "",
-      width: "w-1/5",
+      header: "Duration",
+      width: "w-1/3",
+      render: (value) => `${value} days`,
     },
   ];
 
-  const onSubmitType = async () => {
-    setLoadingType(true);
-    try {
-      // Your API call or actions here
-      setIsTypeModalOpen(false);
-    } catch (error) {
-      console.error(`Failed to add project type:`, error);
-    } finally {
-      setLoadingType(false);
+  // Handle stage form input changes
+  const handleStageInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: keyof StageFormData
+  ) => {
+    setStageFormData({
+      ...stageFormData,
+      [field]: e.target.value,
+    });
+  };
+
+  // Function to add a new stage
+  const handleAddStage = (pipelineId: number) => {
+    if (stageFormData.stageName && stageFormData.duration) {
+      const newStage: Stage = {
+        stage: stageFormData.stageName,
+        duration: parseInt(stageFormData.duration, 10),
+        action: "",
+      };
+
+      setPipelineStages({
+        ...pipelineStages,
+        [pipelineId]: [...(pipelineStages[pipelineId] || []), newStage],
+      });
+
+      // Reset the form
+      setStageFormData({ stageName: "", duration: "" });
+      setActivePipelineId(null);
     }
   };
 
-  const onSubmitStep = async () => {
-    setLoadingStep(true);
-    try {
-      // Your API call or actions here
-      setIsStepModalOpen(false);
-    } catch (error) {
-      console.error(`Failed to add step:`, error);
-    } finally {
-      setLoadingStep(false);
-    }
-  };
-
-  const onSubmitMilestone = async () => {
-    setLoadingMilestone(true);
-    try {
-      // Your API call or actions here
-      setIsMilestoneModalOpen(false);
-    } catch (error) {
-      console.error(`Failed to add milestone:`, error);
-    } finally {
-      setLoadingMilestone(false);
-    }
+  // Function to handle cancel button
+  const handleCancel = () => {
+    setStageFormData({ stageName: "", duration: "" });
+    setActivePipelineId(null);
   };
 
   // Function to get sub-table data for each row
-  const getSubTableData = () => {
-    // Return specific sub-table data based on row
-    return [
-      { item: "Item A", quantity: 10, price: 5 },
-      { item: "Item B", quantity: 20, price: 7 },
-    ];
+  const getSubTableData = (row: Pipeline): Stage[] => {
+    return pipelineStages[row.id] || [];
   };
 
-  // Function to get sub-table columns for each row
-  const getSubTableColumns = () => {
-    // Return specific columns for the sub-table based on row
-    return [
-      { key: "item", header: "Item" },
-      { key: "quantity", header: "Quantity" },
-      { key: "price", header: "Price" },
-    ];
+  // Sub-table columns
+  const subTableColumns: ColumnDefinition<Stage, keyof Stage>[] = [
+    { key: "stage", header: "Stages", width: "w-2/3" },
+    {
+      key: "duration",
+      header: "Duration",
+      render: (value) => `${value} days`,
+      width: "w-1/3",
+    },
+    {
+      key: "action",
+      header: "",
+      width: "w-10",
+      render: () => <BsThreeDotsVertical className="cursor-pointer" />,
+    },
+  ];
+
+  // Custom render function for the sub table to include the add stage form
+  const renderSubTable = (
+    row: Pipeline,
+    data: Stage[],
+    columns: ColumnDefinition<Stage, keyof Stage>[]
+  ): React.ReactNode => {
+    const isActiveForm = activePipelineId === row.id;
+    const isFormValid =
+      stageFormData.stageName.trim() !== "" && stageFormData.duration.trim() !== "";
+
+    return (
+      <div className="m-4 border rounded-lg overflow-hidden">
+        <table className="min-w-full table-fixed">
+          <thead className="border-b border-[#0000001A]">
+            <tr>
+              {columns.map((column, index) => (
+                <th
+                  key={`sub-header-${index}`}
+                  className={`bg-[#F9F9F9] p-4 text-left font-[600] text-[14px] ${column.width || ""}`}
+                >
+                  {column.header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {data.map((stageRow, rowIndex) => (
+              <tr key={`sub-row-${rowIndex}`} className="bg-white">
+                {columns.map((column, colIndex) => {
+                  const key = column.key;
+                  return (
+                    <td
+                      key={`sub-cell-${rowIndex}-${colIndex}`}
+                      className={`p-4 text-[14px] ${column.width || ""}`}
+                    >
+                      {column.render
+                        ? column.render(stageRow[key], stageRow)
+                        : (stageRow[key] as React.ReactNode)}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+            {isActiveForm && (
+              <tr>
+                <td colSpan={columns.length} className="p-0 border-t">
+                  <div className="flex items-center p-4">
+                    <div className="flex flex-1 space-x-2">
+                      <input
+                        type="text"
+                        placeholder="Stage name"
+                        className="py-2 px-4 border rounded-full w-1/4 text-[14px]"
+                        value={stageFormData.stageName}
+                        onChange={(e) => handleStageInputChange(e, "stageName")}
+                      />
+                      <div className="w-2/4"></div>
+                      <input
+                        type="text"
+                        placeholder="Duration"
+                        className="py-2 px-4 border rounded-full w-1/4 text-[14px]"
+                        value={stageFormData.duration}
+                        onChange={(e) => handleStageInputChange(e, "duration")}
+                      />
+                    </div>
+                    <div className="flex space-x-2 ml-2">
+                      <button
+                        className="px-4 py-1 text-sm border border-black text-black rounded-full bg-white"
+                        onClick={handleCancel}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className={`px-4 py-1 text-sm rounded-full ${
+                          isFormValid
+                            ? "bg-black text-white"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        }`}
+                        onClick={() => isFormValid && handleAddStage(row.id)}
+                        disabled={!isFormValid}
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        <div className="p-4 pb-6">
+          <div className="flex items-center">
+            <button
+              onClick={() => setActivePipelineId(row.id)}
+              className={`flex items-center text-sm font-semibold ${
+                isActiveForm
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-black hover:text-primary"
+              }`}
+              disabled={isActiveForm}
+            >
+              <span className="mr-1 text-xl">
+                <IoAdd className={isActiveForm ? "text-gray-400" : "text-black"} />
+              </span>
+              Add stage
+            </button>
+            {/* Line beside the button */}
+            <div className="flex-grow border-t border-gray-200 ml-4"></div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const onSubmitPipeline = async (data: InferType<typeof addProjectPipelineSchema>) => {
+    createProjectType
+      .mutateAsync({
+        name: data.pipelineName,
+        company_id: session?.company_id ?? "",
+      })
+      .then(() => {
+        reset();
+        setIsPipelineModalOpen(false);
+      })
+      .catch(console.error);
   };
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center my-2">
         <ViewToggle
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           options={[
-            { value: "table", label: "Project type" },
-            { value: "form", label: "Project form" },
+            { value: "pipeline", label: "Pipeline" },
+            { value: "form", label: "Form customisation " },
           ]}
         />
-        <div className="flex justify-between space-x-2">
-          <FormSelect
-            value={"dubai"}
-            options={[{ value: "dubai", label: "Dubai Registration" }]}
-          />
-          <MainButton onClick={() => setIsTypeModalOpen(true)}>
-            {" "}
-            <span className="mr-3 text-xl">
-              <IoAdd className="text-white" />
-            </span>
-            Add project type
+        {activeTab === "pipeline" ? (
+          <MainButton onClick={() => setIsPipelineModalOpen(true)}>
+            Create pipeline
           </MainButton>
-        </div>
-      </div>
-
-      <div className="border-[1px] border-[#0000001A] rounded-lg mt-4 p-4">
-        {activeTab === "table" ? (
-          <>
-            <div className="flex justify-between items-center my-2">
-              <h1 className="text-[16px] font-[600]">Milestone </h1>
-              <MainButton
-                variant="outlined"
-                onClick={() => setIsMilestoneModalOpen(true)}
-              >
-                Create milestone
-              </MainButton>
-            </div>
-            <Table
-              data={project}
-              columns={columns}
-              className="border-none"
-              rowClassName="hover:bg-gray-50 transition-colors"
-              expandable={true} // Enable expandable functionality
-              subData={getSubTableData} // Pass row-specific sub-table data
-              subColumns={getSubTableColumns} // Pass row-specific sub-table columns
-            />
-          </>
         ) : (
-          <div> Form </div>
+          <MainButton>Publish</MainButton>
         )}
       </div>
 
-      {/* Modal to add project type */}
-      {isTypeModalOpen && (
-        <Modal
-          title="Add project type"
-          closeModal={() => setIsTypeModalOpen(false)}
-          fullHeight={false}
-        >
-          <form
-            onSubmit={handleSubmitType(onSubmitType)}
-            className="flex flex-col gap-4 p-4"
-          >
-            <FormInput
-              label="Project name"
-              placeholder="Project name"
-              {...registerType("projectName")}
-              error={errorsType.projectName?.message}
-            />
-            <FormSelect
-              label="Assign to"
-              options={[
-                { value: "consultant", label: "Consultant" },
-                { value: "client", label: "Client" },
-                { value: "customer", label: "Customer" },
-              ]}
-              register={registerType("assignTo")}
-              error={errorsType.assignTo?.message}
-            />
-            <FormSelect
-              label="Billing type"
-              options={[
-                { value: "consultant", label: "Consultant" },
-                { value: "client", label: "Client" },
-                { value: "customer", label: "Customer" },
-              ]}
-              register={registerType("billingType")}
-              error={errorsType.billingType?.message}
-            />
-            <MainButton type="submit" isLoading={loadingType}>
-              Add project type
-            </MainButton>
-          </form>
-        </Modal>
+      {activeTab === "pipeline" ? (
+        <div className="border-[1px] border-[#0000001A] p-1 rounded-lg bg-[#F7F7F7]">
+          <Table<Pipeline, keyof Pipeline, Stage, keyof Stage>
+            data={pipelineData}
+            columns={columns}
+            className="border-none"
+            rowClassName="hover:bg-gray-50 transition-colors"
+            expandable={true}
+            subData={getSubTableData}
+            subColumns={subTableColumns}
+            customSubTableRender={renderSubTable}
+          />
+        </div>
+      ) : (
+        <div className="bg-[#F4F4F4] py-4 rounded-[10px] border border-[#0000001A]">
+          <FormCustomization />
+        </div>
       )}
 
-      {/* Modal to add step */}
-      {isStepModalOpen && (
+      {/* Modal to add project pipeline */}
+      {isPipelineModalOpen && (
         <Modal
-          title="Add step"
-          closeModal={() => setIsStepModalOpen(false)}
+          title="Create pipeline"
+          closeModal={() => setIsPipelineModalOpen(false)}
           fullHeight={false}
         >
           <form
-            onSubmit={handleSubmitStep(onSubmitStep)}
+            onSubmit={handleSubmitPipeline(onSubmitPipeline)}
             className="flex flex-col gap-4 p-4"
           >
             <FormInput
-              label="Step name"
-              placeholder="Step name"
-              {...registerStep("stepName")}
-              error={errorsStep.stepName?.message}
+              label="Pipeline name"
+              placeholder="Pipeline name"
+              {...registerPipeline("pipelineName")}
+              error={errorsPipeline.pipelineName?.message}
             />
-            <FormSelect
-              label="Duration (days)"
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3" },
-              ]}
-              register={registerStep("duration")}
-              error={errorsStep.duration?.message}
-            />
-            <FormSelect
-              label="Assign to"
-              options={[
-                { value: "consultant", label: "Consultant" },
-                { value: "client", label: "Client" },
-                { value: "customer", label: "Customer" },
-              ]}
-              register={registerStep("assignTo")}
-              error={errorsStep.assignTo?.message}
-            />
-            <MainButton type="submit" isLoading={loadingStep}>
-              Add step
-            </MainButton>
-          </form>
-        </Modal>
-      )}
 
-      {/* Modal to add milestone */}
-      {isMilestoneModalOpen && (
-        <Modal
-          title="Add milestone"
-          closeModal={() => setIsMilestoneModalOpen(false)}
-          fullHeight={false}
-        >
-          <form
-            onSubmit={handleSubmitMilestone(onSubmitMilestone)}
-            className="flex flex-col gap-4 p-4"
-          >
-            <FormInput
-              label="Milestone name"
-              placeholder="Milestone name"
-              {...registerMilestone("milestoneName")}
-              error={errorsMilestone.milestoneName?.message}
-            />
-            <FormSelect
-              label="Duration (days)"
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3" },
-              ]}
-              register={registerMilestone("duration")}
-              error={errorsMilestone.duration?.message}
-            />
-            <FormSelect
-              label="Assign to"
-              options={[
-                { value: "consultant", label: "Consultant" },
-                { value: "client", label: "Client" },
-                { value: "customer", label: "Customer" },
-              ]}
-              register={registerMilestone("assignTo")}
-              error={errorsMilestone.assignTo?.message}
-            />
-            <MainButton type="submit" isLoading={loadingMilestone}>
-              Add milestone
+            <MainButton modalButton type="submit" isLoading={createProjectType.isPending}>
+              Create pipeline
             </MainButton>
           </form>
         </Modal>

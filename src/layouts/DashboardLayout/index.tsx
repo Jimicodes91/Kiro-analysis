@@ -11,7 +11,7 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="bg-white overflow-x-hidden w-screen h-screen relative">
+    <div className="bg-white  w-screen h-screen relative">
       <div>
         <header
           className={`bg-white fixed w-full z-10 top-0 ${

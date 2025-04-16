@@ -6,6 +6,7 @@ const useCreateProjectType = () => {
     Record<string, string>,
     {
       name: string;
+      company_id: string;
     }
   >({
     method: "post",

@@ -68,31 +68,32 @@ export interface CompanyApiProps {
 
 export interface User {
   id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: unknown;
   email: string;
-  pfp: string | null;
-  name: string | null;
+  pfp: unknown;
+  name: string;
+  role: string;
+  company_id: unknown;
+  is_blocked: number;
+  is_verified: number;
+  timezone: unknown;
+  language: string;
+  currency: string;
+  is_active: number;
+  last_login: unknown;
+  verification_token: string;
+  token_expires: number;
+  googleId: unknown;
+  refresh_token: unknown;
+  refresh_token_expires: unknown;
+  password_setup_token: unknown;
+  login_count: number;
+  password_setup_token_expires: unknown;
 }
 
 export interface AuthData {
   token: string;
   user: User;
-  company_id: string | null;
-  created_at: string;
-  currency: string;
-  deleted_at: string | null;
-  is_active: number;
-  is_blocked: number;
-  is_verified: number;
-  language: string;
-  last_login: string;
-  login_count: number;
-  password_setup_token: string | null;
-  password_setup_token_expires: string | null;
-  refresh_token: string | null;
-  refresh_token_expires: string | null;
-  role: "ADMIN" | "USER" | "OTHER_ROLE";
-  timezone: string | null;
-  token_expires: string | null;
-  updated_at: string;
-  verification_token: string | null;
 }

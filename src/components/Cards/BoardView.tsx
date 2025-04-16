@@ -1,5 +1,5 @@
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import React from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import ProjectColumn from "./ProjectColumn";
 
 interface BoardViewProps {
@@ -33,8 +33,8 @@ const BoardView: React.FC<BoardViewProps> = ({ columns, columnOrder, onDragEnd }
         {(provided) => (
           <div
             className="flex overflow-x-auto pb-2"
-            {...provided.droppableProps}
             ref={provided.innerRef}
+            {...provided.droppableProps}
           >
             {columnOrder.map((columnId, index) => {
               const column = columns[columnId];
@@ -45,6 +45,7 @@ const BoardView: React.FC<BoardViewProps> = ({ columns, columnOrder, onDragEnd }
                       className="flex flex-col bg-[#F7F7F7] rounded-lg p-3 mr-4 w-64 flex-shrink-0"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
+                      {...provided.dragHandleProps}
                     >
                       <ProjectColumn column={column} />
                     </div>

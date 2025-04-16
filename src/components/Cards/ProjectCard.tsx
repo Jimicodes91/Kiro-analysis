@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import { Draggable } from "@hello-pangea/dnd";
-import Modal from "../Modal";
-import { LuCalendar, LuUserRound } from "react-icons/lu";
-import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
-import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
-import { RiStickyNoteLine } from "react-icons/ri";
+import React, { useState } from "react";
 import { BsActivity } from "react-icons/bs";
+import { LuCalendar, LuUserRound } from "react-icons/lu";
+import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
+import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
+import { RiStickyNoteLine } from "react-icons/ri";
+import Modal from "../Modal";
 import ViewToggle from "./ViewToggle";
 
 interface Task {
@@ -178,7 +178,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
           </div>
         )}
       </Draggable>
-
+      {/* <ProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> */}
       {/* Modal for project details */}
       {isModalOpen && (
         <Modal

@@ -32,7 +32,7 @@ const Login: React.FC = () => {
         // Store tokens in local storage
         setCookie("user_session_token", response.data.data.token);
         setCookie("user_session", JSON.stringify(response.data.data.user));
-        if (response.data.data.user.is_verified === 1) {
+        if (response.data.data.user.company_id) {
           navigate(PAGES.PROJECT_PAGE);
         } else {
           navigate(PAGES.ONBOARDING_PAGE);

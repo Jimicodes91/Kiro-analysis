@@ -6,11 +6,12 @@ import { cn } from "@/lib/utils";
 import { BeatLoader } from "react-spinners";
 
 const buttonVariants = cva(
-  "inline-flex items-center relative justify-center transition-all text-md duration-200 rounded-lg gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-90 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center relative justify-center transition-all text-md transition-all duration-300 rounded-lg gap-2 whitespace-nowrap rounded-full text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-90 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-white border-primary",
+        default:
+          "bg-primary text-white border-primary focus:ring-primary focus:ring-2 focus:ring-offset-1",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
@@ -21,8 +22,8 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-10 py-6",
-        sm: "h-8 rounded-md px-3 text-xs",
+        default: "h-10 px-6 py-6",
+        sm: "h-10 rounded-full px-6 py-4 text-sm",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
       },
@@ -87,7 +88,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             style={{
               opacity: isLoading ? 0 : 1,
             }}
-            className="inline-flex items-center gap-3"
+            className="inline-flex items-center rounded-full justify-center gap-3 w-full h-full"
           >
             {children}
           </span>
