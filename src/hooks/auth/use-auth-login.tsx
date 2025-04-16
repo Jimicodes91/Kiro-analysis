@@ -10,7 +10,7 @@ export interface User {
   pfp: unknown;
   name: string;
   role: string;
-  compunknown_id: unknown;
+  company_id: unknown;
   is_blocked: number;
   is_verified: number;
   timezone: unknown;

@@ -21,24 +21,11 @@ export const addTaskTypeSchema = yup.object().shape({
   description: yup.string().required("Description is required"),
 });
 
-export const addProjectTypeSchema = yup.object().shape({
-  projectName: yup.string().required("Project name is required"),
-  assignTo: yup.string().required("Assign to is required"),
-  milestones: yup.array().of(
-    yup.object().shape({
-      value: yup.string().required("Milestone is required"),
-    })
-  ),
+export const addProjectPipelineSchema = yup.object().shape({
+  pipelineName: yup.string().required("Pipeline name is required"),
 });
 
-export const addMilestoneSchema = yup.object().shape({
-  milestoneName: yup.string().required("Milestone name is required"),
-  assignTo: yup.string().required("Assign to is required"),
-  duration: yup.string().required("Duration is required"),
-});
-
-export const addStepSchema = yup.object().shape({
-  stepName: yup.string().required("Step name is required"),
-  assignTo: yup.string().required("Assign to is required"),
+export const addStageSchema = yup.object().shape({
+  stageName: yup.string().required("Stage name is required"),
   duration: yup.string().required("Duration is required"),
 });

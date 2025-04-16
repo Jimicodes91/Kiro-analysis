@@ -32,7 +32,8 @@ type TableProps<T, K extends keyof T> = {
   onRowClick?: (row: T) => void;
   expandable?: boolean;
   subData?: (row: T) => SubTableRowData[];
-  subColumns?: (row: T) => SubColumnDefinition<SubTableRowData>[];
+  // Changed from function to fixed array
+  subColumns?: SubColumnDefinition<SubTableRowData>[];
 };
 
 const Table = <T, K extends keyof T>({
@@ -41,8 +42,8 @@ const Table = <T, K extends keyof T>({
   emptyMessage = "No data available",
   className = "",
   headerClassName = "text-left p-4 font-[600] text-[14px] ",
-  rowClassName = "border-b hover:bg-gray-50 text-[12px] font-[500]",
-  cellClassName = "p-4",
+  rowClassName = "border-b hover:bg-gray-50 text-[14px] font-[500] hover: cursor-pointer",
+  cellClassName = "p-4 text-[14px]",
   onRowClick,
   expandable = false,
   subData,
@@ -166,7 +167,7 @@ const Table = <T, K extends keyof T>({
                                 <div className="m-4 border rounded-lg overflow-hidden">
                                   <SubTable
                                     data={subData(row)}
-                                    columns={subColumns(row)}
+                                    columns={subColumns}
                                     parentCellClassName={cellClassName}
                                   />
                                 </div>
@@ -212,7 +213,7 @@ const SubTable = <T extends SubTableRowData>({
           {columns.map((column, index) => (
             <th
               key={`sub-header-${index}`}
-              className={`bg-[#F9F9F9] p-4 text-left ${column.width || ""}`}
+              className={`bg-[#F9F9F9] p-4 text-left font-[600] text-[14px] ${column.width || ""}`}
             >
               {column.header}
             </th>

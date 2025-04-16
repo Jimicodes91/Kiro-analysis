@@ -9,14 +9,14 @@ interface ViewToggleProps {
 
 const ViewToggle: React.FC<ViewToggleProps> = ({ options, activeTab, setActiveTab }) => {
   return (
-    <div className="flex border-[1px] border-gray-200 justify-between items-center px-3 rounded-full">
+    <div className="flex border-[1px] border-[#00000033] justify-between items-center px-1 rounded-full">
       {options.map((option) => (
         <button
           key={option.value}
-          className={`my-2 py-1 px-4 font-medium text-sm w-[129px] ${
+          className={`my-1 py-2 px-4 font-medium text-sm ${
             activeTab === option.value
-              ? "text-white border-b-2 bg-primary rounded-full"
-              : "text-gray-500 hover:text-gray-700"
+              ? "text-white bg-primary rounded-full"
+              : "text-[#00000066] hover:text-gray-500"
           }`}
           onClick={() => setActiveTab(option.value)}
         >
