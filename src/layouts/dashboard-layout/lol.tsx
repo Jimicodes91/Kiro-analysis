@@ -96,7 +96,7 @@ export default function AccountLayout() {
           </div>
         </div>
         <Separator className="sticky z-20 h-0 top-[70px]" />
-        <div>
+        <div className="min-h-[calc(100vh-70px)] flex-1">
           <Outlet />
         </div>
       </div>
