@@ -93,7 +93,7 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="p-6">
       <h1 className="text-2xl font-[600] mb-6">Admin</h1>
       <div className="bg-white rounded-[6px] overflow-hidden border-[1.5px] border-[#0000001A]">
         <div className="flex border-b border-gray-200">
@@ -113,7 +113,7 @@ const Admin: React.FC = () => {
         </div>
         <div className="p-6">{renderTabContent()}</div>
       </div>
-    </>
+    </div>
   );
 };
 

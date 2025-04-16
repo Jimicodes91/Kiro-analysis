@@ -23,19 +23,11 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-0" rightIcon={<Icons.caret />}>
-          <Avatar className="h-8 w-8 bg-primary text-white">
+        <Button variant="ghost" className="px-3" rightIcon={<Icons.caret />}>
+          <Avatar className="h-8 w-8">
             <AvatarImage src={"/"} alt="@shadcn" />
             <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
           </Avatar>
-          {/* <div className="flex flex-col text-left">
-            <span className="max-w-[120px] whitespace-nowrap text-ellipsis overflow-hidden">
-              {user?.value?.data?.[0]?.name}
-            </span>
-            <span className="max-w-[120px] whitespace-nowrap text-ellipsis overflow-hidden">
-              {user?.value?.data?.[0]?.email}
-            </span>
-          </div> */}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>

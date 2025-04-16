@@ -1,23 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { PAGES } from "@/lib/constants";
+import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import React, { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
-import { IoAdd } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import BoardView from "../../../components/Cards/BoardView";
 import TableView from "../../../components/Cards/TableView";
 import ViewToggle from "../../../components/Cards/ViewToggle";
-import Search from "../../../components/Form/search";
-import { FormSelect } from "../../../components/Form/select";
+import { useProjectContext } from "./project-context";
+import ActiveProjectTypeProjectWrapper from "./selected-project-wrapper";
 
 const Project: React.FC = () => {
-  const [, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("board");
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    console.log("Search Query:", query);
-  };
+  const { activeProjectType } = useProjectContext();
+  const allProjects = useGetAllProjects(activeProjectType);
 
   const tableData = [
     {
@@ -176,31 +171,8 @@ const Project: React.FC = () => {
   const columnOrder = Object.keys(columns);
 
   return (
-    <div className="grid relative">
-      <div className="flex flex-col md:flex-row items-center justify-between">
-        <div className="flex items-center space-x-4  mt-5 md:mt-0">
-          <h1 className="text-2xl font-bold mr-5">Project</h1>
-          <Search placeholder="Search keyword" onSearch={handleSearch} />
-        </div>
-        <div className="flex items-center space-x-4 mt-5 md:mt-0">
-          <FormSelect
-            label=""
-            value={"db"}
-            options={[
-              { value: "Nigeria", label: "Nigeria Registration" },
-              { value: "usa", label: "United States Registration" },
-              { value: "uk", label: "United Kingdom Registration" },
-              { value: "db", label: "Dubai Registration" },
-            ]}
-          />
-          <Link to={PAGES.PROJECT_CREATE_PAGE}>
-            <Button asChild leftIcon={<IoAdd />}>
-              Add project
-            </Button>
-          </Link>
-        </div>
-      </div>
-      <div className="border-[1px] border-[#0000001A] rounded-lg mt-4 p-4">
+    <ActiveProjectTypeProjectWrapper>
+      <>
         <div className="flex justify-between items-center">
           <ViewToggle
             activeTab={activeTab}
@@ -211,26 +183,24 @@ const Project: React.FC = () => {
             ]}
           />
           <div className="flex justify-between space-x-2">
-            <FormSelect
-              value={"all"}
-              options={[{ value: "all", label: "All project" }]}
-            />
-            <button
-              className="mr-5 cursor-pointer relative border-2 border-[#0000001A] bg-[#0923270F] p-2 rounded-full"
-              type="button"
+            <Button
+              size="sm"
+              variant="outline"
+              leftIcon={<HiOutlineAdjustmentsVertical className="text-[#111] w-6 h-6" />}
             >
-              <HiOutlineAdjustmentsVertical className="text-[#111] w-6 h-6" />
-            </button>
-            <button
-              className="mr-5 cursor-pointer relative border-2 border-[#0000001A] bg-[#0923270F] p-2 rounded-full"
-              type="button"
+              Filter
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              leftIcon={<GoShare className="text-[#111] w-6 h-6" />}
             >
-              <GoShare className="text-[#111] w-6 h-6" />
-            </button>
+              Export
+            </Button>
           </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 grid">
           {activeTab === "board" ? (
             <BoardView
               columns={columns}
@@ -238,11 +208,11 @@ const Project: React.FC = () => {
               onDragEnd={onDragEnd}
             />
           ) : (
-            <TableView tableData={tableData} />
+            <TableView projectData={allProjects} />
           )}
         </div>
-      </div>
-    </div>
+      </>
+    </ActiveProjectTypeProjectWrapper>
   );
 };
 

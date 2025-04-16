@@ -1,14 +1,16 @@
 // tablerow.tsx
 import ViewToggle from "@/components/Cards/ViewToggle";
 import Modal from "@/components/Modal";
-import { TableRowProps } from "@/types/components";
-import React, { useState } from "react";
+import { ProjectDetails } from "@/types/api.types";
+import { format } from "date-fns";
+import { useState } from "react";
 import { BsActivity } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
 import { LuCalendar, LuUserRound } from "react-icons/lu";
 import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
 import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
 import { RiStickyNoteLine } from "react-icons/ri";
+import { TableCell } from "../ui/table";
 
 interface Task {
   id: number;
@@ -34,7 +36,7 @@ interface Activity {
   user: string;
 }
 
-const TableRow: React.FC<TableRowProps> = ({ row }) => {
+const TableRow = ({ row }: { row: ProjectDetails }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("task");
   const [tasks, setTasks] = useState<Task[]>([
@@ -114,22 +116,12 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
         onClick={() => setIsModalOpen(true)}
         className="cursor-pointer hover:bg-gray-50"
       >
-        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-          {row.title}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          {row.organization}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          {row.startDate}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          {row.dueDate}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          {row.completedDate}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        <TableCell>{row.name}</TableCell>
+        <TableCell>{row.company_id}</TableCell>
+        <TableCell>{format(row.start_date, "PPP")}</TableCell>
+        <TableCell>{format(row.end_date, "PPP")}</TableCell>
+        <TableCell>Nill</TableCell>
+        <TableCell>
           <span
             className={`p-2 inline-flex text-sm leading-5 font-semibold rounded-full 
             ${
@@ -142,34 +134,36 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
           >
             {row.status}
           </span>
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
+        </TableCell>
+        <TableCell>
           <div className="flex -space-x-2">
-            {row.projectTeam?.map((member, index) => (
+            Nil
+            {/* {row.projectTeam?.map((member, index) => (
               <div
                 key={index}
                 className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
               >
                 {member.substring(0, 2)}
               </div>
-            ))}
+            ))} */}
           </div>
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
+        </TableCell>
+        <TableCell>
           <div className="flex -space-x-2">
-            {row.clientTeam?.map((member, index) => (
+            Nil
+            {/* {row.clientTeam?.map((member, index) => (
               <div
                 key={index}
                 className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
               >
                 {member.substring(0, 2)}
               </div>
-            ))}
+            ))} */}
           </div>
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
+        </TableCell>
+        <TableCell>
           <IoSettingsOutline className="text-gray-500" />
-        </td>
+        </TableCell>
       </tr>
 
       {/* Modal for project details - same as in ProjectCard */}
@@ -183,10 +177,8 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
           <div className="border-[1px] rounded-lg p-4 m-2 mt-4">
             <div className="space-y-4">
               <div className="flex flex-col">
-                <p className="text-[#191819] font-bold text-2xl">{row.title}</p>
-                <p className="text-[#19181980] text-base font-medium">
-                  {row.organization}
-                </p>
+                <p className="text-[#191819] font-bold text-2xl">{row.name}</p>
+                <p className="text-[#19181980] text-base font-medium">{row.company_id}</p>
               </div>
               <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-[#0000001A] border-[1px]">
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
@@ -234,14 +226,14 @@ const TableRow: React.FC<TableRowProps> = ({ row }) => {
                   </div>
                   <div>
                     <div className="flex -space-x-2">
-                      {row.clientTeam?.map((member, index) => (
+                      {/* {row.clientTeam?.map((member, index) => (
                         <div
                           key={index}
                           className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
                         >
                           {member.substring(0, 2)}
                         </div>
-                      ))}
+                      ))} */}
                     </div>
                   </div>
                 </div>

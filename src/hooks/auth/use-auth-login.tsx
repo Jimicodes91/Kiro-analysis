@@ -9,7 +9,7 @@ export interface User {
   email: string;
   pfp: unknown;
   name: string;
-  role: string;
+  role: "ADMIN";
   company_id: string;
   is_blocked: number;
   is_verified: number;

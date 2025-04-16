@@ -20,7 +20,7 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ options, activeTab, setActiveTa
           }`}
           onClick={() => setActiveTab(option.value)}
         >
-          <span className="z-[1] relative text-inherit">{option.label}</span>
+          <p className="z-[1] relative text-inherit">{option.label}</p>
           {option.value === activeTab ? (
             <motion.div
               className="absolute bottom-[0px] left-0 right-0 rounded-full h-full w-full bg-primary"

@@ -20,24 +20,25 @@ function CreateProjectTemplate() {
   };
 
   return (
-    <div className="space-y-3">
-      <div>
-        <p>
-          <Link to={PAGES.PROJECT_PAGE}>
-            <Button
-              leftIcon={<Icons.arrow />}
-              variant="ghost"
-              size="icon"
-              className="ml-3"
-            >
-              Project
-            </Button>
-          </Link>
-        </p>
-        <Heading size="h3">Add Project</Heading>
-      </div>
-      <div className="w-full bg-brand-gray grid place-items-center p-6">
-        {renderForm()}
+    <div>
+      <div className="space-y-3 p-6">
+        <div>
+          <p>
+            <Link to={PAGES.PROJECT_PAGE}>
+              <Button
+                leftIcon={<Icons.arrow />}
+                variant="ghost"
+                className="px-0 hover:bg-white"
+              >
+                Project
+              </Button>
+            </Link>
+          </p>
+          <Heading size="h3">Add Project</Heading>
+        </div>
+        <div className="w-full bg-brand-gray grid place-items-center p-6">
+          {renderForm()}
+        </div>
       </div>
     </div>
   );

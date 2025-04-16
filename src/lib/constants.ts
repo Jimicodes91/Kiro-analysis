@@ -1,3 +1,56 @@
+import { IconProps, Icons } from "@/components/ui/icons";
+import { JSX } from "react";
+
+export type UserType = "ADMIN" | "CLIENT";
+
+export type DashboardLinkType = {
+  title: string;
+  icon: (props: IconProps) => JSX.Element;
+  path: string;
+  exact?: boolean;
+};
+
+const universalRoutes = [
+  {
+    title: "Home",
+    icon: Icons.dashboard,
+    path: "/home",
+    exact: true,
+  },
+  {
+    title: "Projects",
+    icon: Icons.project,
+    path: "/projects",
+  },
+  {
+    title: "Client",
+    icon: Icons.users,
+    path: "/client",
+  },
+  {
+    title: "Event",
+    icon: Icons.event,
+    path: "/event",
+  },
+  {
+    title: "Finance",
+    icon: Icons.coins,
+    path: "/finance",
+  },
+];
+
+export const topNavData: Record<UserType, DashboardLinkType[]> = {
+  CLIENT: [...universalRoutes],
+  ADMIN: [
+    ...universalRoutes,
+    {
+      title: "Admin",
+      icon: Icons.admin,
+      path: "/admin",
+    },
+  ],
+};
+
 export enum ProjectStatus {
   NOT_STARTED = "not_started",
   IN_PROGRESS = "in_progress",
@@ -64,8 +117,8 @@ export const ENDPOINTS = {
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
-  GET_ALL_PROJECTS: (projectTypeId: string, status: ProjectStatus) =>
-    `projects?project_type_id=${projectTypeId}&status=${status}`,
+  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatus) =>
+    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status ? `?status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
 
