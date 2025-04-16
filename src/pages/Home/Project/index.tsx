@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
+import Loader from "@/components/ui/loader";
+import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
+import ProjectEmptyState from "@/pages/projects/components/project-empty-state";
 import React, { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
@@ -13,6 +16,7 @@ const Project: React.FC = () => {
   const [activeTab, setActiveTab] = useState("board");
   const { activeProjectType } = useProjectContext();
   const allProjects = useGetAllProjects(activeProjectType);
+  const projeectTypes = useGetAllProjectTypes();
 
   const tableData = [
     {
@@ -169,6 +173,22 @@ const Project: React.FC = () => {
   };
 
   const columnOrder = Object.keys(columns);
+
+  if (!projeectTypes.isPending && !projeectTypes?.value) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
+
+  if (
+    !projeectTypes.isPending &&
+    !!projeectTypes?.value &&
+    projeectTypes?.value?.data?.length === 0
+  ) {
+    return <ProjectEmptyState />;
+  }
 
   return (
     <ActiveProjectTypeProjectWrapper>
