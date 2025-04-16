@@ -27,7 +27,7 @@ const ActiveProjectTypeProjectWrapper = ({ children }: { children: React.ReactNo
 
   return (
     <div>
-      <div className="p-6">
+      <div className="p-6 animate-in fade-in-0 duration-700 ease-in-out">
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center gap-4">
             <Heading size="h3">Project</Heading>
