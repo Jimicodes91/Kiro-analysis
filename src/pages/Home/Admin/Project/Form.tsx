@@ -12,8 +12,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import React, { useState } from "react";
+import { IoAdd } from "react-icons/io5";
 
 // Define field types
 type FieldType = "text" | "textarea" | "select" | "date" | "dropdown";
@@ -131,7 +132,7 @@ const FormCustomization: React.FC = () => {
             value={typeof value === "string" ? value : undefined}
             onValueChange={(val) => updateField(id, { value: val })}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
               <SelectValue placeholder={label} />
             </SelectTrigger>
             <SelectContent>
@@ -194,14 +195,19 @@ const FormCustomization: React.FC = () => {
         <div className="border rounded-lg p-6">
           {fields.map(renderField)}
 
-          <Button
-            variant="ghost"
-            onClick={addCustomField}
-            className="mt-4 w-full flex items-center justify-center border border-dashed border-gray-300 py-3 text-sm"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add custom field
-          </Button>
+          <div className="flex items-center">
+            <button
+              onClick={addCustomField}
+              className={`flex items-center text-sm font-semibold text-black hover:text-primary`}
+            >
+              <span className="mr-1 text-xl">
+                <IoAdd className={"text-black"} />
+              </span>
+              Add custom field
+            </button>
+            {/* Line beside the button */}
+            <div className="flex-grow border-t border-gray-200 ml-4"></div>
+          </div>
         </div>
       </div>
     </div>
