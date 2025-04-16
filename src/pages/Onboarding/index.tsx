@@ -1,11 +1,9 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
-// import { nextStep, prevStep } from "../../Redux/store/slices/onboardingSlice";
 import Sidebar from "../../components/Sidebar";
 import ProgressBar from "../../components/progressBar";
+import { RootState } from "../../store";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
-// import { MainButton } from "../../Components/Form/button";
 
 const Onboarding = () => {
   const activeStep = useSelector((state: RootState) => state.onboarding.activeStep);
@@ -23,8 +21,6 @@ const Onboarding = () => {
         return <Step1 />;
     }
   };
-
-  console.log(activeStep);
 
   return (
     <div className="flex px-8 bg-white overflow-x-hidden w-screen h-screen relative">

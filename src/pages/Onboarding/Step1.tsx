@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -51,6 +52,7 @@ const COUNTRY_STATES: CountryStatesMap = {
 const Step1 = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const session = getUserSession();
   const [states, setStates] = useState<{ value: string; label: string }[]>([]);
   const storedCompanyDetails = useSelector(
     (state: RootState) => state.onboarding.companyDetails
@@ -97,7 +99,7 @@ const Step1 = () => {
         size: data.size,
         address: data.address,
       };
-      const response = await createCompanyApi(payload);
+      const response = await createCompanyApi(payload, session?.id ?? "");
       dispatch(setCompanyDetails(data));
       dispatch(nextStep());
       Toast.success(response.message || "Company created successfully");

@@ -1,11 +1,9 @@
 import useAuthLogin from "@/hooks/auth/use-auth-login";
 import { PAGES } from "@/lib/constants";
-import { setAuthUser } from "@/store/slices/authSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { setCookie } from "cookies-next";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
@@ -14,7 +12,6 @@ import { loginSchema } from "../../components/validationSchema/auth";
 import { LoginUser } from "../../types";
 
 const Login: React.FC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const authLogin = useAuthLogin();
   const {
@@ -32,13 +29,10 @@ const Login: React.FC = () => {
         password: data.password,
       })
       .then((response) => {
-        const { token, user } = response.data.data;
         // Store tokens in local storage
-        setCookie("user_session_token", token);
-        setCookie("user_session", JSON.stringify(user));
-        // Store user data in Redux
-        dispatch(setAuthUser(user));
-        if (user.is_verified === 1) {
+        setCookie("user_session_token", response.data.data.token);
+        setCookie("user_session", JSON.stringify(response.data.data.user));
+        if (response.data.data.user.company_id) {
           navigate(PAGES.PROJECT_PAGE);
         } else {
           navigate(PAGES.ONBOARDING_PAGE);

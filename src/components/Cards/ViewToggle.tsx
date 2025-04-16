@@ -1,4 +1,4 @@
-// components/ViewToggle.tsx
+import { motion } from "framer-motion";
 import React from "react";
 
 interface ViewToggleProps {
@@ -8,20 +8,27 @@ interface ViewToggleProps {
 }
 
 const ViewToggle: React.FC<ViewToggleProps> = ({ options, activeTab, setActiveTab }) => {
+  const id = options[0].value;
   return (
     <div className="flex border-[1px] border-[#00000033] justify-between items-center px-1 rounded-full">
       {options.map((option) => (
-        <button
+        <motion.button
+          initial={false}
           key={option.value}
-          className={`my-1 py-2 px-4 font-medium text-sm ${
-            activeTab === option.value
-              ? "text-white bg-primary rounded-full"
-              : "text-[#00000066] hover:text-gray-500"
+          className={`my-1 py-2 relative cursor-pointer px-4 transition-colors duration-300 font-medium text-sm bg-transparent  ${
+            option.value === activeTab ? "text-white" : "text-primary"
           }`}
           onClick={() => setActiveTab(option.value)}
         >
-          {option.label}
-        </button>
+          <span className="z-[1] relative text-inherit">{option.label}</span>
+          {option.value === activeTab ? (
+            <motion.div
+              className="absolute bottom-[0px] left-0 right-0 rounded-full h-full w-full bg-primary"
+              layoutId={`underline-${id}`}
+              id="underline"
+            />
+          ) : null}
+        </motion.button>
       ))}
     </div>
   );

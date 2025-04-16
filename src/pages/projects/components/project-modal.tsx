@@ -1,12 +1,18 @@
-import { Draggable } from "@hello-pangea/dnd";
-import React, { useState } from "react";
+"use client";
+import ViewToggle from "@/components/Cards/ViewToggle";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  ModalProps,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 import { BsActivity } from "react-icons/bs";
 import { LuCalendar, LuUserRound } from "react-icons/lu";
 import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
 import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
 import { RiStickyNoteLine } from "react-icons/ri";
-import Modal from "../Modal";
-import ViewToggle from "./ViewToggle";
 
 interface Task {
   id: number;
@@ -32,21 +38,7 @@ interface Activity {
   user: string;
 }
 
-interface ProjectCardProps {
-  card: {
-    id: number;
-    title: string;
-    organization: string;
-    status: string;
-    clientTeam?: string[];
-    projectTeam?: string[];
-    description?: string;
-  };
-  index: number;
-}
-
-const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+function ProjectModal({ isOpen, onClose }: ModalProps) {
   const [activeTab, setActiveTab] = useState("task");
   const [tasks, setTasks] = useState<Task[]>([
     {
@@ -118,77 +110,30 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
     );
   };
 
+  const card = {
+    id: 1,
+    title: "Nigeria Registration",
+    organization: "Orizon Digital",
+    startDate: "02 Nov 2023 ",
+    dueDate: "02 Nov 2023 ",
+    completedDate: "02 Nov 2023 ",
+    status: "Completed",
+    projectTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
+    clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
+  };
+
   return (
-    <>
-      <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
-        {(provided) => (
-          <div
-            className="bg-white p-3 rounded shadow mb-2 flex flex-col h-52 justify-between cursor-pointer hover:shadow-md transition-shadow"
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            onClick={() => setIsModalOpen(true)}
-          >
-            <div className="mt-2">
-              <span
-                className={`p-1 px-3 inline-flex text-xs leading-5 mb-2 font-semibold rounded-full 
-                  ${
-                    card.status === "Completed"
-                      ? "bg-green-100 text-green-800"
-                      : card.status === "In progress"
-                        ? "bg-[#F1E6D4] text-[#B78026]"
-                        : "bg-[#FB002B1A] text-[#FB002B]"
-                  }`}
-              >
-                {card.status}
-              </span>
-            </div>
-            <div className="font-semibold text-lg mb-1">{card.title}</div>
-            <div className="text-sm text-gray-500 mb-1">{card.organization}</div>
-            <div className="flex justify-between text-xs space-x-2 mb-1">
-              <div className="flex flex-col">
-                <p>Client team</p>
-                <div className="flex -space-x-2">
-                  {card.clientTeam?.map((member, index) => (
-                    <div
-                      key={index}
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
-                    >
-                      {member.substring(0, 2)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex justify-between text-xs mb-1">
-                <div className="flex flex-col">
-                  <p>Project team</p>
-                  <div className="flex -space-x-2">
-                    {card.projectTeam?.map((member, index) => (
-                      <div
-                        key={index}
-                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
-                      >
-                        {member.substring(0, 2)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </Draggable>
-      {/* <ProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> */}
-      {/* Modal for project details */}
-      {isModalOpen && (
-        <Modal
-          title="Project detail"
-          closeModal={() => setIsModalOpen(false)}
-          showExpandButton={true}
-          expandRoute={`/projects/${card.id}`}
-        >
-          <div className="border-[1px] rounded-lg p-4 m-2 mt-4">
-            <div className="space-y-4">
+    <AlertDialog open={isOpen}>
+      <AlertDialogContent
+        onEscapeKeyDown={onClose}
+        className="bg-white p-2.5 space-y-1 translate-x-[0%] left-[60%] max-w-xl max-h-[800px] overflow-y-scroll"
+      >
+        <AlertDialogHeader className="px-3 pt-2">
+          <AlertDialogTitle>Project detail</AlertDialogTitle>
+        </AlertDialogHeader>
+        <div className="space-y-3 p-2">
+          <div className="border-[1px] rounded-lg p-4">
+            <div className="space-y-3">
               <div className="flex flex-col">
                 <p className="text-[#191819] font-bold text-2xl">{card.title}</p>
                 <p className="text-[#19181980] text-base font-medium">
@@ -255,8 +200,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
               </div>
             </div>
           </div>
-          <div className="border-[1px] rounded-lg p-4 m-2 mt-4">
-            <div className="space-y-4">
+          <div className="border-[1px] rounded-lg p-4">
+            <div className="space-y-3">
               <div className="flex justify-between">
                 <p className="text-[#19181980] text-sm font-semibold">
                   Phase:
@@ -273,7 +218,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
               </p>
             </div>
           </div>
-          <div className="border-[1px] rounded-lg p-4 m-2 mt-4">
+          <div className="border-[1px] rounded-lg p-4">
             <div className="space-y-4">
               <ViewToggle
                 activeTab={activeTab}
@@ -381,7 +326,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
 
               {/* Activity Tab Content */}
               {activeTab === "activity" && (
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {activities.length === 0 ? (
                     <div className="text-center py-4 text-gray-500">No activity yet.</div>
                   ) : (
@@ -412,10 +357,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
               )}
             </div>
           </div>
-        </Modal>
-      )}
-    </>
+        </div>
+      </AlertDialogContent>
+    </AlertDialog>
   );
-};
+}
 
-export default ProjectCard;
+export default ProjectModal;

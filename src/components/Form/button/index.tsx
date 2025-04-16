@@ -1,4 +1,4 @@
-import { ClipLoader } from "react-spinners";
+import { BeatLoader } from "react-spinners";
 
 type MainButtonProps = {
   type?: "button" | "submit" | "reset";
@@ -40,7 +40,7 @@ export const MainButton: React.FC<MainButtonProps> = ({
       disabled={disabled || isLoading}
     >
       {isLoading ? (
-        <ClipLoader color={variant === "filled" ? "#fff" : "#000"} size="20px" />
+        <BeatLoader color={variant === "filled" ? "#fff" : "#000"} size="10px" />
       ) : (
         children
       )}

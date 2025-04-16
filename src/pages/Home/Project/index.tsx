@@ -1,18 +1,19 @@
+import { Button } from "@/components/ui/button";
+import { PAGES } from "@/lib/constants";
 import React, { useState } from "react";
-import Search from "../../../components/Form/search";
-import { FormSelect } from "../../../components/Form/select";
-import { MainButton } from "../../../components/Form/button";
-import { IoAdd } from "react-icons/io5";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
+import { IoAdd } from "react-icons/io5";
+import { Link } from "react-router-dom";
 import BoardView from "../../../components/Cards/BoardView";
 import TableView from "../../../components/Cards/TableView";
 import ViewToggle from "../../../components/Cards/ViewToggle";
+import Search from "../../../components/Form/search";
+import { FormSelect } from "../../../components/Form/select";
 
 const Project: React.FC = () => {
   const [, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("board");
-
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     console.log("Search Query:", query);
@@ -175,8 +176,8 @@ const Project: React.FC = () => {
   const columnOrder = Object.keys(columns);
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row items-center justify-between ">
+    <div className="grid relative">
+      <div className="flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center space-x-4  mt-5 md:mt-0">
           <h1 className="text-2xl font-bold mr-5">Project</h1>
           <Search placeholder="Search keyword" onSearch={handleSearch} />
@@ -192,12 +193,11 @@ const Project: React.FC = () => {
               { value: "db", label: "Dubai Registration" },
             ]}
           />
-          <MainButton>
-            <span className="mr-3 text-xl">
-              <IoAdd />
-            </span>
-            Add project
-          </MainButton>
+          <Link to={PAGES.PROJECT_CREATE_PAGE}>
+            <Button asChild leftIcon={<IoAdd />}>
+              Add project
+            </Button>
+          </Link>
         </div>
       </div>
       <div className="border-[1px] border-[#0000001A] rounded-lg mt-4 p-4">

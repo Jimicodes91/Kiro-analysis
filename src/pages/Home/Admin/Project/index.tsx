@@ -1,15 +1,13 @@
-import ViewToggle from "@/components/Cards/ViewToggle";
 import { addProjectPipelineSchema } from "@/components/validationSchema/admin";
+import useGetAllCompanies from "@/hooks/admin/use-get-all-companies";
 import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
-import { RootState } from "@/store";
+import { getUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
-import {
-  // useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { InferType } from "yup";
+import ViewToggle from "../../../../components/Cards/ViewToggle";
 import { MainButton } from "../../../../components/Form/button";
 import { FormInput } from "../../../../components/Form/input";
 import Modal from "../../../../components/Modal";
@@ -41,14 +39,16 @@ interface Pipeline {
 const ProjectTab: React.FC = () => {
   const [activeTab, setActiveTab] = useState("pipeline");
   const [isPipelineModalOpen, setIsPipelineModalOpen] = useState(false);
+  const session = getUserSession();
   const createProjectType = useCreateProjectType();
-  const authUser = useSelector((state: RootState) => state.auth.authUser);
+  useGetAllCompanies();
 
   //   Project pipeline form
   const {
     register: registerPipeline,
     handleSubmit: handleSubmitPipeline,
     formState: { errors: errorsPipeline },
+    reset,
   } = useForm<ProjectPipelineFormData>({
     resolver: yupResolver(addProjectPipelineSchema),
   });
@@ -141,16 +141,20 @@ const ProjectTab: React.FC = () => {
     { key: "action", header: "", render: () => <BsThreeDotsVertical /> },
   ];
 
-  const onSubmitPipeline = async (data: ProjectPipelineFormData) => {
+  console.log(session);
+
+  const onSubmitPipeline = async (data: InferType<typeof addProjectPipelineSchema>) => {
     createProjectType
       .mutateAsync({
         name: data.pipelineName,
-        company_id: String(authUser?.company_id ?? 0),
+        company_id: session?.company_id ?? "",
+      })
+      .then(() => {
+        reset();
+        setIsPipelineModalOpen(false);
       })
       .catch(console.error);
   };
-
-  console.log(authUser, "authuser");
 
   return (
     <>
@@ -206,7 +210,7 @@ const ProjectTab: React.FC = () => {
               error={errorsPipeline.pipelineName?.message}
             />
 
-            <MainButton modalButton type="submit">
+            <MainButton modalButton type="submit" isLoading={createProjectType.isPending}>
               Create pipeline
             </MainButton>
           </form>

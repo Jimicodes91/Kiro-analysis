@@ -1,12 +1,12 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
 
-const useGetAllCompanies = () => {
+const useGetProjectForms = () => {
   return useQueryActionHook({
     method: "get",
-    endpoint: ENDPOINTS.GET_ALL_COMPANIES,
-    queryKey: [QUERYKEYS.GET_ALL_COMPANIES],
+    endpoint: ENDPOINTS.GET_PROJECT_FORMS,
+    queryKey: [QUERYKEYS.GET_PROJECT_FORMS],
   });
 };
 
-export default useGetAllCompanies;
+export default useGetProjectForms;
