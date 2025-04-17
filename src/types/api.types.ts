@@ -294,3 +294,31 @@ export interface CustomFields {
   legal_structure: string;
   incorporation_date: string;
 }
+
+export interface UserDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  email: string;
+  pfp?: string;
+  password: string;
+  name?: string;
+  role: string;
+  company_id?: string;
+  is_blocked: number;
+  is_verified: number;
+  timezone?: string;
+  language: string;
+  currency: string;
+  is_active: number;
+  last_login?: string;
+  verification_token?: string;
+  token_expires?: number;
+  googleId?: string;
+  refresh_token?: string;
+  refresh_token_expires?: string;
+  password_setup_token?: string;
+  login_count: number;
+  password_setup_token_expires?: string;
+}

@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { setCookie } from "cookies-next";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
@@ -12,6 +12,7 @@ import { loginSchema } from "../../components/validationSchema/auth";
 import { LoginUser } from "../../types";
 
 const Login: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const authLogin = useAuthLogin();
   const {
@@ -21,6 +22,8 @@ const Login: React.FC = () => {
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
+  const callback = searchParams.get("callback");
+  console.log(callback, "callback");
 
   const onSubmit = async (data: LoginUser) => {
     authLogin
@@ -33,6 +36,7 @@ const Login: React.FC = () => {
         setCookie("user_session_token", response.data.data.token);
         setCookie("user_session", JSON.stringify(response.data.data.user));
         if (response.data.data.user.company_id) {
+          // navigate(callback ? callback : PAGES.PROJECT_PAGE);
           navigate(PAGES.PROJECT_PAGE);
         } else {
           navigate(PAGES.ONBOARDING_PAGE);

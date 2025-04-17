@@ -13,7 +13,6 @@ import { topNavData } from "@/lib/constants";
 import getInitials, { cn } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { FaIndustry } from "react-icons/fa";
-import { VscBell } from "react-icons/vsc";
 import { Link, Outlet } from "react-router-dom";
 import AccountNav from "./account-nav";
 import LogoutModal from "./logout-modal";
@@ -86,12 +85,12 @@ export default function AccountLayout() {
             )}
           </div>
           <div className="flex gap-3 ring-pri-60 items-center">
-            <Button size="icon" variant="outline" type="button">
+            {/* <Button size="icon" variant="outline" type="button">
               <VscBell className="text-[#111] w-6 h-6" />
               <span className="absolute -top-1 -right-1 bg-primary text-white rounded-full w-4 h-4 flex justify-center items-center text-xs">
                 3
               </span>
-            </Button>
+            </Button> */}
             <UserNav onOpen={onOpen} />
           </div>
         </div>

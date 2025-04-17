@@ -7,6 +7,7 @@ export async function logout() {
   // Destroy the session
   deleteCookie("user_session_token");
   deleteCookie("user_session");
+  window.location.href = `?callback=${window.location.href}`;
 }
 
 export async function getSessionToken() {
@@ -21,9 +22,7 @@ export async function getSessionToken() {
 export function getUserSession() {
   const session = getCookie("user_session");
   if (!session) {
-    logout().finally(() => {
-      window.location.href = `/?callback=${window.location.href}`;
-    });
+    logout();
     return;
   }
 
@@ -76,9 +75,7 @@ axios.interceptors.response.use(
       // } catch (err) {
       //   return Promise.reject(err); // Handle refresh token failure
       // }
-      logout().finally(() => {
-        window.location.href = `/?callback=${window.location.href}`;
-      });
+      logout();
     }
     return Promise.reject(error);
   }

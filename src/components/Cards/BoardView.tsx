@@ -42,7 +42,7 @@ const BoardView: React.FC<BoardViewProps> = ({ columns, columnOrder, onDragEnd }
                 <Draggable key={column.id} draggableId={column.id} index={index}>
                   {(provided) => (
                     <div
-                      className="flex flex-col bg-[#F7F7F7] rounded-lg p-3 mr-4 w-64 flex-shrink-0"
+                      className="flex flex-col bg-brand-table rounded-lg p-3 mr-4 w-64 flex-shrink-0"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}

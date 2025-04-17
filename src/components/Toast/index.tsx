@@ -9,6 +9,7 @@ const Toast = {
     toast(
       <ToastTemplate
         message={message}
+        header="Request Successful"
         icon={
           <div className="toast-icon">
             <SuccessIcon />
