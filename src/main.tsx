@@ -31,7 +31,7 @@ createRoot(document.getElementById("root")!).render(
             draggable
             pauseOnFocusLoss
             position="top-right"
-            autoClose={400000}
+            autoClose={4000}
           />
           <ReactQueryDevtools />
         </BrowserRouter>

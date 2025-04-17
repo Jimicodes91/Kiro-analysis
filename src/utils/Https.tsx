@@ -1,5 +1,5 @@
+import { getSessionToken } from "@/services/api.service";
 import axios, { InternalAxiosRequestConfig } from "axios";
-import store from "store";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,8 +12,9 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = store.get("atk");
+  async (config: InternalAxiosRequestConfig) => {
+    const session = await getSessionToken();
+    const token = session;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
