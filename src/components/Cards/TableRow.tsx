@@ -10,7 +10,7 @@ import { LuCalendar, LuUserRound } from "react-icons/lu";
 import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
 import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
 import { RiStickyNoteLine } from "react-icons/ri";
-import { TableCell } from "../ui/table";
+import { TableCell, TableRow } from "../ui/table";
 
 interface Task {
   id: number;
@@ -36,7 +36,7 @@ interface Activity {
   user: string;
 }
 
-const TableRow = ({ row }: { row: ProjectDetails }) => {
+const TableRowLol = ({ row }: { row: ProjectDetails }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("task");
   const [tasks, setTasks] = useState<Task[]>([
@@ -111,12 +111,12 @@ const TableRow = ({ row }: { row: ProjectDetails }) => {
 
   return (
     <>
-      <tr
+      <TableRow
         key={row.id}
         onClick={() => setIsModalOpen(true)}
         className="cursor-pointer hover:bg-gray-50"
       >
-        <TableCell>{row.name}</TableCell>
+        <TableCell className="">{row.name}</TableCell>
         <TableCell>{row.company_id}</TableCell>
         <TableCell>{format(row.start_date, "PPP")}</TableCell>
         <TableCell>{format(row.end_date, "PPP")}</TableCell>
@@ -164,7 +164,7 @@ const TableRow = ({ row }: { row: ProjectDetails }) => {
         <TableCell>
           <IoSettingsOutline className="text-gray-500" />
         </TableCell>
-      </tr>
+      </TableRow>
 
       {/* Modal for project details - same as in ProjectCard */}
       {isModalOpen && (
@@ -403,4 +403,4 @@ const TableRow = ({ row }: { row: ProjectDetails }) => {
   );
 };
 
-export default TableRow;
+export default TableRowLol;

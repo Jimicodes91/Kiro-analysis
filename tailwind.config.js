@@ -74,6 +74,7 @@ export default {
           primary: "#E0EFDE",
           text: "#74757F",
           gray: "#F4F4F4",
+          table: "#F7F7F7",
         },
       },
       fontFamily: {

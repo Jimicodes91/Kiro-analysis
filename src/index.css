@@ -96,6 +96,9 @@
   display: flex;
   align-items: center;
   gap: 2px;
+  font-family: "42dot Sans", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
 .toast-icon {

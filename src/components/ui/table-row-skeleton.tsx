@@ -9,6 +9,9 @@ const TableSkeletonRowLoader = ({
 }) => {
   return (
     <TableBody>
+      <TableRow className="border-0 outline-none !bg-transparent">
+        <TableCell className="border-0 h-3 py-0" colSpan={9}></TableCell>
+      </TableRow>
       {Array.from({ length: noOfRows }).map((_, rowIndex) => (
         <TableRow key={rowIndex} className="animate-pulse">
           {Array.from({ length }).map((_, colIndex) => (

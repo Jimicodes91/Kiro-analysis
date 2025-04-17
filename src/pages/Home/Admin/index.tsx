@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 import AuditTrailTab from "./AuditTrail";
 import DocumentTab from "./Document";
@@ -44,47 +45,37 @@ const Admin: React.FC = () => {
       case "Project":
         return (
           <div>
-            {" "}
-            <ProjectTab />{" "}
+            <ProjectTab />
           </div>
         );
       case "Document":
         return (
           <div>
-            {" "}
-            <DocumentTab />{" "}
+            <DocumentTab />
           </div>
         );
       case "Event":
         return (
           <div>
-            {" "}
-            <EventTab />{" "}
+            <EventTab />
           </div>
         );
-      // case "Note":
-      //   return <div className="p-4">Note</div>;
       case "Task":
         return (
           <div>
-            {" "}
-            <TaskTab />{" "}
+            <TaskTab />
           </div>
         );
       case "AuditTrail":
         return (
           <div>
-            {" "}
-            <AuditTrailTab />{" "}
+            <AuditTrailTab />
           </div>
         );
-      // case "Account":
-      //   return <div> Account </div>;
       case "Settings":
         return (
           <div>
-            {" "}
-            <SettingsTab />{" "}
+            <SettingsTab />
           </div>
         );
       default:
@@ -100,14 +91,21 @@ const Admin: React.FC = () => {
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={`px-6 py-3 text-[14px] text-black focus:outline-none transition-colors duration-200 ${
+              className={`px-6 py-3 relative text-[14px] text-black focus:outline-none transition-all duration-200 ${
                 activeTab === tab
-                  ? "border-b-2 border-black font-[600]"
+                  ? "font-bold"
                   : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"
               }`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
+              {activeTab === tab ? (
+                <motion.div
+                  className="absolute bottom-0 left-0 rounded-full h-1 w-full bg-primary"
+                  layoutId={`underline-admin`}
+                  id="underline"
+                />
+              ) : null}
             </button>
           ))}
         </div>

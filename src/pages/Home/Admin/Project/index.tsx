@@ -1,7 +1,6 @@
 import { addProjectPipelineSchema } from "@/components/validationSchema/admin";
 import useGetAllCompanies from "@/hooks/admin/use-get-all-companies";
 import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
-import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { getUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
@@ -67,8 +66,7 @@ const ProjectTab: React.FC = () => {
   const session = getUserSession();
   const createProjectType = useCreateProjectType();
   useGetAllCompanies();
-  const projectTypes = useGetAllProjectTypes();
-  console.log(projectTypes.data, "project types");
+
   // Project pipeline form
   const {
     register: registerPipeline,
@@ -328,7 +326,7 @@ const ProjectTab: React.FC = () => {
       </div>
 
       {activeTab === "pipeline" ? (
-        <div className="border-[1px] border-[#0000001A] p-1 rounded-lg bg-[#F7F7F7]">
+        <div className="border-[1px] border-[#0000001A] p-1 rounded-lg bg-brand-table">
           <Table<Pipeline, keyof Pipeline, Stage, keyof Stage>
             data={pipelineData}
             columns={columns}
