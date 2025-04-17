@@ -22,16 +22,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { IFormField } from "@/hooks/project-modules/project-forms/use-get-project-form-fields";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useCreateProject from "@/hooks/project-modules/use-create-project";
+import { PAGES } from "@/lib/constants";
 import { cn, convertDatesToYMD } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import * as z from "zod";
 
 export default function CreateProjectDynamicForm({ fields }: { fields: IFormField[] }) {
   const projectTypes = useGetAllProjectTypes();
+  const navigate = useNavigate();
   const createProject = useCreateProject();
 
   const fieldSchema = fields.reduce((acc, field) => {
@@ -70,8 +73,9 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
   function onSubmit(values: z.infer<typeof formSchema>) {
     createProject
       .mutateAsync(convertDatesToYMD(values))
-      .then((data) => {
-        console.log(data);
+      .then(() => {
+        form.reset();
+        navigate(PAGES.PROJECT_PAGE);
       })
       .catch(console.error);
   }

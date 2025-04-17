@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { addProjectPipelineSchema } from "@/components/validationSchema/admin";
 import useGetAllCompanies from "@/hooks/admin/use-get-all-companies";
 import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
@@ -98,11 +99,9 @@ const ProjectTab: React.FC = () => {
           ]}
         />
         {activeTab === "pipeline" ? (
-          <MainButton onClick={() => setIsPipelineModalOpen(true)}>
-            Create pipeline
-          </MainButton>
+          <Button onClick={() => setIsPipelineModalOpen(true)}>Create pipeline</Button>
         ) : (
-          <MainButton>Publish</MainButton>
+          <Button>Publish</Button>
         )}
       </div>
 
