@@ -1,3 +1,4 @@
+import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import React from "react";
 import ProjectColumn from "./ProjectColumn";
@@ -24,6 +25,7 @@ interface BoardViewProps {
     source: { droppableId: string; index: number };
     draggableId: string;
   }) => void;
+  projectData: ReturnType<typeof useGetAllProjects>;
 }
 
 const BoardView: React.FC<BoardViewProps> = ({ columns, columnOrder, onDragEnd }) => {

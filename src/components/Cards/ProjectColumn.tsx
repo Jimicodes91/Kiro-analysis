@@ -1,5 +1,5 @@
-import React from "react";
 import { Droppable } from "@hello-pangea/dnd";
+import React from "react";
 import ProjectCard from "./ProjectCard";
 
 interface ProjectColumnProps {

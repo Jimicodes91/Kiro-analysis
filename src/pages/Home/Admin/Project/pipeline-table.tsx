@@ -19,13 +19,17 @@ const PipeLineTable = () => {
       return <EmptyTable message="No pipline found" length={3} />;
 
     return (
-      <TableBody className="text-xs">
+      <TableBody>
         <TableRow className="border-0 outline-none !bg-transparent">
           <TableCell className="border-0 h-3 py-0" colSpan={3}></TableCell>
         </TableRow>
         <>
-          {projectTypes?.value?.data?.map((projectType) => (
-            <PipeLineTableRow key={projectType.id} projectType={projectType} />
+          {projectTypes?.value?.data?.map((projectType, index) => (
+            <PipeLineTableRow
+              key={projectType.id}
+              projectType={projectType}
+              index={index}
+            />
           ))}
         </>
       </TableBody>

@@ -6,8 +6,7 @@ const useCreateMilestone = () => {
     Record<string, string>,
     {
       name: string;
-      start_date: string;
-      end_date: string;
+      duration: string;
       project_type_id: string;
     }
   >({

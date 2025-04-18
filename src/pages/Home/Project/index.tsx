@@ -223,6 +223,7 @@ const Project: React.FC = () => {
         <div className="mt-4 grid">
           {activeTab === "board" ? (
             <BoardView
+              projectData={allProjects}
               columns={columns}
               columnOrder={columnOrder}
               onDragEnd={onDragEnd}
