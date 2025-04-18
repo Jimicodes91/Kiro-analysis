@@ -1,13 +1,19 @@
 import { LoginResponse } from "@/hooks/auth/use-auth-login";
+import { PAGES } from "@/lib/constants";
 import { CustomMethod, SecureRequestProps } from "@/types/api.types";
 import axios from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
 
-export async function logout() {
+export async function logout(redirect = true) {
   // Destroy the session
   deleteCookie("user_session_token");
   deleteCookie("user_session");
-  window.location.href = `?callback=${window.location.href}`;
+
+  if (typeof window !== "undefined" && redirect) {
+    const currentUrl = window.location.pathname;
+    const loginUrl = `${PAGES.LOGIN_PAGE}?callback=${encodeURIComponent(currentUrl)}`;
+    window.location.href = loginUrl;
+  }
 }
 
 export async function getSessionToken() {

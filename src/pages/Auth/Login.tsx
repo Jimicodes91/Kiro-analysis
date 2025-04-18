@@ -23,7 +23,6 @@ const Login: React.FC = () => {
     resolver: yupResolver(loginSchema),
   });
   const callback = searchParams.get("callback");
-  console.log(callback, "callback");
 
   const onSubmit = async (data: LoginUser) => {
     authLogin
@@ -36,8 +35,8 @@ const Login: React.FC = () => {
         setCookie("user_session_token", response.data.data.token);
         setCookie("user_session", JSON.stringify(response.data.data.user));
         if (response.data.data.user.company_id) {
-          // navigate(callback ? callback : PAGES.PROJECT_PAGE);
-          navigate(PAGES.PROJECT_PAGE);
+          navigate(callback ? callback : PAGES.PROJECT_PAGE);
+          // navigate(PAGES.PROJECT_PAGE);
         } else {
           navigate(PAGES.ONBOARDING_PAGE);
         }

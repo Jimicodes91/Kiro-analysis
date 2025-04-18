@@ -60,7 +60,7 @@ function MilestoneForm({
   return (
     <>
       <TableRow className="!bg-white !border-y-0">
-        <TableCell colSpan={3} className="w-fit bg-transparent hover:bg-transparent pt-4">
+        <TableCell colSpan={3} className="w-fit bg-transparent hover:bg-transparent">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}

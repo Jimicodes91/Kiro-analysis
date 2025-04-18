@@ -81,7 +81,7 @@ export default function AccountLayout() {
             {company?.isPending ? (
               <div className="h-8 min-w-[200px] bg-slate-300 animate-pulse"></div>
             ) : (
-              <Heading size="h2">{company?.value?.data?.name}</Heading>
+              <Heading size="h3">{company?.value?.data?.name}</Heading>
             )}
           </div>
           <div className="flex gap-3 ring-pri-60 items-center">

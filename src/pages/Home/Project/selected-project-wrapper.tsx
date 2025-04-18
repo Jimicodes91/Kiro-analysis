@@ -49,7 +49,7 @@ const ActiveProjectTypeProjectWrapper = ({ children }: { children: React.ReactNo
                   isLoading={projectTypes.isLoading}
                   className="min-w-[150px]"
                 >
-                  <SelectValue placeholder="Select project type" />
+                  <SelectValue placeholder="Select pipeline" />
                 </SelectTrigger>
                 <SelectContent>
                   {projectTypes?.value &&
