@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
 import Loader from "@/components/ui/loader";
+import useGetProjectForms from "@/hooks/project-modules/project-forms/use-get-project-form";
 import useGetProjectFormFields from "@/hooks/project-modules/project-forms/use-get-project-form-fields";
 import { PAGES } from "@/lib/constants";
 import { Link } from "react-router-dom";
@@ -9,7 +10,7 @@ import CreateProjectDynamicForm from "../components/project-dynamic-form";
 
 function CreateProjectTemplate() {
   const projectFormFields = useGetProjectFormFields();
-
+  useGetProjectForms();
   const renderForm = () => {
     if (projectFormFields.isLoading) return <Loader />;
 

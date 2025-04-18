@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
-import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { PAGES } from "@/lib/constants";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuPlus } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import ProjectEmptyStateCard from "./project-empty-state-card";
 
 function ProjectEmptyState() {
   const navigate = useNavigate();
@@ -30,17 +30,7 @@ function ProjectEmptyState() {
             </Button>
           </div>
         </div>
-        <div className="h-full flex-1 w-full flex text-center justify-center items-center">
-          <div className="text-center flex flex-col items-center justify-center space-y-1">
-            <div className="grid place-items-center rounded-full h-16 w-16 bg-brand-primary/60">
-              <Icons.project className="h-8 w-8" />
-            </div>
-            <Heading size="h3">No project to show yet</Heading>
-            <p className="text-brand-text text-sm">
-              You&apos;ve got a blank state. Add project to get started
-            </p>
-          </div>
-        </div>
+        <ProjectEmptyStateCard />
       </div>
     </div>
   );

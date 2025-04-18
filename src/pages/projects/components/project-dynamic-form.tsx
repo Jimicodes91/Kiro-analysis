@@ -186,7 +186,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                 })}
               <div className="pt-5">
                 <Button type="submit" fullWidth isLoading={createProject.isPending}>
-                  Submit
+                  Add project
                 </Button>
               </div>
             </form>

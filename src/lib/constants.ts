@@ -68,7 +68,7 @@ export const ENDPOINTS = {
   UPDATE_PASSWORD: "auth/update-password",
   AUTH_LOGIN: "auth/login",
   COMPANY_ADMIN_SIGNUP: "auth/company-admin-signup",
-  SEND_CONSULTANT_INVITE: "auth/send-consultant-invite",
+  SEND_CONSULTANT_INVITE: "auth/send-invite",
   COMPLETE_REGISTRATION: "auth/complete-registration",
   ADD_CLIENT: "auth/add-client",
 
