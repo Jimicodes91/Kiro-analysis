@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import getInitials from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
-import { Link } from "react-router-dom";
 
 export function UserNav({ onOpen }: { onOpen?: () => void }) {
   const user = getUserSession();
@@ -36,12 +35,7 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
             <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link to="/settings">Settings</Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        <DropdownMenuGroup></DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onOpen}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
