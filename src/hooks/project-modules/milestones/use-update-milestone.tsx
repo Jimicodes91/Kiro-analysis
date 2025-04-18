@@ -6,8 +6,7 @@ const useUpdateMilestone = (milestoneId: string) => {
     Record<string, string>,
     {
       name?: string;
-      start_date?: string;
-      end_date?: string;
+      duration?: string;
       is_completed?: boolean;
     }
   >({

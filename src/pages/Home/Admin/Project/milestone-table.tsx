@@ -25,9 +25,9 @@ import { cn } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { IoIosArrowDown } from "react-icons/io";
 import { LuPlus } from "react-icons/lu";
 import { InferType } from "yup";
+import MilestoneTableRow from "./milestone-table-row";
 
 function MilestoneTable({
   projectType,
@@ -38,7 +38,7 @@ function MilestoneTable({
   bg: string;
   isOpen: boolean;
 }) {
-  const milestone = useGetAllProjectTypeMilestones(projectType.id);
+  const getMilestones = useGetAllProjectTypeMilestones(projectType.id);
   const createMilestone = useCreateMilestone();
   const { isOpen: isCreateFormOpen, onOpen, onClose } = useDisclosure();
   const form = useForm({
@@ -53,7 +53,7 @@ function MilestoneTable({
         project_type_id: projectType.id,
       })
       .then(() => {
-        milestone.refetch().finally(() => {
+        getMilestones.refetch().finally(() => {
           form.reset();
           onClose();
         });
@@ -62,25 +62,21 @@ function MilestoneTable({
   };
 
   const renderTableBody = () => {
-    if (milestone.isPending)
+    if (getMilestones.isPending)
       return <TableSkeletonRowLoader isSegemented={false} noOfRows={3} length={3} />;
 
-    if (milestone?.value?.data?.length === 0)
+    if (getMilestones?.value?.data?.length === 0)
       return <EmptyTable message="No milestone found" length={3} />;
 
     return (
       <>
         <>
-          {milestone?.value?.data?.map((milestone) => (
-            <TableRow className="">
-              <TableCell>{milestone?.name}</TableCell>
-              <TableCell>{milestone?.duration}</TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon">
-                  <IoIosArrowDown />
-                </Button>
-              </TableCell>
-            </TableRow>
+          {getMilestones?.value?.data?.map((milestone) => (
+            <MilestoneTableRow
+              milestone={milestone}
+              key={milestone.id}
+              refetch={getMilestones.refetch}
+            />
           ))}
         </>
       </>
@@ -123,7 +119,7 @@ function MilestoneTable({
                 <TableRow className="!bg-white !border-y-0">
                   <TableCell
                     colSpan={3}
-                    className="w-fit grid bg-transparent hover:bg-transparent pt-4"
+                    className="w-fit bg-transparent hover:bg-transparent pt-4"
                   >
                     <Form {...form}>
                       <form

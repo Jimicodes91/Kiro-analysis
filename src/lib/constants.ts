@@ -93,6 +93,11 @@ export const ENDPOINTS = {
   // Company Endpoints
   CREATE_COMPANY: (userId: string) => `create/${userId}`,
 
+  // Company Admin Endpoints
+  GET_COMPANY_USERS: (companyId: string) => `admin/companies/${companyId}`,
+  UPDATE_COMPANY_USER_STATUS: (companyId: string, userId: string) =>
+    `comp-admin/update-user-status/${companyId}/${userId}`,
+
   // User Endpoints
   GET_USER: (userId: string) => `user/${userId}`,
   UPDATE_PROFILE: (userId: string) => `user/profile/${userId}`,
@@ -250,6 +255,9 @@ export const QUERYKEYS = {
   GET_ALL_USERS: "GET_ALL_USERS",
   GET_ACTIVE_USERS: "GET_ACTIVE_USERS",
   GET_ALL_ADMINS: "GET_ALL_ADMINS",
+
+  // Company Admin Endpoints
+  GET_COMPANY_USERS: "GET_COMPANY_USERS",
 
   // User Query keys
   GET_USER: "GET_USER",
