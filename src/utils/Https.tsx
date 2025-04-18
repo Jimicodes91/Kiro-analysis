@@ -1,7 +1,7 @@
 import { getSessionToken } from "@/services/api.service";
 import axios, { InternalAxiosRequestConfig } from "axios";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+const baseURL = import.meta.env.VITE_API_BASE_URL_TWO;
 
 const axiosInstance = axios.create({
   baseURL,

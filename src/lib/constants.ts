@@ -94,7 +94,7 @@ export const ENDPOINTS = {
   CREATE_COMPANY: (userId: string) => `create/${userId}`,
 
   // Company Admin Endpoints
-  GET_COMPANY_USERS: (companyId: string) => `admin/companies/${companyId}`,
+  GET_COMPANY_USERS: (companyId: string) => `admin/companies/${companyId}/users`,
   UPDATE_COMPANY_USER_STATUS: (companyId: string, userId: string) =>
     `comp-admin/update-user-status/${companyId}/${userId}`,
 

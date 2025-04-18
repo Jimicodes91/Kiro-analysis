@@ -13,9 +13,9 @@ const Onboarding = () => {
 
   const renderStep = () => {
     switch (activeStep) {
-      case 1:
-        return <Step1 />;
       case 2:
+        return <Step1 />;
+      case 1:
         return <Step2 />;
       default:
         return <Step1 />;
