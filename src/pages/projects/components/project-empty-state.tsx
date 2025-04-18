@@ -30,7 +30,7 @@ function ProjectEmptyState() {
             </Button>
           </div>
         </div>
-        <ProjectEmptyStateCard />
+        <ProjectEmptyStateCard hasPipeline={false} />
       </div>
     </div>
   );
