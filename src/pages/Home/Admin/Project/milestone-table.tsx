@@ -1,12 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -16,17 +8,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
-import { addStageSchema } from "@/components/validationSchema/admin";
 import useGetAllProjectTypeMilestones from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
-import useCreateMilestone from "@/hooks/project-modules/milestones/use-create-milestone";
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useDisclosure from "@/hooks/use-disclosure";
 import { cn } from "@/lib/utils";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
-import { InferType } from "yup";
+import MilestoneForm from "./mileston-form";
 import MilestoneTableRow from "./milestone-table-row";
 
 function MilestoneTable({
@@ -39,27 +27,7 @@ function MilestoneTable({
   isOpen: boolean;
 }) {
   const getMilestones = useGetAllProjectTypeMilestones(projectType.id);
-  const createMilestone = useCreateMilestone();
   const { isOpen: isCreateFormOpen, onOpen, onClose } = useDisclosure();
-  const form = useForm({
-    resolver: yupResolver(addStageSchema),
-  });
-
-  const onSubmit = async (data: InferType<typeof addStageSchema>) => {
-    createMilestone
-      .mutateAsync({
-        name: data.stageName,
-        duration: data.duration,
-        project_type_id: projectType.id,
-      })
-      .then(() => {
-        getMilestones.refetch().finally(() => {
-          form.reset();
-          onClose();
-        });
-      })
-      .catch(console.error);
-  };
 
   const renderTableBody = () => {
     if (getMilestones.isPending)
@@ -116,74 +84,12 @@ function MilestoneTable({
               </TableHeader>
               <>{renderTableBody()}</>
               {isCreateFormOpen && (
-                <TableRow className="!bg-white !border-y-0">
-                  <TableCell
-                    colSpan={3}
-                    className="w-fit bg-transparent hover:bg-transparent pt-4"
-                  >
-                    <Form {...form}>
-                      <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="flex gap-3 flex-col md:flex-row"
-                      >
-                        <div className="w-full">
-                          <FormField
-                            control={form.control}
-                            name="stageName"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Input
-                                    className="h-10 w-full max-w-xs"
-                                    placeholder="Stage name"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div className="w-full">
-                          <FormField
-                            control={form.control}
-                            name="duration"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Input
-                                    className="h-10 w-full max-w-xs"
-                                    placeholder="Duration"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-
-                        <div className="items-center w-fit gap-2 flex">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={createMilestone.isPending}
-                            onClick={onClose}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            type="submit"
-                            size="sm"
-                            isLoading={createMilestone.isPending}
-                          >
-                            Save
-                          </Button>
-                        </div>
-                      </form>
-                    </Form>
-                  </TableCell>
-                </TableRow>
+                <MilestoneForm
+                  onClose={onClose}
+                  refetch={getMilestones.refetch}
+                  key={String(isOpen)}
+                  projectTypeId={projectType.id}
+                />
               )}
               <TableRow className="!bg-white !border-t-0">
                 <TableCell colSpan={3} className="w-fit">

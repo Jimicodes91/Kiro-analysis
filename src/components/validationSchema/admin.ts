@@ -26,7 +26,7 @@ export const addProjectPipelineSchema = yup.object().shape({
 });
 
 export const addStageSchema = yup.object().shape({
-  stageName: yup.string().required("Stage name is required"),
+  name: yup.string().required("Stage name is required"),
   duration: yup
     .string()
     .required("Duration is required")
