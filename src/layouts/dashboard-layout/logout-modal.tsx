@@ -32,13 +32,12 @@ function LogoutModal({ isOpen, onClose }: ModalProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex flex-row items-center pt-6 gap-2">
-            <Button size="sm" className="w-full" onClick={onClose}>
+            <Button size="sm" onClick={onClose}>
               Cancel
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="w-full"
               isLoading={authLogout.isPending}
               onClick={() => {
                 authLogout.mutateAsync(undefined).then(() => {
