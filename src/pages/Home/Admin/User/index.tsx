@@ -4,7 +4,7 @@ import useDisclosure from "@/hooks/use-disclosure";
 import React from "react";
 import { LuPlus } from "react-icons/lu";
 import AddUserModalForm from "./add-user-model-form";
-import UsersTable from "./user.table";
+import UsersTable from "./user-table";
 
 const UserTab: React.FC = () => {
   const { onClose, isOpen, onOpen } = useDisclosure();
