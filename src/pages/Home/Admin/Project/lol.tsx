@@ -1,6 +1,6 @@
-import { addProjectPipelineSchema } from "@/components/validationSchema/admin";
 import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
 import { getUserSession } from "@/services/api.service";
+import { addProjectPipelineSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";

@@ -26,7 +26,6 @@ const steps = [
 ];
 
 const Sidebar: React.FC = () => {
-  // const dispatch = useDispatch();
   const { stage } = useOnboarding();
   return (
     <div className="h-screen py-8 px-4">

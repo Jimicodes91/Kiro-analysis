@@ -1,6 +1,6 @@
-import { companyDetailsSchema } from "@/components/validationSchema/onboarding";
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS } from "@/lib/constants";
+import { companyDetailsSchema } from "@/utils/validation-schema/onboarding";
 import { InferType } from "yup";
 
 type CompanyDetails = InferType<typeof companyDetailsSchema>;

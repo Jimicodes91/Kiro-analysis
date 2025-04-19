@@ -1,4 +1,4 @@
-import { companyDetailsSchema } from "@/components/validationSchema/onboarding";
+import { companyDetailsSchema } from "@/utils/validation-schema/onboarding";
 import React from "react";
 import { InferType } from "yup";
 

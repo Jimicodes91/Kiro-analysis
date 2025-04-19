@@ -2,8 +2,18 @@ import Toast from "@/components/Toast";
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS } from "@/lib/constants";
 import { ResponseErrorType } from "@/types/api.types";
-import axiosInstance from "@/utils/Https";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+
+const baseURL = import.meta.env.VITE_API_BASE_URL_TWO;
+
+const axiosInstance = axios.create({
+  baseURL,
+  headers: {
+    "Content-Type": "application/json",
+    channel: "WEB",
+  },
+});
 
 type PostResponse = { success: boolean; message: string };
 

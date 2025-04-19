@@ -15,15 +15,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { addUserSchema } from "@/components/validationSchema/admin";
 import { useMultiSendInvite } from "@/hooks/auth/use-send-consultant-invite";
 import { PAGES } from "@/lib/constants";
+import { addUserSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFieldArray, useForm } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { InferType } from "yup";
-import { inviteTeamSchema } from "../../components/validationSchema/onboarding";
+import { inviteTeamSchema } from "../../utils/validation-schema/onboarding";
 import { useOnboarding } from "./onboarding-context";
 
 const Step2 = () => {

@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { addStageSchema } from "@/components/validationSchema/admin";
 import useGetAllProjectTypeMilestones, {
   ProjectTypeMilestone,
 } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import useCreateMilestone from "@/hooks/project-modules/milestones/use-create-milestone";
 import useUpdateMilestone from "@/hooks/project-modules/milestones/use-update-milestone";
+import { addStageSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";

@@ -1,4 +1,4 @@
-import AuthLayout from "@/layouts/AuthLayout";
+import AuthLayout from "@/layouts/auth-layout";
 import AccountLayout from "@/layouts/dashboard-layout/lol";
 import ProjectContextProvider from "@/pages/Home/Project/project-context";
 import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";

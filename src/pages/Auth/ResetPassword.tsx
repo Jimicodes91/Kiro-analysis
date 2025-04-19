@@ -9,7 +9,7 @@ import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
 import Toast from "../../components/Toast";
-import { resetPasswordSchema } from "../../components/validationSchema/auth";
+import { resetPasswordSchema } from "../../utils/validation-schema/auth";
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();

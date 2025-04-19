@@ -8,7 +8,7 @@ import { FormInput } from "../../../../components/Form/input";
 import { FormSelect } from "../../../../components/Form/select";
 import Modal from "../../../../components/Modal";
 import Table from "../../../../components/Table";
-import { addDocumentTypeSchema } from "../../../../components/validationSchema/admin";
+import { addDocumentTypeSchema } from "../../../../utils/validation-schema/admin";
 
 interface ColumnDefinition<T, K extends keyof T> {
   key: K;

@@ -9,7 +9,7 @@ import { InferType } from "yup";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
-import { loginSchema } from "../../components/validationSchema/auth";
+import { loginSchema } from "../../utils/validation-schema/auth";
 
 const Login: React.FC = () => {
   const [searchParams] = useSearchParams();

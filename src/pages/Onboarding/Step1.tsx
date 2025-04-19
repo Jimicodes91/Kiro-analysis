@@ -28,7 +28,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
-import { companyDetailsSchema } from "../../components/validationSchema/onboarding";
+import { companyDetailsSchema } from "../../utils/validation-schema/onboarding";
 import { useOnboarding } from "./onboarding-context";
 
 const Step1 = () => {

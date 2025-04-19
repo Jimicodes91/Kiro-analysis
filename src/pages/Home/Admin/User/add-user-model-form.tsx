@@ -21,7 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
-import { addUserSchema } from "../../../../components/validationSchema/admin";
+import { addUserSchema } from "../../../../utils/validation-schema/admin";
 
 function AddUserModalForm({ onClose }: ModalProps) {
   const sendConsultantInvite = useSendConsultantInvite();

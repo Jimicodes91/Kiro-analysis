@@ -8,7 +8,7 @@ import { InferType } from "yup";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
-import { forgetPasswordSchema } from "../../components/validationSchema/auth";
+import { forgetPasswordSchema } from "../../utils/validation-schema/auth";
 import VerificationCard from "./VerificationCard";
 
 const ForgotPassword: React.FC = () => {

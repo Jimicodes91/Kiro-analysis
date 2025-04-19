@@ -8,9 +8,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { completeInviteSchema } from "@/components/validationSchema/auth";
 import useCompleteRegistration from "@/hooks/auth/use-complete-registration";
 import useDisclosure from "@/hooks/use-disclosure";
+import { completeInviteSchema } from "@/utils/validation-schema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import React from "react";

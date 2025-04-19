@@ -7,7 +7,7 @@ import { MainButton } from "../../../../components/Form/button";
 import { FormInput } from "../../../../components/Form/input";
 import Modal from "../../../../components/Modal";
 import Table from "../../../../components/Table";
-import { addEventTypeSchema } from "../../../../components/validationSchema/admin";
+import { addEventTypeSchema } from "../../../../utils/validation-schema/admin";
 
 interface ColumnDefinition<T, K extends keyof T> {
   key: K;
