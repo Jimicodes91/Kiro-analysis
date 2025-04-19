@@ -33,7 +33,6 @@ function UserTableRow({ user }: { user: UserDetails }) {
 
         <TableCell>
           <Badge variant={user?.is_active ? "success" : "destructive"}>
-            <Icons.check className="mt-1.5" />
             <span>{user?.is_active ? "Active" : "Inactive"}</span>
           </Badge>
         </TableCell>

@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../../components/Cards/ViewToggle";
 import FormCustomization from "./Form";
 import PipelineForm from "./lol";
@@ -7,7 +9,21 @@ import PipeLineTable from "./pipeline-table";
 
 const ProjectTab: React.FC = () => {
   const [activeTab, setActiveTab] = useState("pipeline");
-  const [isPipelineModalOpen, setIsPipelineModalOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isCreateMode = searchParams.get("isCreateMode");
+  const isOpen = Boolean(isCreateMode);
+
+  const onClose = () => {
+    searchParams.delete("isCreateMode");
+    setSearchParams(searchParams, {
+      replace: true,
+    });
+  };
+
+  const onOpen = () => {
+    searchParams.set("isCreateMode", "1");
+    setSearchParams(searchParams);
+  };
 
   return (
     <>
@@ -21,7 +37,7 @@ const ProjectTab: React.FC = () => {
           ]}
         />
         {activeTab === "pipeline" ? (
-          <Button onClick={() => setIsPipelineModalOpen(true)}>Create pipeline</Button>
+          <Button onClick={onOpen}>Create pipeline</Button>
         ) : (
           <Button>Publish</Button>
         )}
@@ -34,11 +50,20 @@ const ProjectTab: React.FC = () => {
           <FormCustomization />
         </div>
       )}
-
-      {/* Modal to add project pipeline */}
-      {isPipelineModalOpen && (
-        <PipelineForm onClose={() => setIsPipelineModalOpen(false)} />
-      )}
+      <AnimatePresence
+        // Disable any initial animations on children that
+        // are present when the component is first rendered
+        initial={false}
+        // Only render one component at a time.
+        // The exiting component will finish its exit
+        // animation before entering component is rendered
+        mode="wait"
+        // Fires when all exiting nodes have completed animating out
+        onExitComplete={() => null}
+      >
+        {/* Modal to add project pipeline */}
+        {isOpen && <PipelineForm onClose={onClose} />}
+      </AnimatePresence>
     </>
   );
 };

@@ -95,8 +95,7 @@ export const ENDPOINTS = {
 
   // Company Admin Endpoints
   GET_COMPANY_USERS: (companyId: string) => `admin/companies/${companyId}/users`,
-  UPDATE_COMPANY_USER_STATUS: (companyId: string) =>
-    `comp-admin/users/${companyId}/status`,
+  UPDATE_COMPANY_USER_STATUS: (companyId: string) => `admin/users/${companyId}/status`,
 
   // User Endpoints
   GET_USER: (userId: string) => `user/${userId}`,
@@ -322,7 +321,7 @@ export const PAGES = {
   REGISTER_PAGE: "/register",
   FORGOT_PASSWORD_PAGE: "/forgot-password",
   RESET_PASSWORD_PAGE: "/reset-password",
-
+  ADMIN_PAGE: "/admin",
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
   PROJECT_CREATE_PAGE: "/projects/create",

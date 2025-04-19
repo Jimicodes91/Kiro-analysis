@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React from "react";
+import { useSearchParams } from "react-router-dom";
 import AuditTrailTab from "./AuditTrail";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
@@ -20,7 +21,13 @@ type TabType =
   | "Settings";
 
 const Admin: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>("User");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedTab = searchParams.get("selectedTab") || "User";
+
+  const handleTabChange = (value: string) => {
+    searchParams.set("selectedTab", value);
+    setSearchParams(searchParams);
+  };
 
   const tabs: TabType[] = [
     "User",
@@ -35,7 +42,7 @@ const Admin: React.FC = () => {
   ];
 
   const renderTabContent = () => {
-    switch (activeTab) {
+    switch (selectedTab) {
       case "User":
         return (
           <div>
@@ -92,14 +99,14 @@ const Admin: React.FC = () => {
             <button
               key={tab}
               className={`px-6 py-3 relative text-[14px] text-black focus:outline-none transition-all duration-200 ${
-                activeTab === tab
+                selectedTab === tab
                   ? "font-bold"
                   : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"
               }`}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
             >
               {tab}
-              {activeTab === tab ? (
+              {selectedTab === tab ? (
                 <motion.div
                   className="absolute bottom-0 left-0 rounded-full h-0.5 w-full bg-primary"
                   layoutId={`underline-admin`}

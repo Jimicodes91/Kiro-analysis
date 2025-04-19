@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { type ReactNode } from "react";
 import { BsArrowsAngleExpand } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,30 @@ interface ModalProps {
   fullHeight?: boolean;
 }
 
+const dropIn = {
+  hidden: {
+    y: "-30vh",
+  },
+  visible: {
+    y: "0",
+    transition: {
+      duration: 0.3,
+      type: "spring",
+      damping: 25,
+      // stiffness: 500,
+    },
+  },
+  exit: {
+    y: "-20vh",
+    opacity: 0,
+    transition: {
+      duration: 0.2,
+      type: "spring",
+      // damping: 25,
+      // stiffness: 500,
+    },
+  },
+};
 const Modal = ({
   title,
   children,
@@ -36,14 +61,21 @@ const Modal = ({
         fullHeight ? "items-center" : "items-start"
       } justify-end z-50 bg-[#00000033] ${className}`}
     >
-      <div
+      <motion.div
         className="absolute w-full h-full bg-gray-900 opacity-50"
         onClick={closeModal}
-      ></div>
-      <div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.4 }}
+        exit={{ opacity: 0 }}
+      ></motion.div>
+      <motion.div
         className={`bg-white  border-[1px] rounded-lg p-4 z-50 w-[90%] md:w-[60%] lg:w-[40%] ${
           fullHeight ? "h-full max-h-[90%]" : " max-h-[90%] mt-6"
         } mx-[3%] flex flex-col overflow-hidden`}
+        variants={dropIn}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
       >
         <div className=" border-[1px] rounded-lg flex flex-col h-full">
           {/* Fixed Header */}
@@ -85,7 +117,7 @@ const Modal = ({
             <div>{children}</div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

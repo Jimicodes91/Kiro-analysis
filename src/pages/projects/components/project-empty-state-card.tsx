@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
+import { PAGES } from "@/lib/constants";
+import { useNavigate } from "react-router-dom";
 
 function ProjectEmptyStateCard({ hasPipeline = true }: { hasPipeline?: boolean }) {
+  const navigate = useNavigate();
   return (
     <>
       <div className="h-full min-h-[calc(100vh-300px)] flex-1 w-full flex text-center justify-center items-center">
@@ -22,7 +25,14 @@ function ProjectEmptyStateCard({ hasPipeline = true }: { hasPipeline?: boolean }
               <p className="text-brand-text text-sm">
                 You&apos;ve got a blank state. Create pipeline to get started
               </p>
-              <Button size="sm">Create pipeline</Button>
+              <Button
+                size="sm"
+                onClick={() =>
+                  navigate(PAGES.ADMIN_PAGE + "?selectedTab=Pipeline&isCreateMode=1")
+                }
+              >
+                Create pipeline
+              </Button>
             </div>
           )}
         </div>

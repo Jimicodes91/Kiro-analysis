@@ -10,7 +10,7 @@ const useToggleCompanyUserStatus = (companyId: string) => {
     endpoint: ENDPOINTS.UPDATE_COMPANY_USER_STATUS(companyId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_COMPANY_USERS, companyId],
+        queryKey: [QUERYKEYS.GET_COMPANY_USERS],
       });
     },
   });
