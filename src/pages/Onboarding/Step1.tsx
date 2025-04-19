@@ -27,8 +27,8 @@ import { getUserSession, updateUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { InferType } from "yup";
 import { companyDetailsSchema } from "../../components/validationSchema/onboarding";
-import { CompanyDetails } from "../../types";
 import { useOnboarding } from "./onboarding-context";
 
 const Step1 = () => {
@@ -60,7 +60,7 @@ const Step1 = () => {
     form.reset(companyData);
   }, [companyData, form]);
 
-  const onSubmit = async (data: CompanyDetails) => {
+  const onSubmit = async (data: InferType<typeof companyDetailsSchema>) => {
     createCompany
       .mutateAsync(data)
       .then((response) => {

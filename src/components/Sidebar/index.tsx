@@ -1,6 +1,5 @@
-import React from "react";
-// import { goToStep } from "../../Redux/store/slices/onboardingSlice";
 import { useOnboarding } from "@/pages/Onboarding/onboarding-context";
+import React from "react";
 import { OnBoardingGroup } from "../../assets";
 import {
   Active_Buildings,

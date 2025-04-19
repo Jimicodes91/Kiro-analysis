@@ -1,13 +1,13 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
-import Table from "../../../../components/Table";
+import { useForm } from "react-hook-form";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { MainButton } from "../../../../components/Form/button";
 import { IoAdd } from "react-icons/io5";
-import Modal from "../../../../components/Modal";
+import { MainButton } from "../../../../components/Form/button";
 import { FormInput } from "../../../../components/Form/input";
 import { FormSelect } from "../../../../components/Form/select";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import Modal from "../../../../components/Modal";
+import Table from "../../../../components/Table";
 import { addDocumentTypeSchema } from "../../../../components/validationSchema/admin";
 
 interface ColumnDefinition<T, K extends keyof T> {
@@ -90,7 +90,6 @@ const DocumentTab: React.FC = () => {
   const onSubmit = async (data: DocumentType) => {
     setLoading(true);
     try {
-      //   await sendConsultantInviteApi(data);
       setIsModalOpen(false);
     } catch (error) {
       console.error(`${data}`, error);

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import Table from "../../../../components/Table";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { MainButton } from "../../../../components/Form/button";
-import { IoAdd } from "react-icons/io5";
-import Modal from "../../../../components/Modal";
-import { FormInput } from "../../../../components/Form/input";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { IoAdd } from "react-icons/io5";
+import { MainButton } from "../../../../components/Form/button";
+import { FormInput } from "../../../../components/Form/input";
+import Modal from "../../../../components/Modal";
+import Table from "../../../../components/Table";
 import { addEventTypeSchema } from "../../../../components/validationSchema/admin";
 
 interface ColumnDefinition<T, K extends keyof T> {
@@ -79,7 +79,6 @@ const EventTab: React.FC = () => {
   const onSubmit = async (data: EventType) => {
     setLoading(true);
     try {
-      //   await sendConsultantInviteApi(data);
       setIsModalOpen(false);
     } catch (error) {
       console.error(`${data}`, error);

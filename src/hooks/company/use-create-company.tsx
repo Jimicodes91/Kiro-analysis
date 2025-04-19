@@ -1,7 +1,9 @@
+import { companyDetailsSchema } from "@/components/validationSchema/onboarding";
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS } from "@/lib/constants";
-import { CompanyDetails } from "@/types";
+import { InferType } from "yup";
 
+type CompanyDetails = InferType<typeof companyDetailsSchema>;
 export interface CreateCompanyResponse {
   success: boolean;
   message: string;

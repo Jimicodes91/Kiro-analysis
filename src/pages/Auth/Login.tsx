@@ -5,11 +5,11 @@ import { setCookie } from "cookies-next";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { InferType } from "yup";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
 import { loginSchema } from "../../components/validationSchema/auth";
-import { LoginUser } from "../../types";
 
 const Login: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -24,7 +24,7 @@ const Login: React.FC = () => {
   });
   const callback = searchParams.get("callback");
 
-  const onSubmit = async (data: LoginUser) => {
+  const onSubmit = async (data: InferType<typeof loginSchema>) => {
     authLogin
       .mutateAsync({
         email: data.email,

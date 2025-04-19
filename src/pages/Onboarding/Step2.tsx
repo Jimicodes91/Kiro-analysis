@@ -15,14 +15,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { addUserSchema } from "@/components/validationSchema/admin";
 import { useMultiSendInvite } from "@/hooks/auth/use-send-consultant-invite";
 import { PAGES } from "@/lib/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFieldArray, useForm } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { InferType } from "yup";
 import { inviteTeamSchema } from "../../components/validationSchema/onboarding";
-import { TeamMember } from "../../types";
 import { useOnboarding } from "./onboarding-context";
 
 const Step2 = () => {
@@ -52,7 +53,7 @@ const Step2 = () => {
     },
   });
 
-  const onSubmit = async (data: { teamMembers?: TeamMember[] }) => {
+  const onSubmit = async (data: { teamMembers?: InferType<typeof addUserSchema>[] }) => {
     const teamMembers = data.teamMembers;
     if (teamMembers) {
       try {

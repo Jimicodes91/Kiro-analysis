@@ -19,9 +19,9 @@ import {
 import useSendConsultantInvite from "@/hooks/auth/use-send-consultant-invite";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addUserSchema } from "../../../../components/validationSchema/admin";
-import { TeamMember } from "../../../../types";
 
 function AddUserModalForm({ onClose }: ModalProps) {
   const sendConsultantInvite = useSendConsultantInvite();
@@ -29,7 +29,7 @@ function AddUserModalForm({ onClose }: ModalProps) {
     resolver: yupResolver(addUserSchema),
   });
 
-  const onSubmit = async (data: TeamMember) => {
+  const onSubmit = async (data: InferType<typeof addUserSchema>) => {
     sendConsultantInvite
       .mutateAsync(data)
       .then(() => {

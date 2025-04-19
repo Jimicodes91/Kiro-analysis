@@ -1,6 +1,8 @@
-import { CompanyDetails } from "@/types";
+import { companyDetailsSchema } from "@/components/validationSchema/onboarding";
 import React from "react";
+import { InferType } from "yup";
 
+type CompanyDetails = InferType<typeof companyDetailsSchema>;
 interface OnboardingContextInterface {
   onNext: () => void;
   onPrev: () => void;

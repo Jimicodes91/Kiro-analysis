@@ -1,23 +1,7 @@
-import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 
 const OnboardingLayout = () => {
-  // const initialState = {
-  //   openMobileSideBar: false,
-  // }
-  // const [
-  //   _,
-  //   // setState
-  // ] = useReducer(
-  //   (state: any, newState: any) => ({ ...state, ...newState }),
-  //   initialState,
-  // )
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <>
       <div className="bg-white overflow-x-hidden w-screen h-screen relative">

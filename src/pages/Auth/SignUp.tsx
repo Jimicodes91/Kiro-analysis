@@ -5,11 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { InferType } from "yup";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
 import { signupSchema } from "../../components/validationSchema/auth";
-import { AdminSignUpFormProps } from "../../types";
 import VerificationCard from "./VerificationCard";
 
 const SignUp: React.FC = () => {
@@ -25,7 +25,7 @@ const SignUp: React.FC = () => {
     resolver: yupResolver(signupSchema),
   });
 
-  const onSubmit = async (data: AdminSignUpFormProps) => {
+  const onSubmit = async (data: InferType<typeof signupSchema>) => {
     adminSignup.mutateAsync(data).catch(console.error);
   };
 
