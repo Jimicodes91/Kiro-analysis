@@ -42,7 +42,7 @@ const PipeLineTable = () => {
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
               <TableHead>Pipeline</TableHead>
-              <TableHead>Duration</TableHead>
+              <TableHead>Duration (days)</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>

@@ -20,15 +20,14 @@ import { PAGES } from "@/lib/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFieldArray, useForm } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { MainButton } from "../../components/Form/button";
 import { inviteTeamSchema } from "../../components/validationSchema/onboarding";
-import { prevStep } from "../../store/slices/onboardingSlice";
 import { TeamMember } from "../../types";
+import { useOnboarding } from "./onboarding-context";
 
 const Step2 = () => {
-  const dispatch = useDispatch();
+  const { onPrev } = useOnboarding();
+
   const navigate = useNavigate();
   const sendInvite = useMultiSendInvite();
 
@@ -66,13 +65,6 @@ const Step2 = () => {
       return;
     }
   };
-
-  const handleBack = () => {
-    dispatch(prevStep());
-  };
-
-  console.log(form.getValues(), "getValues()");
-  console.log(form, "getValues()");
 
   return (
     <div>
@@ -167,18 +159,14 @@ const Step2 = () => {
               + Add another user
             </button>
           </div>
-          <div className="flex justify-between mt-12">
-            <Button variant="outline" onClick={handleBack}>
+          <div className="flex justify-between mt-10">
+            <Button variant="outline" onClick={onPrev}>
               Back
             </Button>
             <div className="flex gap-2">
-              <MainButton
-                variant="outlined"
-                onClick={() => navigate(PAGES.PROJECT_PAGE)}
-                type="button"
-              >
+              <Button variant="outline" onClick={() => navigate(PAGES.PROJECT_PAGE)}>
                 Skip
-              </MainButton>
+              </Button>
               <Button type="submit" isLoading={sendInvite.isPending}>
                 Save and continue
               </Button>

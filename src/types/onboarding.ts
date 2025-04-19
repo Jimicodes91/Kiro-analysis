@@ -1,11 +1,11 @@
 export interface CompanyDetails {
   name: string;
-  industryType: string;
+  industry_type: string;
   size: string;
   country: string;
   address: string;
   city: string;
-  postalCode: string;
+  postal_code: string;
 }
 
 export interface TeamMember {

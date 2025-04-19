@@ -1,6 +1,7 @@
 import AuthLayout from "@/layouts/AuthLayout";
 import AccountLayout from "@/layouts/dashboard-layout/lol";
 import ProjectContextProvider from "@/pages/Home/Project/project-context";
+import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";
 import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
 import { RouteObject } from "react-router-dom";
 import CompleteInvite from "../pages/Auth/CompleteInvite";
@@ -40,7 +41,12 @@ export const AuthRoutes: RouteObject[] = [
   { path: "verify-account", element: <VerifyEmail /> },
   {
     path: "onboarding",
-    element: <Onboarding />,
+
+    element: (
+      <OnboardingContextProvider>
+        <Onboarding />
+      </OnboardingContextProvider>
+    ),
   },
   {
     path: "*",

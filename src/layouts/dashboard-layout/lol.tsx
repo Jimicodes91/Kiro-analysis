@@ -26,7 +26,7 @@ export default function AccountLayout() {
     <div className="h-auto flex">
       <div
         className={cn(
-          "space-y-1 z-10 h-screen sticky top-0 flex-shrink-0 left-0 transition-all duration-300 ease-in border-r border-r-gray-200 flex flex-col justify-between w-[210px] bg-secondary/50"
+          "space-y-1 z-10 h-screen sticky top-0 hidden flex-shrink-0 left-0 transition-all duration-300 ease-in border-r border-r-gray-200 md:flex flex-col justify-between w-[210px] bg-secondary/50"
         )}
       >
         <div>

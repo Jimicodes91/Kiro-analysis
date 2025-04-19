@@ -1,7 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
 // import { goToStep } from "../../Redux/store/slices/onboardingSlice";
+import { useOnboarding } from "@/pages/Onboarding/onboarding-context";
 import { OnBoardingGroup } from "../../assets";
 import {
   Active_Buildings,
@@ -29,13 +28,12 @@ const steps = [
 
 const Sidebar: React.FC = () => {
   // const dispatch = useDispatch();
-  const activeStep = useSelector((state: RootState) => state.onboarding.activeStep);
-
+  const { stage } = useOnboarding();
   return (
     <div className="h-screen py-8 px-4">
       <ul>
         {steps.map((step, index) => {
-          const isActive = activeStep === step.id;
+          const isActive = stage === step.id;
           const isLastStep = index === steps.length - 1;
 
           return (

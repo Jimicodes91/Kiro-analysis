@@ -56,4 +56,4 @@ export const addClientApi = (payload: AddClientProp) =>
   apiRequest(`auth/add-client`, payload);
 
 export const createCompanyApi = (payload: CompanyApiProps, userId: string) =>
-  apiRequest(`/api/v1/company/create/${userId}`, payload);
+  apiRequest(`company/create/${userId}`, payload);

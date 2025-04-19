@@ -1,11 +1,8 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
-import useDisclosure from "@/hooks/use-disclosure";
-import PipelineForm from "@/pages/Home/Admin/Project/lol";
 
 function ProjectEmptyStateCard({ hasPipeline = true }: { hasPipeline?: boolean }) {
-  const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <>
       <div className="h-full min-h-[calc(100vh-300px)] flex-1 w-full flex text-center justify-center items-center">
@@ -25,12 +22,11 @@ function ProjectEmptyStateCard({ hasPipeline = true }: { hasPipeline?: boolean }
               <p className="text-brand-text text-sm">
                 You&apos;ve got a blank state. Create pipeline to get started
               </p>
-              <Button onClick={onOpen}>Create pipeline</Button>
+              <Button size="sm">Create pipeline</Button>
             </div>
           )}
         </div>
       </div>
-      {isOpen && <PipelineForm onClose={onClose} />}
     </>
   );
 }

@@ -1,18 +1,18 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
-interface UpdateTaskRequest {
-  name?: string;
-  description?: string;
-  status?: string;
-  start_date?: string;
-  end_date?: string;
-}
+const useToggleCompanyUserStatus = (companyId: string) => {
+  const queryClient = useQueryClient();
 
-const useToggleCompanyUserStatus = (projectId: string, taskId: string) => {
-  return useCustomMutation<Record<string, string>, UpdateTaskRequest>({
+  return useCustomMutation<Record<string, string>>({
     method: "patch",
-    endpoint: ENDPOINTS.UPDATE_TASK_DETAILS(projectId, taskId),
+    endpoint: ENDPOINTS.UPDATE_COMPANY_USER_STATUS(companyId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_COMPANY_USERS, companyId],
+      });
+    },
   });
 };
 

@@ -53,67 +53,68 @@ function MilestoneTable({
 
   return (
     <>
-      {isOpen && (
-        <motion.tr
-          key="content"
+      <motion.tr
+        key="content"
+        initial="collapsed"
+        animate="open"
+        exit="collapsed"
+        layout
+        variants={{
+          open: { opacity: 1, height: "auto" },
+          collapsed: { opacity: 0, height: 0 },
+        }}
+        transition={{ duration: 0.4 }}
+        className={cn("!border-t-0 border-l  border-b border-r origin-top", bg)}
+      >
+        <motion.td
+          className="p-2"
+          colSpan={3}
           initial="collapsed"
           animate="open"
           exit="collapsed"
-          layout
           variants={{
-            open: { opacity: 1, height: "auto" },
-            collapsed: { opacity: 0, height: 0 },
+            collapsed: { scale: 0.8, opacity: 0 },
+            open: { scale: 1, opacity: 1 },
           }}
           transition={{ duration: 0.4 }}
-          className={cn("!border-t-0 border-l  border-b border-r origin-top", bg)}
         >
-          <motion.td
-            className="p-2"
-            colSpan={3}
-            variants={{
-              collapsed: { scale: 0.8, opacity: 0 },
-              open: { scale: 1, opacity: 1 },
-            }}
-            transition={{ duration: 0.4 }}
-          >
-            <Table>
-              <TableHeader className="!border rounded-l-full">
-                <TableHead className="w-[55%] lg:w-[58%]">Stage</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead className="w-4"></TableHead>
-              </TableHeader>
-              <>{renderTableBody()}</>
-              {isCreateFormOpen && (
-                <MilestoneForm
-                  onClose={onClose}
-                  refetch={getMilestones.refetch}
-                  key={String(isOpen)}
-                  projectTypeId={projectType.id}
-                />
-              )}
-              <TableRow className="!bg-white !border-t-0">
-                <TableCell colSpan={3} className="w-fit">
-                  <div className="grid">
-                    <div className="items-center gap-3 flex">
-                      <Button
-                        leftIcon={<LuPlus />}
-                        variant="ghost"
-                        onClick={onOpen}
-                        size="sm"
-                        className="px-0 hover:bg-transparent"
-                      >
-                        Add stage
-                      </Button>
+          <Table>
+            <TableHeader className="!border rounded-l-full">
+              <TableHead className="w-[55%] lg:w-[58%]">Stage</TableHead>
+              <TableHead>Duration (days)</TableHead>
+              <TableHead className="w-4"></TableHead>
+            </TableHeader>
+            <>{renderTableBody()}</>
+            {isCreateFormOpen && (
+              <MilestoneForm
+                onClose={onClose}
+                refetch={getMilestones.refetch}
+                key={String(isOpen)}
+                projectTypeId={projectType.id}
+              />
+            )}
+            <TableRow className="!bg-white !border-t-0">
+              <TableCell colSpan={3} className="w-fit">
+                <div className="grid">
+                  <div className="items-center gap-3 flex">
+                    <Button
+                      leftIcon={<LuPlus />}
+                      variant="ghost"
+                      onClick={onOpen}
+                      size="sm"
+                      className="px-0 hover:bg-transparent"
+                    >
+                      Add stage
+                    </Button>
 
-                      <Separator className="w-fit" />
-                    </div>
+                    <Separator className="w-fit" />
                   </div>
-                </TableCell>
-              </TableRow>
-            </Table>
-          </motion.td>
-        </motion.tr>
-      )}
+                </div>
+              </TableCell>
+            </TableRow>
+          </Table>
+        </motion.td>
+      </motion.tr>
     </>
   );
 }

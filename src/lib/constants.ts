@@ -91,12 +91,12 @@ export const ENDPOINTS = {
   GET_ALL_ADMINS: `admin/all-admin`,
 
   // Company Endpoints
-  CREATE_COMPANY: (userId: string) => `create/${userId}`,
+  CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
 
   // Company Admin Endpoints
   GET_COMPANY_USERS: (companyId: string) => `admin/companies/${companyId}/users`,
-  UPDATE_COMPANY_USER_STATUS: (companyId: string, userId: string) =>
-    `comp-admin/update-user-status/${companyId}/${userId}`,
+  UPDATE_COMPANY_USER_STATUS: (companyId: string) =>
+    `comp-admin/users/${companyId}/status`,
 
   // User Endpoints
   GET_USER: (userId: string) => `user/${userId}`,
@@ -326,4 +326,67 @@ export const PAGES = {
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
   PROJECT_CREATE_PAGE: "/projects/create",
+};
+
+export const industryList = [
+  { value: "technology", label: "Technology" },
+  { value: "finance", label: "Finance" },
+  { value: "healthcare", label: "Healthcare" },
+  { value: "education", label: "Education" },
+  { value: "retail", label: "Retail" },
+  { value: "manufacturing", label: "Manufacturing" },
+  { value: "consulting", label: "Consulting" },
+  { value: "entertainment", label: "Entertainment" },
+];
+
+export const companySizeList = [
+  { value: "1-10", label: "1-10 Employees" },
+  { value: "11-50", label: "11-50 Employees" },
+  { value: "51-100", label: "51-100 Employees" },
+  { value: "101-250", label: "101-250 Employees" },
+  { value: "251-500", label: "251-500 Employees" },
+  { value: "500+", label: "500+ Employees" },
+];
+
+export const countryList = [
+  { value: "Nigeria", label: "Nigeria" },
+  { value: "usa", label: "United States" },
+  { value: "uk", label: "United Kingdom" },
+  { value: "ca", label: "Canada" },
+];
+
+// Define a type for the state options
+type StateOption = { value: string; label: string };
+
+// Define a type for the country-states mapping
+export type CountryStatesMap = {
+  [key in "Nigeria" | "usa" | "uk" | "ca"]: StateOption[];
+};
+
+// Predefined country-state mappings
+export const COUNTRY_STATES: CountryStatesMap = {
+  Nigeria: [
+    { value: "lagos", label: "Lagos" },
+    { value: "abuja", label: "Abuja" },
+    { value: "ibadan", label: "Ibadan" },
+    { value: "kano", label: "Kano" },
+  ],
+  usa: [
+    { value: "ny", label: "New York" },
+    { value: "ca", label: "California" },
+    { value: "tx", label: "Texas" },
+    { value: "fl", label: "Florida" },
+  ],
+  uk: [
+    { value: "london", label: "London" },
+    { value: "manchester", label: "Manchester" },
+    { value: "birmingham", label: "Birmingham" },
+    { value: "liverpool", label: "Liverpool" },
+  ],
+  ca: [
+    { value: "ontario", label: "Ontario" },
+    { value: "quebec", label: "Quebec" },
+    { value: "bc", label: "British Columbia" },
+    { value: "alberta", label: "Alberta" },
+  ],
 };

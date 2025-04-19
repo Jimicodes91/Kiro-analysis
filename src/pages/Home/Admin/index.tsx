@@ -10,7 +10,7 @@ import UserTab from "./User/index";
 
 type TabType =
   | "User"
-  | "Project"
+  | "Pipeline"
   | "Document"
   | "Event"
   | "Note"
@@ -24,7 +24,7 @@ const Admin: React.FC = () => {
 
   const tabs: TabType[] = [
     "User",
-    "Project",
+    "Pipeline",
     "Document",
     "Event",
     // "Note",
@@ -42,7 +42,7 @@ const Admin: React.FC = () => {
             <UserTab />
           </div>
         );
-      case "Project":
+      case "Pipeline":
         return (
           <div>
             <ProjectTab />
@@ -101,7 +101,7 @@ const Admin: React.FC = () => {
               {tab}
               {activeTab === tab ? (
                 <motion.div
-                  className="absolute bottom-0 left-0 rounded-full h-1 w-full bg-primary"
+                  className="absolute bottom-0 left-0 rounded-full h-0.5 w-full bg-primary"
                   layoutId={`underline-admin`}
                   id="underline"
                 />
