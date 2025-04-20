@@ -170,7 +170,7 @@ const ProjectDetail: React.FC = () => {
         </MainButton>
       </div>
 
-      <div className="bg-white flex rounded-lg shadow-md border border-[#0000001A] p-3 overflow-hidden">
+      <div className="bg-white flex rounded-lg shadow-md border border-brand-border p-3 overflow-hidden">
         <div className="w-1/4 mb-8 p-4 rounded-lg border mr-5 ">
           <div className="flex flex-col gap-1 mb-4">
             <p className="text-[#191819] font-medium text-lg">{project.title}</p>

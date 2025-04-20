@@ -1,6 +1,6 @@
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import ProjectEmptyStateCard from "@/pages/projects/components/project-empty-state-card";
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import React from "react";
 import Loader from "../ui/loader";
 import ProjectColumn from "./ProjectColumn";
@@ -37,7 +37,12 @@ const BoardView: React.FC<BoardViewProps> = ({
   projectData,
 }) => {
   const renderBody = () => {
-    if (projectData.isLoading) return <Loader />;
+    if (projectData.isLoading)
+      return (
+        <div className="min-h-[calc(100vh-290px)]">
+          <Loader />
+        </div>
+      );
 
     if (!projectData.isLoading && projectData?.value) {
       if (projectData?.value?.data?.length === 0) {
@@ -48,25 +53,19 @@ const BoardView: React.FC<BoardViewProps> = ({
             <Droppable droppableId="all-columns" direction="horizontal" type="column">
               {(provided) => (
                 <div
-                  className="flex overflow-x-auto pb-2"
+                  className="flex overflow-x-auto pb-2 space-x-3"
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {columnOrder.map((columnId, index) => {
+                  {columnOrder.map((columnId) => {
                     const column = columns[columnId];
                     return (
-                      <Draggable key={column.id} draggableId={column.id} index={index}>
-                        {(provided) => (
-                          <div
-                            className="flex flex-col bg-brand-table rounded-lg p-3 mr-4 w-64 flex-shrink-0"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <ProjectColumn column={column} />
-                          </div>
-                        )}
-                      </Draggable>
+                      <div
+                        className="flex flex-col border border-brand-border bg-brand-table rounded-lg w-52 flex-shrink-0"
+                        ref={provided.innerRef}
+                      >
+                        <ProjectColumn column={column} />
+                      </div>
                     );
                   })}
                   {provided.placeholder}

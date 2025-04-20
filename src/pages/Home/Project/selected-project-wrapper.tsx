@@ -70,7 +70,7 @@ const ActiveProjectTypeProjectWrapper = ({ children }: { children: React.ReactNo
             </Button>
           </div>
         </div>
-        <div className="border-[1px] border-[#0000001A] rounded-lg mt-4 p-4">
+        <div className="border-[1px] border-brand-border rounded-lg mt-4 p-4">
           {children}
         </div>
       </div>

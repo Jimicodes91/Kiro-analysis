@@ -70,7 +70,7 @@ export default {
         brand: {
           faint: "#0000004D",
           placeholder: "#00000080",
-          border: "00000033",
+          border: "#0000001A",
           primary: "#E0EFDE",
           text: "#74757F",
           gray: "#F4F4F4",

@@ -1,3 +1,4 @@
+import getInitials, { cn } from "@/lib/utils";
 import { Draggable } from "@hello-pangea/dnd";
 import React, { useState } from "react";
 import { BsActivity } from "react-icons/bs";
@@ -6,6 +7,7 @@ import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
 import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
 import { RiStickyNoteLine } from "react-icons/ri";
 import Modal from "../Modal";
+import Heading from "../ui/heading";
 import ViewToggle from "./ViewToggle";
 
 interface Task {
@@ -121,9 +123,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
   return (
     <>
       <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
-        {(provided) => (
+        {(provided, snapshot) => (
           <div
-            className="bg-white p-3 rounded shadow mb-2 flex flex-col h-52 justify-between cursor-pointer hover:shadow-md transition-shadow"
+            className={cn(
+              "bg-white p-2 py-1 rounded-lg flex flex-col h-48 justify-between !cursor-pointer hover:shadow-md transition-shadow border border-brand-border",
+              snapshot.isDragging && "cursor-grabbing opacity-80"
+            )}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
@@ -143,32 +148,35 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                 {card.status}
               </span>
             </div>
-            <div className="font-semibold text-lg mb-1">{card.title}</div>
-            <div className="text-sm text-gray-500 mb-1">{card.organization}</div>
+            <div>
+              <Heading size="h5" className="font-medium leading-[22px]">
+                {card.title} / {card.organization}
+              </Heading>
+            </div>
             <div className="flex justify-between text-xs space-x-2 mb-1">
-              <div className="flex flex-col">
-                <p>Client team</p>
+              <div className="flex flex-col gap-y-1">
+                <p className="text-gray-500">Client team</p>
                 <div className="flex -space-x-2">
                   {card.clientTeam?.map((member, index) => (
                     <div
                       key={index}
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                      className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
                     >
-                      {member.substring(0, 2)}
+                      {getInitials(member)}
                     </div>
                   ))}
                 </div>
               </div>
               <div className="flex justify-between text-xs mb-1">
-                <div className="flex flex-col">
-                  <p>Project team</p>
+                <div className="flex flex-col gap-y-1">
+                  <p className="text-gray-500">Project team</p>
                   <div className="flex -space-x-2">
                     {card.projectTeam?.map((member, index) => (
                       <div
                         key={index}
-                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                        className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
                       >
-                        {member.substring(0, 2)}
+                        {getInitials(member)}
                       </div>
                     ))}
                   </div>
@@ -195,7 +203,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                   {card.organization}
                 </p>
               </div>
-              <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-[#0000001A] border-[1px]">
+              <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-brand-border border-[1px]">
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
                   <div className="flex items-center gap-2">
                     <LuUserRound className="text-[#19181980] w-4 h-4" />

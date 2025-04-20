@@ -48,7 +48,7 @@ const ProjectTab: React.FC = () => {
       {activeTab === "pipeline" ? (
         <PipeLineTable />
       ) : (
-        <div className="bg-[#F4F4F4] py-4 rounded-[10px] border border-[#0000001A]">
+        <div className="bg-[#F4F4F4] py-4 rounded-[10px] border border-brand-border">
           <FormCustomization />
         </div>
       )}

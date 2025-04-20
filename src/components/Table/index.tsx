@@ -44,7 +44,7 @@ const SubTable = <S, SK extends keyof S>({
 }: SubTableProps<S, SK>) => {
   return (
     <table className="min-w-full table-fixed">
-      <thead className="border-b border-[#0000001A]">
+      <thead className="border-b border-brand-border">
         <tr>
           {columns.map((column, index) => (
             <th
@@ -159,7 +159,7 @@ function Table<T, K extends keyof T, S = never, SK extends keyof S = never>(
           </div>
 
           {/* Body table with gap */}
-          <div className="mt-2 rounded-lg border border-[#0000001A] overflow-hidden">
+          <div className="mt-2 rounded-lg border border-brand-border overflow-hidden">
             <table className="min-w-full">
               <thead className="hidden">
                 {/* Hidden header to maintain column width consistency */}

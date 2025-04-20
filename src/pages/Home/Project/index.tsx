@@ -98,11 +98,6 @@ const Project: React.FC = () => {
       title: "Banking",
       cards: [],
     },
-    "column-7": {
-      id: "column-7",
-      title: "Renewal",
-      cards: [],
-    },
   });
 
   const onDragEnd = (result: {
@@ -176,7 +171,7 @@ const Project: React.FC = () => {
 
   if (!projeectTypes.isPending && !projeectTypes?.value) {
     return (
-      <div>
+      <div className="min-h-[calc(100vh-70px)]">
         <Loader />
       </div>
     );

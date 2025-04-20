@@ -147,8 +147,8 @@ const AuditTrailTab: React.FC = () => {
         <div key={groupName} className="w-full">
           {/* Time group header with divider line */}
           <div className="relative flex items-center justify-center my-4">
-            <div className="absolute border-t border-[#0000001A] w-full"></div>
-            <div className="relative px-4 py-1 bg-white text-[#191819] border-[#0000001A] font-semibold text-sm rounded-full border z-10">
+            <div className="absolute border-t border-brand-border w-full"></div>
+            <div className="relative px-4 py-1 bg-white text-[#191819] border-brand-border font-semibold text-sm rounded-full border z-10">
               {groupName}
             </div>
           </div>

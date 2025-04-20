@@ -140,7 +140,7 @@ function ProjectModal({ isOpen, onClose }: ModalProps) {
                   {card.organization}
                 </p>
               </div>
-              <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-[#0000001A] border-[1px]">
+              <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-brand-border border-[1px]">
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
                   <div className="flex items-center gap-2">
                     <LuUserRound className="text-[#19181980] w-4 h-4" />

@@ -92,7 +92,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                 .sort((a, b) => a.sort_order - b.sort_order)
                 .map((field) => {
                   const options = projectTypes?.value?.data ?? [];
-
+                  const isRequired = Boolean(field.is_required);
                   return (
                     <FormField
                       key={field.name}
@@ -101,7 +101,12 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                       name={field.slug}
                       render={({ field: fieldProps }) => (
                         <FormItem className="flex flex-col w-full">
-                          <FormLabel>{field.name}</FormLabel>
+                          <FormLabel>
+                            {field.name}{" "}
+                            {isRequired && (
+                              <span className="text-red-600 font-bold">*</span>
+                            )}
+                          </FormLabel>
                           <>
                             {field.type === "select" ? (
                               <Select
