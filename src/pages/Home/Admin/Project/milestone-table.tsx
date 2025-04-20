@@ -80,7 +80,7 @@ function MilestoneTable({
         >
           <Table>
             <TableHeader className="!border rounded-l-full">
-              <TableHead className="w-[55%] lg:w-[58%]">Stage</TableHead>
+              <TableHead className="w-[55%] lg:w-[49%]">Stage</TableHead>
               <TableHead>Duration (days)</TableHead>
               <TableHead className="w-4"></TableHead>
             </TableHeader>

@@ -7,8 +7,7 @@ export const addUserSchema = yup.object().shape({
 
 export const addDocumentTypeSchema = yup.object().shape({
   typeName: yup.string().required("Type name is required"),
-  accessLevel: yup.string().required("Access Level is required"),
-  expirationPolicy: yup.number().required("Expiration policy is required"),
+  description: yup.string().required("Access Level is required"),
 });
 
 export const addEventTypeSchema = yup.object().shape({

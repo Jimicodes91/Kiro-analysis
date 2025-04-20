@@ -1,7 +1,10 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useUpdateMilestone = (milestoneId: string) => {
+  const queryClient = useQueryClient();
+
   return useCustomMutation<
     Record<string, string>,
     {
@@ -12,6 +15,11 @@ const useUpdateMilestone = (milestoneId: string) => {
   >({
     method: "patch",
     endpoint: ENDPOINTS.UPDATE_MILESTONE_DETAILS(milestoneId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_ALL_PROJECT_TYPES],
+      });
+    },
   });
 };
 

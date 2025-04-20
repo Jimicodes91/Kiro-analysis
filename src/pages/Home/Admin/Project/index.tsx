@@ -37,7 +37,9 @@ const ProjectTab: React.FC = () => {
           ]}
         />
         {activeTab === "pipeline" ? (
-          <Button onClick={onOpen}>Create pipeline</Button>
+          <Button size="sm" onClick={onOpen}>
+            Create pipeline
+          </Button>
         ) : (
           <Button>Publish</Button>
         )}
@@ -50,17 +52,7 @@ const ProjectTab: React.FC = () => {
           <FormCustomization />
         </div>
       )}
-      <AnimatePresence
-        // Disable any initial animations on children that
-        // are present when the component is first rendered
-        initial={false}
-        // Only render one component at a time.
-        // The exiting component will finish its exit
-        // animation before entering component is rendered
-        mode="wait"
-        // Fires when all exiting nodes have completed animating out
-        onExitComplete={() => null}
-      >
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {/* Modal to add project pipeline */}
         {isOpen && <PipelineForm onClose={onClose} />}
       </AnimatePresence>

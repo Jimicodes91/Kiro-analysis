@@ -25,7 +25,7 @@ const Admin: React.FC = () => {
   const selectedTab = searchParams.get("selectedTab") || "User";
 
   const handleTabChange = (value: string) => {
-    searchParams.set("selectedTab", value);
+    searchParams.set("selectedTab", value?.toLowerCase());
     setSearchParams(searchParams);
   };
 
@@ -43,43 +43,43 @@ const Admin: React.FC = () => {
 
   const renderTabContent = () => {
     switch (selectedTab) {
-      case "User":
+      case "user":
         return (
           <div>
             <UserTab />
           </div>
         );
-      case "Pipeline":
+      case "pipeline":
         return (
           <div>
             <ProjectTab />
           </div>
         );
-      case "Document":
+      case "document":
         return (
           <div>
             <DocumentTab />
           </div>
         );
-      case "Event":
+      case "event":
         return (
           <div>
             <EventTab />
           </div>
         );
-      case "Task":
+      case "task":
         return (
           <div>
             <TaskTab />
           </div>
         );
-      case "AuditTrail":
+      case "auditTrail":
         return (
           <div>
             <AuditTrailTab />
           </div>
         );
-      case "Settings":
+      case "settings":
         return (
           <div>
             <SettingsTab />
@@ -99,14 +99,14 @@ const Admin: React.FC = () => {
             <button
               key={tab}
               className={`px-6 py-3 relative text-[14px] text-black focus:outline-none transition-all duration-200 ${
-                selectedTab === tab
+                selectedTab === tab.toLowerCase()
                   ? "font-bold"
                   : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"
               }`}
               onClick={() => handleTabChange(tab)}
             >
               {tab}
-              {selectedTab === tab ? (
+              {selectedTab === tab.toLowerCase() ? (
                 <motion.div
                   className="absolute bottom-0 left-0 rounded-full h-0.5 w-full bg-primary"
                   layoutId={`underline-admin`}

@@ -32,13 +32,20 @@ const TableSkeletonRowLoader = ({
 export const EmptyTable = ({
   length = 6,
   message = "No record found",
+  isSegemented = true,
 }: {
   length?: number;
   message?: string;
+  isSegemented?: boolean;
 }) => {
   return (
     <TableBody>
-      <TableRow className="animate-pulse">
+      {isSegemented && (
+        <TableRow className="border-0 outline-none hover:bg-white !bg-transparent">
+          <TableCell className="border-0 h-3 py-0" colSpan={9}></TableCell>
+        </TableRow>
+      )}
+      <TableRow className="hover:bg-white">
         <TableCell colSpan={length}>
           <div className="py-10 text-center text-primary font-bold">{message}</div>
         </TableCell>

@@ -138,14 +138,14 @@ function Table<T, K extends keyof T, S = never, SK extends keyof S = never>(
         {/* Table container - both header and body will scroll together */}
         <div className="inline-block min-w-full">
           {/* Header table with rounded corners */}
-          <div className="rounded-lg border border-[#D3D4D4] overflow-hidden">
+          <div className=" border border-[#D3D4D4] overflow-hidden">
             <table className="min-w-full">
-              <thead className="bg-[#EAECEC]">
+              <thead className="bg-[#EAECEC] ">
                 <tr>
                   {columns.map((column, index) => (
                     <th
                       key={`header-${index}`}
-                      className={`${headerClassName} ${column.width || ""}`}
+                      className={`${headerClassName}  ${column.width || ""}`}
                     >
                       {column.header}
                     </th>

@@ -15,6 +15,9 @@ const PipeLineTable = () => {
   const renderTableBody = () => {
     if (projectTypes.isPending) return <TableSkeletonRowLoader length={3} />;
 
+    if (projectTypes?.isError)
+      return <EmptyTable message="Something went wrong" length={3} />;
+
     if (projectTypes?.value?.data?.length === 0)
       return <EmptyTable message="No pipline found" length={3} />;
 

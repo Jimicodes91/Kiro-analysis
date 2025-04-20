@@ -1,13 +1,20 @@
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
 import { getUserSession } from "@/services/api.service";
 import { addProjectPipelineSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
-import { MainButton } from "../../../../components/Form/button";
-import { FormInput } from "../../../../components/Form/input";
 import Modal from "../../../../components/Modal";
-
 interface ProjectPipelineFormData {
   pipelineName: string;
 }
@@ -15,13 +22,7 @@ interface ProjectPipelineFormData {
 function PipelineForm({ onClose }: { onClose: () => void }) {
   const session = getUserSession();
   const createProjectType = useCreateProjectType();
-  // Project pipeline form
-  const {
-    register: registerPipeline,
-    handleSubmit: handleSubmitPipeline,
-    formState: { errors: errorsPipeline },
-    reset,
-  } = useForm<ProjectPipelineFormData>({
+  const form = useForm<ProjectPipelineFormData>({
     resolver: yupResolver(addProjectPipelineSchema),
   });
 
@@ -32,28 +33,36 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
         company_id: session?.company_id ?? "",
       })
       .then(() => {
-        reset();
+        form.reset();
         onClose();
       })
       .catch(console.error);
   };
   return (
     <Modal title="Create pipeline" closeModal={() => onClose()} fullHeight={false}>
-      <form
-        onSubmit={handleSubmitPipeline(onSubmitPipeline)}
-        className="flex flex-col gap-4 p-4"
-      >
-        <FormInput
-          label="Pipeline name"
-          placeholder="Pipeline name"
-          {...registerPipeline("pipelineName")}
-          error={errorsPipeline.pipelineName?.message}
-        />
-
-        <MainButton modalButton type="submit" isLoading={createProjectType.isPending}>
-          Create pipeline
-        </MainButton>
-      </form>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmitPipeline)}
+          className="flex flex-col gap-6 p-4"
+        >
+          <FormField
+            control={form.control}
+            name="pipelineName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Pipeline name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Pipeline name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" isLoading={createProjectType.isPending}>
+            Create pipeline
+          </Button>
+        </form>
+      </Form>
     </Modal>
   );
 }
