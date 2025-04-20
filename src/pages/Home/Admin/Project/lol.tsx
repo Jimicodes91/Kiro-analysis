@@ -38,6 +38,7 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
       })
       .catch(console.error);
   };
+
   return (
     <Modal title="Create pipeline" closeModal={() => onClose()} fullHeight={false}>
       <Form {...form}>

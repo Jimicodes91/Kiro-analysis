@@ -12,7 +12,7 @@ import useGetAllProjectTypeMilestones, {
   ProjectTypeMilestone,
 } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import useDisclosure from "@/hooks/use-disclosure";
-import MilestoneForm from "./mileston-form";
+import MilestoneForm from "./milestone-form";
 
 function MilestoneTableRow({
   milestone,

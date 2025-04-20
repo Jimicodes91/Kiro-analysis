@@ -14,7 +14,7 @@ import useDisclosure from "@/hooks/use-disclosure";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { LuPlus } from "react-icons/lu";
-import MilestoneForm from "./mileston-form";
+import MilestoneForm from "./milestone-form";
 import MilestoneTableRow from "./milestone-table-row";
 
 function MilestoneTable({
