@@ -1,6 +1,6 @@
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import ProjectEmptyStateCard from "@/pages/projects/components/project-empty-state-card";
-import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext } from "@hello-pangea/dnd";
 import React from "react";
 import Loader from "../ui/loader";
 import ProjectColumn from "./ProjectColumn";
@@ -48,30 +48,19 @@ const BoardView: React.FC<BoardViewProps> = ({
       if (projectData?.value?.data?.length === 0) {
         return <ProjectEmptyStateCard />;
       } else {
+        const projects = projectData.value.data ?? [];
         return (
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="all-columns" direction="horizontal" type="column">
-              {(provided) => (
-                <div
-                  className="flex overflow-x-auto pb-2 space-x-3"
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {columnOrder.map((columnId) => {
-                    const column = columns[columnId];
-                    return (
-                      <div
-                        className="flex flex-col border border-brand-border bg-brand-table rounded-lg w-52 flex-shrink-0"
-                        ref={provided.innerRef}
-                      >
-                        <ProjectColumn column={column} />
-                      </div>
-                    );
-                  })}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+            <div className="flex overflow-x-auto pb-3 space-x-3">
+              {columnOrder.map((columnId) => {
+                const column = columns[columnId];
+                return (
+                  <div className="flex flex-col border border-brand-border bg-brand-table rounded-lg w-52 flex-shrink-0">
+                    <ProjectColumn column={column} projects={projects} />
+                  </div>
+                );
+              })}
+            </div>
           </DragDropContext>
         );
       }

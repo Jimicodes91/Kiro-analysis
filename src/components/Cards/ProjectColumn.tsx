@@ -1,3 +1,4 @@
+import { ProjectDetails } from "@/types/api.types";
 import { Droppable } from "@hello-pangea/dnd";
 import React from "react";
 import ProjectCard from "./ProjectCard";
@@ -15,9 +16,10 @@ interface ProjectColumnProps {
       projectTeam?: string[];
     }>;
   };
+  projects: ProjectDetails[];
 }
 
-const ProjectColumn: React.FC<ProjectColumnProps> = ({ column }) => {
+const ProjectColumn: React.FC<ProjectColumnProps> = ({ column, projects }) => {
   return (
     <div className="flex flex-col space-y-2 min-h-[calc(100vh-290px)] h-full">
       <div className="px-1.5 pt-1.5">
@@ -25,6 +27,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({ column }) => {
           <h3 className="font-bold">{column.title}</h3>
         </div>
       </div>
+      {/* droppableId="all-columns" direction="horizontal" type="column" */}
       <Droppable droppableId={column.id} type="card">
         {(provided, snapshot) => (
           <div
@@ -32,8 +35,8 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({ column }) => {
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {column.cards.map((card, index) => (
-              <ProjectCard key={card.id} card={card} index={index} />
+            {projects.map((project, index) => (
+              <ProjectCard key={project.id} project={project} index={index} />
             ))}
             {provided.placeholder}
           </div>

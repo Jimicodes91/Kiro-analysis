@@ -1,4 +1,5 @@
-import getInitials, { cn } from "@/lib/utils";
+import getInitials, { cn, getFormattedText } from "@/lib/utils";
+import { ProjectDetails } from "@/types/api.types";
 import { Draggable } from "@hello-pangea/dnd";
 import React, { useState } from "react";
 import { BsActivity } from "react-icons/bs";
@@ -7,6 +8,7 @@ import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
 import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
 import { RiStickyNoteLine } from "react-icons/ri";
 import Modal from "../Modal";
+import { Badge } from "../ui/badge";
 import Heading from "../ui/heading";
 import ViewToggle from "./ViewToggle";
 
@@ -35,7 +37,7 @@ interface Activity {
 }
 
 interface ProjectCardProps {
-  card: {
+  card?: {
     id: number;
     title: string;
     organization: string;
@@ -45,9 +47,10 @@ interface ProjectCardProps {
     description?: string;
   };
   index: number;
+  project: ProjectDetails;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("task");
   const [tasks, setTasks] = useState<Task[]>([
@@ -122,7 +125,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
 
   return (
     <>
-      <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
+      <Draggable key={project.id} draggableId={project.id.toString()} index={index}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
@@ -142,29 +145,20 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
               )}
             >
               <div className="mt-2">
-                <span
-                  className={`p-1 px-3 inline-flex text-xs leading-5 mb-2 font-semibold rounded-full 
-                  ${
-                    card.status === "Completed"
-                      ? "bg-green-100 text-green-800"
-                      : card.status === "In progress"
-                        ? "bg-[#F1E6D4] text-[#B78026]"
-                        : "bg-[#FB002B1A] text-[#FB002B]"
-                  }`}
-                >
-                  {card.status}
-                </span>
+                <Badge size="sm" variant={project.status}>
+                  {getFormattedText(project.status)}
+                </Badge>
               </div>
               <div>
                 <Heading size="h5" className="font-medium leading-[22px]">
-                  {card.title} / {card.organization}
+                  {project.name} / {project.form_data.client_organization}
                 </Heading>
               </div>
               <div className="flex justify-between text-xs space-x-2 mb-1">
                 <div className="flex flex-col gap-y-1">
                   <p className="text-gray-500">Client team</p>
                   <div className="flex -space-x-2">
-                    {card.clientTeam?.map((member, index) => (
+                    {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
                       <div
                         key={index}
                         className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
@@ -178,7 +172,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                   <div className="flex flex-col gap-y-1">
                     <p className="text-gray-500">Project team</p>
                     <div className="flex -space-x-2">
-                      {card.projectTeam?.map((member, index) => (
+                      {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
                         <div
                           key={index}
                           className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
@@ -201,14 +195,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
           title="Project detail"
           closeModal={() => setIsModalOpen(false)}
           showExpandButton={true}
-          expandRoute={`/projects/${card.id}`}
+          expandRoute={`/projects/${project.id}`}
         >
           <div className="border-[1px] rounded-lg p-4 m-2 mt-4">
             <div className="space-y-4">
               <div className="flex flex-col">
-                <p className="text-[#191819] font-bold text-2xl">{card.title}</p>
+                <p className="text-[#191819] font-bold text-2xl">{project.name}</p>
                 <p className="text-[#19181980] text-base font-medium">
-                  {card.organization}
+                  {project.form_data.client_organization}
                 </p>
               </div>
               <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-brand-border border-[1px]">
@@ -236,18 +230,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                     <h3 className="text-sm text-[#19181980]">Status</h3>
                   </div>
                   <div>
-                    <span
-                      className={`p-1 px-3 inline-flex text-xs leading-5 font-semibold rounded-full 
-                  ${
-                    card.status === "Completed"
-                      ? "bg-green-100 text-green-800"
-                      : card.status === "In progress"
-                        ? "bg-[#F1E6D4] text-[#B78026]"
-                        : "bg-[#FB002B1A] text-[#FB002B]"
-                  }`}
-                    >
-                      {card.status}
-                    </span>
+                    <Badge size="sm" variant={project.status}>
+                      {getFormattedText(project.status)}
+                    </Badge>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 lg:gap-11 md:gap-1">
@@ -257,14 +242,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                   </div>
                   <div>
                     <div className="flex -space-x-2">
-                      {card.clientTeam?.map((member, index) => (
+                      {/* {card.clientTeam?.map((member, index) => (
                         <div
                           key={index}
                           className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
                         >
                           {member.substring(0, 2)}
                         </div>
-                      ))}
+                      ))} */}
                     </div>
                   </div>
                 </div>

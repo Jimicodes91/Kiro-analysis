@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "../ui/table";
 import TableSkeletonRowLoader, { EmptyTable } from "../ui/table-row-skeleton";
-import TableRowLol from "./TableRow";
+import ProjectTableRow from "./project-table-row";
 
 interface TableViewProps {
   projectData: ReturnType<typeof useGetAllProjects>;
@@ -30,7 +30,7 @@ const TableView: React.FC<TableViewProps> = ({ projectData }) => {
         </TableRow>
         <>
           {projectData?.value?.data?.map((project) => (
-            <TableRowLol key={project.id} row={project} />
+            <ProjectTableRow key={project.id} project={project} />
           ))}
         </>
       </TableBody>

@@ -1,6 +1,7 @@
 // tablerow.tsx
 import ViewToggle from "@/components/Cards/ViewToggle";
 import Modal from "@/components/Modal";
+import { getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -10,6 +11,7 @@ import { LuCalendar, LuUserRound } from "react-icons/lu";
 import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
 import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
 import { RiStickyNoteLine } from "react-icons/ri";
+import { Badge } from "../ui/badge";
 import { TableCell, TableRow } from "../ui/table";
 
 interface Task {
@@ -36,7 +38,7 @@ interface Activity {
   user: string;
 }
 
-const TableRowLol = ({ row }: { row: ProjectDetails }) => {
+const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("task");
   const [tasks, setTasks] = useState<Task[]>([
@@ -112,28 +114,19 @@ const TableRowLol = ({ row }: { row: ProjectDetails }) => {
   return (
     <>
       <TableRow
-        key={row.id}
+        key={project.id}
         onClick={() => setIsModalOpen(true)}
         className="cursor-pointer hover:bg-gray-50"
       >
-        <TableCell className="">{row.name}</TableCell>
-        <TableCell>{row.company_id}</TableCell>
-        <TableCell>{format(row.start_date, "PPP")}</TableCell>
-        <TableCell>{format(row.end_date, "PPP")}</TableCell>
+        <TableCell className="">{project.name}</TableCell>
+        <TableCell>{project.form_data.client_organization}</TableCell>
+        <TableCell>{format(project.start_date, "PPP")}</TableCell>
+        <TableCell>{format(project.end_date, "PPP")}</TableCell>
         <TableCell>Nill</TableCell>
         <TableCell>
-          <span
-            className={`p-2 inline-flex text-sm leading-5 font-semibold rounded-full 
-            ${
-              row.status === "Completed"
-                ? "bg-green-100 text-green-800"
-                : row.status === "In progress"
-                  ? "bg-[#F1E6D4] text-[#B78026]"
-                  : "bg-[#FB002B1A] text-[#FB002B]"
-            }`}
-          >
-            {row.status}
-          </span>
+          <Badge size="sm" variant={project.status}>
+            {getFormattedText(project.status)}
+          </Badge>
         </TableCell>
         <TableCell>
           <div className="flex -space-x-2">
@@ -172,13 +165,15 @@ const TableRowLol = ({ row }: { row: ProjectDetails }) => {
           title="Project detail"
           closeModal={() => setIsModalOpen(false)}
           showExpandButton={true}
-          expandRoute={`/projects/${row.id}`}
+          expandRoute={`/projects/${project.id}`}
         >
           <div className="border-[1px] rounded-lg p-4 m-2 mt-4">
             <div className="space-y-4">
               <div className="flex flex-col">
-                <p className="text-[#191819] font-bold text-2xl">{row.name}</p>
-                <p className="text-[#19181980] text-base font-medium">{row.company_id}</p>
+                <p className="text-[#191819] font-bold text-2xl">{project.name}</p>
+                <p className="text-[#19181980] text-base font-medium">
+                  {project.form_data.client_organization}
+                </p>
               </div>
               <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-brand-border border-[1px]">
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
@@ -205,18 +200,9 @@ const TableRowLol = ({ row }: { row: ProjectDetails }) => {
                     <h3 className="text-sm text-[#19181980]">Status</h3>
                   </div>
                   <div>
-                    <span
-                      className={`p-1 px-3 inline-flex text-xs leading-5 font-semibold rounded-full 
-                  ${
-                    row.status === "Completed"
-                      ? "bg-green-100 text-green-800"
-                      : row.status === "In progress"
-                        ? "bg-[#F1E6D4] text-[#B78026]"
-                        : "bg-[#FB002B1A] text-[#FB002B]"
-                  }`}
-                    >
-                      {row.status}
-                    </span>
+                    <Badge size="sm" variant={project.status}>
+                      {getFormattedText(project.status)}
+                    </Badge>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 lg:gap-11 md:gap-1">
@@ -403,4 +389,4 @@ const TableRowLol = ({ row }: { row: ProjectDetails }) => {
   );
 };
 
-export default TableRowLol;
+export default ProjectTableRow;

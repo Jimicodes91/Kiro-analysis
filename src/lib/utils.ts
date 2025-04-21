@@ -52,3 +52,8 @@ export function convertDatesToYMD(obj: Record<string, Given>): Record<string, Gi
 
   return result;
 }
+
+export function getFormattedText(name?: string) {
+  if (!name) return "";
+  return name.split("_").join(" ");
+}
