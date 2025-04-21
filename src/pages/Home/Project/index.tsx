@@ -65,12 +65,12 @@ const Project: React.FC = () => {
     Record<string, { id: string; title: string; cards: typeof tableData }>
   >({
     "column-1": {
-      id: "column-1",
+      id: "7a5b91c9-ce8b-4364-98e3-9df109369056",
       title: "Onboarding",
       cards: [tableData[0]],
     },
     "column-2": {
-      id: "column-2",
+      id: "4ade5ecd-e84d-49fa-8ee6-43c79cf3e0d3",
       title: "Licensing",
       cards: [tableData[1]],
     },

@@ -1,6 +1,5 @@
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import React from "react";
-import { IoSettingsOutline } from "react-icons/io5";
 import {
   Table,
   TableBody,
@@ -50,9 +49,6 @@ const TableView: React.FC<TableViewProps> = ({ projectData }) => {
               <TableHead>Status</TableHead>
               <TableHead>Project team</TableHead>
               <TableHead>Client team</TableHead>
-              <TableHead>
-                <IoSettingsOutline />
-              </TableHead>
             </TableRow>
           </TableHeader>
           {renderTableBody()}

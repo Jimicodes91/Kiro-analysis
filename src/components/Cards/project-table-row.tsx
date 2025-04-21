@@ -1,12 +1,11 @@
 // tablerow.tsx
 import ViewToggle from "@/components/Cards/ViewToggle";
 import Modal from "@/components/Modal";
-import { getFormattedText } from "@/lib/utils";
+import getInitials, { getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { format } from "date-fns";
 import { useState } from "react";
 import { BsActivity } from "react-icons/bs";
-import { IoSettingsOutline } from "react-icons/io5";
 import { LuCalendar, LuUserRound } from "react-icons/lu";
 import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
 import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
@@ -130,32 +129,27 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
         </TableCell>
         <TableCell>
           <div className="flex -space-x-2">
-            Nil
-            {/* {row.projectTeam?.map((member, index) => (
+            {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
               <div
                 key={index}
-                className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
               >
-                {member.substring(0, 2)}
+                {getInitials(member)}
               </div>
-            ))} */}
+            ))}
           </div>
         </TableCell>
         <TableCell>
           <div className="flex -space-x-2">
-            Nil
-            {/* {row.clientTeam?.map((member, index) => (
+            {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
               <div
                 key={index}
-                className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
               >
-                {member.substring(0, 2)}
+                {getInitials(member)}
               </div>
-            ))} */}
+            ))}
           </div>
-        </TableCell>
-        <TableCell>
-          <IoSettingsOutline className="text-gray-500" />
         </TableCell>
       </TableRow>
 
@@ -212,14 +206,14 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
                   </div>
                   <div>
                     <div className="flex -space-x-2">
-                      {/* {row.clientTeam?.map((member, index) => (
+                      {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
                         <div
                           key={index}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
+                          className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
                         >
-                          {member.substring(0, 2)}
+                          {getInitials(member)}
                         </div>
-                      ))} */}
+                      ))}
                     </div>
                   </div>
                 </div>
