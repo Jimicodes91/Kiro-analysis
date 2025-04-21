@@ -58,7 +58,8 @@ const BoardView: React.FC<BoardViewProps> = ({
                   <div className="flex flex-col border border-brand-border bg-brand-table rounded-lg w-52 flex-shrink-0">
                     <ProjectColumn
                       column={column}
-                      projects={projects?.filter((project) => project.id === column.id)}
+                      // projects={projects?.filter((project) => project.id === column.id)}
+                      projects={projects}
                     />
                   </div>
                 );
