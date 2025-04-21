@@ -6,6 +6,7 @@ import ProjectEmptyState from "@/pages/projects/components/project-empty-state";
 import React, { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
+import { useSearchParams } from "react-router-dom";
 import BoardView from "../../../components/Cards/BoardView";
 import TableView from "../../../components/Cards/TableView";
 import ViewToggle from "../../../components/Cards/ViewToggle";
@@ -13,10 +14,16 @@ import { useProjectContext } from "./project-context";
 import ActiveProjectTypeProjectWrapper from "./selected-project-wrapper";
 
 const Project: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("board");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const viewMode = searchParams.get("viewMode") || "table";
   const { activeProjectType } = useProjectContext();
   const allProjects = useGetAllProjects(activeProjectType);
   const projeectTypes = useGetAllProjectTypes();
+
+  const handleTabChange = (value: string) => {
+    searchParams.set("viewMode", value?.toLowerCase());
+    setSearchParams(searchParams);
+  };
 
   const tableData = [
     {
@@ -52,17 +59,6 @@ const Project: React.FC = () => {
       projectTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
       clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
     },
-    {
-      id: 4,
-      title: "Dubai Registration",
-      organization: "Orizon Digital",
-      startDate: "02 Nov 2023 ",
-      dueDate: "02 Nov 2023 ",
-      completedDate: "02 Nov 2023 ",
-      status: "Completed",
-      projectTeam: ["New Horizon", "Orizon Digital", "Stellar Solutions Inc."],
-      clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
-    },
   ];
 
   const [columns, setColumns] = useState<
@@ -86,7 +82,7 @@ const Project: React.FC = () => {
     "column-4": {
       id: "column-4",
       title: "Travel",
-      cards: [tableData[3]],
+      cards: [],
     },
     "column-5": {
       id: "column-5",
@@ -190,8 +186,8 @@ const Project: React.FC = () => {
       <>
         <div className="flex justify-between items-center">
           <ViewToggle
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
+            activeTab={viewMode}
+            setActiveTab={handleTabChange}
             options={[
               { value: "board", label: "Board" },
               { value: "table", label: "Table" },
@@ -216,7 +212,7 @@ const Project: React.FC = () => {
         </div>
 
         <div className="mt-4 grid">
-          {activeTab === "board" ? (
+          {viewMode === "board" ? (
             <BoardView
               projectData={allProjects}
               columns={columns}

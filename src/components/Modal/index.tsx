@@ -56,13 +56,13 @@ const Modal = ({
 
   return (
     <motion.div
-      className={`fixed top-0 right-0 w-full h-full flex ${
+      className={`fixed top-0 right-0 w-full h-screen flex ${
         fullHeight ? "items-center" : "items-start"
       } justify-end z-50 backdrop-blur-sm ${className}`}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="absolute w-full h-full bg-black"
+        className="fixed w-full top-0 right-0 h-screen bg-black"
         onClick={closeModal}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.4 }}

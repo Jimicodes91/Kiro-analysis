@@ -125,18 +125,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
       <Draggable key={card.id} draggableId={card.id.toString()} index={index}>
         {(provided, snapshot) => (
           <div
-            className={cn(
-              "bg-white p-2 py-1 rounded-lg flex flex-col h-48 justify-between !cursor-pointer hover:shadow-md transition-shadow border border-brand-border",
-              snapshot.isDragging && "cursor-grabbing opacity-80"
-            )}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             onClick={() => setIsModalOpen(true)}
           >
-            <div className="mt-2">
-              <span
-                className={`p-1 px-3 inline-flex text-xs leading-5 mb-2 font-semibold rounded-full 
+            <div
+              style={{
+                opacity: snapshot.isDragging ? 0.9 : 1,
+                transform: snapshot.isDragging ? "rotate(-5deg)" : "",
+              }}
+              className={cn(
+                "bg-white p-2 py-1 transition-all duration-100 rounded-lg flex flex-col overflow-hidden h-48 justify-between !cursor-default hover:shadow-md border border-brand-border",
+                snapshot.isDragging && "cursor-grabbing shadow-md"
+              )}
+            >
+              <div className="mt-2">
+                <span
+                  className={`p-1 px-3 inline-flex text-xs leading-5 mb-2 font-semibold rounded-full 
                   ${
                     card.status === "Completed"
                       ? "bg-green-100 text-green-800"
@@ -144,34 +150,20 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                         ? "bg-[#F1E6D4] text-[#B78026]"
                         : "bg-[#FB002B1A] text-[#FB002B]"
                   }`}
-              >
-                {card.status}
-              </span>
-            </div>
-            <div>
-              <Heading size="h5" className="font-medium leading-[22px]">
-                {card.title} / {card.organization}
-              </Heading>
-            </div>
-            <div className="flex justify-between text-xs space-x-2 mb-1">
-              <div className="flex flex-col gap-y-1">
-                <p className="text-gray-500">Client team</p>
-                <div className="flex -space-x-2">
-                  {card.clientTeam?.map((member, index) => (
-                    <div
-                      key={index}
-                      className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-                    >
-                      {getInitials(member)}
-                    </div>
-                  ))}
-                </div>
+                >
+                  {card.status}
+                </span>
               </div>
-              <div className="flex justify-between text-xs mb-1">
+              <div>
+                <Heading size="h5" className="font-medium leading-[22px]">
+                  {card.title} / {card.organization}
+                </Heading>
+              </div>
+              <div className="flex justify-between text-xs space-x-2 mb-1">
                 <div className="flex flex-col gap-y-1">
-                  <p className="text-gray-500">Project team</p>
+                  <p className="text-gray-500">Client team</p>
                   <div className="flex -space-x-2">
-                    {card.projectTeam?.map((member, index) => (
+                    {card.clientTeam?.map((member, index) => (
                       <div
                         key={index}
                         className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
@@ -179,6 +171,21 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                         {getInitials(member)}
                       </div>
                     ))}
+                  </div>
+                </div>
+                <div className="flex justify-between text-xs mb-1">
+                  <div className="flex flex-col gap-y-1">
+                    <p className="text-gray-500">Project team</p>
+                    <div className="flex -space-x-2">
+                      {card.projectTeam?.map((member, index) => (
+                        <div
+                          key={index}
+                          className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
+                        >
+                          {getInitials(member)}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
