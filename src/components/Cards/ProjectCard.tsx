@@ -129,6 +129,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             onClick={() => setIsModalOpen(true)}
+            className="mb-2"
           >
             <div
               style={{
@@ -136,7 +137,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ card, index }) => {
                 transform: snapshot.isDragging ? "rotate(-5deg)" : "",
               }}
               className={cn(
-                "bg-white p-2 py-1 transition-all duration-100 rounded-lg flex flex-col overflow-hidden h-48 justify-between !cursor-default hover:shadow-md border border-brand-border",
+                "bg-white p-2 py-1 transition-all duration-100 rounded-lg flex flex-col overflow-hidden h-48 justify-between !cursor-pointer hover:shadow-md border border-brand-border",
                 snapshot.isDragging && "cursor-grabbing shadow-md"
               )}
             >
