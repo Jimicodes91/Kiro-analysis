@@ -1,7 +1,10 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
-const useCreateTaskType = (projectId: string) => {
+const useCreateTaskType = () => {
+  const queryClient = useQueryClient();
+
   return useCustomMutation<
     Record<string, string>,
     {
@@ -10,7 +13,12 @@ const useCreateTaskType = (projectId: string) => {
     }
   >({
     method: "post",
-    endpoint: ENDPOINTS.CREATE_TASK_TYPE(projectId),
+    endpoint: ENDPOINTS.CREATE_TASK_TYPE,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_TASK_TYPES],
+      });
+    },
   });
 };
 

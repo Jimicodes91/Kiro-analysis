@@ -8,12 +8,12 @@ export interface DocumentTypeListResponse {
   data: DocumentTypeDetails[];
 }
 
-const useGetAllProjectDocumentTypes = (projectId: string) => {
+const useGetAllDocumentTypes = () => {
   return useQueryActionHook<DocumentTypeListResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_DOCUMENT_TYPES(projectId),
-    queryKey: [QUERYKEYS.GET_DOCUMENT_TYPES, projectId],
+    endpoint: ENDPOINTS.GET_DOCUMENT_TYPES,
+    queryKey: [QUERYKEYS.GET_DOCUMENT_TYPES],
   });
 };
 
-export default useGetAllProjectDocumentTypes;
+export default useGetAllDocumentTypes;

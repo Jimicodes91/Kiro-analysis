@@ -21,12 +21,9 @@ import { addProjectPipelineSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
-interface ProjectPipelineFormData {
-  pipelineName: string;
-}
 
 function CreatePipelineModal({ isOpen, onClose }: ModalProps) {
-  const form = useForm<ProjectPipelineFormData>({
+  const form = useForm({
     resolver: yupResolver(addProjectPipelineSchema),
   });
   const createProjectType = useCreateProjectType();
@@ -35,7 +32,7 @@ function CreatePipelineModal({ isOpen, onClose }: ModalProps) {
   const onSubmit = async (data: InferType<typeof addProjectPipelineSchema>) => {
     createProjectType
       .mutateAsync({
-        name: data.pipelineName,
+        name: data.name,
         company_id: session?.company_id ?? "",
       })
       .then(() => {
@@ -59,7 +56,7 @@ function CreatePipelineModal({ isOpen, onClose }: ModalProps) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="pipelineName"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Pipeline name</FormLabel>

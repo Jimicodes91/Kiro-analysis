@@ -1,24 +1,13 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import AuditTrailTab from "./AuditTrail";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
 import ProjectTab from "./Project";
-import SettingsTab from "./Settings";
 import TaskTab from "./Task";
 import UserTab from "./User/index";
 
-type TabType =
-  | "User"
-  | "Pipeline"
-  | "Document"
-  | "Event"
-  | "Note"
-  | "Task"
-  | "AuditTrail"
-  | "Account"
-  | "Settings";
+type TabType = "User" | "Pipeline" | "Document" | "Event" | "Note" | "Task";
 
 const Admin: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,17 +18,7 @@ const Admin: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const tabs: TabType[] = [
-    "User",
-    "Pipeline",
-    "Document",
-    "Event",
-    // "Note",
-    "Task",
-    "AuditTrail",
-    // "Account",
-    "Settings",
-  ];
+  const tabs: TabType[] = ["User", "Pipeline", "Document", "Event", "Note", "Task"];
 
   const renderTabContent = () => {
     switch (selectedTab) {
@@ -67,24 +46,19 @@ const Admin: React.FC = () => {
             <EventTab />
           </div>
         );
+      case "note":
+        return (
+          <div>
+            <p>Note Tab</p>
+          </div>
+        );
       case "task":
         return (
           <div>
             <TaskTab />
           </div>
         );
-      case "auditTrail":
-        return (
-          <div>
-            <AuditTrailTab />
-          </div>
-        );
-      case "settings":
-        return (
-          <div>
-            <SettingsTab />
-          </div>
-        );
+
       default:
         return;
     }

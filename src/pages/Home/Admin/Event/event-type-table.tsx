@@ -7,20 +7,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
-import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
-import { getUserSession } from "@/services/api.service";
-import DocumentTableRow from "./document-table-row";
+import useGetAllProjectEventTypes from "@/hooks/project-modules/event-types/use-get-all-event-types";
+import EventTypeTableRow from "./event-type-table-row";
 
-const DocumentTable = () => {
-  const session = getUserSession();
-  const users = useGetCompanyUsers(session?.company_id ?? "");
+const EventTypeTable = () => {
+  const eventTypes = useGetAllProjectEventTypes();
+
   const renderTableBody = () => {
-    if (users.isPending) return <TableSkeletonRowLoader length={7} />;
+    if (eventTypes.isPending) return <TableSkeletonRowLoader length={3} />;
 
-    if (users?.isError) return <EmptyTable message="Something went wrong" length={7} />;
+    if (eventTypes?.isError)
+      return <EmptyTable message="Something went wrong" length={3} />;
 
-    if (users?.value?.data?.length === 0)
-      return <EmptyTable message="No document found" length={7} />;
+    if (eventTypes?.value?.data?.length === 0)
+      return <EmptyTable message="No Event type found" length={3} />;
 
     return (
       <TableBody className="text-xs">
@@ -28,8 +28,8 @@ const DocumentTable = () => {
           <TableCell className="border-0 h-3 py-0" colSpan={7}></TableCell>
         </TableRow>
         <>
-          {users?.value?.data?.map((user) => (
-            <DocumentTableRow key={user.id} user={user} />
+          {eventTypes?.value?.data?.map((eventType) => (
+            <EventTypeTableRow key={eventType.id} eventType={eventType} />
           ))}
         </>
       </TableBody>
@@ -42,8 +42,7 @@ const DocumentTable = () => {
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border">
               <TableHead>Type name</TableHead>
-              <TableHead>Access level</TableHead>
-              <TableHead>Expiration policy</TableHead>
+              <TableHead>Description</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -54,4 +53,4 @@ const DocumentTable = () => {
   );
 };
 
-export default DocumentTable;
+export default EventTypeTable;

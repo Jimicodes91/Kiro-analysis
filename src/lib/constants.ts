@@ -215,18 +215,16 @@ export const ENDPOINTS = {
   GET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
 
   // 9. Document Types
-  CREATE_DOCUMENT_TYPE: (projectId: string) =>
-    `metadata/projects/${projectId}/type/documents`,
-  GET_DOCUMENT_TYPES: (projectId: string) =>
-    `metadata/projects/${projectId}/type/documents`,
+  CREATE_DOCUMENT_TYPE: `metadata/type/documents`,
+  GET_DOCUMENT_TYPES: `metadata/type/documents`,
 
   // 10. Event Types
-  CREATE_EVENT_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/events`,
-  GET_EVENT_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/events`,
+  CREATE_EVENT_TYPE: "metadata/type/events",
+  GET_EVENT_TYPES: "metadata/type/events",
 
   // 11. Task Types
-  CREATE_TASK_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
-  GET_TASK_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
+  CREATE_TASK_TYPE: "metadata/type/tasks",
+  GET_TASK_TYPES: "metadata/type/tasks",
 
   // 12. Activity Logs
   GET_AUDIT_TRAIL: (projectId: string, page = 1, limit = 20) =>
