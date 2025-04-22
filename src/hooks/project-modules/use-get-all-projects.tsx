@@ -13,6 +13,7 @@ const useGetAllProjects = (projectTypeId?: string, status?: ProjectStatus) => {
   const projectTypeIdKey = projectTypeId ?? "";
   return useQueryActionHook<ProjectListResponse>({
     method: "get",
+    enabled: Boolean(projectTypeId),
     endpoint: ENDPOINTS.GET_ALL_PROJECTS(projectTypeId, status),
     queryKey: [QUERYKEYS.GET_ALL_PROJECTS, projectTypeIdKey, statusKey],
   });

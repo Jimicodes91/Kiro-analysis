@@ -86,7 +86,7 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
             )}
           />
           {stagesFields.map((item, index) => (
-            <div className="flex gap-2 items-center" key={item.id}>
+            <div className="flex gap-2 items-end" key={item.id}>
               <div className="w-full">
                 <FormField
                   control={form.control}
@@ -117,7 +117,7 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
                   )}
                 />
               </div>
-              {stagesFields.length > 1 && (
+              {index >= 1 && (
                 <Button
                   onClick={() => remove(index)}
                   size="icon"

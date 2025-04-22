@@ -3,7 +3,7 @@ import Loader from "@/components/ui/loader";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import ProjectEmptyState from "@/pages/projects/components/project-empty-state";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
@@ -16,7 +16,7 @@ import ActiveProjectTypeProjectWrapper from "./selected-project-wrapper";
 const Project: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const viewMode = searchParams.get("viewMode") || "table";
-  const { activeProjectType } = useProjectContext();
+  const { activeProjectType, changeActiveProjectType } = useProjectContext();
   const allProjects = useGetAllProjects(activeProjectType);
   const projeectTypes = useGetAllProjectTypes();
 
@@ -25,149 +25,17 @@ const Project: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const tableData = [
-    {
-      id: 1,
-      title: "Nigeria Registration",
-      organization: "Orizon Digital",
-      startDate: "02 Nov 2023 ",
-      dueDate: "02 Nov 2023 ",
-      completedDate: "02 Nov 2023 ",
-      status: "Completed",
-      projectTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
-      clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
-    },
-    {
-      id: 2,
-      title: "ElevatePro Digital Transformation",
-      organization: "Stellar Solutions Inc.",
-      startDate: "02 Nov 2023 ",
-      dueDate: "02 Nov 2023 ",
-      completedDate: "02 Nov 2023 ",
-      status: "In progress",
-      projectTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
-      clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
-    },
-    {
-      id: 3,
-      title: "United States Registration",
-      organization: "Orizon Digital",
-      startDate: "02 Nov 2023 ",
-      dueDate: "02 Nov 2023 ",
-      completedDate: "02 Nov 2023 ",
-      status: "Not started",
-      projectTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
-      clientTeam: ["Orizon Digital", "Orizon Digital", "Orizon Digital"],
-    },
-  ];
-
-  const [columns, setColumns] = useState<
-    Record<string, { id: string; title: string; cards: typeof tableData }>
-  >({
-    "column-1": {
-      id: "7a5b91c9-ce8b-4364-98e3-9df109369056",
-      title: "Onboarding",
-      cards: [tableData[0]],
-    },
-    "column-2": {
-      id: "4ade5ecd-e84d-49fa-8ee6-43c79cf3e0d3",
-      title: "Licensing",
-      cards: [tableData[1]],
-    },
-    "column-3": {
-      id: "column-3",
-      title: "Permit",
-      cards: [tableData[2]],
-    },
-    "column-4": {
-      id: "column-4",
-      title: "Travel",
-      cards: [],
-    },
-    "column-5": {
-      id: "column-5",
-      title: "Immigration",
-      cards: [],
-    },
-    "column-6": {
-      id: "column-6",
-      title: "Banking",
-      cards: [],
-    },
-  });
-
-  const onDragEnd = (result: {
-    destination: { droppableId: string; index: number } | null;
-    source: { droppableId: string; index: number };
-    draggableId: string;
-  }) => {
-    const { destination, source, draggableId } = result;
-
-    if (!destination) return;
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
+  useEffect(() => {
+    if (projeectTypes.isSuccess && projeectTypes.value) {
+      const activeTypeId = projeectTypes?.value?.data?.[0]?.id;
+      changeActiveProjectType(activeTypeId ?? "");
     }
-
-    const start = columns[source.droppableId as string];
-    const finish = columns[destination.droppableId];
-
-    if (start === finish) {
-      const newCardIds = Array.from(start.cards);
-      newCardIds.splice(source.index, 1);
-      newCardIds.splice(
-        destination.index,
-        0,
-        start.cards.find(
-          (card) => card.id.toString() === draggableId
-        ) as (typeof tableData)[0]
-      );
-
-      const newColumn = {
-        ...start,
-        cards: newCardIds,
-      };
-
-      setColumns({
-        ...columns,
-        [newColumn.id]: newColumn,
-      });
-      return;
-    }
-
-    // Moving from one list to another
-    const startCardIds = Array.from(start.cards);
-    const movedCard = start.cards.find(
-      (card) => card.id.toString() === draggableId
-    ) as (typeof tableData)[0];
-    startCardIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      cards: startCardIds,
-    };
-
-    const finishCardIds = Array.from(finish.cards);
-    finishCardIds.splice(destination.index, 0, movedCard);
-    const newFinish = {
-      ...finish,
-      cards: finishCardIds,
-    };
-
-    setColumns({
-      ...columns,
-      [newStart.id]: newStart,
-      [newFinish.id]: newFinish,
-    });
-  };
-
-  const columnOrder = Object.keys(columns);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projeectTypes.isSuccess, projeectTypes?.value]);
 
   if (!projeectTypes.isPending && !projeectTypes?.value) {
     return (
-      <div className="min-h-[calc(100vh-70px)]">
+      <div className="min-h-[calc(100vh-70px)] flex items-center">
         <Loader />
       </div>
     );
@@ -184,7 +52,7 @@ const Project: React.FC = () => {
   return (
     <ActiveProjectTypeProjectWrapper>
       <>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between gap-3 flex-wrap items-center">
           <ViewToggle
             activeTab={viewMode}
             setActiveTab={handleTabChange}
@@ -213,12 +81,7 @@ const Project: React.FC = () => {
 
         <div className="mt-4 grid">
           {viewMode === "board" ? (
-            <BoardView
-              projectData={allProjects}
-              columns={columns}
-              columnOrder={columnOrder}
-              onDragEnd={onDragEnd}
-            />
+            <BoardView projectData={allProjects} />
           ) : (
             <TableView projectData={allProjects} />
           )}

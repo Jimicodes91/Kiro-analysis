@@ -1,5 +1,6 @@
 import AuthLayout from "@/layouts/auth-layout";
 import AccountLayout from "@/layouts/dashboard-layout/lol";
+import Client from "@/pages/Home/client";
 import ProjectContextProvider from "@/pages/Home/Project/project-context";
 import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";
 import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
@@ -12,7 +13,6 @@ import SignUp from "../pages/Auth/SignUp";
 import VerifyEmail from "../pages/Auth/VerifyEmail";
 import Home from "../pages/Home";
 import Admin from "../pages/Home/Admin";
-import Client from "../pages/Home/Client";
 import Event from "../pages/Home/Event";
 import Finance from "../pages/Home/Finance";
 import Message from "../pages/Home/Message";

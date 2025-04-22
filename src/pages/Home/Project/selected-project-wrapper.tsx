@@ -28,7 +28,7 @@ const ActiveProjectTypeProjectWrapper = ({ children }: { children: React.ReactNo
   return (
     <div>
       <div className="p-6 animate-in fade-in-0 duration-700 ease-in-out">
-        <div className="flex flex-col md:flex-row items-center justify-between">
+        <div className="flex gap-4 items-stretch md:items-center justify-between flex-col md:flex-row">
           <div className="flex items-center gap-4">
             <Heading size="h3">Project</Heading>
             <div className="relative w-full min-w-[300px]">
@@ -42,7 +42,7 @@ const ActiveProjectTypeProjectWrapper = ({ children }: { children: React.ReactNo
               />
             </div>
           </div>
-          <div className="flex items-center space-x-4 mt-5 md:mt-0">
+          <div className="flex items-center space-x-3">
             <div>
               <Select value={activeProjectType} onValueChange={changeActiveProjectType}>
                 <SelectTrigger
