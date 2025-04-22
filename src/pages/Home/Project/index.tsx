@@ -18,7 +18,7 @@ const Project: React.FC = () => {
   const viewMode = searchParams.get("viewMode") || "table";
   const { activeProjectType, changeActiveProjectType } = useProjectContext();
   const allProjects = useGetAllProjects(activeProjectType);
-  const projeectTypes = useGetAllProjectTypes();
+  const projectTypes = useGetAllProjectTypes();
 
   const handleTabChange = (value: string) => {
     searchParams.set("viewMode", value?.toLowerCase());
@@ -26,14 +26,14 @@ const Project: React.FC = () => {
   };
 
   useEffect(() => {
-    if (projeectTypes.isSuccess && projeectTypes.value) {
-      const activeTypeId = projeectTypes?.value?.data?.[0]?.id;
+    if (projectTypes.isSuccess && projectTypes.value) {
+      const activeTypeId = projectTypes?.value?.data?.[0]?.id;
       changeActiveProjectType(activeTypeId ?? "");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projeectTypes.isSuccess, projeectTypes?.value]);
+  }, [projectTypes.isSuccess, projectTypes?.value]);
 
-  if (!projeectTypes.isPending && !projeectTypes?.value) {
+  if (!projectTypes.isPending && !projectTypes?.value) {
     return (
       <div className="min-h-[calc(100vh-70px)] flex items-center">
         <Loader />
@@ -42,9 +42,9 @@ const Project: React.FC = () => {
   }
 
   if (
-    !projeectTypes.isPending &&
-    !!projeectTypes?.value &&
-    projeectTypes?.value?.data?.length === 0
+    !projectTypes.isPending &&
+    !!projectTypes?.value &&
+    projectTypes?.value?.data?.length === 0
   ) {
     return <ProjectEmptyState />;
   }
@@ -81,7 +81,7 @@ const Project: React.FC = () => {
 
         <div className="mt-4 grid">
           {viewMode === "board" ? (
-            <BoardView projectData={allProjects} />
+            <BoardView projectData={allProjects} projectTypes={projectTypes} />
           ) : (
             <TableView projectData={allProjects} />
           )}

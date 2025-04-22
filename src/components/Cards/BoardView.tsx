@@ -1,3 +1,4 @@
+import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { useProjectContext } from "@/pages/Home/Project/project-context";
 import ProjectEmptyStateCard from "@/pages/projects/components/project-empty-state-card";
@@ -8,10 +9,12 @@ import ProjectColumn from "./ProjectColumn";
 
 interface BoardViewProps {
   projectData: ReturnType<typeof useGetAllProjects>;
+  projectTypes: ReturnType<typeof useGetAllProjectTypes>;
 }
 
-const BoardView: React.FC<BoardViewProps> = ({ projectData }) => {
+const BoardView: React.FC<BoardViewProps> = ({ projectData, projectTypes }) => {
   const { activeProjectType } = useProjectContext();
+
   const tableData = [
     {
       id: 1,
@@ -83,15 +86,13 @@ const BoardView: React.FC<BoardViewProps> = ({ projectData }) => {
     },
   });
 
-  const columnOrder = Object.keys(columns);
-
   const onDragEnd = (result: {
     destination: { droppableId: string; index: number } | null;
     source: { droppableId: string; index: number };
     draggableId: string;
   }) => {
     const { destination, source, draggableId } = result;
-
+    console.log({ destination, source, draggableId });
     if (!destination) return;
 
     if (
@@ -168,18 +169,19 @@ const BoardView: React.FC<BoardViewProps> = ({ projectData }) => {
         return (
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="flex overflow-x-auto pb-3 space-x-3">
-              {columnOrder.map((columnId) => {
-                const column = columns[columnId];
-                return (
-                  <div className="flex flex-col border border-brand-border bg-brand-table rounded-lg w-52 flex-shrink-0">
-                    <ProjectColumn
-                      column={column}
-                      // projects={projects?.filter((project) => project.id === column.id)}
-                      projects={projects}
-                    />
-                  </div>
-                );
-              })}
+              {projectTypes?.value?.data
+                ?.find((item) => item.id === activeProjectType)
+                ?.milestones?.map((milestone) => {
+                  return (
+                    <div className="flex flex-col border border-brand-border bg-brand-table rounded-lg w-52 flex-shrink-0">
+                      <ProjectColumn
+                        column={milestone}
+                        // projects={projects?.filter((project) => project.id === column.id)}
+                        projects={projects}
+                      />
+                    </div>
+                  );
+                })}
             </div>
           </DragDropContext>
         );

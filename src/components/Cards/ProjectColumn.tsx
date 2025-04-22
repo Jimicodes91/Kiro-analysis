@@ -1,21 +1,11 @@
+import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import { ProjectDetails } from "@/types/api.types";
 import { Droppable } from "@hello-pangea/dnd";
 import React from "react";
 import ProjectCard from "./ProjectCard";
 
 interface ProjectColumnProps {
-  column: {
-    id: string;
-    title: string;
-    cards: Array<{
-      id: number;
-      title: string;
-      organization: string;
-      status: string;
-      clientTeam?: string[];
-      projectTeam?: string[];
-    }>;
-  };
+  column: ProjectTypeMilestone;
   projects: ProjectDetails[];
 }
 
@@ -24,7 +14,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({ column, projects }) => {
     <div className="flex flex-col space-y-2 min-h-[calc(100vh-290px)] h-full">
       <div className="px-1.5 pt-1.5">
         <div className="flex justify-center py-3 border border-brand-border items-center rounded-md bg-[#0923270D]">
-          <h3 className="font-bold">{column.title}</h3>
+          <h3 className="font-bold">{column.name}</h3>
         </div>
       </div>
       {/* droppableId="all-columns" direction="horizontal" type="column" */}
