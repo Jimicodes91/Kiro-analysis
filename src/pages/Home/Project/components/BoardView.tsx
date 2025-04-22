@@ -1,9 +1,10 @@
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
+import useUpdateProjectMilestone from "@/hooks/project-modules/use-update-project-milestone";
 import { generateBoardMilestone, updateProjectMilestoneById } from "@/lib/utils";
 import { useProjectContext } from "@/pages/Home/Project/project-context";
 import { ProjectDetails } from "@/types/api.types";
 import { DragDropContext } from "@hello-pangea/dnd";
-import React from "react";
+import React, { useEffect } from "react";
 import ProjectColumn from "./project-column";
 
 interface BoardViewProps {
@@ -11,9 +12,32 @@ interface BoardViewProps {
   projectTypes: ReturnType<typeof useGetAllProjectTypes>;
 }
 
+const initialState = {
+  projectId: "",
+  milestoneId: "",
+};
+
 const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes }) => {
   const [milestoneProjects, setMilestoneProjects] = React.useState(projects);
   const { activeProjectType } = useProjectContext();
+  const [updateData, setUpdateData] = React.useState(initialState);
+
+  const updateProjectMilestone = useUpdateProjectMilestone(updateData.projectId);
+
+  useEffect(() => {
+    if (updateData.projectId && updateData.milestoneId) {
+      updateProjectMilestone
+        .mutateAsync({
+          milestone_id: updateData.milestoneId,
+        })
+        .then(() => {
+          setUpdateData(initialState);
+        })
+        .catch(console.error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateData]);
+
   const onDragEnd = (result: {
     destination: { droppableId: string; index: number } | null;
     source: { droppableId: string; index: number };
@@ -64,6 +88,10 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes }) => {
 
     setMilestoneProjects((prev) => {
       return updateProjectMilestoneById(prev, draggableId, destination.droppableId);
+    });
+    setUpdateData({
+      projectId: draggableId,
+      milestoneId: destination.droppableId,
     });
   };
 
