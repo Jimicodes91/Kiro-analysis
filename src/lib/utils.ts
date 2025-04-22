@@ -1,3 +1,6 @@
+import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
+import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
+import { ProjectDetails } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
 import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
@@ -56,4 +59,51 @@ export function convertDatesToYMD(obj: Record<string, Given>): Record<string, Gi
 export function getFormattedText(name?: string) {
   if (!name) return "";
   return name.split("_").join(" ");
+}
+
+export const generateBoardMilestone = (
+  projectTypes: ProjectType[] | undefined,
+  activeProjectType: string
+) => {
+  if (!projectTypes) return [];
+  const milestones = projectTypes?.find(
+    (item) => item.id === activeProjectType
+  )?.milestones;
+
+  if (milestones) {
+    const backlog: ProjectTypeMilestone = {
+      id: "disabled",
+      created_at: "",
+      updated_at: "",
+      project_type_id: "",
+      company_id: "",
+      duration: 0,
+      name: "Backlog",
+      is_system: 0,
+      projects: [],
+      status: "",
+    };
+    const newMilestones = [backlog, ...milestones];
+
+    return newMilestones;
+  } else {
+    return [];
+  }
+};
+
+export const getMileStoneProject = (projects: ProjectDetails[], milestoneId: string) => {
+  const filteredProjects = projects.filter((item) =>
+    milestoneId === "disabled" ? !item.milestone_id : item.milestone_id === milestoneId
+  );
+  return filteredProjects;
+};
+
+export function updateProjectMilestoneById(
+  projects: ProjectDetails[],
+  projectId: string,
+  milestoneId: string
+): ProjectDetails[] {
+  return projects.map((project) =>
+    project.id === projectId ? { ...project, milestone_id: milestoneId } : project
+  );
 }

@@ -125,6 +125,7 @@ export const ENDPOINTS = {
     `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status ? `?status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
+  UPDATE_PROJECT_MILESTONE: (projectId: string) => `projects/${projectId}`,
 
   // 1. Project Types
   GET_ALL_PROJECT_TYPES: "projects/types",

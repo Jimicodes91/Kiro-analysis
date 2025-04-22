@@ -1,5 +1,4 @@
 "use client";
-import ViewToggle from "@/components/Cards/ViewToggle";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -7,6 +6,7 @@ import {
   AlertDialogTitle,
   ModalProps,
 } from "@/components/ui/alert-dialog";
+import ViewToggle from "@/components/ui/view-toggle";
 import { useState } from "react";
 import { BsActivity } from "react-icons/bs";
 import { LuCalendar, LuUserRound } from "react-icons/lu";

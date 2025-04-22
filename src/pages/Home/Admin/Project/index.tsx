@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import ViewToggle from "../../../../components/Cards/ViewToggle";
+import ViewToggle from "../../../../components/ui/view-toggle";
 import FormCustomization from "./Form";
 import PipelineForm from "./lol";
 import PipeLineTable from "./pipeline-table";

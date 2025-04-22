@@ -1,17 +1,16 @@
-// tablerow.tsx
-import ViewToggle from "@/components/Cards/ViewToggle";
-import Modal from "@/components/Modal";
-import getInitials, { getFormattedText } from "@/lib/utils";
+import getInitials, { cn, getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
-import { format } from "date-fns";
-import { useState } from "react";
+import { Draggable } from "@hello-pangea/dnd";
+import React, { useState } from "react";
 import { BsActivity } from "react-icons/bs";
 import { LuCalendar, LuUserRound } from "react-icons/lu";
 import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
 import { PiSpinner, PiUsersThreeLight } from "react-icons/pi";
 import { RiStickyNoteLine } from "react-icons/ri";
-import { Badge } from "../ui/badge";
-import { TableCell, TableRow } from "../ui/table";
+import Modal from "../../../../components/Modal";
+import { Badge } from "../../../../components/ui/badge";
+import Heading from "../../../../components/ui/heading";
+import ViewToggle from "../../../../components/ui/view-toggle";
 
 interface Task {
   id: number;
@@ -37,7 +36,21 @@ interface Activity {
   user: string;
 }
 
-const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
+interface ProjectCardProps {
+  card?: {
+    id: number;
+    title: string;
+    organization: string;
+    status: string;
+    clientTeam?: string[];
+    projectTeam?: string[];
+    description?: string;
+  };
+  index: number;
+  project: ProjectDetails;
+}
+
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("task");
   const [tasks, setTasks] = useState<Task[]>([
@@ -112,48 +125,71 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
 
   return (
     <>
-      <TableRow
-        key={project.id}
-        onClick={() => setIsModalOpen(true)}
-        className="cursor-pointer hover:bg-gray-50"
-      >
-        <TableCell className="">{project.name}</TableCell>
-        <TableCell>{project.form_data.client_organization}</TableCell>
-        <TableCell>{format(project.start_date, "PPP")}</TableCell>
-        <TableCell>{format(project.end_date, "PPP")}</TableCell>
-        <TableCell>Nill</TableCell>
-        <TableCell>
-          <Badge size="sm" variant={project.status}>
-            {getFormattedText(project.status)}
-          </Badge>
-        </TableCell>
-        <TableCell>
-          <div className="flex -space-x-2">
-            {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
-              <div
-                key={index}
-                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-              >
-                {getInitials(member)}
+      <Draggable key={project.id} draggableId={project.id} index={index}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={() => setIsModalOpen(true)}
+            className="mb-2"
+          >
+            <div
+              style={{
+                opacity: snapshot.isDragging ? 0.9 : 1,
+                transform: snapshot.isDragging ? "rotate(-5deg)" : "",
+              }}
+              className={cn(
+                "bg-white p-2 py-1 transition-all duration-100 rounded-lg flex flex-col overflow-hidden h-48 justify-between !cursor-pointer hover:shadow-md border border-brand-border",
+                snapshot.isDragging && "cursor-grabbing shadow-md"
+              )}
+            >
+              <div className="mt-2">
+                <Badge size="sm" variant={project.status}>
+                  {getFormattedText(project.status)}
+                </Badge>
               </div>
-            ))}
-          </div>
-        </TableCell>
-        <TableCell>
-          <div className="flex -space-x-2">
-            {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
-              <div
-                key={index}
-                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-              >
-                {getInitials(member)}
+              <div>
+                <Heading size="h5" className="font-medium leading-[22px]">
+                  {project.name} / {project.form_data.client_organization}
+                </Heading>
               </div>
-            ))}
+              <div className="flex justify-between text-xs space-x-2 mb-1">
+                <div className="flex flex-col gap-y-1">
+                  <p className="text-gray-500">Client team</p>
+                  <div className="flex -space-x-2">
+                    {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
+                      <div
+                        key={index}
+                        className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
+                      >
+                        {getInitials(member)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex justify-between text-xs mb-1">
+                  <div className="flex flex-col gap-y-1">
+                    <p className="text-gray-500">Project team</p>
+                    <div className="flex -space-x-2">
+                      {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
+                        <div
+                          key={index}
+                          className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
+                        >
+                          {getInitials(member)}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </TableCell>
-      </TableRow>
-
-      {/* Modal for project details - same as in ProjectCard */}
+        )}
+      </Draggable>
+      {/* <ProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> */}
+      {/* Modal for project details */}
       {isModalOpen && (
         <Modal
           title="Project detail"
@@ -206,14 +242,14 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
                   </div>
                   <div>
                     <div className="flex -space-x-2">
-                      {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
+                      {/* {card.clientTeam?.map((member, index) => (
                         <div
                           key={index}
-                          className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F1F1] text-dark text-sm font-medium ring-2 ring-white"
                         >
-                          {getInitials(member)}
+                          {member.substring(0, 2)}
                         </div>
-                      ))}
+                      ))} */}
                     </div>
                   </div>
                 </div>
@@ -383,4 +419,4 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
   );
 };
 
-export default ProjectTableRow;
+export default ProjectCard;

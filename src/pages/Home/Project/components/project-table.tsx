@@ -1,5 +1,4 @@
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
-import React from "react";
 import {
   Table,
   TableBody,
@@ -7,15 +6,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import TableSkeletonRowLoader, { EmptyTable } from "../ui/table-row-skeleton";
+} from "../../../../components/ui/table";
+import TableSkeletonRowLoader, {
+  EmptyTable,
+} from "../../../../components/ui/table-row-skeleton";
 import ProjectTableRow from "./project-table-row";
 
-interface TableViewProps {
+interface ProjectTableProps {
   projectData: ReturnType<typeof useGetAllProjects>;
 }
 
-const TableView: React.FC<TableViewProps> = ({ projectData }) => {
+const ProjectTable = ({ projectData }: ProjectTableProps) => {
   const renderTableBody = () => {
     if (projectData.isPending) return <TableSkeletonRowLoader length={9} />;
 
@@ -58,4 +59,4 @@ const TableView: React.FC<TableViewProps> = ({ projectData }) => {
   );
 };
 
-export default TableView;
+export default ProjectTable;

@@ -7,9 +7,9 @@ import React, { useEffect } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
-import BoardView from "../../../components/Cards/BoardView";
-import TableView from "../../../components/Cards/TableView";
-import ViewToggle from "../../../components/Cards/ViewToggle";
+import ViewToggle from "../../../components/ui/view-toggle";
+import BoardLoadingWrapper from "./components/loading-wrapper";
+import ProjectTable from "./components/project-table";
 import { useProjectContext } from "./project-context";
 import ActiveProjectTypeProjectWrapper from "./selected-project-wrapper";
 
@@ -81,9 +81,9 @@ const Project: React.FC = () => {
 
         <div className="mt-4 grid">
           {viewMode === "board" ? (
-            <BoardView projectData={allProjects} projectTypes={projectTypes} />
+            <BoardLoadingWrapper projectData={allProjects} projectTypes={projectTypes} />
           ) : (
-            <TableView projectData={allProjects} />
+            <ProjectTable projectData={allProjects} />
           )}
         </div>
       </>
