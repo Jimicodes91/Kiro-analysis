@@ -30,7 +30,7 @@ const AddEventTypeModal = ({ onClose }: { onClose: () => void }) => {
         form.reset();
         onClose();
       })
-      .catch(console.log);
+      .catch(console.error);
   };
 
   return (

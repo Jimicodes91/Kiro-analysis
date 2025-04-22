@@ -56,14 +56,9 @@ const Step2 = () => {
   const onSubmit = async (data: { teamMembers?: InferType<typeof addUserSchema>[] }) => {
     const teamMembers = data.teamMembers;
     if (teamMembers) {
-      try {
-        const results = await sendInvite.mutateAsync(teamMembers);
-        console.log("All done:", results);
-      } catch (err) {
+      sendInvite.mutateAsync(teamMembers).catch((err) => {
         console.error("One or more failed:", err);
-      }
-    } else {
-      return;
+      });
     }
   };
 
@@ -86,7 +81,6 @@ const Step2 = () => {
                     control={form.control}
                     name={`teamMembers.${index}.email`}
                     render={({ field }) => {
-                      console.log(field);
                       return (
                         <FormItem>
                           <FormLabel>Email</FormLabel>
