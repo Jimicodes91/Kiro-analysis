@@ -60,7 +60,7 @@ const CompleteInvite: React.FC = () => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Type name</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Type name" {...field} />
                 </FormControl>
