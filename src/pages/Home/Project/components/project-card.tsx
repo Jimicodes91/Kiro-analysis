@@ -157,7 +157,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 <Badge size="sm" variant={project.status}>
                   {getFormattedText(project.status)}
                 </Badge>
-                {isLoading && <Icons.spinner className="animate-spin text-gray-500" />}
+                {isLoading && (
+                  <Icons.spinner className="animate-spin h-4 w-4 text-gray-500" />
+                )}
               </div>
               <div>
                 <Heading size="h5" className="font-medium leading-[22px]">

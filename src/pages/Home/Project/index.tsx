@@ -9,7 +9,7 @@ import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../components/ui/view-toggle";
 import ProjectTable from "./components/project-table";
-import { useProjectContext } from "./project-context";
+import { useProjectContext } from "./context/project-context";
 import BoardLoadingWrapper from "./templates/loading-wrapper";
 import ActiveProjectTypeProjectWrapper from "./templates/selected-project-wrapper";
 

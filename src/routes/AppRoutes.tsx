@@ -1,7 +1,7 @@
 import AuthLayout from "@/layouts/auth-layout";
 import AccountLayout from "@/layouts/dashboard-layout/lol";
 import Client from "@/pages/Home/client";
-import ProjectContextProvider from "@/pages/Home/Project/project-context";
+import ProjectContextProvider from "@/pages/Home/Project/context/project-context";
 import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";
 import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
 import { RouteObject } from "react-router-dom";

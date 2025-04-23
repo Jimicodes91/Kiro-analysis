@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuPlus } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
-import { useProjectContext } from "../project-context";
+import { useProjectContext } from "../context/project-context";
 
 const ActiveProjectTypeProjectWrapper = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();

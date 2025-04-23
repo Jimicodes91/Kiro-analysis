@@ -1,7 +1,7 @@
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useUpdateProjectMilestone from "@/hooks/project-modules/use-update-project-milestone";
 import { generateBoardMilestone, updateProjectMilestoneById } from "@/lib/utils";
-import { useProjectContext } from "@/pages/Home/Project/project-context";
+import { useProjectContext } from "@/pages/Home/Project/context/project-context";
 import { ProjectDetails } from "@/types/api.types";
 import { DragDropContext } from "@hello-pangea/dnd";
 import React, { useEffect } from "react";

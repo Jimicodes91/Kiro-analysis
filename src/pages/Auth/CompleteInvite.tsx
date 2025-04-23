@@ -57,6 +57,19 @@ const CompleteInvite: React.FC = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Type name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Type name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="newPassword"
             render={({ field }) => (
               <FormItem>

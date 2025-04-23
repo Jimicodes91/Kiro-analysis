@@ -1,7 +1,7 @@
 import Loader from "@/components/ui/loader";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
-import { useProjectContext } from "@/pages/Home/Project/project-context";
+import { useProjectContext } from "@/pages/Home/Project/context/project-context";
 import ProjectEmptyStateCard from "@/pages/projects/components/project-empty-state-card";
 import React from "react";
 import BoardView from "./board-view";
