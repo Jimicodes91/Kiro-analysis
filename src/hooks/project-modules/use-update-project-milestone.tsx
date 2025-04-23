@@ -18,6 +18,8 @@ const useUpdateProjectMilestone = (projectId: string) => {
         queryKey: [QUERYKEYS.GET_ALL_PROJECTS],
       });
     },
+    mutationKey: [QUERYKEYS.UPDATE_PROJECT_MILESTONE, projectId],
+    showSuccessToast: false,
   });
 };
 

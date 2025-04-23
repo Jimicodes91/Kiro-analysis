@@ -5,7 +5,7 @@ import { useProjectContext } from "@/pages/Home/Project/project-context";
 import { ProjectDetails } from "@/types/api.types";
 import { DragDropContext } from "@hello-pangea/dnd";
 import React, { useEffect } from "react";
-import ProjectColumn from "./project-column";
+import ProjectColumn from "../components/project-column";
 
 interface BoardViewProps {
   projects: ProjectDetails[];

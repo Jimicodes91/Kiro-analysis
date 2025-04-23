@@ -4,7 +4,7 @@ import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { useProjectContext } from "@/pages/Home/Project/project-context";
 import ProjectEmptyStateCard from "@/pages/projects/components/project-empty-state-card";
 import React from "react";
-import BoardView from "./BoardView";
+import BoardView from "./board-view";
 
 interface BoardLoadingWrapperProps {
   projectData: ReturnType<typeof useGetAllProjects>;

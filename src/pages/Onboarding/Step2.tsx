@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { useMultiSendInvite } from "@/hooks/auth/use-send-consultant-invite";
 import { PAGES } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { addUserSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -69,20 +70,18 @@ const Step2 = () => {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="mb-12 space-y-4">
             {fields.map((item, index) => {
-              const showDeleteButton = fields.length > 1;
+              const showDeleteButton = index > 0;
               return (
                 <div
                   key={item.id}
-                  className={
-                    showDeleteButton ? "grid grid-cols-2 gap-4" : "grid grid-cols-2 gap-4"
-                  }
+                  className={cn("flex gap-2", !showDeleteButton && "mr-8")}
                 >
                   <FormField
                     control={form.control}
                     name={`teamMembers.${index}.email`}
                     render={({ field }) => {
                       return (
-                        <FormItem>
+                        <FormItem className="w-full">
                           <FormLabel>Email</FormLabel>
                           <FormControl>
                             <Input
@@ -103,7 +102,7 @@ const Step2 = () => {
                     name={`teamMembers.${index}.role`}
                     key={item.id}
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="w-full">
                         <FormLabel>Role</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl className="h-12 w-full">

@@ -117,7 +117,9 @@ const Step1 = () => {
                         </FormControl>
                         <SelectContent>
                           {industryList.map((item) => (
-                            <SelectItem value={item.value}>{item.label}</SelectItem>
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -145,7 +147,9 @@ const Step1 = () => {
                         </FormControl>
                         <SelectContent>
                           {companySizeList.map((item) => (
-                            <SelectItem value={item.value}>{item.label}</SelectItem>
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -171,7 +175,9 @@ const Step1 = () => {
                         </FormControl>
                         <SelectContent>
                           {countryList.map((item) => (
-                            <SelectItem value={item.value}>{item.label}</SelectItem>
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -219,7 +225,9 @@ const Step1 = () => {
                         </FormControl>
                         <SelectContent>
                           {states.map((item) => (
-                            <SelectItem value={item.value}>{item.label}</SelectItem>
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>

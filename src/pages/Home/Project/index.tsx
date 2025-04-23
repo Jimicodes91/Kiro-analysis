@@ -8,10 +8,10 @@ import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../components/ui/view-toggle";
-import BoardLoadingWrapper from "./components/loading-wrapper";
 import ProjectTable from "./components/project-table";
 import { useProjectContext } from "./project-context";
-import ActiveProjectTypeProjectWrapper from "./selected-project-wrapper";
+import BoardLoadingWrapper from "./templates/loading-wrapper";
+import ActiveProjectTypeProjectWrapper from "./templates/selected-project-wrapper";
 
 const Project: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,7 +26,7 @@ const Project: React.FC = () => {
   };
 
   useEffect(() => {
-    if (projectTypes.isSuccess && projectTypes.value) {
+    if (projectTypes.isSuccess && projectTypes.value && !activeProjectType) {
       const activeTypeId = projectTypes?.value?.data?.[0]?.id;
       changeActiveProjectType(activeTypeId ?? "");
     }

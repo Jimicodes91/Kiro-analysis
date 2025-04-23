@@ -1,6 +1,9 @@
+import { Icons } from "@/components/ui/icons";
+import { QUERYKEYS } from "@/lib/constants";
 import getInitials, { cn, getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { Draggable } from "@hello-pangea/dnd";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { BsActivity } from "react-icons/bs";
 import { LuCalendar, LuUserRound } from "react-icons/lu";
@@ -53,6 +56,7 @@ interface ProjectCardProps {
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("task");
+  const queryClient = useQueryClient();
   const [tasks, setTasks] = useState<Task[]>([
     {
       id: 1,
@@ -122,6 +126,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
       )
     );
   };
+  const isLoading = Boolean(
+    queryClient.isMutating({
+      mutationKey: [QUERYKEYS.UPDATE_PROJECT_MILESTONE, project.id],
+    })
+  );
 
   return (
     <>
@@ -144,10 +153,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 snapshot.isDragging && "cursor-grabbing shadow-md"
               )}
             >
-              <div className="mt-2">
+              <div className="mt-2 flex items-center justify-between">
                 <Badge size="sm" variant={project.status}>
                   {getFormattedText(project.status)}
                 </Badge>
+                {isLoading && <Icons.spinner className="animate-spin text-gray-500" />}
               </div>
               <div>
                 <Heading size="h5" className="font-medium leading-[22px]">
