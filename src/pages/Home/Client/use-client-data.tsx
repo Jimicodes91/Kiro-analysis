@@ -4,7 +4,6 @@ import {
   useState,
 } from "react";
 
-// Dummy data based on your screenshots
 const dummyClients: Client[] = [
   {
     id: "1",
