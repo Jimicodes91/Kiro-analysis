@@ -54,12 +54,12 @@ const OnboardingContextProvider = ({ children }: OnboardingPropsInterface) => {
   };
 
   useEffect(() => {
-    if (user?.company_id) {
+    if (user?.company_id && !companyData.address) {
       navigate(PAGES.PROJECT_PAGE, {
         replace: true,
       });
     }
-  }, [navigate, user]);
+  }, [navigate, user, companyData]);
 
   return (
     <OnboardingCtx.Provider

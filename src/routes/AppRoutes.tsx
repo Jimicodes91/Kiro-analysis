@@ -17,7 +17,7 @@ import Event from "../pages/Home/Event";
 import Finance from "../pages/Home/Finance";
 import Message from "../pages/Home/Message";
 import Project from "../pages/Home/Project";
-import ProjectDetail from "../pages/Home/Project/ProjectDetail";
+import ProjectDetail from "../pages/Home/project-details/ProjectDetail";
 import NotFound from "../pages/Notfound";
 import Onboarding from "../pages/Onboarding/index";
 

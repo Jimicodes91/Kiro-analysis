@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { Button } from "@/components/ui/button";
+import Heading from "@/components/ui/heading";
+import Spade from "@/components/ui/spade";
 import { TableRowProps } from "@/types/components";
 import { GoShare } from "react-icons/go";
 import { IoArrowBack } from "react-icons/io5";
-import { MainButton } from "../../../components/Form/button";
-import ContactInfo from "./Contactinfo";
+import ContactInfo from "../Project/Contactinfo";
 import Detail from "./Detail";
 
 const mockProjects: TableRowProps["row"][] = [
@@ -52,6 +54,38 @@ const mockProjects: TableRowProps["row"][] = [
     status: "Not started",
     projectTeam: ["Sarah W", "Tom H"],
     clientTeam: ["Client C"],
+  },
+];
+
+const text = [
+  {
+    title: "Onboarding",
+    isActive: true,
+  },
+  {
+    title: "Licensing",
+    isActive: true,
+  },
+
+  {
+    title: "Permit",
+    isActive: true,
+  },
+  {
+    title: "Travel",
+    isActive: true,
+  },
+  {
+    title: "Immigration",
+    isActive: false,
+  },
+  {
+    title: "Banking",
+    isActive: false,
+  },
+  {
+    title: "Renewal",
+    isActive: false,
   },
 ];
 
@@ -152,11 +186,11 @@ const ProjectDetail: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto">
-      <div className="mb-6">
+    <div className="p-6 bg">
+      <div className="mb-1">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-dark hover:text-[#191819B2] transition-colors"
+          className="flex items-center text-sm text-dark hover:text-[#191819B2] transition-colors"
         >
           <IoArrowBack className="mr-2" />
           Back to Projects
@@ -164,19 +198,18 @@ const ProjectDetail: React.FC = () => {
       </div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold text-[#191819] ">Project detail</h1>
-        <MainButton className="flex items-center text-dark bg-white text-primary hover:text-[#191819B2] transition-colors">
-          <GoShare className="mr-2 text-primary" />
-          <span className="text-primary">Export</span>
-        </MainButton>
+        <Button variant="outline" size="sm" leftIcon={<GoShare className="" />}>
+          Export
+        </Button>
       </div>
 
-      <div className="bg-white flex rounded-lg shadow-md border border-brand-border p-3 overflow-hidden">
-        <div className="w-1/4 mb-8 p-4 rounded-lg border mr-5 ">
+      <div className="bg-white flex rounded-lg border border-brand-border p-3 overflow-hidden">
+        <div className="w-1/4 mb-8 p-4 rounded-lg border">
           <div className="flex flex-col gap-1 mb-4">
-            <p className="text-[#191819] font-medium text-lg">{project.title}</p>
-            <p className="text-[#19181980] text-base font-medium">
-              {project.organization}
-            </p>
+            <Heading size="h4" className="leading-[22px]">
+              ElevatePro Digital Transformation
+            </Heading>
+            <p className="text-[#19181980] text-sm font-light">Stellar Solutions Inc.</p>
           </div>
 
           <div className="bg-[#F8F8F8] p-4 rounded-lg border">
@@ -187,7 +220,7 @@ const ProjectDetail: React.FC = () => {
               article, or presentation,
             </p>
           </div>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden mt-5">
+          <div className="bg-white rounded-lg border border-brand-border overflow-hidden mt-5">
             <div className="flex border-b border-gray-200">
               {mainTabs.map((tab) => (
                 <button
@@ -207,23 +240,25 @@ const ProjectDetail: React.FC = () => {
           </div>
         </div>
         <div className="w-3/4">
-          <div className="p-3">
-            <div className="mb-8 p-4 bg-gray-50 rounded-lg border">
+          <div className="p-3 pt-0">
+            <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-brand-border">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-sm font-semibold text-gray-700">
-                  Phase: <span className="text-gray-900">Pre travel</span>
-                </h3>
+                <h3 className="text-lg font-semibold text-gray-700">Milestone</h3>
                 <span className="text-sm font-semibold text-gray-900">40%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className="bg-primary h-2.5 rounded-full"
-                  style={{ width: "40%" }}
-                ></div>
+              <div className="flex items-center w-full text-white text-sm -space-x- font-medium">
+                {text.map((item, index) => (
+                  <Spade
+                    isActive={item.isActive}
+                    isFirst={index === 0}
+                    text={item.title}
+                    isLast={index === text.length - 1}
+                  />
+                ))}
               </div>
               <p className="mt-2 text-sm text-gray-500">32 days to completion</p>
             </div>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
               <div className="flex border-b border-gray-200">
                 {subTabs.map((tab) => (
                   <button
