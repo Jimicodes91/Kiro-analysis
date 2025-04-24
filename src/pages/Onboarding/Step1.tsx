@@ -251,7 +251,11 @@ const Step1 = () => {
               </div>
             </div>
             <div className="flex justify-end pt-4">
-              <Button type="submit" isLoading={createCompany.isPending}>
+              <Button
+                type="submit"
+                className="z-[99]"
+                isLoading={createCompany.isPending}
+              >
                 Save and continue
               </Button>
             </div>
