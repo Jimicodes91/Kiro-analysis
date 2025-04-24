@@ -23,7 +23,7 @@ const AuthLayout = () => {
         </div>
 
         {/* Image at Bottom Right */}
-        <div className="absolute bottom-0 right-0">
+        <div className="absolute bottom-0 right-0 z-0">
           <img src={Group} alt="Group Illustration" className="w-full max-w-[390px]" />
         </div>
       </div>

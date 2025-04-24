@@ -157,7 +157,7 @@ const Step2 = () => {
             <Button variant="outline" onClick={onPrev}>
               Back
             </Button>
-            <div className="flex gap-2">
+            <div className="flex gap-2 z-[99] relative">
               <Button variant="outline" onClick={() => navigate(PAGES.PROJECT_PAGE)}>
                 Skip
               </Button>
