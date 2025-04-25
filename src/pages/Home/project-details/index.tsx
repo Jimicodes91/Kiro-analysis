@@ -9,7 +9,12 @@ function ProjectDetailsPageWrapper() {
 
   const renderBody = () => {
     if (projectDetails.isSuccess && projectDetails.value) {
-      return <ProjectDetail projectDetails={projectDetails?.value?.data} />;
+      return (
+        <ProjectDetail
+          projectDetails={projectDetails?.value?.data}
+          refetchProject={projectDetails?.refetch}
+        />
+      );
     }
 
     if (projectDetails.isError && projectDetails.error) {

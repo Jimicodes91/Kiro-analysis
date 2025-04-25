@@ -15,7 +15,7 @@ import ActiveProjectTypeProjectWrapper from "./templates/selected-project-wrappe
 
 const Project: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const viewMode = searchParams.get("viewMode") || "table";
+  const viewMode = searchParams.get("viewMode") || "board";
   const { activeProjectType, changeActiveProjectType } = useProjectContext();
   const allProjects = useGetAllProjects(activeProjectType);
   const projectTypes = useGetAllProjectTypes();

@@ -10,8 +10,7 @@ import { ProjectDetails } from "@/types/api.types";
 
 export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDetails }) {
   return (
-    // @ts-expect-error Some
-    <Accordion type="multiple" defaultValue="item-1" className="w-full">
+    <Accordion type="multiple" className="w-full">
       <AccordionItem value="item-1">
         <AccordionTrigger>Summary</AccordionTrigger>
         <AccordionContent>

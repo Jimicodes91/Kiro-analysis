@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
+import { Icons } from "@/components/ui/icons";
 import Spade from "@/components/ui/spade";
+import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
+import useGetProjectDetails from "@/hooks/project-modules/use-get-project-details";
+import useUpdateProjectMilestone from "@/hooks/project-modules/use-update-project-milestone";
 import { ProjectDetails } from "@/types/api.types";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -8,38 +12,6 @@ import { GoShare } from "react-icons/go";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { ProjectSummary } from "./components/project-sumarry";
-
-const text = [
-  {
-    title: "Onboarding",
-    isActive: true,
-  },
-  {
-    title: "Licensing",
-    isActive: true,
-  },
-
-  {
-    title: "Permit",
-    isActive: true,
-  },
-  {
-    title: "Travel",
-    isActive: true,
-  },
-  {
-    title: "Immigration",
-    isActive: false,
-  },
-  {
-    title: "Banking",
-    isActive: false,
-  },
-  {
-    title: "Renewal",
-    isActive: false,
-  },
-];
 
 type SubTabType =
   | "Task"
@@ -50,8 +22,16 @@ type SubTabType =
   | "Event"
   | "Project team";
 
-const ProjectDetail = ({ projectDetails }: { projectDetails: ProjectDetails }) => {
+const ProjectDetail = ({
+  projectDetails,
+  refetchProject,
+}: {
+  projectDetails: ProjectDetails;
+  refetchProject: ReturnType<typeof useGetProjectDetails>["refetch"];
+}) => {
   const navigate = useNavigate();
+  const journey = useGetProjectTypeDetails(projectDetails?.project_type_id);
+  const updateProjectMilestone = useUpdateProjectMilestone(projectDetails.id);
 
   const [activeSubTab, setActiveSubTab] = useState<SubTabType>("Task");
 
@@ -86,6 +66,57 @@ const ProjectDetail = ({ projectDetails }: { projectDetails: ProjectDetails }) =
     }
   };
 
+  const updateMilestoneFxn = (milestoneId: string) => {
+    updateProjectMilestone
+      .mutateAsync({
+        milestone_id: milestoneId,
+      })
+      .then(() => refetchProject())
+      .catch(console.error);
+  };
+  const renderMilestone = () => {
+    if (journey.isSuccess && journey?.value) {
+      return (
+        <div className="p-4 bg-gray-50 rounded-lg border space-y-4 border-brand-border">
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-gray-700">Milestone</h3>
+              <span className="text-sm font-semibold text-gray-900">40%</span>
+            </div>
+            <div className="flex items-center w-full text-white text-sm  font-medium">
+              {journey?.value?.data?.milestones?.map((item, index, arr) => (
+                <Spade
+                  isActive={
+                    arr.findIndex((item) => item.id === projectDetails?.milestone_id) >=
+                    index
+                  }
+                  isFirst={index === 0}
+                  text={item.name}
+                  isLast={index === arr.length - 1}
+                  onClick={() => updateMilestoneFxn(item.id)}
+                />
+              ))}
+              {updateProjectMilestone.isPending && (
+                <div className="ml-2">
+                  <Icons.spinner className="text-primary h-4 w-4" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* <p className="mt-2 text-sm text-gray-500">32 days to completion</p> */}
+          <p className="mt-2 text-sm text-gray-500">
+            {projectDetails?.timeline} to completion
+          </p>
+        </div>
+      );
+    }
+    if (journey.isError && journey.error) {
+      return <p>Something went wrong</p>;
+    }
+
+    return <div className="w-full h-[140px] bg-slate-200 rounded-lg"></div>;
+  };
   return (
     <div className="p-6 animate-in h-full flex flex-col min-h-[calc(100vh-70px)] fade-in-0 duration-700 ease-in-out">
       <div>
@@ -130,24 +161,8 @@ const ProjectDetail = ({ projectDetails }: { projectDetails: ProjectDetails }) =
           </div>
         </div>
         <div className="">
-          <div className="p-3 pt-0">
-            <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-brand-border">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-semibold text-gray-700">Milestone</h3>
-                <span className="text-sm font-semibold text-gray-900">40%</span>
-              </div>
-              <div className="flex items-center w-full text-white text-sm -space-x- font-medium">
-                {text.map((item, index) => (
-                  <Spade
-                    isActive={item.isActive}
-                    isFirst={index === 0}
-                    text={item.title}
-                    isLast={index === text.length - 1}
-                  />
-                ))}
-              </div>
-              <p className="mt-2 text-sm text-gray-500">32 days to completion</p>
-            </div>
+          <div className="p-3 pt-0 space-y-8">
+            <>{renderMilestone()}</>
             <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
               <div className="flex border-b border-gray-200">
                 {subTabs.map((tab) => (
@@ -164,7 +179,7 @@ const ProjectDetail = ({ projectDetails }: { projectDetails: ProjectDetails }) =
                     {activeSubTab === tab ? (
                       <motion.div
                         className="absolute bottom-0 left-0 rounded-full h-0.5 w-full bg-primary"
-                        layoutId={`underline-admin`}
+                        layoutId={`underline-project`}
                         id="underline-project"
                       />
                     ) : null}
