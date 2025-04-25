@@ -67,13 +67,14 @@ export default {
           text: "#74757F",
           gray: "#F4F4F4",
           table: "#F7F7F7",
+          fade: "#19181980",
         },
       },
       fontFamily: {
         body: ["42dot Sans", "sans-serif"],
       },
       gridTemplateColumns: {
-        "auth-layout": "minmax(350px, 500px) 1fr",
+        "auth-layout": "250px 1fr",
       },
       keyframes: {
         "accordion-down": {

@@ -24,7 +24,7 @@ import { LuPlus, LuTrash } from "react-icons/lu";
 import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 
-function PipelineForm({ onClose }: { onClose: () => void }) {
+function JourneyForm({ onClose }: { onClose: () => void }) {
   const session = getUserSession();
   const createProjectType = useCreateProjectType();
   const form = useForm({
@@ -66,7 +66,7 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <Modal title="Create pipeline" closeModal={() => onClose()} fullHeight={false}>
+    <Modal title="Create journey" closeModal={() => onClose()} fullHeight={false}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmitPipeline)}
@@ -77,9 +77,9 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Pipeline name</FormLabel>
+                <FormLabel>Journey</FormLabel>
                 <FormControl>
-                  <Input placeholder="Pipeline name" {...field} />
+                  <Input placeholder="journey name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -108,7 +108,7 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
                   name={`stages.${index}.duration`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Duration</FormLabel>
+                      <FormLabel>Duration (days)</FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="Duration" {...field} />
                       </FormControl>
@@ -155,7 +155,7 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
             </div>
           </div>
           <Button type="submit" isLoading={createProjectType.isPending}>
-            Create pipeline
+            Create journey
           </Button>
         </form>
       </Form>
@@ -163,4 +163,4 @@ function PipelineForm({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default PipelineForm;
+export default JourneyForm;

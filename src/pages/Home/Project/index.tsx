@@ -26,9 +26,12 @@ const Project: React.FC = () => {
   };
 
   useEffect(() => {
-    if (projectTypes.isSuccess && projectTypes.value && !activeProjectType) {
+    if (projectTypes.isSuccess && projectTypes.value) {
+      const isPresence = projectTypes?.value?.data?.find(
+        (item) => item.id === activeProjectType
+      )?.id;
       const activeTypeId = projectTypes?.value?.data?.[0]?.id;
-      changeActiveProjectType(activeTypeId ?? "");
+      changeActiveProjectType(isPresence ? activeProjectType! : activeTypeId ?? "");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectTypes.isSuccess, projectTypes?.value]);

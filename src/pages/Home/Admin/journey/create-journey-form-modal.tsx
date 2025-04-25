@@ -74,7 +74,7 @@ function CreatePipelineModal({ isOpen, onClose }: ModalProps) {
                   fullWidth={true}
                   isLoading={createProjectType.isPending}
                 >
-                  Create Pipeline
+                  Create Journey
                 </Button>
               </div>
             </form>

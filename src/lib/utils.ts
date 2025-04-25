@@ -107,3 +107,11 @@ export function updateProjectMilestoneById(
     project.id === projectId ? { ...project, milestone_id: milestoneId } : project
   );
 }
+
+export function convertToKilobyte(size: number) {
+  const newSize = size / 1024;
+
+  return newSize.toFixed(2);
+}
+
+// export const getCurrentMilestone = (milestones, milestoneId: string)

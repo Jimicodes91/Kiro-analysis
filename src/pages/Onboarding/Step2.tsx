@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useMultiSendInvite } from "@/hooks/auth/use-send-consultant-invite";
+import useSendConsultantInvite from "@/hooks/auth/use-send-consultant-invite";
 import { PAGES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { addUserSchema } from "@/utils/validation-schema/admin";
@@ -29,10 +29,8 @@ import { useOnboarding } from "./onboarding-context";
 
 const Step2 = () => {
   const { onPrev } = useOnboarding();
-
   const navigate = useNavigate();
-  const sendInvite = useMultiSendInvite();
-
+  const sendConsultantInvite = useSendConsultantInvite();
   const form = useForm({
     resolver: yupResolver(inviteTeamSchema),
     defaultValues: {
@@ -57,7 +55,7 @@ const Step2 = () => {
   const onSubmit = async (data: { teamMembers?: InferType<typeof addUserSchema>[] }) => {
     const teamMembers = data.teamMembers;
     if (teamMembers) {
-      sendInvite.mutateAsync(teamMembers).catch((err) => {
+      sendConsultantInvite.mutateAsync(teamMembers[0]).catch((err) => {
         console.error("One or more failed:", err);
       });
     }
@@ -118,7 +116,6 @@ const Step2 = () => {
                             {[
                               { value: "consultant", label: "Consultant" },
                               { value: "client", label: "Client" },
-                              { value: "customer", label: "Customer" },
                             ].map((option) => (
                               <SelectItem key={option.value} value={option.value}>
                                 {option.label}
@@ -161,7 +158,7 @@ const Step2 = () => {
               <Button variant="outline" onClick={() => navigate(PAGES.PROJECT_PAGE)}>
                 Skip
               </Button>
-              <Button type="submit" isLoading={sendInvite.isPending}>
+              <Button type="submit" isLoading={sendConsultantInvite.isPending}>
                 Save and continue
               </Button>
             </div>

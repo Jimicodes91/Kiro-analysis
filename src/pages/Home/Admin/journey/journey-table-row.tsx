@@ -7,7 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { IoIosArrowDown } from "react-icons/io";
 import MilestoneTable from "./milestone-table";
 
-function PipeLineTableRow({
+function JourneyTableRow({
   projectType,
   index,
 }: {
@@ -41,4 +41,4 @@ function PipeLineTableRow({
     </>
   );
 }
-export default PipeLineTableRow;
+export default JourneyTableRow;

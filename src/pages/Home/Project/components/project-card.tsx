@@ -213,15 +213,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             <div className="space-y-4">
               <div className="flex flex-col">
                 <p className="text-[#191819] font-bold text-2xl">{project.name}</p>
-                <p className="text-[#19181980] text-base font-medium">
+                <p className="text-brand-fade text-base font-medium">
                   {project.form_data.client_organization}
                 </p>
               </div>
               <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-brand-border border-[1px]">
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
                   <div className="flex items-center gap-2">
-                    <LuUserRound className="text-[#19181980] w-4 h-4" />
-                    <h3 className="text-sm text-[#19181980]">Owner</h3>
+                    <LuUserRound className="text-brand-fade w-4 h-4" />
+                    <h3 className="text-sm text-brand-fade">Owner</h3>
                   </div>
                   <div>
                     <p>Uchenna Okenwa</p>
@@ -229,8 +229,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 </div>
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
                   <div className="flex items-center gap-2">
-                    <LuCalendar className="text-[#19181980] w-4 h-4" />
-                    <h3 className="text-sm text-[#19181980]">Timeline</h3>
+                    <LuCalendar className="text-brand-fade w-4 h-4" />
+                    <h3 className="text-sm text-brand-fade">Timeline</h3>
                   </div>
                   <div>
                     <p>6 months</p>
@@ -238,8 +238,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 </div>
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
                   <div className="flex items-center gap-2">
-                    <PiSpinner className="text-[#19181980] w-4 h-4" />
-                    <h3 className="text-sm text-[#19181980]">Status</h3>
+                    <PiSpinner className="text-brand-fade w-4 h-4" />
+                    <h3 className="text-sm text-brand-fade">Status</h3>
                   </div>
                   <div>
                     <Badge size="sm" variant={project.status}>
@@ -249,8 +249,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 </div>
                 <div className="flex items-center gap-3 lg:gap-11 md:gap-1">
                   <div className="flex items-center gap-2">
-                    <PiUsersThreeLight className="text-[#19181980] w-4 h-4" />
-                    <h3 className="text-sm text-[#19181980]">Assigned</h3>
+                    <PiUsersThreeLight className="text-brand-fade w-4 h-4" />
+                    <h3 className="text-sm text-brand-fade">Assigned</h3>
                   </div>
                   <div>
                     <div className="flex -space-x-2">
@@ -271,7 +271,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           <div className="border-[1px] rounded-lg p-4 m-2 mt-4">
             <div className="space-y-4">
               <div className="flex justify-between">
-                <p className="text-[#19181980] text-sm font-semibold">
+                <p className="text-brand-fade text-sm font-semibold">
                   Phase:
                   <span className="text-[#000] mx-1 text-sm font-semibold">
                     Pre travel
@@ -281,7 +281,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 <p className="text-[#000] mx-1 text-sm font-semibold">40%</p>
               </div>
 
-              <p className="text-[#19181980] text-sm font-semibold">
+              <p className="text-brand-fade text-sm font-semibold">
                 32 days to completion
               </p>
             </div>

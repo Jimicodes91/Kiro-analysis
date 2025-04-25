@@ -50,9 +50,12 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
       if (field.is_required)
         validator = validator.min(1, `${field.name} must be at least 1`);
     } else if (field.type === "date") {
-      validator = z.coerce.date();
-      if (field.is_required)
+      if (field.is_required) {
+        validator = z.coerce.date({
+          message: `${field.name} must be a valid date`,
+        });
         validator = validator.min(new Date(), `${field.name} must be a valid date`);
+      }
     } else {
       if (field.is_required) validator = validator.min(1, `${field.name} is required`);
     }
@@ -142,9 +145,10 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                       }
                                       variant={"outline"}
                                       className={cn(
-                                        "pl-3 !justify-between flex w-full font-normal rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm",
+                                        "flex w-full justify-stretch h-12  font-normal rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm",
                                         !fieldProps.value && "text-muted-foreground"
                                       )}
+                                      slotClassName="justify-start"
                                     >
                                       {fieldProps.value ? (
                                         format(fieldProps.value, "yyy-MM-dd")

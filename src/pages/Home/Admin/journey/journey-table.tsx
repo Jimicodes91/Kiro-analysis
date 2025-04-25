@@ -8,9 +8,9 @@ import {
 } from "@/components/ui/table";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
-import PipeLineTableRow from "./pipeline-table-row";
+import JourneyTableRow from "./journey-table-row";
 
-const PipeLineTable = () => {
+const JourneyTable = () => {
   const projectTypes = useGetAllProjectTypes();
   const renderTableBody = () => {
     if (projectTypes.isPending) return <TableSkeletonRowLoader length={3} />;
@@ -28,7 +28,7 @@ const PipeLineTable = () => {
         </TableRow>
         <>
           {projectTypes?.value?.data?.map((projectType, index) => (
-            <PipeLineTableRow
+            <JourneyTableRow
               key={projectType.id}
               projectType={projectType}
               index={index}
@@ -44,7 +44,7 @@ const PipeLineTable = () => {
         <Table className="overflow-auto">
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
-              <TableHead>Pipeline</TableHead>
+              <TableHead>Journey</TableHead>
               <TableHead>Duration (days)</TableHead>
               <TableHead></TableHead>
             </TableRow>
@@ -56,4 +56,4 @@ const PipeLineTable = () => {
   );
 };
 
-export default PipeLineTable;
+export default JourneyTable;

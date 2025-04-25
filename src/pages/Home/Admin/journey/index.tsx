@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../../components/ui/view-toggle";
 import FormCustomization from "./Form";
+import JourneyTable from "./journey-table";
 import PipelineForm from "./lol";
-import PipeLineTable from "./pipeline-table";
 
-const ProjectTab: React.FC = () => {
+const JourneyTab: React.FC = () => {
   const [activeTab, setActiveTab] = useState("pipeline");
   const [searchParams, setSearchParams] = useSearchParams();
   const isCreateMode = searchParams.get("isCreateMode");
@@ -32,13 +32,13 @@ const ProjectTab: React.FC = () => {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           options={[
-            { value: "pipeline", label: "Pipeline" },
+            { value: "pipeline", label: "Journey" },
             { value: "form", label: "Form customisation " },
           ]}
         />
         {activeTab === "pipeline" ? (
           <Button size="sm" onClick={onOpen}>
-            Create pipeline
+            Create journey
           </Button>
         ) : (
           <Button>Publish</Button>
@@ -46,7 +46,7 @@ const ProjectTab: React.FC = () => {
       </div>
 
       {activeTab === "pipeline" ? (
-        <PipeLineTable />
+        <JourneyTable />
       ) : (
         <div className="bg-[#F4F4F4] py-4 rounded-[10px] border border-brand-border">
           <FormCustomization />
@@ -60,4 +60,4 @@ const ProjectTab: React.FC = () => {
   );
 };
 
-export default ProjectTab;
+export default JourneyTab;

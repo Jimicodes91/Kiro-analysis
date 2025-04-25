@@ -75,23 +75,22 @@ function AddUserModalForm({ onClose }: ModalProps) {
                     {[
                       { value: "consultant", label: "Consultant" },
                       { value: "client", label: "Client" },
-                      { value: "customer", label: "Customer" },
                     ].map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
                     ))}
-                    <SelectItem value="user">User</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          <Button type="submit" isLoading={sendConsultantInvite.isPending}>
-            Add User
-          </Button>
+          <div className="pt-3">
+            <Button type="submit" fullWidth isLoading={sendConsultantInvite.isPending}>
+              Add User
+            </Button>
+          </div>
         </form>
       </Form>
     </Modal>

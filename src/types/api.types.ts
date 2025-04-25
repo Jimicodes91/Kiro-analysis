@@ -1,3 +1,4 @@
+import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import { ProjectStatus } from "@/lib/constants";
 import { QueryFunction, QueryKey } from "@tanstack/react-query";
 import { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from "axios";
@@ -287,7 +288,7 @@ export interface ProjectDetails {
   documents?: string[];
   project_type: ProjectType;
   custom_fields?: string;
-  milestone?: string;
+  milestone?: ProjectTypeMilestone;
   client?: string;
   timeline: string;
 }

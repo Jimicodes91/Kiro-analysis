@@ -11,7 +11,7 @@ function Spade({ text, isLast, isFirst, isActive }: SpadeProps) {
   return (
     <div
       className={cn(
-        "flex items-center w-fit capitalize font-medium px-8 text-md py-2.5 relative cursor-pointer",
+        "flex items-center w-fit capitalize font-medium pl-4 pr-7 text-md py-2.5 relative cursor-pointer",
         isFirst && "rounded-l-full",
         isLast && "rounded-r-full",
         isActive ? "bg-primary text-white" : "bg-[#092327]/5 text-[#00000080]"

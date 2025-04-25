@@ -3,11 +3,11 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
-import ProjectTab from "./Project";
+import JourneyTab from "./journey";
 import TaskTab from "./Task";
 import UserTab from "./User/index";
 
-type TabType = "User" | "Pipeline" | "Document" | "Event" | "Note" | "Task";
+type TabType = "User" | "Journey" | "Document" | "Event" | "Note" | "Task";
 
 const Admin: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,7 +18,7 @@ const Admin: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const tabs: TabType[] = ["User", "Pipeline", "Document", "Event", "Note", "Task"];
+  const tabs: TabType[] = ["User", "Journey", "Document", "Event", "Note", "Task"];
 
   const renderTabContent = () => {
     switch (selectedTab) {
@@ -28,10 +28,10 @@ const Admin: React.FC = () => {
             <UserTab />
           </div>
         );
-      case "pipeline":
+      case "journey":
         return (
           <div>
-            <ProjectTab />
+            <JourneyTab />
           </div>
         );
       case "document":

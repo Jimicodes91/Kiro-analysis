@@ -11,11 +11,11 @@ export interface CreateTaskRequest {
   is_visible_to_client: boolean;
 }
 
-const useCreateEvent = (projectId: string) => {
+const useCreateTask = (projectId: string) => {
   return useCustomMutation<Record<string, string>, CreateTaskRequest>({
     method: "post",
     endpoint: ENDPOINTS.CREATE_TASK(projectId),
   });
 };
 
-export default useCreateEvent;
+export default useCreateTask;

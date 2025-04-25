@@ -169,7 +169,7 @@ const AuditTrailTab: React.FC = () => {
                 <span className="text-[#19181966] text-sm font-medium">
                   {formatTime(entry.timestamp)}
                 </span>
-                <span className="text-sm text-[#19181980]">
+                <span className="text-sm text-brand-fade">
                   <span className="font-medium text-[#191819]">{entry.userName}</span>{" "}
                   {entry.action} a{" "}
                   <span className="text-[#191819]">{entry.actionType}</span>
