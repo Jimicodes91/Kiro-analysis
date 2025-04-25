@@ -25,7 +25,9 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
         <Button variant="ghost" className="px-3" rightIcon={<Icons.caret />}>
           <Avatar className="h-8 w-8">
             <AvatarImage src={"/"} alt="@shadcn" />
-            <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
+            <AvatarFallback className="bg-[#E4E6E7] text-primary">
+              {getInitials(user?.name ? user?.name : user?.email)}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
