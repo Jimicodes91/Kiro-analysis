@@ -10,6 +10,7 @@ import ProjectColumn from "../components/project-column";
 interface BoardViewProps {
   projects: ProjectDetails[];
   projectTypes: ReturnType<typeof useGetAllProjectTypes>;
+  isLoading: boolean;
 }
 
 const initialState = {
@@ -17,12 +18,18 @@ const initialState = {
   milestoneId: "",
 };
 
-const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes }) => {
+const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading }) => {
   const [milestoneProjects, setMilestoneProjects] = React.useState(projects);
   const { activeProjectType } = useProjectContext();
   const [updateData, setUpdateData] = React.useState(initialState);
 
   const updateProjectMilestone = useUpdateProjectMilestone(updateData.projectId);
+
+  useEffect(() => {
+    if (!isLoading && projects) {
+      setMilestoneProjects(projects);
+    }
+  }, [isLoading, projects]);
 
   useEffect(() => {
     if (updateData.projectId && updateData.milestoneId) {

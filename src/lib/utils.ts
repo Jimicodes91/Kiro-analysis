@@ -1,4 +1,3 @@
-import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { ProjectDetails } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
@@ -71,21 +70,7 @@ export const generateBoardMilestone = (
   )?.milestones;
 
   if (milestones) {
-    const backlog: ProjectTypeMilestone = {
-      id: "disabled",
-      created_at: "",
-      updated_at: "",
-      project_type_id: "",
-      company_id: "",
-      duration: 0,
-      name: "Backlog",
-      is_system: 0,
-      projects: [],
-      status: "",
-    };
-    const newMilestones = [backlog, ...milestones];
-
-    return newMilestones;
+    return milestones;
   } else {
     return [];
   }

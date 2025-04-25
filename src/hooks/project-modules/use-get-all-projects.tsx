@@ -16,6 +16,7 @@ const useGetAllProjects = (projectTypeId?: string, status?: ProjectStatus) => {
     enabled: Boolean(projectTypeId),
     endpoint: ENDPOINTS.GET_ALL_PROJECTS(projectTypeId, status),
     queryKey: [QUERYKEYS.GET_ALL_PROJECTS, projectTypeIdKey, statusKey],
+    refetchOnWindowFocus: true,
   });
 };
 

@@ -94,6 +94,7 @@ const ProjectDetail = ({
                   text={item.name}
                   isLast={index === arr.length - 1}
                   onClick={() => updateMilestoneFxn(item.id)}
+                  key={item.id}
                 />
               ))}
               {updateProjectMilestone.isPending && (

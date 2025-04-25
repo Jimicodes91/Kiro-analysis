@@ -30,7 +30,13 @@ const BoardLoadingWrapper: React.FC<BoardLoadingWrapperProps> = ({
         return <ProjectEmptyStateCard />;
       } else {
         const projects = projectData.value.data ?? [];
-        return <BoardView projects={projects} projectTypes={projectTypes} />;
+        return (
+          <BoardView
+            isLoading={projectData.isLoading || projectData.isFetching}
+            projects={projects}
+            projectTypes={projectTypes}
+          />
+        );
       }
     }
 
