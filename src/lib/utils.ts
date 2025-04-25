@@ -34,7 +34,7 @@ export function convertDatesToYMD(obj: Record<string, Given>): Record<string, Gi
   for (const key in obj) {
     const value = obj[key];
     // Check if the value is a string.
-    if (key.toLowerCase().includes("date") && typeof value !== "string") {
+    if (key.toLowerCase().includes("date")) {
       const parsedDate = new Date(value);
       // If the date is valid, format it as YYYY-MM-DD.
       if (!isNaN(parsedDate.getTime())) {

@@ -28,21 +28,30 @@ function getMutationAction<P, T>(mutationData: Partial<SecureRequestProps>) {
   };
 }
 
-const errorFormatter = (data: unknown) => {
+const errorFormatter = (data: {
+  message: string;
+  data?: {
+    errors: string[];
+  };
+  errors?: Record<string, unknown>;
+}) => {
   if (data === null) return "";
-  if (Array.isArray(data)) {
-    return "Array Error";
-  }
-  if (typeof data === "object") {
-    const castedData = data as Record<string, unknown>;
-    const keys = Object.keys(data);
-    let message = "";
-    keys.forEach((item) => {
-      message += `\n ${castedData[item]}`;
+  if (Array.isArray(data?.data?.errors)) {
+    let message = data?.message;
+    data?.data?.errors.forEach((item) => {
+      message += `\n\t\n [${item}]`;
     });
     return message;
   }
-  return "Another erorr";
+  if (Array.isArray(data?.errors)) {
+    let message = data?.message;
+    data?.errors.forEach((item) => {
+      message += `\n\t\n [${item}]`;
+    });
+    return message;
+  }
+  if (data.message) return data.message;
+  return "Another error";
 };
 
 function useCustomMutation<P = Record<string, unknown>, T = Record<string, unknown>>(
@@ -67,7 +76,7 @@ function useCustomMutation<P = Record<string, unknown>, T = Record<string, unkno
     onError: (err: ResponseErrorType) => {
       if (showFailureToast) {
         const errorMsg = errorFormatter(err?.response?.data);
-
+        console.log(err?.response?.data, "err?.response?.data");
         Toast.error(errorMsg);
       }
       mutatationResult.reset();

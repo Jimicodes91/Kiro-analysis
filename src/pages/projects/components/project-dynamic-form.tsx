@@ -50,10 +50,9 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
       if (field.is_required)
         validator = validator.min(1, `${field.name} must be at least 1`);
     } else if (field.type === "date") {
+      validator = z.coerce.string();
       if (field.is_required) {
-        validator = z.coerce.date({
-          message: `${field.name} must be a valid date`,
-        });
+        validator = z.coerce.date();
         validator = validator.min(new Date(), `${field.name} must be a valid date`);
       }
     } else {

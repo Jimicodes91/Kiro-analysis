@@ -32,7 +32,7 @@ export type CredentialsServerResponseModel<T> = T;
 export interface ResponseErrorType {
   message: string;
   name: string;
-  errors?: Record<string, unknown>;
+  data: { errors?: string[] };
 
   response: {
     data: {
