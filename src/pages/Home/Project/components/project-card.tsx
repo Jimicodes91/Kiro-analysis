@@ -224,7 +224,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                     <h3 className="text-sm text-brand-fade">Owner</h3>
                   </div>
                   <div>
-                    <p>Uchenna Okenwa</p>
+                    <p>{project?.form_data?.project_client}</p>
                   </div>
                 </div>
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
@@ -233,7 +233,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                     <h3 className="text-sm text-brand-fade">Timeline</h3>
                   </div>
                   <div>
-                    <p>6 months</p>
+                    <p>{project?.timeline}</p>
                   </div>
                 </div>
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
@@ -274,7 +274,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 <p className="text-brand-fade text-sm font-semibold">
                   Phase:
                   <span className="text-[#000] mx-1 text-sm font-semibold">
-                    Pre travel
+                    {project?.milestone?.name}
                   </span>
                 </p>
 
@@ -282,7 +282,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               </div>
 
               <p className="text-brand-fade text-sm font-semibold">
-                32 days to completion
+                {project?.timeline} to completion
               </p>
             </div>
           </div>
