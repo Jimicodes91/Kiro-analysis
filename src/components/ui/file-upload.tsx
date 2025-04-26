@@ -1,5 +1,5 @@
 import { convertToKilobyte } from "@/lib/utils";
-import { File, Trash2, UploadCloud } from "lucide-react";
+import { File, Trash2, Upload } from "lucide-react";
 import { ChangeEvent, DragEvent } from "react";
 
 interface FileUploadProps {
@@ -31,7 +31,7 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
   return (
     <section className="">
       <div
-        className={`border-[1.5px] rounded-md border-brand-file p-4 bg-white flex flex-col items-center justify-center relative ${
+        className={`border-[1.5px] rounded-md border-dashed p-4 bg-[#E0EFDE4D] flex flex-col items-center justify-center relative ${
           value ? "border-pri-base" : ""
         }`}
         onDrop={handleDrop}
@@ -64,8 +64,8 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
         ) : (
           <>
             <div className="upload-info">
-              <div className="w-fit mx-auto">
-                <UploadCloud />
+              <div className="w-fit mx-auto pb-3">
+                <Upload />
               </div>
             </div>
             <input
@@ -76,19 +76,18 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
               onChange={handleFileChange}
               accept=".csv,.xlsx,.xls,.xlsm,.xltm,.xlam,.xlsb,.xltx,.xlt"
             />
-            <div className="text-center text-sm text-brand-text">
+            <div className="text-center text-sm space-y-3 text-brand-text">
               <div>
+                <span> Drag file here to upload or</span>{" "}
                 <label
                   htmlFor={id}
                   className="inline-flex cursor-pointer text-pri-base font-bold"
                 >
-                  Click to upload
+                  choose file
                 </label>
-                <span> or drag and drop</span>
               </div>
-              <p className="text-xs">Upload only XLSX or CSV </p>
 
-              <p className="text-brand-text text-[10px] pt-3 font-light text-center">
+              <p className="text-brand-text text-xs text-center">
                 PDF, DOCX, XLSX, PNG, JPG format, up to 50MB
               </p>
             </div>

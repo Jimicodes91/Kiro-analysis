@@ -56,7 +56,7 @@ const Modal = ({
 
   return (
     <motion.div
-      className={`fixed top-0 right-0 w-full h-screen flex ${
+      className={`fixed top-0 right-0 w-full h-screen scroll-smooth flex ${
         fullHeight ? "items-center" : "items-start"
       } justify-end z-50 backdrop-blur-sm ${className}`}
       exit={{ opacity: 0 }}
@@ -113,7 +113,7 @@ const Modal = ({
           </div>
 
           {/* Scrollable Content Area */}
-          <div className="overflow-y-auto flex-grow custom-scrollbar">
+          <div className="overflow-y-auto flex-grow custom-scrollbar scroll-smooth">
             <div>{children}</div>
           </div>
         </div>

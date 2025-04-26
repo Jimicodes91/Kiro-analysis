@@ -50,7 +50,7 @@ function Spade({ text, isLast, isFirst, isActive, onClick }: SpadeProps) {
         </TooltipTrigger>
         <TooltipContent
           sideOffset={10}
-          className="text-white text-xs p-2"
+          className="text-primary text-xs p-2 bg-white border"
           arrowPadding={100}
         >
           <p>

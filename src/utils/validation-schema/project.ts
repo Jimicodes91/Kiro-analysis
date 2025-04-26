@@ -19,6 +19,9 @@ export const addProjectTask = z.object({
   name: z.string({
     message: "Task name is required",
   }),
+  task_type: z.string({
+    message: "Task type is required",
+  }),
   description: z.string({
     message: "Description is required",
   }),
@@ -50,4 +53,23 @@ export const addProjectTask = z.object({
     "application/x-excel",
     "application/x-msexcel",
   ]),
+});
+
+export const requestDocument = z.object({
+  name: z.string({
+    message: "Document name is required",
+  }),
+  document_type_id: z.string({
+    message: "Document type is required",
+  }),
+  description: z.string({
+    message: "Description is required",
+  }),
+  end_date: z.date({
+    message: "End date is required",
+  }),
+  is_visible_to_client: z.boolean(),
+  assignee_id: z.string({
+    message: "Assignee is required",
+  }),
 });

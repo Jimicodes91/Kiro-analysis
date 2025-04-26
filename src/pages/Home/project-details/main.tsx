@@ -11,7 +11,11 @@ import { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import ActivityCard from "./components/cards/activity-card";
+import DocumentCard from "./components/cards/document-card";
+import NoteCard from "./components/cards/note-card";
 import { ProjectSummary } from "./components/project-sumarry";
+import ProjectTask from "./template/project-task";
 
 type SubTabType =
   | "Task"
@@ -48,13 +52,25 @@ const ProjectDetail = ({
   const renderSubTabContent = () => {
     switch (activeSubTab) {
       case "Task":
-        return <div className="p-4">Task</div>;
+        return <ProjectTask projectId={projectDetails?.id} />;
       case "Notes":
-        return <div className="p-4">Notes</div>;
+        return (
+          <div>
+            <NoteCard />
+          </div>
+        );
       case "Activity":
-        return <div className="p-4">Activity</div>;
+        return (
+          <div>
+            <ActivityCard />
+          </div>
+        );
       case "Document":
-        return <div className="p-4">Document</div>;
+        return (
+          <div>
+            <DocumentCard />
+          </div>
+        );
       case "Message":
         return <div className="p-4">Message</div>;
       case "Event":
@@ -99,7 +115,7 @@ const ProjectDetail = ({
               ))}
               {updateProjectMilestone.isPending && (
                 <div className="ml-2">
-                  <Icons.spinner className="text-primary h-4 w-4" />
+                  <Icons.spinner className="text-primary animate-spin h-4 w-4" />
                 </div>
               )}
             </div>
