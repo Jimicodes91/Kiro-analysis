@@ -1,3 +1,4 @@
+import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,7 +17,7 @@ import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addEventTypeSchema } from "../../../../utils/validation-schema/admin";
 
-const AddEventTypeModal = ({ onClose }: { onClose: () => void }) => {
+const AddEventTypeModal = ({ onClose, isOpen }: ModalProps) => {
   const createEvenType = useCreateEventType();
 
   const form = useForm({
@@ -35,7 +36,7 @@ const AddEventTypeModal = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <>
-      <Modal title="Add event type" closeModal={onClose} fullHeight={false}>
+      <Modal title="Add event type" closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

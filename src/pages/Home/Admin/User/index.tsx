@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import useDisclosure from "@/hooks/use-disclosure";
+import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { LuPlus } from "react-icons/lu";
 import AddUserModalForm from "./add-user-model-form";
@@ -18,7 +19,9 @@ const UserTab: React.FC = () => {
       </div>
       <UsersTable />
       {/* Modal to add user */}
-      {isOpen && <AddUserModalForm isOpen={isOpen} onClose={onClose} />}
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isOpen && <AddUserModalForm isOpen={isOpen} onClose={onClose} />}
+      </AnimatePresence>
     </>
   );
 };

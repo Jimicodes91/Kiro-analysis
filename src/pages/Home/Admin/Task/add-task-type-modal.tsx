@@ -1,3 +1,4 @@
+import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,7 +17,7 @@ import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addEventTypeSchema } from "../../../../utils/validation-schema/admin";
 
-const AddTaskTypeModal = ({ onClose }: { onClose: () => void }) => {
+const AddTaskTypeModal = ({ onClose, isOpen }: ModalProps) => {
   const createTaskType = useCreateTaskType();
 
   const form = useForm({
@@ -35,7 +36,7 @@ const AddTaskTypeModal = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <>
-      <Modal title="Add task type" closeModal={onClose} fullHeight={false}>
+      <Modal title="Add task type" closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

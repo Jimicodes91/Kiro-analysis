@@ -1,3 +1,4 @@
+import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,7 +25,7 @@ import { LuPlus, LuTrash } from "react-icons/lu";
 import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 
-function JourneyForm({ onClose }: { onClose: () => void }) {
+function JourneyForm({ onClose, isOpen }: ModalProps) {
   const session = getUserSession();
   const createProjectType = useCreateProjectType();
   const form = useForm({
@@ -66,7 +67,7 @@ function JourneyForm({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <Modal title="Create journey" closeModal={() => onClose()} fullHeight={false}>
+    <Modal title="Create journey" closeModal={() => onClose()} isOpen={isOpen}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmitPipeline)}

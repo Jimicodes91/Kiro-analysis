@@ -24,7 +24,9 @@ function ProjectTask({ projectId }: { projectId: string }) {
         </div>
       </div>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {isOpen && <AddProjectTaskModal projectId={projectId} onClose={onClose} />}
+        {isOpen && (
+          <AddProjectTaskModal isOpen={isOpen} projectId={projectId} onClose={onClose} />
+        )}
       </AnimatePresence>
     </>
   );

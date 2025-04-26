@@ -1,3 +1,4 @@
+import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -32,10 +33,10 @@ const statuses = [
 const RequestDocumentModal = ({
   onClose,
   projectId,
+  isOpen,
 }: {
-  onClose: () => void;
   projectId: string;
-}) => {
+} & ModalProps) => {
   const createTask = useCreateTask(projectId);
   const documentTypes = useGetAllDocumentTypes();
   const form = useForm<z.infer<typeof requestDocument>>({
@@ -55,7 +56,7 @@ const RequestDocumentModal = ({
 
   return (
     <>
-      <Modal title="Request document" closeModal={onClose} fullHeight={true}>
+      <Modal title="Request document" closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

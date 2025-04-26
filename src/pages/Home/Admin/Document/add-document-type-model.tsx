@@ -17,7 +17,7 @@ import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addDocumentTypeSchema } from "../../../../utils/validation-schema/admin";
 
-const AddDocumentModal = ({ onClose }: ModalProps) => {
+const AddDocumentModal = ({ onClose, isOpen }: ModalProps) => {
   const createDocumentType = useCreateDocumentType();
   const form = useForm({
     resolver: yupResolver(addDocumentTypeSchema),
@@ -34,7 +34,7 @@ const AddDocumentModal = ({ onClose }: ModalProps) => {
   };
 
   return (
-    <Modal title="Add document type" closeModal={() => onClose()} fullHeight={false}>
+    <Modal title="Add document type" closeModal={onClose} isOpen={isOpen}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
           <FormField

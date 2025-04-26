@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { BsArrowsAngleExpand } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
@@ -11,7 +11,7 @@ interface ModalProps {
   className?: string;
   expandRoute?: string;
   showExpandButton?: boolean;
-  fullHeight?: boolean;
+  isOpen?: boolean;
 }
 
 const dropIn = {
@@ -28,7 +28,7 @@ const dropIn = {
   },
   exit: {
     y: "-30vh",
-    opacity: 0,
+    opacity: 0.3,
     transition: {
       duration: 0.2,
       type: "spring",
@@ -44,7 +44,7 @@ const Modal = ({
   className,
   expandRoute,
   showExpandButton = false,
-  fullHeight = true,
+  isOpen = false,
 }: ModalProps) => {
   const navigate = useNavigate();
 
@@ -54,11 +54,31 @@ const Modal = ({
     }
   };
 
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      console.log(event);
+      if (event.key === "Escape") {
+        closeModal();
+        // searchParams.delete("selectedTab");
+        // setSearchParams(searchParams, { replace: true }); // removes from URL without adding to browser history
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    } else {
+      window.removeEventListener("keydown", handleKeyDown);
+    }
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [closeModal, isOpen]);
+
   return (
     <motion.div
-      className={`fixed top-0 right-0 w-full h-screen scroll-smooth flex ${
-        fullHeight ? "items-center" : "items-start"
-      } justify-end z-50 backdrop-blur-sm ${className}`}
+      className={`fixed top-0 right-0 w-full py-6 h-screen scroll-smooth items-start flex justify-end z-50 backdrop-blur-sm ${className}`}
       exit={{ opacity: 0 }}
     >
       <motion.div
@@ -66,18 +86,16 @@ const Modal = ({
         onClick={closeModal}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.4 }}
-        exit={{ opacity: 0 }}
+        exit={{ opacity: 1 }}
       ></motion.div>
       <motion.div
-        className={`bg-white rounded-lg p-4 z-50 w-[90%] md:w-[60%] lg:w-[38%] ${
-          fullHeight ? "h-full max-h-[90%]" : " max-h-[90%] mt-6"
-        } mx-[2%] flex flex-col`}
+        className={`bg-white rounded-lg p-4 z-50 w-full max-w-lg max-h-full mx-[20px] flex flex-col`}
         variants={dropIn}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        <div className="border rounded-lg flex flex-col h-full">
+        <div className="border rounded-lg flex flex-col h-fit custom-scrollbar overflow-y-auto">
           {/* Fixed Header */}
           <div className="flex justify-between pb-4 p-3 rounded-tl-lg rounded-rl-lg border-b border-[1px] sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
             <div className="flex items-center gap-4">
@@ -113,7 +131,7 @@ const Modal = ({
           </div>
 
           {/* Scrollable Content Area */}
-          <div className="overflow-y-auto flex-grow custom-scrollbar scroll-smooth">
+          <div className="h-full flex-grow scroll-smooth">
             <div>{children}</div>
           </div>
         </div>

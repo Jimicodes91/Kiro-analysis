@@ -23,7 +23,7 @@ import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addUserSchema } from "../../../../utils/validation-schema/admin";
 
-function AddUserModalForm({ onClose }: ModalProps) {
+function AddUserModalForm({ onClose, isOpen }: ModalProps) {
   const sendConsultantInvite = useSendConsultantInvite();
   const form = useForm({
     resolver: yupResolver(addUserSchema),
@@ -39,7 +39,7 @@ function AddUserModalForm({ onClose }: ModalProps) {
       .catch(console.error);
   };
   return (
-    <Modal title="Add User" closeModal={onClose} fullHeight={false}>
+    <Modal title="Add User" closeModal={onClose} isOpen={isOpen}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
           <FormField

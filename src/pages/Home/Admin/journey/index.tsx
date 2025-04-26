@@ -54,7 +54,7 @@ const JourneyTab: React.FC = () => {
       )}
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {/* Modal to add project pipeline */}
-        {isOpen && <PipelineForm onClose={onClose} />}
+        {isOpen && <PipelineForm isOpen={isOpen} onClose={onClose} />}
       </AnimatePresence>
     </>
   );

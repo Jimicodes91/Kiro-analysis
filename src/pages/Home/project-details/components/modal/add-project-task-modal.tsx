@@ -1,3 +1,4 @@
+import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -38,10 +39,10 @@ const statuses = [
 const AddProjectTaskModal = ({
   onClose,
   projectId,
+  isOpen,
 }: {
-  onClose: () => void;
   projectId: string;
-}) => {
+} & ModalProps) => {
   const createTask = useCreateTask(projectId);
   const taskTypes = useGetAllTaskTypes();
   const form = useForm<z.infer<typeof addProjectTask>>({
@@ -61,7 +62,7 @@ const AddProjectTaskModal = ({
 
   return (
     <>
-      <Modal title="Add task" closeModal={onClose} fullHeight={true}>
+      <Modal title="Add task" closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

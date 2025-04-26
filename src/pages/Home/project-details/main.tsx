@@ -44,7 +44,6 @@ const ProjectDetail = ({
     "Notes",
     "Activity",
     "Document",
-    "Message",
     "Event",
     "Project team",
   ];
@@ -71,8 +70,7 @@ const ProjectDetail = ({
             <DocumentCard />
           </div>
         );
-      case "Message":
-        return <div className="p-4">Message</div>;
+
       case "Event":
         return <div className="p-4">Event</div>;
       case "Project team":
