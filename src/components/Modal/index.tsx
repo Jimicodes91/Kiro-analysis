@@ -56,7 +56,6 @@ const Modal = ({
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log(event);
       if (event.key === "Escape") {
         closeModal();
         // searchParams.delete("selectedTab");
@@ -66,8 +65,10 @@ const Modal = ({
 
     if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden"; // ⛔ prevent scrolling
     } else {
       window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = ""; // ✅ re-enable scrolling
     }
 
     // Cleanup
@@ -89,13 +90,13 @@ const Modal = ({
         exit={{ opacity: 1 }}
       ></motion.div>
       <motion.div
-        className={`bg-white rounded-lg p-4 z-50 w-full max-w-lg max-h-full mx-[20px] flex flex-col`}
+        className={`bg-white rounded-lg p-4 z-50 w-full max-w-lg max-h-full mx-[20px] flex flex-col scroll-smooth`}
         variants={dropIn}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        <div className="border rounded-lg flex flex-col h-fit custom-scrollbar overflow-y-auto">
+        <div className="border rounded-lg flex flex-col h-fit custom-scrollbar scroll-smooth overflow-y-auto">
           {/* Fixed Header */}
           <div className="flex justify-between pb-4 p-3 rounded-tl-lg rounded-rl-lg border-b border-[1px] sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
             <div className="flex items-center gap-4">

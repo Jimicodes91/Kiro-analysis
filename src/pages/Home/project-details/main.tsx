@@ -15,7 +15,8 @@ import ActivityCard from "./components/cards/activity-card";
 import DocumentCard from "./components/cards/document-card";
 import NoteCard from "./components/cards/note-card";
 import { ProjectSummary } from "./components/project-sumarry";
-import ProjectTask from "./template/project-task";
+import ProjectEventSection from "./template/project-event.section";
+import ProjectTaskSection from "./template/project-task-section";
 
 type SubTabType =
   | "Task"
@@ -51,7 +52,7 @@ const ProjectDetail = ({
   const renderSubTabContent = () => {
     switch (activeSubTab) {
       case "Task":
-        return <ProjectTask projectId={projectDetails?.id} />;
+        return <ProjectTaskSection projectId={projectDetails?.id} />;
       case "Notes":
         return (
           <div>
@@ -72,7 +73,11 @@ const ProjectDetail = ({
         );
 
       case "Event":
-        return <div className="p-4">Event</div>;
+        return (
+          <>
+            <ProjectEventSection projectId={projectDetails?.id} />
+          </>
+        );
       case "Project team":
         return <div className="p-4">Project team</div>;
       default:
@@ -152,7 +157,7 @@ const ProjectDetail = ({
         </div>
       </div>
 
-      <div className="bg-white flex-1 h-full grid grid-cols-auth-layout rounded-lg border border-brand-border p-3">
+      <div className="bg-white flex-1 h-full grid grid-cols-1 md:grid-cols-auth-layout rounded-lg border border-brand-border p-3">
         <div className="mb-8 p-4 space-y-4 rounded-lg border">
           <div className="flex flex-col gap-1">
             <Heading size="h4" className="leading-[22px]">
@@ -178,12 +183,12 @@ const ProjectDetail = ({
         <div className="">
           <div className="p-3 pt-0 space-y-8">
             <>{renderMilestone()}</>
-            <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
-              <div className="flex border-b border-gray-200">
+            <div className="bg-white rounded-lg grid border border-brand-border overflow-hidden">
+              <div className="flex border-b border-gray-200 overflow-auto">
                 {subTabs.map((tab) => (
                   <button
                     key={tab}
-                    className={`px-6 py-3 relative text-[14px] text-black focus:outline-none transition-all duration-200 ${
+                    className={`px-6 py-3 relative whitespace-nowrap text-[14px] text-black focus:outline-none transition-all duration-200 ${
                       activeSubTab === tab
                         ? "font-bold"
                         : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"

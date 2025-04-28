@@ -43,13 +43,12 @@ const errorFormatter = (data: {
     });
     return message;
   }
-  if (Array.isArray(data?.errors)) {
+  if (typeof data.data === "string") {
     let message = data?.message;
-    data?.errors.forEach((item) => {
-      message += `\n\t\n [${item}]`;
-    });
+    message += `\n\t\n [${data.data}]`;
     return message;
   }
+
   if (data.message) return data.message;
   return "Another error";
 };

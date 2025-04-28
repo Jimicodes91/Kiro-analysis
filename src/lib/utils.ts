@@ -93,6 +93,34 @@ export function updateProjectMilestoneById(
   );
 }
 
+export function updateProjectsIndex(
+  projects: ProjectDetails[],
+  projectId: string,
+  newIndex: number
+) {
+  // Step 1: Find the project to move
+  const movingProject = projects.find((p) => p.id === projectId);
+  if (!movingProject) {
+    return projects; // if project not found, return original
+  }
+
+  // Step 2: Remove the moving project from the array
+  const remainingProjects = projects.filter((p) => p.id !== projectId);
+
+  // Step 3: Insert the moving project at the desired index
+  const updatedProjects = [
+    ...remainingProjects.slice(0, newIndex),
+    movingProject,
+    ...remainingProjects.slice(newIndex),
+  ];
+
+  // Step 4: Update the `index` field properly
+  return updatedProjects.map((p, idx) => ({
+    ...p,
+    index: idx,
+  }));
+}
+
 export function convertToKilobyte(size: number) {
   const newSize = size / 1024;
 

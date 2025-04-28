@@ -21,14 +21,14 @@ export const addTaskTypeSchema = yup.object().shape({
 });
 
 export const addProjectPipelineSchema = yup.object().shape({
-  name: yup.string().required("Pipeline name is required"),
+  name: yup.string().required("Journey name is required"),
   stages: yup.array().of(
     yup.object().shape({
       name: yup.string().required("Name is required"),
       duration: yup
         .number()
         .required("Duration is required")
-        .min(1, "Duration should be greater than zero"),
+        .min(1, "Must be more than zero"),
     })
   ),
 });

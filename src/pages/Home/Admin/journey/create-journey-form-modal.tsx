@@ -1,10 +1,4 @@
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  ModalProps,
-} from "@/components/ui/alert-dialog";
+import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,25 +9,55 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import useCreateProjectType from "@/hooks/project-modules/project-types/use-create-project-type";
 import { getUserSession } from "@/services/api.service";
 import { addProjectPipelineSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
+import { LuPlus, LuTrash } from "react-icons/lu";
 import { InferType } from "yup";
+import Modal from "../../../../components/Modal";
 
-function CreatePipelineModal({ isOpen, onClose }: ModalProps) {
+function JourneyFormModal({ onClose, isOpen }: ModalProps) {
+  const session = getUserSession();
+  const createProjectType = useCreateProjectType();
   const form = useForm({
     resolver: yupResolver(addProjectPipelineSchema),
+    defaultValues: {
+      stages: [
+        {
+          name: "",
+          duration: 0,
+        },
+      ],
+    },
   });
-  const createProjectType = useCreateProjectType();
-  const session = getUserSession();
 
-  const onSubmit = async (data: InferType<typeof addProjectPipelineSchema>) => {
+  const {
+    fields: stagesFields,
+    append,
+    remove,
+  } = useFieldArray({
+    name: "stages",
+    control: form.control,
+    rules: {
+      required: "Please append at least 1 item",
+      minLength: 1,
+    },
+  });
+
+  const onSubmitPipeline = async (data: InferType<typeof addProjectPipelineSchema>) => {
     createProjectType
       .mutateAsync({
-        name: data.name,
         company_id: session?.company_id ?? "",
+        ...data,
       })
       .then(() => {
         form.reset();
@@ -43,46 +67,101 @@ function CreatePipelineModal({ isOpen, onClose }: ModalProps) {
   };
 
   return (
-    <AlertDialog open={isOpen}>
-      <AlertDialogContent
-        onEscapeKeyDown={onClose}
-        className="bg-white p-3 space-y-1 translate-x-[0%] left-[60%] max-w-xl max-h-[800px] overflow-y-scroll"
-      >
-        <AlertDialogHeader className="px-3 pt-2">
-          <AlertDialogTitle>Create pipeline</AlertDialogTitle>
-        </AlertDialogHeader>
-        <div className="space-y-3 p-3">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Pipeline name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Pipeline name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="space-y-2">
-                <Button
-                  type="submit"
-                  fullWidth={true}
-                  isLoading={createProjectType.isPending}
-                >
-                  Create Journey
-                </Button>
+    <Modal title="Create journey" closeModal={() => onClose()} isOpen={isOpen}>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmitPipeline)}
+          className="flex flex-col gap-6 p-4"
+        >
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Journey</FormLabel>
+                <FormControl>
+                  <Input placeholder="journey name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {stagesFields.map((item, index) => (
+            <div className="flex gap-2 items-end" key={item.id}>
+              <div className="w-full">
+                <FormField
+                  control={form.control}
+                  name={`stages.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Stage name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Stage name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-            </form>
-          </Form>
-        </div>
-      </AlertDialogContent>
-    </AlertDialog>
+              <div className="w-full">
+                <FormField
+                  control={form.control}
+                  name={`stages.${index}.duration`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Duration (days)</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="Duration" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {index >= 1 && (
+                <Button
+                  onClick={() => remove(index)}
+                  size="icon"
+                  variant="outline"
+                  className="flex-shrink-0"
+                >
+                  <LuTrash />
+                </Button>
+              )}
+            </div>
+          ))}
+
+          <div className="grid p-0 m-0">
+            <div className="items-center gap-3 flex">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      leftIcon={<LuPlus />}
+                      variant="ghost"
+                      onClick={() => append({ name: "", duration: 0 })}
+                      size="sm"
+                      className="px-0 hover:bg-transparent"
+                    >
+                      Add stage
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent arrowPadding={4} className="text-white p-2">
+                    <p>Add the stages/milestons to a project type</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <Separator className="w-fit" />
+            </div>
+          </div>
+          <Button type="submit" isLoading={createProjectType.isPending}>
+            Create journey
+          </Button>
+        </form>
+      </Form>
+    </Modal>
   );
 }
 
-export default CreatePipelineModal;
+export default JourneyFormModal;

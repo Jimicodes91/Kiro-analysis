@@ -1,6 +1,10 @@
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useUpdateProjectMilestone from "@/hooks/project-modules/use-update-project-milestone";
-import { generateBoardMilestone, updateProjectMilestoneById } from "@/lib/utils";
+import {
+  generateBoardMilestone,
+  updateProjectMilestoneById,
+  updateProjectsIndex,
+} from "@/lib/utils";
 import { useProjectContext } from "@/pages/Home/Project/context/project-context";
 import { ProjectDetails } from "@/types/api.types";
 import { DragDropContext } from "@hello-pangea/dnd";
@@ -61,6 +65,16 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
       return;
     }
 
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index != source.index
+    ) {
+      setMilestoneProjects((prev) => {
+        return updateProjectsIndex(prev, draggableId, destination.index);
+      });
+      return;
+    }
+
     // if (destination.droppableId === source.droppableId) {
     // mutate asyn function
     // }
@@ -92,7 +106,6 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
     // }
 
     // Moving from one list to another
-
     setMilestoneProjects((prev) => {
       return updateProjectMilestoneById(prev, draggableId, destination.droppableId);
     });

@@ -3,9 +3,9 @@ import { AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../../components/ui/view-toggle";
+import JourneyFormModal from "./create-journey-form-modal";
 import FormCustomization from "./Form";
 import JourneyTable from "./journey-table";
-import PipelineForm from "./lol";
 
 const JourneyTab: React.FC = () => {
   const [activeTab, setActiveTab] = useState("pipeline");
@@ -54,7 +54,7 @@ const JourneyTab: React.FC = () => {
       )}
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {/* Modal to add project pipeline */}
-        {isOpen && <PipelineForm isOpen={isOpen} onClose={onClose} />}
+        {isOpen && <JourneyFormModal isOpen={isOpen} onClose={onClose} />}
       </AnimatePresence>
     </>
   );

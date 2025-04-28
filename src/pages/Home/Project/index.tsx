@@ -36,7 +36,7 @@ const Project: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectTypes.isSuccess, projectTypes?.value]);
 
-  if (projectTypes.isPending || allProjects.isLoading) {
+  if (projectTypes.isPending && !projectTypes.value) {
     return (
       <div className="min-h-[calc(100vh-70px)] flex items-center">
         <Loader />

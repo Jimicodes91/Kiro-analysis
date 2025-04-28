@@ -11,8 +11,8 @@ export default function DocumentCard() {
   return (
     <div className="bg-[#F8F8F8] rounded-lg border border-brand-border">
       <Accordion collapsible type="single" className="w-full" defaultValue="item-1">
-        <AccordionItem value="item-1" defaultValue="item-1">
-          <AccordionTrigger className="py-3 border-b rounded-lg px-4">
+        <AccordionItem value="item-1" defaultValue="item-1" className="border-0">
+          <AccordionTrigger className="py-3 rounded-lg px-4">
             <Heading size="h5">Business registration.doc</Heading>
           </AccordionTrigger>
           <AccordionContent>
