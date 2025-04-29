@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 import { Logo, LogoWithText } from "@/assets";
+import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { SIDEBAR_COOKIE_NAME } from "@/components/ui/sidebar";
@@ -11,8 +12,8 @@ import { topNavData } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { getCookie, setCookie } from "cookies-next";
+import { PanelLeft } from "lucide-react";
 import React from "react";
-import { FaIndustry } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
 import AccountNav from "./account-nav";
 import LogoutModal from "./logout-modal";
@@ -82,17 +83,18 @@ export default function AccountLayout() {
       <div className="w-full flex-1 relative transition-all duration-300 ease-in">
         <div className="px-6 flex border-b bg-white sticky top-0 z-20 items-center justify-between h-[70px]">
           <div className="flex gap-2 items-center">
-            <div
+            <Button
               onClick={() =>
                 setCollapsed((prev) => {
                   setCookie(SIDEBAR_COOKIE_NAME, !prev ? 1 : 0);
                   return !prev;
                 })
               }
-              className="grid place-items-center h-11 w-11 rounded-full bg-gray-100"
+              size="icon"
+              variant="ghost"
             >
-              <FaIndustry className="w-5 h-5 text-primary" />
-            </div>
+              <PanelLeft className="w-5 h-5 text-primary" />
+            </Button>
             {company?.isPending ? (
               <div className="h-8 min-w-[200px] bg-slate-300 animate-pulse"></div>
             ) : (

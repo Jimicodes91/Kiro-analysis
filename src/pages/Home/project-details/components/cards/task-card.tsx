@@ -10,8 +10,9 @@ import {
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
 import getInitials from "@/lib/utils";
+import { TaskDetails } from "@/types/api.types";
 
-function TaskCard() {
+function TaskCard({ task }: { task: TaskDetails }) {
   return (
     <div className="px-5 py-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
       <div className="flex items-center justify-between">
@@ -24,7 +25,7 @@ function TaskCard() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40" align="end" forceMount>
             <DropdownMenuGroup>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Edit {task?.id}</DropdownMenuItem>
               <DropdownMenuItem>Mark as done</DropdownMenuItem>
               <DropdownMenuItem>Delete</DropdownMenuItem>
             </DropdownMenuGroup>

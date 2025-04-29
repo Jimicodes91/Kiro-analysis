@@ -122,8 +122,12 @@ const UploadDocumentModal = ({
                 <FormItem>
                   <FormLabel>Attachment</FormLabel>
                   <FormControl>
-                    {/* @ts-expect-error sjsj */}
-                    <DragNdrop id="file" value={field.value} onChange={field.onChange} />
+                    <DragNdrop
+                      id="filesa-sa"
+                      /* @ts-expect-error sjsj */
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

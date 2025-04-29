@@ -171,7 +171,7 @@ export const ENDPOINTS = {
 
   // 5. Tasks
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
-  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/tasks?project_id=${projectId}`,
   GET_TASK_DETAILS: (projectId: string, taskId: string) =>
     `projects/${projectId}/tasks/${taskId}`,
   UPDATE_TASK_DETAILS: (projectId: string, taskId: string) =>

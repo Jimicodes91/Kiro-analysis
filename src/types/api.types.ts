@@ -63,10 +63,10 @@ export interface TaskDetails {
   end_date: string;
   is_visible_to_client: number;
   assignee: string[];
-  document: Document[];
+  document: IDocument[];
 }
 
-export interface Document {
+export interface IDocument {
   id: string;
   created_at: string;
   updated_at: string;

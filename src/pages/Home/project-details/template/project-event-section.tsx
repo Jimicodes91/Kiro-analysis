@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button";
-import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-task";
+import useGetProjectEvents from "@/hooks/project-modules/events/use-get-project-events";
 import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
-import { Filter, Plus } from "lucide-react";
-import TaskCard from "../components/cards/task-card";
-import AddProjectTaskModal from "../components/modal/add-project-task-modal";
+import { FiSliders } from "react-icons/fi";
+import EventCard from "../components/cards/event-card";
+import CreateEventModal from "../components/modal/create-event-modal";
 
-function ProjectTaskSection({ projectId }: { projectId: string }) {
+function ProjectEventSection({ projectId }: { projectId: string }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const projectTasks = useGetProjectTasks(projectId);
+  const projectEvents = useGetProjectEvents(projectId);
 
   const renderBody = () => {
-    if (projectTasks.isPending)
+    if (projectEvents.isPending)
       return (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
@@ -23,25 +23,27 @@ function ProjectTaskSection({ projectId }: { projectId: string }) {
         </div>
       );
 
-    if (projectTasks?.isError)
+    if (projectEvents?.isError)
       return (
         <div className="py-10 px-4 rounded-lg border flex justify-center border-brand-border bg-[#F8F8F8]">
           <p className="text-sm text-brand-fade p-0 m-0">Somthing went wrong</p>
         </div>
       );
 
-    if (projectTasks?.value?.data?.length === 0)
+    if (projectEvents?.value?.data?.length === 0)
       return (
         <div className="py-10 px-4 rounded-lg border flex justify-center border-brand-border bg-[#F8F8F8]">
           <p className="text-sm text-brand-fade p-0 m-0">
-            No task currently on this project
+            No event currently on this project
           </p>
         </div>
       );
 
     return (
       <div className="space-y-2">
-        {projectTasks?.value?.data?.map((task) => <TaskCard key={task.id} task={task} />)}
+        {projectEvents?.value?.data?.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
       </div>
     );
   };
@@ -50,22 +52,22 @@ function ProjectTaskSection({ projectId }: { projectId: string }) {
     <>
       <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
         <div className="flex justify-end gap-3 items-center">
-          <Button size="sm" variant="outline" leftIcon={<Filter />}>
-            Filter
+          <Button size="icon" variant="outline">
+            <FiSliders />
           </Button>
-          <Button size="sm" leftIcon={<Plus />} onClick={onOpen}>
-            Add Task
+          <Button size="sm" onClick={onOpen}>
+            Create evemt
           </Button>
         </div>
         <div>{renderBody()}</div>
       </div>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && (
-          <AddProjectTaskModal isOpen={isOpen} projectId={projectId} onClose={onClose} />
+          <CreateEventModal isOpen={isOpen} projectId={projectId} onClose={onClose} />
         )}
       </AnimatePresence>
     </>
   );
 }
 
-export default ProjectTaskSection;
+export default ProjectEventSection;

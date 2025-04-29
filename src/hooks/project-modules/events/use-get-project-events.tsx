@@ -8,7 +8,7 @@ export interface EventList {
   data: EventDetails[];
 }
 
-const useGetAllProjectEvents = (projectId: string) => {
+const useGetProjectEvents = (projectId: string) => {
   return useQueryActionHook<EventList>({
     method: "get",
     endpoint: ENDPOINTS.GET_ALL_PROJECT_EVENTS(projectId),
@@ -16,4 +16,4 @@ const useGetAllProjectEvents = (projectId: string) => {
   });
 };
 
-export default useGetAllProjectEvents;
+export default useGetProjectEvents;

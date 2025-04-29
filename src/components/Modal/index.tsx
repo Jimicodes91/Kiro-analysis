@@ -68,12 +68,13 @@ const Modal = ({
       document.body.style.overflow = "hidden"; // ⛔ prevent scrolling
     } else {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = ""; // ✅ re-enable scrolling
+      document.body.style.overflow = "auto"; // ✅ re-enable scrolling
     }
 
     // Cleanup
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "auto"; // ✅ re-enable scrolling
     };
   }, [closeModal, isOpen]);
 

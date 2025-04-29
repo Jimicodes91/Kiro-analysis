@@ -10,9 +10,9 @@ const TaskTab: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <>
-      <div className="flex justify-between items-center my-6">
+      <div className="flex justify-between items-center my-2">
         <h1 className="text-[16px] font-[600]">Task type </h1>
-        <Button onClick={onOpen} leftIcon={<IoAdd className="text-white" />}>
+        <Button onClick={onOpen} size="sm" leftIcon={<IoAdd className="text-white" />}>
           Add task type
         </Button>
       </div>

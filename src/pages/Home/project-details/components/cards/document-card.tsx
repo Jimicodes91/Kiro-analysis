@@ -5,15 +5,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Heading from "@/components/ui/heading";
+import { IDocument } from "@/types/api.types";
 import Attachment from "./attachment";
 
-export default function DocumentCard() {
+export default function DocumentCard({ document }: { document: IDocument }) {
   return (
     <div className="bg-[#F8F8F8] rounded-lg border border-brand-border">
       <Accordion collapsible type="single" className="w-full" defaultValue="item-1">
         <AccordionItem value="item-1" defaultValue="item-1" className="border-0">
           <AccordionTrigger className="py-3 rounded-lg px-4">
-            <Heading size="h5">Business registration.doc</Heading>
+            <Heading size="h5">Business registration.doc {document?.name}</Heading>
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 p-4">
