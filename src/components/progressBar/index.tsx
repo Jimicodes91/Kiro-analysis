@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React from "react";
 
 interface ProgressBarProps {
@@ -10,10 +11,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
 
   return (
     <div className="w-full bg-gray-200 h-[10px] rounded-full mb-8">
-      <div
+      <motion.div
         className="bg-primary h-3 rounded-full"
         style={{ width: `${progress}%` }}
-      ></div>
+        layout
+      ></motion.div>
     </div>
   );
 };

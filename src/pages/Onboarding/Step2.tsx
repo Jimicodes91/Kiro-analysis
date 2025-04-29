@@ -1,32 +1,37 @@
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useSendConsultantInvite from "@/hooks/auth/use-send-consultant-invite";
 import { PAGES } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import { addUserSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { MainButton } from "../../components/Form/button";
-import { FormInput } from "../../components/Form/input";
-import { FormSelect } from "../../components/Form/select";
-import Toast from "../../components/Toast";
-import { inviteTeamSchema } from "../../components/validationSchema/onboarding";
-import { sendConsultantInviteApi } from "../../services";
-import { prevStep, setTeamMembers } from "../../store/slices/onboardingSlice";
-import { TeamMember } from "../../types";
+import { InferType } from "yup";
+import { inviteTeamSchema } from "../../utils/validation-schema/onboarding";
+import { useOnboarding } from "./onboarding-context";
 
 const Step2 = () => {
-  const dispatch = useDispatch();
+  const { onPrev } = useOnboarding();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    getValues,
-    formState: { errors },
-  } = useForm({
+  const sendConsultantInvite = useSendConsultantInvite();
+  const form = useForm({
     resolver: yupResolver(inviteTeamSchema),
     defaultValues: {
       teamMembers: [
@@ -37,94 +42,92 @@ const Step2 = () => {
       ],
     },
   });
+
   const { fields, append, remove } = useFieldArray({
-    control,
     name: "teamMembers",
+    control: form.control,
+    rules: {
+      required: "Please append at least 1 item",
+      minLength: 1,
+    },
   });
 
-  const onSubmit = async (data: { teamMembers?: TeamMember[] }) => {
-    const teamMembers = data.teamMembers || [];
-    console.log(data, "teamMembers");
-    // Update team members in Redux store
-    dispatch(setTeamMembers(teamMembers));
-
-    // Set loading state
-    setLoading(true);
-
-    try {
-      // Detailed invite process with individual error handling
-      await Promise.all(
-        teamMembers.map(async (member) => {
-          try {
-            await sendConsultantInviteApi({
-              email: member.email,
-              role: member.role,
-            });
-          } catch (error) {
-            // Log the error for debugging
-            console.error(`Failed to invite ${member.email}:`, error);
-            // Rethrow to trigger the catch block in the main try-catch
-            throw error;
-          }
-        })
-      );
-
-      // Show success toast
-      Toast.success("Team members invited successfully");
-
-      // Navigate to project screen
-      navigate(PAGES.PROJECT_PAGE);
-    } catch (error) {
-      // Handle any errors during invitation
-      console.error("Error inviting team members:", error);
-
-      // Generic error toast
-      Toast.error("Failed to invite team members");
-    } finally {
-      // Reset loading state
-      setLoading(false);
+  const onSubmit = async (data: { teamMembers?: InferType<typeof addUserSchema>[] }) => {
+    const teamMembers = data.teamMembers;
+    if (teamMembers) {
+      sendConsultantInvite.mutateAsync(teamMembers[0]).catch((err) => {
+        console.error("One or more failed:", err);
+      });
     }
-  };
-
-  const handleBack = () => {
-    const currentTeamMembers = getValues("teamMembers") || [];
-    dispatch(setTeamMembers(currentTeamMembers));
-    dispatch(prevStep());
   };
 
   return (
     <div>
       <h1 className="text-[24px] font-bold mb-12">Invite your team</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-12 space-y-4">
-          {fields.map((item, index) => {
-            const showDeleteButton = fields.length > 1;
-            return (
-              <div
-                key={item.id}
-                className={
-                  showDeleteButton ? "grid grid-cols-2 gap-4" : "grid grid-cols-2 gap-4"
-                }
-              >
-                <FormInput
-                  label="Email"
-                  placeholder="Email"
-                  {...register(`teamMembers.${index}.email`)}
-                  error={errors.teamMembers?.[index]?.email?.message}
-                />
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <FormSelect
-                      label="Role"
-                      options={[
-                        { value: "consultant", label: "Consultant" },
-                        { value: "client", label: "Client" },
-                        { value: "customer", label: "Customer" },
-                      ]}
-                      register={register(`teamMembers.${index}.role`)}
-                      error={errors.teamMembers?.[index]?.role?.message}
-                    />
-                  </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="mb-12 space-y-4">
+            {fields.map((item, index) => {
+              const showDeleteButton = index > 0;
+              return (
+                <div
+                  key={item.id}
+                  className={cn("flex gap-2", !showDeleteButton && "mr-8")}
+                >
+                  <FormField
+                    control={form.control}
+                    name={`teamMembers.${index}.email`}
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="w-full">
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              className="w-full"
+                              key={item.id}
+                              placeholder="Email"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`teamMembers.${index}.role`}
+                    key={item.id}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Role</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl className="h-12 w-full">
+                            <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm w-full">
+                              <SelectValue
+                                placeholder={
+                                  <p className="text-brand-placeholder">Select Role</p>
+                                }
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {[
+                              { value: "consultant", label: "Consultant" },
+                              { value: "client", label: "Client" },
+                            ].map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   {showDeleteButton && (
                     <div className="flex items-center self-center pt-6">
                       <button
@@ -137,35 +140,31 @@ const Step2 = () => {
                     </div>
                   )}
                 </div>
-              </div>
-            );
-          })}
-          <button
-            type="button"
-            onClick={() => append({ email: "", role: "" })}
-            className="text-primary font-bold"
-          >
-            + Add another user
-          </button>
-        </div>
-        <div className="flex justify-between mt-12">
-          <MainButton variant="outlined" onClick={handleBack} type="button">
-            Back
-          </MainButton>
-          <div className="flex gap-2">
-            <MainButton
-              variant="outlined"
-              onClick={() => navigate(PAGES.PROJECT_PAGE)}
+              );
+            })}
+            <button
               type="button"
+              onClick={() => append({ email: "", role: "" })}
+              className="text-primary font-bold"
             >
-              Skip
-            </MainButton>
-            <Button type="submit" isLoading={loading}>
-              Save and continue
-            </Button>
+              + Add another user
+            </button>
           </div>
-        </div>
-      </form>
+          <div className="flex justify-between mt-10">
+            <Button variant="outline" onClick={onPrev}>
+              Back
+            </Button>
+            <div className="flex gap-2 z-[99] relative">
+              <Button variant="outline" onClick={() => navigate(PAGES.PROJECT_PAGE)}>
+                Skip
+              </Button>
+              <Button type="submit" isLoading={sendConsultantInvite.isPending}>
+                Save and continue
+              </Button>
+            </div>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 };

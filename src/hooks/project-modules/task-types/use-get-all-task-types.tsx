@@ -8,12 +8,12 @@ export interface TaskTypeListResponse {
   data: TaskTypeDetails[];
 }
 
-const useGetAllProjectTaskTypes = (projectId: string) => {
+const useGetAllTaskTypes = () => {
   return useQueryActionHook<TaskTypeListResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_TASK_TYPES(projectId),
-    queryKey: [QUERYKEYS.GET_TASK_TYPES, projectId],
+    endpoint: ENDPOINTS.GET_TASK_TYPES,
+    queryKey: [QUERYKEYS.GET_TASK_TYPES],
   });
 };
 
-export default useGetAllProjectTaskTypes;
+export default useGetAllTaskTypes;

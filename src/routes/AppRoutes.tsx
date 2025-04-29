@@ -1,6 +1,9 @@
-import AuthLayout from "@/layouts/AuthLayout";
+import AuthLayout from "@/layouts/auth-layout";
 import AccountLayout from "@/layouts/dashboard-layout/lol";
-import ProjectContextProvider from "@/pages/Home/Project/project-context";
+import Client from "@/pages/Home/client";
+import ProjectDetailsPageWrapper from "@/pages/Home/project-details";
+import ProjectContextProvider from "@/pages/Home/Project/context/project-context";
+import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";
 import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
 import { RouteObject } from "react-router-dom";
 import CompleteInvite from "../pages/Auth/CompleteInvite";
@@ -11,12 +14,10 @@ import SignUp from "../pages/Auth/SignUp";
 import VerifyEmail from "../pages/Auth/VerifyEmail";
 import Home from "../pages/Home";
 import Admin from "../pages/Home/Admin";
-import Client from "../pages/Home/Client";
 import Event from "../pages/Home/Event";
 import Finance from "../pages/Home/Finance";
 import Message from "../pages/Home/Message";
 import Project from "../pages/Home/Project";
-import ProjectDetail from "../pages/Home/Project/ProjectDetail";
 import NotFound from "../pages/Notfound";
 import Onboarding from "../pages/Onboarding/index";
 
@@ -40,7 +41,12 @@ export const AuthRoutes: RouteObject[] = [
   { path: "verify-account", element: <VerifyEmail /> },
   {
     path: "onboarding",
-    element: <Onboarding />,
+
+    element: (
+      <OnboardingContextProvider>
+        <Onboarding />
+      </OnboardingContextProvider>
+    ),
   },
   {
     path: "*",
@@ -84,7 +90,7 @@ export const HomeRoutes = {
         },
         {
           path: "projects/:id",
-          element: <ProjectDetail />,
+          element: <ProjectDetailsPageWrapper />,
         },
       ],
     },

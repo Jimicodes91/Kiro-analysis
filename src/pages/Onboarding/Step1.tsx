@@ -1,77 +1,50 @@
 import { Button } from "@/components/ui/button";
-import { getUserSession } from "@/services/api.service";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useCreateCompany from "@/hooks/company/use-create-company";
+import {
+  companySizeList,
+  COUNTRY_STATES,
+  countryList,
+  CountryStatesMap,
+  industryList,
+} from "@/lib/constants";
+import { getUserSession, updateUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { FormInput } from "../../components/Form/input";
-import { FormSelect } from "../../components/Form/select";
-import Toast from "../../components/Toast";
-import { companyDetailsSchema } from "../../components/validationSchema/onboarding";
-import { createCompanyApi } from "../../services";
-import { RootState } from "../../store";
-import { nextStep, setCompanyDetails } from "../../store/slices/onboardingSlice";
-import { CompanyDetails } from "../../types";
-
-// Define a type for the state options
-type StateOption = { value: string; label: string };
-
-// Define a type for the country-states mapping
-type CountryStatesMap = {
-  [key in "Nigeria" | "usa" | "uk" | "ca"]: StateOption[];
-};
-
-// Predefined country-state mappings
-const COUNTRY_STATES: CountryStatesMap = {
-  Nigeria: [
-    { value: "lagos", label: "Lagos" },
-    { value: "abuja", label: "Abuja" },
-    { value: "ibadan", label: "Ibadan" },
-    { value: "kano", label: "Kano" },
-  ],
-  usa: [
-    { value: "ny", label: "New York" },
-    { value: "ca", label: "California" },
-    { value: "tx", label: "Texas" },
-    { value: "fl", label: "Florida" },
-  ],
-  uk: [
-    { value: "london", label: "London" },
-    { value: "manchester", label: "Manchester" },
-    { value: "birmingham", label: "Birmingham" },
-    { value: "liverpool", label: "Liverpool" },
-  ],
-  ca: [
-    { value: "ontario", label: "Ontario" },
-    { value: "quebec", label: "Quebec" },
-    { value: "bc", label: "British Columbia" },
-    { value: "alberta", label: "Alberta" },
-  ],
-};
+import { InferType } from "yup";
+import { companyDetailsSchema } from "../../utils/validation-schema/onboarding";
+import { useOnboarding } from "./onboarding-context";
 
 const Step1 = () => {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const { onNext, updateCompanyDetails, companyData } = useOnboarding();
   const session = getUserSession();
   const [states, setStates] = useState<{ value: string; label: string }[]>([]);
-  const storedCompanyDetails = useSelector(
-    (state: RootState) => state.onboarding.companyDetails
-  );
+  const createCompany = useCreateCompany(session?.id ?? "");
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors },
-  } = useForm({
+  const form = useForm({
     resolver: yupResolver(companyDetailsSchema),
     mode: "onChange",
-    defaultValues: storedCompanyDetails,
+    defaultValues: companyData,
   });
 
   // Watch country to dynamically update states
-  const watchCountry = watch("country");
+  const watchCountry = form.watch("country");
 
   useEffect(() => {
     // Type-safe way to check and set states
@@ -84,119 +57,210 @@ const Step1 = () => {
 
   // Ensure Redux state is loaded into form
   useEffect(() => {
-    reset(storedCompanyDetails);
-  }, [storedCompanyDetails, reset]);
+    form.reset(companyData);
+  }, [companyData, form]);
 
-  const onSubmit = async (data: CompanyDetails) => {
-    setLoading(true);
-    try {
-      const payload = {
-        industry_type: data.industryType,
-        postal_code: data.postalCode,
-        name: data.name,
-        country: data.country,
-        city: data.city,
-        size: data.size,
-        address: data.address,
-      };
-      const response = await createCompanyApi(payload, session?.id ?? "");
-      dispatch(setCompanyDetails(data));
-      dispatch(nextStep());
-      Toast.success(response.message || "Company created successfully");
-    } catch (error) {
-      console.error("Error creating company:", error);
-      const errorMessage =
-        (error as { data?: string })?.data || "Company creation failed";
-      Toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+  const onSubmit = async (data: InferType<typeof companyDetailsSchema>) => {
+    createCompany
+      .mutateAsync(data)
+      .then((response) => {
+        const res = response?.data?.data;
+        const updateFields = {
+          company_name: res?.name,
+          company_id: res?.id,
+        };
+        updateUserSession(updateFields);
+        updateCompanyDetails(data);
+        onNext();
+      })
+      .catch(console.log);
   };
 
   return (
     <div>
       <h1 className="text-[24px] font-bold mb-12">Company detail</h1>
       <div className="overflow-y-auto flex-1">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-12 space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FormInput
-                label="Company name"
-                placeholder="Company name"
-                {...register("name")}
-                error={errors.name?.message}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="p-1 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Company name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="industry_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Industry type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="h-12 w-full">
+                          <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
+                            <SelectValue
+                              placeholder={
+                                <p className="text-brand-placeholder">
+                                  Select Industry type
+                                </p>
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {industryList.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="size"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company size</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="h-12 w-full">
+                          <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
+                            <SelectValue
+                              placeholder={
+                                <p className="text-brand-placeholder">Company size</p>
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {companySizeList.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="h-12 w-full">
+                          <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
+                            <SelectValue
+                              placeholder={
+                                <p className="text-brand-placeholder">Country</p>
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {countryList.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Company Address" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormSelect
-                label="Industry type"
-                options={[
-                  { value: "technology", label: "Technology" },
-                  { value: "finance", label: "Finance" },
-                  { value: "healthcare", label: "Healthcare" },
-                  { value: "education", label: "Education" },
-                  { value: "retail", label: "Retail" },
-                  { value: "manufacturing", label: "Manufacturing" },
-                  { value: "consulting", label: "Consulting" },
-                  { value: "entertainment", label: "Entertainment" },
-                ]}
-                register={register("industryType")}
-                error={errors.industryType?.message}
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>City</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl className="h-12 bg-black w-full">
+                          <SelectTrigger
+                            disabled={states.length === 0}
+                            className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm"
+                          >
+                            <SelectValue
+                              placeholder={
+                                <p className="text-brand-placeholder">
+                                  {states.length === 0
+                                    ? "Select Country First"
+                                    : "Select City"}
+                                </p>
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {states.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="postal_code"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Postal Code</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Postal Code" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <FormSelect
-                label="Company size"
-                options={[
-                  { value: "1-10", label: "1-10 Employees" },
-                  { value: "11-50", label: "11-50 Employees" },
-                  { value: "51-100", label: "51-100 Employees" },
-                  { value: "101-250", label: "101-250 Employees" },
-                  { value: "251-500", label: "251-500 Employees" },
-                  { value: "500+", label: "500+ Employees" },
-                ]}
-                register={register("size")}
-                error={errors.size?.message}
-              />
-              <FormSelect
-                label="Country"
-                options={[
-                  { value: "Nigeria", label: "Nigeria" },
-                  { value: "usa", label: "United States" },
-                  { value: "uk", label: "United Kingdom" },
-                  { value: "ca", label: "Canada" },
-                ]}
-                register={register("country")}
-                error={errors.country?.message}
-              />
+            <div className="flex justify-end pt-4">
+              <Button
+                type="submit"
+                className="z-[99]"
+                isLoading={createCompany.isPending}
+              >
+                Save and continue
+              </Button>
             </div>
-            <FormInput
-              label="Company Address"
-              placeholder="Company Address"
-              {...register("address")}
-              error={errors.address?.message}
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <FormSelect
-                label="City"
-                options={states}
-                register={register("city")}
-                error={errors.city?.message}
-                // disabled={states.length === 0}
-                placeholder={states.length === 0 ? "Select Country First" : "Select City"}
-              />
-              <FormInput
-                label="Postal Code"
-                placeholder="Postal Code"
-                {...register("postalCode")}
-                error={errors.postalCode?.message}
-              />
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <Button type="submit" isLoading={loading}>
-              Save and continue
-            </Button>
-          </div>
-        </form>
+          </form>
+        </Form>
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 px-6 py-6",
-        sm: "h-10 rounded-full px-6 py-4 text-sm",
+        sm: "h-10 rounded-full px-6 py-4 text-[0.8rem]",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
       },
@@ -45,6 +45,7 @@ export interface ButtonProps
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   isLoading?: boolean;
+  slotClassName?: HTMLButtonElement["className"];
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -60,6 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className = "",
       asChild,
       fullWidth,
+      slotClassName = "",
       type = "button",
       ...others
     },
@@ -88,7 +90,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             style={{
               opacity: isLoading ? 0 : 1,
             }}
-            className="inline-flex items-center rounded-full justify-center gap-3 w-full h-full"
+            className={cn(
+              "inline-flex items-center rounded-full justify-center gap-3 w-full h-full",
+              slotClassName
+            )}
           >
             {children}
           </span>

@@ -1,3 +1,5 @@
+import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
+import { ProjectStatus } from "@/lib/constants";
 import { QueryFunction, QueryKey } from "@tanstack/react-query";
 import { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from "axios";
 
@@ -30,7 +32,7 @@ export type CredentialsServerResponseModel<T> = T;
 export interface ResponseErrorType {
   message: string;
   name: string;
-  errors?: Record<string, unknown>;
+  data: { errors?: string[] };
 
   response: {
     data: {
@@ -274,17 +276,46 @@ export interface ProjectDetails {
   consultant_id?: string;
   milestone_id?: string;
   project_type_id: string;
-  status: string;
+  status: `${ProjectStatus}`;
   name: string;
   start_date: string;
   end_date: string;
   completed_at?: string;
-  custom_fields: CustomFields;
-  documents: Document[];
-  stage_id?: string;
-  description?: string;
-  milestone?: string;
+  jurisdiction?: string;
+  visa_required?: string;
+  package?: string;
+  form_data: ProjectFormData;
+  documents?: string[];
+  project_type: ProjectType;
+  custom_fields?: string;
+  milestone?: ProjectTypeMilestone;
+  client?: string;
   timeline: string;
+}
+
+export interface ProjectType {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  company_id: string;
+  name: string;
+  slug: string;
+  is_system: number;
+}
+export interface ProjectFormData {
+  end_date: string;
+  pipeline: string;
+  post_code: string;
+  start_date: string;
+  description: string;
+  nationality: string;
+  phone_number: string;
+  project_name: string;
+  email_address: string;
+  project_value: number;
+  project_client: string;
+  resident_country: string;
+  client_organization: string;
 }
 
 export interface CustomFields {

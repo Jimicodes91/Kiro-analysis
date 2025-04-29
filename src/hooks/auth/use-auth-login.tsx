@@ -11,6 +11,7 @@ export interface User {
   name: string;
   role: "ADMIN";
   company_id: string;
+  company_name: string;
   is_blocked: number;
   is_verified: number;
   timezone: unknown;

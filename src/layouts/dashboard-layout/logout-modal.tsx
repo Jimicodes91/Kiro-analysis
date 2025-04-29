@@ -1,7 +1,6 @@
 "use client";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -23,31 +22,33 @@ function LogoutModal({ isOpen, onClose }: ModalProps) {
   const navigate = useNavigate();
   return (
     <AlertDialog open={isOpen}>
-      <AlertDialogContent onEscapeKeyDown={onClose} className="bg-white">
-        <AlertDialogHeader>
-          <AlertDialogTitle>Log Out</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will sign you out of your account and
-            remove your data from your cache.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter className="flex flex-row items-center gap-2">
-          <AlertDialogAction className="w-full" onClick={onClose}>
-            Cancel
-          </AlertDialogAction>
-          <Button
-            variant="outline"
-            className="w-full"
-            isLoading={authLogout.isPending}
-            onClick={() => {
-              authLogout.mutateAsync().then(() => {
-                navigate(PAGES.LOGIN_PAGE);
-              });
-            }}
-          >
-            Log out
-          </Button>
-        </AlertDialogFooter>
+      <AlertDialogContent onEscapeKeyDown={onClose} className="bg-white p-3 !max-w-lg">
+        <div className="p-3">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Log Out</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will sign you out of your account and remove your data from your
+              browser cache.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex flex-row items-center pt-6 gap-2">
+            <Button size="sm" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              isLoading={authLogout.isPending}
+              onClick={() => {
+                authLogout.mutateAsync(undefined).then(() => {
+                  navigate(PAGES.LOGIN_PAGE);
+                });
+              }}
+            >
+              Log out
+            </Button>
+          </AlertDialogFooter>
+        </div>
       </AlertDialogContent>
     </AlertDialog>
   );
