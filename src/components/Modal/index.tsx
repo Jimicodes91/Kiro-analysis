@@ -90,7 +90,7 @@ const Modal = ({
         exit={{ opacity: 1 }}
       ></motion.div>
       <motion.div
-        className={`bg-white rounded-lg p-4 z-50 w-full max-w-lg max-h-full mx-[20px] flex flex-col scroll-smooth`}
+        className={`bg-white rounded-lg p-4 z-50 w-full max-w-md max-h-full mx-[20px] flex flex-col scroll-smooth`}
         variants={dropIn}
         initial="hidden"
         animate="visible"

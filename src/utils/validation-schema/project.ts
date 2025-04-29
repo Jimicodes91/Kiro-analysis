@@ -15,7 +15,7 @@ export const fileSchema = (maxSize: number, allowedTypes: string[]) =>
     });
 export const fileSize = 100 * 1024 * 1024;
 
-export const addProjectTask = z.object({
+export const addProjectTaskSchema = z.object({
   name: z.string({
     message: "Task name is required",
   }),
@@ -55,7 +55,7 @@ export const addProjectTask = z.object({
   ]),
 });
 
-export const requestDocument = z.object({
+export const requestDocumentSchema = z.object({
   name: z.string({
     message: "Document name is required",
   }),
@@ -71,5 +71,30 @@ export const requestDocument = z.object({
   is_visible_to_client: z.boolean(),
   assignee_id: z.string({
     message: "Assignee is required",
+  }),
+});
+
+export const uploadDocumentSchema = z.object({
+  file_name: z.string({
+    message: "Document name is required",
+  }),
+  document_type_id: z.string({
+    message: "Document type is required",
+  }),
+  description: z.string({
+    message: "Description is required",
+  }),
+  is_visible_to_client: z.boolean(),
+  attachment: z.string({
+    message: "Assignee is required",
+  }),
+});
+
+export const addTeamSchema = z.object({
+  name: z.string({
+    message: "Document name is required",
+  }),
+  email: z.string({
+    message: "Email is required",
   }),
 });

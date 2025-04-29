@@ -3,7 +3,6 @@ import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
 import { Filter, Plus } from "lucide-react";
 import TaskCard from "../components/cards/task-card";
-import { NoteEditor } from "../components/editor";
 import AddProjectTaskModal from "../components/modal/add-project-task-modal";
 
 function ProjectTaskSection({ projectId }: { projectId: string }) {
@@ -19,7 +18,6 @@ function ProjectTaskSection({ projectId }: { projectId: string }) {
             Add Task
           </Button>
         </div>
-        <NoteEditor />
         <div>
           <TaskCard />
         </div>

@@ -31,7 +31,7 @@ export default function AccountLayout() {
       <motion.div
         className={cn(
           "space-y-1 z-10 h-screen sticky top-0 hidden flex-shrink-0 left-0 transition-all duration-300 ease-in border-r border-r-gray-200 lg:flex flex-col justify-between bg-secondary/50",
-          isCollapsed ? "w-[64px]" : "w-[210px]"
+          isCollapsed ? "w-[64px]" : "w-[200px]"
         )}
         layout
         initial={{ opacity: 0 }}

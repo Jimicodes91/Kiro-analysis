@@ -1,6 +1,7 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import DragNdrop from "@/components/ui/file-upload";
 import {
   Form,
   FormControl,
@@ -19,33 +20,28 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useGetAllDocumentTypes from "@/hooks/project-modules/document-types/use-get-all-document-types";
-import useCreateDocumentRequest from "@/hooks/project-modules/documents/document-request/use-create-document-request";
-import { requestDocumentSchema } from "@/utils/validation-schema/project";
+import useUploadDocument from "@/hooks/project-modules/documents/use-upload-document";
+import { uploadDocumentSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Modal from "../../../../../components/Modal";
 
-const statuses = [
-  { value: "in_progress", label: "In Progress" },
-  { value: "pending", label: "Pending" },
-];
-const RequestDocumentModal = ({
+const UploadDocumentModal = ({
   onClose,
   projectId,
   isOpen,
 }: {
   projectId: string;
 } & ModalProps) => {
-  const createDocumentRequest = useCreateDocumentRequest(projectId);
+  const uploadDocument = useUploadDocument(projectId);
   const documentTypes = useGetAllDocumentTypes();
-  const form = useForm<z.infer<typeof requestDocumentSchema>>({
-    resolver: zodResolver(requestDocumentSchema),
+  const form = useForm<z.infer<typeof uploadDocumentSchema>>({
+    resolver: zodResolver(uploadDocumentSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof requestDocumentSchema>) => {
-    createDocumentRequest
-      // @ts-expect-error ssls
+  const onSubmit = async (data: z.infer<typeof uploadDocumentSchema>) => {
+    uploadDocument
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -56,25 +52,12 @@ const RequestDocumentModal = ({
 
   return (
     <>
-      <Modal title="Request document" closeModal={onClose} isOpen={isOpen}>
+      <Modal title="Upload document" closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-4 p-4"
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Document name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Document name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="document_type_id"
@@ -119,31 +102,29 @@ const RequestDocumentModal = ({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="assignee_id"
+              name="file_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Assignee</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl className="h-12 w-full">
-                      <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                        <SelectValue
-                          placeholder={
-                            <p className="text-brand-placeholder">Select Assignee</p>
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {statuses?.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {item.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>File name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Document name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={"attachment"}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Attachment</FormLabel>
+                  <FormControl>
+                    {/* @ts-expect-error sjsj */}
+                    <DragNdrop id="file" value={field.value} onChange={field.onChange} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -163,8 +144,8 @@ const RequestDocumentModal = ({
                 </FormItem>
               )}
             />
-            <Button type="submit" isLoading={createDocumentRequest.isPending}>
-              Send request
+            <Button type="submit" isLoading={uploadDocument.isPending}>
+              Upload document
             </Button>
           </form>
         </Form>
@@ -173,4 +154,4 @@ const RequestDocumentModal = ({
   );
 };
 
-export default RequestDocumentModal;
+export default UploadDocumentModal;

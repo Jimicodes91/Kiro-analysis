@@ -2,7 +2,6 @@ import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
-import DragNdrop from "@/components/ui/file-upload";
 import {
   Form,
   FormControl,
@@ -21,8 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
-import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
+import useGetAllEventTypes from "@/hooks/project-modules/event-types/use-get-all-event-types";
+import useCreateEvent from "@/hooks/project-modules/events/use-create-event";
 import { cn } from "@/lib/utils";
 import { addProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,21 +35,21 @@ const statuses = [
   { value: "in_progress", label: "In Progress" },
   { value: "pending", label: "Pending" },
 ];
-const AddProjectTaskModal = ({
+const CreateEventModal = ({
   onClose,
   projectId,
   isOpen,
 }: {
   projectId: string;
 } & ModalProps) => {
-  const createTask = useCreateTask(projectId);
-  const taskTypes = useGetAllTaskTypes();
+  const createEvent = useCreateEvent(projectId);
+  const eventTypes = useGetAllEventTypes();
   const form = useForm<z.infer<typeof addProjectTaskSchema>>({
     resolver: zodResolver(addProjectTaskSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof addProjectTaskSchema>) => {
-    createTask
+    createEvent
       // @ts-expect-error ssls
       .mutateAsync(data)
       .then(() => {
@@ -62,7 +61,7 @@ const AddProjectTaskModal = ({
 
   return (
     <>
-      <Modal title="Add task" closeModal={onClose} isOpen={isOpen}>
+      <Modal title="Create event" closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -73,9 +72,9 @@ const AddProjectTaskModal = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Task name</FormLabel>
+                  <FormLabel>Event title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Task name" {...field} />
+                    <Input placeholder="Event title" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,22 +85,22 @@ const AddProjectTaskModal = ({
               name="task_type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Task type</FormLabel>
+                  <FormLabel>Event type</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl className="h-12 w-full">
                       <SelectTrigger
-                        isLoading={taskTypes.isLoading}
+                        isLoading={eventTypes.isLoading}
                         className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm"
                       >
                         <SelectValue
                           placeholder={
-                            <p className="text-brand-placeholder">Select Task type</p>
+                            <p className="text-brand-placeholder">Select Event type</p>
                           }
                         />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {taskTypes?.value?.data?.map((item) => (
+                      {eventTypes?.value?.data?.map((item) => (
                         <SelectItem key={item.id} value={item.id}>
                           {item.name}
                         </SelectItem>
@@ -125,86 +124,76 @@ const AddProjectTaskModal = ({
                 </FormItem>
               )}
             />
-            <div className="flex gap-4 justify-between">
+            <FormField
+              control={form.control}
+              name="start_date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full">
+                  <FormLabel>Start date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "text-sm h-12 font-normal rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4",
+                            !field.value && "text-muted-foreground"
+                          )}
+                          slotClassName="justify-start"
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span className="text-brand-placeholder">Start date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex gap-4">
               <FormField
                 control={form.control}
-                name="start_date"
+                name="name"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel>Start date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "text-sm h-12 font-normal rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4",
-                              !field.value && "text-muted-foreground"
-                            )}
-                            slotClassName="justify-start"
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span className="text-brand-placeholder">Start date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                  <FormItem className="w-full">
+                    <FormLabel>From</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Time"
+                        className="flex justify-between"
+                        type="time"
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="end_date"
+                name="name"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel>End date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "font-normal h-12 rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span className="text-brand-placeholder">End date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                  <FormItem className="w-full">
+                    <FormLabel>To</FormLabel>
+                    <FormControl className="w-full">
+                      <Input placeholder="Event title" type="time" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -239,19 +228,6 @@ const AddProjectTaskModal = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name={"file1"}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Attachment</FormLabel>
-                  <FormControl>
-                    <DragNdrop id="file" value={field.value} onChange={field.onChange} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <FormField
               control={form.control}
@@ -267,8 +243,8 @@ const AddProjectTaskModal = ({
                 </FormItem>
               )}
             />
-            <Button type="submit" isLoading={createTask.isPending}>
-              Save and continue
+            <Button type="submit" isLoading={createEvent.isPending}>
+              Create Event
             </Button>
           </form>
         </Form>
@@ -277,4 +253,4 @@ const AddProjectTaskModal = ({
   );
 };
 
-export default AddProjectTaskModal;
+export default CreateEventModal;

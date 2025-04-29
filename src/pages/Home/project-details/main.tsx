@@ -12,11 +12,12 @@ import { GoShare } from "react-icons/go";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import ActivityCard from "./components/cards/activity-card";
-import DocumentCard from "./components/cards/document-card";
 import NoteCard from "./components/cards/note-card";
 import { ProjectSummary } from "./components/project-sumarry";
+import ProjectDocumentSection from "./template/project-document-section";
 import ProjectEventSection from "./template/project-event.section";
 import ProjectTaskSection from "./template/project-task-section";
+import ProjectTeamSection from "./template/project-team-section";
 
 type SubTabType =
   | "Task"
@@ -68,7 +69,7 @@ const ProjectDetail = ({
       case "Document":
         return (
           <div>
-            <DocumentCard />
+            <ProjectDocumentSection projectId={projectDetails.id} />
           </div>
         );
 
@@ -79,7 +80,7 @@ const ProjectDetail = ({
           </>
         );
       case "Project team":
-        return <div className="p-4">Project team</div>;
+        return <ProjectTeamSection projectId={projectDetails?.id} />;
       default:
         return null;
     }

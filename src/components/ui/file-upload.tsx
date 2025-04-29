@@ -77,12 +77,9 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
               accept=".csv,.xlsx,.xls,.xlsm,.xltm,.xlam,.xlsb,.xltx,.xlt"
             />
             <div className="text-center text-sm space-y-3 text-brand-text">
-              <div>
+              <div className="font-bold text-primary">
                 <span> Drag file here to upload or</span>{" "}
-                <label
-                  htmlFor={id}
-                  className="inline-flex cursor-pointer text-pri-base font-bold"
-                >
+                <label htmlFor={id} className="inline-flex cursor-pointer text-pri-base">
                   choose file
                 </label>
               </div>
