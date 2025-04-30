@@ -23,9 +23,9 @@ const universalRoutes = [
     path: "/projects",
   },
   {
-    title: "Client",
-    icon: Icons.users,
-    path: "/client",
+    title: "Contact",
+    icon: Icons.client,
+    path: "/contact",
   },
   {
     title: "Task",
@@ -103,8 +103,8 @@ export const ENDPOINTS = {
   UPDATE_PROFILE: (userId: string) => `user/profile/${userId}`,
 
   // Contacts Endpoints
-  CREATE_CONTACTS: "contacts",
-  GET_CONTACTS: "contacts",
+  CREATE_CONTACT: "contacts",
+  GET_ALL_CONTACTS: "contacts",
 
   /* 
   Project Module Collection
@@ -266,7 +266,7 @@ export const QUERYKEYS = {
   GET_USER: "GET_USER",
 
   // Contacts Query keys
-  GET_CONTACTS: "GET_CONTACTS",
+  GET_ALL_CONTACTS: "GET_ALL_CONTACTS",
 
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",

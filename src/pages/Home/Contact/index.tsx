@@ -6,46 +6,29 @@ import React, { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
-import TaskEmptyState from "./task-empty-state";
-import TaskModal from "./task-modal-form"; // Import the TaskModal component
-import TasksTable from "./task-table";
-import { useTaskData } from "./use-task-data";
+import ContactEmptyState from "./contact-empty-state";
+import ContactsTable from "./contact-table";
 
-const Task: React.FC = () => {
+const Contact: React.FC = () => {
   const [, setSearchQuery] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { tasks } = useTaskData();
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  const handleAddTask = () => {
-    setIsModalOpen(true);
+  const handleAddContact = () => {
+    // setIsModalOpen(true);
   };
 
-  const contacts = useGetAllContacts();
-  // const create_contacts = useCreateContact();
-
-  console.log("contacts", contacts);
-
-  // useEffect(() => {
-  //   create_contacts.mutateAsync({
-  //     name: "Jonh",
-  //     phone: "090878787667",
-  //     email: "nickokla@gmail.com",
-  //     organization: "tunderone",
-  //     active_projects: "3",
-  //     total_projects: "6",
-  //   });
-  // }, []);
+  const contactsResponse = useGetAllContacts();
 
   return (
     <>
       <div className="mx-6 my-2">
         <div className="flex justify-between items-center my-4">
           <div className="flex items-center gap-4">
-            <Heading size="h3">Task</Heading>
+            <Heading size="h3">Contact</Heading>
             <div className="relative w-full min-w-[300px] bg-[#F3F3F3] rounded-full">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3 text-[#808080]" />
               <Input
@@ -77,25 +60,30 @@ const Task: React.FC = () => {
             <Button
               size="sm"
               leftIcon={<IoAdd className="text-white w-6 h-6" />}
-              onClick={handleAddTask}
+              onClick={handleAddContact}
             >
-              Add task
+              Add contact
             </Button>
           </div>
         </div>
-        {tasks.length === 0 ? <TaskEmptyState /> : <TasksTable />}
+        {Array.isArray(contactsResponse?.data?.data) &&
+        contactsResponse?.data?.data?.data?.length === 0 ? (
+          <ContactEmptyState />
+        ) : (
+          <ContactsTable />
+        )}
       </div>
 
-      {/* Task Modal for creating new tasks */}
-      {isModalOpen && (
-        <TaskModal
+      {/* Contact Modal for creating new contacts */}
+      {/* {isModalOpen && (
+        <ContactModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           mode="create"
         />
-      )}
+      )} */}
     </>
   );
 };
 
-export default Task;
+export default Contact;
