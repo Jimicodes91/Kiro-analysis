@@ -30,7 +30,7 @@ function ClientTableRow({ client }: { client: Client }) {
         <TableCell>{client.users}</TableCell>
         <TableCell>
           <Badge variant={client.status === "Completed" ? "success" : "warn"}>
-            {client.status === "Completed" && <Icons.check className="mt-1.5" />}
+            {/* {client.status === "Completed" && <Icons.check className="mt-1.5" />} */}
             <span>{client.status}</span>
           </Badge>
         </TableCell>

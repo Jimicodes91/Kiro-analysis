@@ -12,7 +12,8 @@ import VerifyEmail from "../pages/Auth/VerifyEmail";
 import Home from "../pages/Home";
 import Admin from "../pages/Home/Admin";
 import Client from "../pages/Home/Client";
-import Event from "../pages/Home/Event";
+// import Event from "../pages/Home/Event";
+import Task from "@/pages/Home/Task";
 import Finance from "../pages/Home/Finance";
 import Message from "../pages/Home/Message";
 import Project from "../pages/Home/Project";
@@ -64,9 +65,13 @@ export const HomeRoutes = {
       element: <Client />,
     },
     {
-      path: "event",
-      element: <Event />,
+      path: "task",
+      element: <Task />,
     },
+    // {
+    //   path: "event",
+    //   element: <Event />,
+    // },
     {
       path: "finance",
       element: <Finance />,

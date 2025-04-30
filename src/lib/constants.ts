@@ -28,10 +28,15 @@ const universalRoutes = [
     path: "/client",
   },
   {
-    title: "Event",
-    icon: Icons.event,
-    path: "/event",
+    title: "Task",
+    icon: Icons.task,
+    path: "/task",
   },
+  // {
+  //   title: "Event",
+  //   icon: Icons.event,
+  //   path: "/event",
+  // },
   {
     title: "Finance",
     icon: Icons.coins,
@@ -96,6 +101,10 @@ export const ENDPOINTS = {
   // User Endpoints
   GET_USER: (userId: string) => `user/${userId}`,
   UPDATE_PROFILE: (userId: string) => `user/profile/${userId}`,
+
+  // Contacts Endpoints
+  CREATE_CONTACTS: "contacts",
+  GET_CONTACTS: "contacts",
 
   /* 
   Project Module Collection
@@ -167,6 +176,8 @@ export const ENDPOINTS = {
   // 5. Tasks
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
   GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_ALL_TASKS: (projectId?: string) =>
+    `projects/tasks${projectId ? `?project_id=${projectId}` : ""}`,
   GET_TASK_DETAILS: (projectId: string, taskId: string) =>
     `projects/${projectId}/tasks/${taskId}`,
   UPDATE_TASK_DETAILS: (projectId: string, taskId: string) =>
@@ -254,6 +265,9 @@ export const QUERYKEYS = {
   // User Query keys
   GET_USER: "GET_USER",
 
+  // Contacts Query keys
+  GET_CONTACTS: "GET_CONTACTS",
+
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
   GET_PROJECT_DETAILS: "GET_PROJECT_DETAILS",
@@ -279,6 +293,7 @@ export const QUERYKEYS = {
 
   // 5. Tasks Query keys
   GET_ALL_PROJECT_TASKS: "GET_ALL_PROJECT_TASKS",
+  GET_ALL_TASKS: "GET_ALL_TASKS",
   GET_TASK_DETAILS: "GET_TASK_DETAILS",
 
   // 6. Documents Query keys

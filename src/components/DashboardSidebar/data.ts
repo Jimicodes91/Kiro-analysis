@@ -1,12 +1,13 @@
 import {
   Admin,
   Client,
-  Event,
+  // Event,
   Finance,
   House,
   Logout,
   Message,
   Project,
+  Task,
 } from "../../assets";
 import { SidebarLinks } from "../../types";
 
@@ -32,12 +33,19 @@ export const DashboardSidebarLinks: SidebarLinks[] = [
     image: Client,
     headingText: "Client",
   },
+  // {
+  //   id: 4,
+  //   title: "Event",
+  //   url: "event",
+  //   image: Event,
+  //   headingText: "Event",
+  // },
   {
     id: 4,
-    title: "Event",
-    url: "event",
-    image: Event,
-    headingText: "Event",
+    title: "Task",
+    url: "task",
+    image: Task,
+    headingText: "Task",
   },
   {
     id: 5,
