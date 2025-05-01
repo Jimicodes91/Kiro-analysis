@@ -13,7 +13,7 @@ const buttonVariants = cva(
         default:
           "bg-primary text-white border-primary focus:ring-primary focus:ring-2 focus:ring-offset-1",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "border-destructive border bg-transparent text-destructive shadow-sm hover:bg-destructive/80 hover:text-white focus-visible:ring-destructive focus:ring-destructive focus:ring-2 focus:ring-offset-1",
         outline:
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
@@ -54,7 +54,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       leftIcon,
       rightIcon,
-      variant,
+      variant = "default",
       size,
       isLoading = false,
       disabled,
@@ -68,6 +68,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
+    const spinnerColor: Record<NonNullable<typeof variant>, string> = {
+      default: "white",
+      destructive: "red",
+      ghost: "#092428",
+      link: "#092428",
+      outline: "#092428",
+      secondary: "#092428",
+    };
     return (
       <Comp
         ref={ref}
@@ -110,7 +118,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {isLoading && (
           <div className="absolute top-1/2 pt-1 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <BeatLoader className="text-white" color="white" size={10} />
+            <BeatLoader color={spinnerColor[variant!]} size={10} />
           </div>
         )}
       </Comp>

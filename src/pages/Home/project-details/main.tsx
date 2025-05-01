@@ -11,11 +11,11 @@ import { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import NoteCard from "./components/cards/note-card";
 import { ProjectSummary } from "./components/project-sumarry";
 import ActivitLogSection from "./template/project-activity-section";
 import ProjectDocumentSection from "./template/project-document-section";
 import ProjectEventSection from "./template/project-event-section";
+import ProjectNoteSection from "./template/project-note-section";
 import ProjectTaskSection from "./template/project-task-section";
 import ProjectTeamSection from "./template/project-team-section";
 
@@ -57,7 +57,7 @@ const ProjectDetail = ({
       case "Notes":
         return (
           <div>
-            <NoteCard />
+            <ProjectNoteSection projectId={projectDetails?.id} />
           </div>
         );
       case "Activity":
@@ -113,7 +113,11 @@ const ProjectDetail = ({
                   isFirst={index === 0}
                   text={item.name}
                   isLast={index === arr.length - 1}
-                  onClick={() => updateMilestoneFxn(item.id)}
+                  onClick={() => {
+                    if (item.id !== projectDetails?.milestone_id) {
+                      updateMilestoneFxn(item.id);
+                    }
+                  }}
                   key={item.id}
                 />
               ))}
@@ -184,8 +188,8 @@ const ProjectDetail = ({
         <div className="">
           <div className="p-0 md:p-3 md:pt-0 space-y-8">
             <>{renderMilestone()}</>
-            <div className="bg-white rounded-lg grid border border-brand-border overflow-hidden">
-              <div className="flex border-b border-gray-200 overflow-auto">
+            <div className="bg-white rounded-lg grid border border-brand-border relative">
+              <div className="flex border-b border-gray-200 overflow-auto sticky top-[10px]">
                 {subTabs.map((tab) => (
                   <button
                     key={tab}

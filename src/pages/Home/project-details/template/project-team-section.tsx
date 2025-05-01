@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button";
 import ViewToggle from "@/components/ui/view-toggle";
-import useGetAllProjectMembers from "@/hooks/project-modules/project-members/use-get-all-project-mebers";
+import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
 import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
 import React from "react";
 import TeamMemberCard from "../components/cards/team-member-card";
-import AddTeamModal from "../components/modal/add-team-modal";
+import AddTeamModal from "../components/modal/add-team-member-modal";
 
 function ProjectTeamSection({ projectId }: { projectId: string }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeTab, setActiveTab] = React.useState("1");
-  const projectMembers = useGetAllProjectMembers(projectId);
+  const projectMembers = useGetProjectMembers(projectId);
 
   const renderBody = () => {
     if (projectMembers.isPending)
@@ -43,9 +43,9 @@ function ProjectTeamSection({ projectId }: { projectId: string }) {
       );
 
     return (
-      <div className="space-y-2">
+      <div>
         {projectMembers?.value?.data?.map((member) => (
-          <TeamMemberCard key={member.id} member={member} />
+          <TeamMemberCard key={member.id} member={member} projectId={projectId} />
         ))}
       </div>
     );

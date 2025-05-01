@@ -8,7 +8,7 @@ export interface MemberListResponse {
   data: Member[];
 }
 
-const useGetAllProjectMembers = (projectId: string) => {
+const useGetProjectMembers = (projectId: string) => {
   return useQueryActionHook<MemberListResponse>({
     method: "get",
     endpoint: ENDPOINTS.GET_PROJECT_MEMBERS(projectId),
@@ -16,4 +16,4 @@ const useGetAllProjectMembers = (projectId: string) => {
   });
 };
 
-export default useGetAllProjectMembers;
+export default useGetProjectMembers;

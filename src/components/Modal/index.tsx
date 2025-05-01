@@ -80,7 +80,7 @@ const Modal = ({
 
   return (
     <motion.div
-      className={`fixed top-0 right-0 w-full py-6 h-screen scroll-smooth items-start flex justify-end z-50 backdrop-blur-sm ${className}`}
+      className={`fixed top-0 right-0 w-full py-6 h-screen scroll-smooth items-start flex justify-end z-50 backdrop-blur-[2px] ${className}`}
       exit={{ opacity: 0 }}
     >
       <motion.div
@@ -110,7 +110,7 @@ const Modal = ({
                   <BsArrowsAngleExpand />
                 </button>
               )}
-              <div className="text-[18px] font-medium text-[#191819]">{title}</div>
+              <div className="text-[18px] font-semibold text-[#191819]">{title}</div>
             </div>
             <button
               onClick={closeModal}

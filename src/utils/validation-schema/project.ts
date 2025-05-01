@@ -91,10 +91,8 @@ export const uploadDocumentSchema = z.object({
 });
 
 export const addTeamSchema = z.object({
-  name: z.string({
+  user_id: z.string({
     message: "Document name is required",
   }),
-  email: z.string({
-    message: "Email is required",
-  }),
+  is_visible_to_client: z.boolean(),
 });

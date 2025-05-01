@@ -1,8 +1,18 @@
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { ProjectDetails } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
-import { format } from "date-fns";
+import { format, isToday, parseISO } from "date-fns";
 import { twMerge } from "tailwind-merge";
+
+export const formatDate = (isoDate: string): string => {
+  const date = parseISO(isoDate);
+
+  if (isToday(date)) {
+    return `Today at ${format(date, "h:mm a")}`;
+  }
+
+  return format(date, "PPp"); // fallback format like "Apr 29, 2025 at 9:47 PM"
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

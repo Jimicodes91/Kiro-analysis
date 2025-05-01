@@ -1,22 +1,35 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
+import useCreateNote from "@/hooks/project-modules/note/use-create-note";
 import { Bold, Italic, Repeat } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
-export const NoteEditor: React.FC = () => {
-  const [visibleToClient, setVisibleToClient] = useState(false);
+export const NoteEditor = ({ projectId }: { projectId: string }) => {
+  const createNote = useCreateNote(projectId);
+  const [isPinned, setIsPinned] = useState(false);
 
   const formatText = (command: "bold" | "italic" | "removeFormat") => {
     document.execCommand(command, false);
+  };
+
+  const createNoteHandler = (content: string, isPinned: boolean) => {
+    createNote.mutateAsync({
+      content,
+      mentions: [],
+      attachments: [],
+      is_pinned: isPinned,
+    });
   };
 
   const handleSend = () => {
     const plainText = (document.getElementById("editor") as HTMLElement).innerHTML;
     console.log("Sending Note:", {
       text: plainText,
-      visibleToClient,
+      isPinned,
     });
+    createNoteHandler(plainText, isPinned);
     // Reset after send
-    setVisibleToClient(false);
+    setIsPinned(false);
     (document.getElementById("editor") as HTMLElement).innerHTML = "";
   };
 
@@ -47,15 +60,19 @@ export const NoteEditor: React.FC = () => {
 
         {/* Checkbox + Send button */}
         <div className="ml-auto flex items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              checked={visibleToClient}
-              onChange={(e) => setVisibleToClient(e.target.checked)}
-              className="w-4 h-4"
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="terms"
+              checked={isPinned}
+              onCheckedChange={(e) => setIsPinned(e as boolean)}
             />
-            Make visible to client
-          </label>
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Pin to top
+            </label>
+          </div>
 
           <button
             onClick={handleSend}
