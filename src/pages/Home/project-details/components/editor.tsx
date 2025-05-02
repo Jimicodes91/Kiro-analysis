@@ -70,7 +70,7 @@ export const NoteEditor = ({ projectId }: { projectId: string }) => {
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Mark Visible to client
+              Make visible to client
             </label>
           </div>
 
