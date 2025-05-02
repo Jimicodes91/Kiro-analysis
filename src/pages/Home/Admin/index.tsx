@@ -4,10 +4,9 @@ import { useSearchParams } from "react-router-dom";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
 import JourneyTab from "./journey";
-import TaskTab from "./Task";
-import UserTab from "./User/index";
-
-type TabType = "User" | "Journey" | "Document" | "Event" | "Note" | "Task";
+import NoteTab from "./note";
+import TaskTab from "./task";
+import UserTab from "./user";
 
 const Admin: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,9 +16,14 @@ const Admin: React.FC = () => {
     searchParams.set("selectedTab", value?.toLowerCase());
     setSearchParams(searchParams);
   };
-
-  const tabs: TabType[] = ["User", "Journey", "Document", "Event", "Note", "Task"];
-
+  const tabsList = [
+    { text: "User", tab: "user" as const },
+    { text: "Journey", tab: "journey" as const },
+    { text: "Document type", tab: "document" as const },
+    { text: "Event type", tab: "event" as const },
+    { text: "Note type", tab: "note" as const },
+    { text: "Task type", tab: "task" as const },
+  ];
   const renderTabContent = () => {
     switch (selectedTab) {
       case "user":
@@ -49,7 +53,7 @@ const Admin: React.FC = () => {
       case "note":
         return (
           <div>
-            <p>Note Tab</p>
+            <NoteTab />
           </div>
         );
       case "task":
@@ -69,22 +73,22 @@ const Admin: React.FC = () => {
       <h1 className="text-2xl font-[600] mb-6">Admin</h1>
       <div className="bg-white rounded-[6px] overflow-hidden border-[1.5px] border-brand-border">
         <div className="flex border-b border-gray-200">
-          {tabs.map((tab) => (
+          {tabsList.map((tab) => (
             <button
-              key={tab}
-              className={`px-6 py-3 relative text-[14px] text-black focus:outline-none transition-all duration-200 ${
-                selectedTab === tab.toLowerCase()
+              key={tab.tab}
+              className={`px-6 py-3 relative border-0 outline-none text-[14px] text-black focus:outline-none transition-all duration-200 ${
+                selectedTab === tab.tab
                   ? "font-bold"
                   : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"
               }`}
-              onClick={() => handleTabChange(tab)}
+              onClick={() => handleTabChange(tab.tab)}
             >
-              {tab}
-              {selectedTab === tab.toLowerCase() ? (
+              {tab.text}
+              {selectedTab === tab.tab ? (
                 <motion.div
                   className="absolute bottom-0 left-0 rounded-full h-0.5 w-full bg-primary"
-                  layoutId={`underline-admin`}
-                  id="underline"
+                  layoutId={`underline-admin-tabs`}
+                  id="underline-admin-tabs"
                 />
               ) : null}
             </button>
