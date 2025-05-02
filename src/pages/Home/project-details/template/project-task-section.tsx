@@ -46,7 +46,7 @@ function ProjectTaskSection({
       );
 
     return (
-      <div>
+      <div className="space-y-3">
         {projectTasks?.value?.data?.map((task) => (
           <TaskCard key={task.id} task={task} projectId={projectId} />
         ))}

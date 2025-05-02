@@ -21,7 +21,7 @@ function TaskCard({ task, projectId }: { task: TaskDetails; projectId: string })
 
   return (
     <>
-      <div className="px-5 py-3 mb-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
+      <div className="px-5 py-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
         <div className="flex items-center justify-between">
           <Badge variant={task?.status}>{getFormattedText(task?.status)}</Badge>
           <DropdownMenu>
