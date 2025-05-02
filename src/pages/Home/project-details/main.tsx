@@ -53,7 +53,12 @@ const ProjectDetail = ({
   const renderSubTabContent = () => {
     switch (activeSubTab) {
       case "Task":
-        return <ProjectTaskSection projectId={projectDetails?.id} />;
+        return (
+          <ProjectTaskSection
+            projectId={projectDetails?.id}
+            projectTypeId={projectDetails?.project_type_id}
+          />
+        );
       case "Notes":
         return (
           <div>

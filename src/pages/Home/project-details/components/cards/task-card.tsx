@@ -9,14 +9,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
-import getInitials from "@/lib/utils";
+import getInitials, { getFormattedText } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
+import { format } from "date-fns";
 
 function TaskCard({ task }: { task: TaskDetails }) {
   return (
     <div className="px-5 py-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
       <div className="flex items-center justify-between">
-        <Badge variant="destructive">Over due</Badge>
+        <Badge variant={task?.status}>{getFormattedText(task?.status)}</Badge>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -25,7 +26,7 @@ function TaskCard({ task }: { task: TaskDetails }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40" align="end" forceMount>
             <DropdownMenuGroup>
-              <DropdownMenuItem>Edit {task?.id}</DropdownMenuItem>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
               <DropdownMenuItem>Mark as done</DropdownMenuItem>
               <DropdownMenuItem>Delete</DropdownMenuItem>
             </DropdownMenuGroup>
@@ -33,25 +34,23 @@ function TaskCard({ task }: { task: TaskDetails }) {
         </DropdownMenu>
       </div>
       <div>
-        <Heading size="h5">Planning & Strategy</Heading>
-        <p className="text-sm text-brand-fade">
-          Define relocation objectives, Set budget and timeline, Assign project manager &
-          key stakeholders
-        </p>
+        <Heading size="h5">{task?.name}</Heading>
+        <p className="text-sm text-brand-fade">{task?.description}</p>
       </div>
       <div className="flex items-center gap-3">
         <div>
           <p className="text-sm text-brand-fade p-0 m-0 pt-1">
-            Due date: <span className="text-primary">12 June 2024</span>
+            Due date:{" "}
+            <span className="text-primary">{format(task?.end_date, "PPP")}</span>
           </p>
         </div>
         <div className="flex -space-x-2">
-          {["Johnbosco", "Nene", "Temi"]?.map((member, index) => (
+          {task?.assignees?.map((member, index) => (
             <div
               key={index}
               className="inline-flex items-center justify-center mt-2 w-8 h-8 rounded-full bg-gray-200 text-gray-700 text-sm font-medium ring-2 ring-white"
             >
-              {getInitials(member)}
+              {getInitials(member?.name ?? member?.email)}
             </div>
           ))}
         </div>

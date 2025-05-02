@@ -1,4 +1,9 @@
-import Select, { OnChangeValue, PropsValue, StylesConfig } from "react-select";
+import Select, {
+  CSSObjectWithLabel,
+  OnChangeValue,
+  PropsValue,
+  StylesConfig,
+} from "react-select";
 
 type Option = {
   label: string;
@@ -11,6 +16,7 @@ interface MultiSelectProps {
   options?: Option[];
   isLoading?: boolean;
   onChange: (newValue: OnChangeValue<Option, true>) => void;
+  isMulti?: true;
 }
 
 const CustomMultiSelect = ({
@@ -19,6 +25,7 @@ const CustomMultiSelect = ({
   value,
   isLoading = false,
   options,
+  isMulti = true,
 }: MultiSelectProps) => {
   const customStyles: StylesConfig<Option, true> = {
     control: (provided) => ({
@@ -26,34 +33,49 @@ const CustomMultiSelect = ({
       outline: "none",
       // background: hasError && !value ? "#fed7d7" : "transparent",
       boxShadow: "0 0 0 rgba(0,0,0,0)",
-      height: "38px",
-      borderRadius: "6px",
+      minHeight: "48px",
+      cursor: "pointer",
+      borderRadius: "100px",
       border: "0px solid transparent",
       fontSize: "0.8rem",
     }),
-    //   container: (provided, state) => ({
-    container: (provided) => ({
+    multiValue: (provided: CSSObjectWithLabel) => ({
       ...provided,
-      border: `1.2px solid ${
-        //   hasError && !value ? "#FC8181" : `${state.isFocused ? "#ADB1D9" : "#ADB1D9"}`
-        ""
-      }`,
-      borderRadius: "6px",
+      borderRadius: "20px",
+      background: "#092428",
+      color: "#fff",
+      overflow: "hidden",
+      padding: "3px",
+      fontSize: "1rem",
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      textTransform: "capitalize",
+      color: "#fff",
+    }),
+    container: (provided, state) => ({
+      ...provided,
+      border: `1.5px solid ${state.isFocused ? "#092428" : "#0000001A"}`,
+      borderRadius: "100px",
       cursor: "pointer",
     }),
-
-    option: (styles, state) => ({
-      ...styles,
-      fontSize: "0.8rem",
+    valueContainer: (base) => ({
+      ...base,
+      fontSize: "0.85rem",
+    }),
+    option: (_styles, state) => ({
+      padding: "8px",
+      fontSize: "0.9rem",
       cursor: "pointer",
       textTransform: "capitalize",
-      background: state.isSelected ? "#E5C05C" : "",
-      color: state.isSelected ? "#222" : "#3E4095",
+      background: state.isSelected ? "#00000014" : state.isFocused ? "#0000001A" : "#fff",
+      color: "#092428",
     }),
     placeholder: (styles) => {
       return {
         ...styles,
-        color: "#8787A8",
+        color: "#00000080",
+        fontSize: "0.85rem",
       };
     },
   };
@@ -63,6 +85,7 @@ const CustomMultiSelect = ({
       <div>
         <Select
           value={value}
+          isMulti={isMulti}
           onChange={onChange}
           styles={customStyles}
           isLoading={isLoading}

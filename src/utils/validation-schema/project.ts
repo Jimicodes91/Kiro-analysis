@@ -19,7 +19,10 @@ export const addProjectTaskSchema = z.object({
   name: z.string({
     message: "Task name is required",
   }),
-  task_type: z.string({
+  task_type_id: z.string({
+    message: "Task type is required",
+  }),
+  status: z.string({
     message: "Task type is required",
   }),
   description: z.string({
@@ -32,26 +35,18 @@ export const addProjectTaskSchema = z.object({
     message: "End date is required",
   }),
   is_visible_to_client: z.boolean(),
-  file1: fileSchema(fileSize, [
+  assignees: z.array(
+    z.object({
+      label: z.string(),
+      value: z.string(),
+    })
+  ),
+  attachment: fileSchema(fileSize, [
     // CSV files
-    "text/csv",
-    "application/csv",
-
-    // Excel files
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
-    "application/vnd.ms-excel", // .xls
-    "application/vnd.ms-excel.sheet.macroEnabled.12", // .xlsm
-    "application/vnd.ms-excel.template.macroEnabled.12", // .xltm
-    "application/vnd.ms-excel.addin.macroEnabled.12", // .xlam
-    "application/vnd.ms-excel.sheet.binary.macroEnabled.12", // .xlsb
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.template", // .xltx
-    "application/vnd.ms-excel.template", // .xlt
-    "application/vnd.ms-excel.sheet.macroenabled.12", // Alternate MIME type for .xlsm
-
-    // Additional MIME types for better compatibility
-    "application/excel",
-    "application/x-excel",
-    "application/x-msexcel",
+    "application/pdf",
+    "image/png",
+    "image/jpeg", // covers both .jpeg and .jpg
+    "application/msword",
   ]),
 });
 
@@ -95,4 +90,37 @@ export const addTeamSchema = z.object({
     message: "Document name is required",
   }),
   is_visible_to_client: z.boolean(),
+});
+
+export const addProjectEventSchema = z.object({
+  name: z.string({
+    message: "Task name is required",
+  }),
+  event_type_id: z.string({
+    message: "Task type is required",
+  }),
+  status: z.string({
+    message: "Task type is required",
+  }),
+  description: z.string({
+    message: "Description is required",
+  }),
+  start_date: z.date({
+    message: "Start date is required",
+  }),
+  end_date: z.date({
+    message: "End date is required",
+  }),
+  is_visible_to_client: z.boolean(),
+  file1: fileSchema(fileSize, [
+    // CSV files
+    "application/pdf",
+    "application/pdf",
+
+    // Excel files
+    // Additional MIME types for better compatibility
+    "application/excel",
+    "application/x-excel",
+    "application/x-msexcel",
+  ]),
 });

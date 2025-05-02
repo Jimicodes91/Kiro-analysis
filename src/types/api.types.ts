@@ -58,11 +58,11 @@ export interface TaskDetails {
   assignee_id?: string;
   name: string;
   description: string;
-  status: string;
+  status: "in_progress" | "completed";
   start_date: string;
   end_date: string;
   is_visible_to_client: number;
-  assignee: string[];
+  assignees: Author[];
   document: IDocument[];
 }
 
@@ -251,6 +251,7 @@ export interface Trail {
   name: string;
   description: string;
   entity: Entity;
+  author: Author;
 }
 
 export interface Entity {

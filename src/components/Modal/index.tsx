@@ -99,7 +99,7 @@ const Modal = ({
       >
         <div className="border rounded-lg flex flex-col h-fit custom-scrollbar scroll-smooth overflow-y-auto">
           {/* Fixed Header */}
-          <div className="flex justify-between pb-4 p-3 rounded-tl-lg rounded-rl-lg border-b border-[1px] sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
+          <div className="flex justify-between pb-4 bg-white p-3 rounded-tl-lg rounded-rl-lg border-b border-[1px] sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
             <div className="flex items-center gap-4">
               {showExpandButton && (
                 <button

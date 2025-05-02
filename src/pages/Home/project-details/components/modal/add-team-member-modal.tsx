@@ -68,6 +68,7 @@ const AddTeamModal = ({
                     <FormControl className="h-12 w-full">
                       <SelectTrigger
                         isLoading={users.isLoading}
+                        disabled={users.isLoading}
                         className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm"
                       >
                         <SelectValue

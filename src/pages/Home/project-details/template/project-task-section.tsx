@@ -1,12 +1,18 @@
 import { Button } from "@/components/ui/button";
-import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-task";
+import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
 import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
 import { Filter, Plus } from "lucide-react";
 import TaskCard from "../components/cards/task-card";
 import AddProjectTaskModal from "../components/modal/add-project-task-modal";
 
-function ProjectTaskSection({ projectId }: { projectId: string }) {
+function ProjectTaskSection({
+  projectId,
+  projectTypeId,
+}: {
+  projectId: string;
+  projectTypeId: string;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const projectTasks = useGetProjectTasks(projectId);
 
@@ -61,7 +67,12 @@ function ProjectTaskSection({ projectId }: { projectId: string }) {
       </div>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && (
-          <AddProjectTaskModal isOpen={isOpen} projectId={projectId} onClose={onClose} />
+          <AddProjectTaskModal
+            isOpen={isOpen}
+            projectTypeId={projectTypeId}
+            projectId={projectId}
+            onClose={onClose}
+          />
         )}
       </AnimatePresence>
     </>

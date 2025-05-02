@@ -1,7 +1,7 @@
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { ProjectDetails } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
-import { format, isToday, parseISO } from "date-fns";
+import { format, formatISO, isToday, parseISO } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export const formatDate = (isoDate: string): string => {
@@ -138,3 +138,25 @@ export function convertToKilobyte(size: number) {
 }
 
 // export const getCurrentMilestone = (milestones, milestoneId: string)
+
+export function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result);
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(file); // Converts to base64 string (data URL format)
+  });
+}
+
+const date = new Date();
+const isoDate = formatISO(date);
+
+console.log(isoDate); // e.g., "2

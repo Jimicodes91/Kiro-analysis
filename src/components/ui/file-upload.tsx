@@ -1,6 +1,7 @@
 import { convertToKilobyte } from "@/lib/utils";
 import { File, Trash2, Upload } from "lucide-react";
 import { ChangeEvent, DragEvent } from "react";
+import { Button } from "./button";
 
 interface FileUploadProps {
   value?: File;
@@ -51,13 +52,14 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
                 </p>
               </div>
               <div className="ml-auto">
-                <button
+                <Button
                   type="button"
+                  size="icon"
+                  variant="ghost"
                   onClick={handleRemoveFile}
-                  className="w-6 h-6 border-2 border-pri-base cursor-pointer grid place-items-center rounded-full text-white bg-pri-base"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                  <Trash2 className="w-4 h-4 text-destructive" />
+                </Button>
               </div>
             </div>
           </>
@@ -74,7 +76,7 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
               id={id}
               name={id}
               onChange={handleFileChange}
-              accept=".csv,.xlsx,.xls,.xlsm,.xltm,.xlam,.xlsb,.xltx,.xlt"
+              accept=".pdf,.png,.jpg, .jpeg"
             />
             <div className="text-center text-sm space-y-3 text-brand-text">
               <div className="font-bold text-primary">
@@ -85,7 +87,7 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
               </div>
 
               <p className="text-brand-text text-xs text-center">
-                PDF, DOCX, XLSX, PNG, JPG format, up to 50MB
+                PDF, PNG, JPG format, up to 50MB
               </p>
             </div>
           </>

@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useGetAllEventTypes from "@/hooks/project-modules/event-types/use-get-all-event-types";
 import useCreateEvent from "@/hooks/project-modules/events/use-create-event";
 import { cn } from "@/lib/utils";
-import { addProjectTaskSchema } from "@/utils/validation-schema/project";
+import { addProjectEventSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -44,11 +44,11 @@ const CreateEventModal = ({
 } & ModalProps) => {
   const createEvent = useCreateEvent(projectId);
   const eventTypes = useGetAllEventTypes();
-  const form = useForm<z.infer<typeof addProjectTaskSchema>>({
-    resolver: zodResolver(addProjectTaskSchema),
+  const form = useForm<z.infer<typeof addProjectEventSchema>>({
+    resolver: zodResolver(addProjectEventSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof addProjectTaskSchema>) => {
+  const onSubmit = async (data: z.infer<typeof addProjectEventSchema>) => {
     createEvent
       // @ts-expect-error ssls
       .mutateAsync(data)
@@ -82,7 +82,7 @@ const CreateEventModal = ({
             />
             <FormField
               control={form.control}
-              name="task_type"
+              name="event_type_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Event type</FormLabel>
@@ -202,7 +202,7 @@ const CreateEventModal = ({
 
             <FormField
               control={form.control}
-              name="task_type"
+              name="status"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
