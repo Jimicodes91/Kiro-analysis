@@ -1,4 +1,5 @@
-import { type ReactNode } from "react";
+import { motion } from "framer-motion";
+import React, { type ReactNode } from "react";
 import { BsArrowsAngleExpand } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
@@ -10,8 +11,31 @@ interface ModalProps {
   className?: string;
   expandRoute?: string;
   showExpandButton?: boolean;
-  fullHeight?: boolean;
+  isOpen?: boolean;
 }
+
+const dropIn = {
+  hidden: {
+    y: "-30vh",
+  },
+  visible: {
+    y: "0",
+    transition: {
+      duration: 0.3,
+      type: "spring",
+      damping: 25,
+    },
+  },
+  exit: {
+    y: "-30vh",
+    opacity: 0.3,
+    transition: {
+      duration: 0.2,
+      type: "spring",
+      damping: 25,
+    },
+  },
+};
 
 const Modal = ({
   title,
@@ -20,7 +44,7 @@ const Modal = ({
   className,
   expandRoute,
   showExpandButton = false,
-  fullHeight = true,
+  isOpen = false,
 }: ModalProps) => {
   const navigate = useNavigate();
 
@@ -30,24 +54,51 @@ const Modal = ({
     }
   };
 
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeModal();
+        // searchParams.delete("selectedTab");
+        // setSearchParams(searchParams, { replace: true }); // removes from URL without adding to browser history
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden"; // ⛔ prevent scrolling
+    } else {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = ""; // ✅ re-enable scrolling
+    }
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [closeModal, isOpen]);
+
   return (
-    <div
-      className={`fixed top-0 right-0 w-full h-full flex  ${
-        fullHeight ? "items-center" : "items-start"
-      } justify-end z-50 bg-[#00000033] ${className}`}
+    <motion.div
+      className={`fixed top-0 right-0 w-full py-6 h-screen scroll-smooth items-start flex justify-end z-50 backdrop-blur-sm ${className}`}
+      exit={{ opacity: 0 }}
     >
-      <div
-        className="absolute w-full h-full bg-gray-900 opacity-50"
+      <motion.div
+        className="fixed w-full top-0 right-0 h-screen bg-black"
         onClick={closeModal}
-      ></div>
-      <div
-        className={`bg-white  border-[1px] rounded-lg p-4 z-50 w-[90%] md:w-[60%] lg:w-[40%] ${
-          fullHeight ? "h-full max-h-[90%]" : " max-h-[90%] mt-6"
-        } mx-[3%] flex flex-col overflow-hidden`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.4 }}
+        exit={{ opacity: 1 }}
+      ></motion.div>
+      <motion.div
+        className={`bg-white rounded-lg p-4 z-50 w-full max-w-md max-h-full mx-[20px] flex flex-col scroll-smooth`}
+        variants={dropIn}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
       >
-        <div className=" border-[1px] rounded-lg flex flex-col h-full">
+        <div className="border rounded-lg flex flex-col h-fit custom-scrollbar scroll-smooth overflow-y-auto">
           {/* Fixed Header */}
-          <div className="flex justify-between pb-4 p-3  border-b border-[1px] bg-white sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
+          <div className="flex justify-between pb-4 p-3 rounded-tl-lg rounded-rl-lg border-b border-[1px] sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
             <div className="flex items-center gap-4">
               {showExpandButton && (
                 <button
@@ -81,12 +132,12 @@ const Modal = ({
           </div>
 
           {/* Scrollable Content Area */}
-          <div className="overflow-y-auto flex-grow custom-scrollbar">
+          <div className="h-full flex-grow scroll-smooth">
             <div>{children}</div>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

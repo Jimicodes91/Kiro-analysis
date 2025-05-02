@@ -4,11 +4,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { InferType } from "yup";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
-import { forgetPasswordSchema } from "../../components/validationSchema/auth";
-import { EmailProp } from "../../types";
+import { forgetPasswordSchema } from "../../utils/validation-schema/auth";
 import VerificationCard from "./VerificationCard";
 
 const ForgotPassword: React.FC = () => {
@@ -22,7 +22,7 @@ const ForgotPassword: React.FC = () => {
     resolver: yupResolver(forgetPasswordSchema),
   });
 
-  const onSubmit = async (data: EmailProp) => {
+  const onSubmit = async (data: InferType<typeof forgetPasswordSchema>) => {
     forgotPassword.mutateAsync(data).catch(console.error);
   };
 

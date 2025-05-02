@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
-import useDisclosure from "@/hooks/use-disclosure";
+// import useDisclosure from "@/hooks/use-disclosure";
+import getInitials from "@/lib/utils";
 import { Task } from "@/types/task.types";
 import { useState } from "react";
 import TaskModal from "./task-modal-form";
@@ -18,7 +19,7 @@ import TaskModal from "./task-modal-form";
 function TaskTableRow({ task }: { task: Task }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMode, setCurrentMode] = useState<"create" | "view" | "edit">("view");
-  const { onOpen: onDeleteOpen } = useDisclosure();
+  // const { onOpen: onDeleteOpen } = useDisclosure();
 
   const handleEditClick = () => {
     setCurrentMode("edit");
@@ -33,18 +34,18 @@ function TaskTableRow({ task }: { task: Task }) {
   return (
     <>
       <TableRow>
-        <TableCell>{task.taskName}</TableCell>
-        <TableCell>{task.clientName}</TableCell>
-        <TableCell>{task.company}</TableCell>
-        <TableCell>{task.endDate}</TableCell>
+        <TableCell>{task.name}</TableCell>
+        {/* <TableCell> -{task.clientName}</TableCell> */}
+        <TableCell>{task.company.name}</TableCell>
+        <TableCell>{task.end_date}</TableCell>
         <TableCell>
           <Badge
             variant={
               task.status === "completed"
                 ? "success"
                 : task.status === "in_progress"
-                  ? "customer"
-                  : "warn"
+                  ? "in_progress"
+                  : "not_started"
             }
           >
             {/* {task.status === "completed" && <Icons.check className="mt-1.5" />} */}
@@ -52,13 +53,22 @@ function TaskTableRow({ task }: { task: Task }) {
           </Badge>
         </TableCell>
         <TableCell>
-          <div className="flex -space-x-2">
-            {task.assignee.map((initial, index) => (
-              <Avatar key={index} className="h-6 w-6 border-2 border-white">
-                <AvatarFallback className="text-xs bg-gray-200">{initial}</AvatarFallback>
-              </Avatar>
-            ))}
-          </div>
+          {Array.isArray(task?.assignees) && task.assignees.length > 0 ? (
+            <div className="flex -space-x-2">
+              {task.assignees.map((assignee, index) => (
+                <Avatar
+                  key={assignee.id || index}
+                  className="h-7 w-7 border-2 border-white"
+                >
+                  <AvatarFallback className="text-xs bg-gray-200">
+                    {getInitials(assignee.name || "")}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+            </div>
+          ) : (
+            "—"
+          )}
         </TableCell>
         <TableCell>
           <DropdownMenu>
@@ -71,7 +81,7 @@ function TaskTableRow({ task }: { task: Task }) {
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={handleViewClick}>View Task</DropdownMenuItem>
                 <DropdownMenuItem onClick={handleEditClick}>Edit Task</DropdownMenuItem>
-                <DropdownMenuItem onClick={onDeleteOpen}>Delete Task</DropdownMenuItem>
+                {/* <DropdownMenuItem onClick={onDeleteOpen}>Delete Task</DropdownMenuItem> */}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>

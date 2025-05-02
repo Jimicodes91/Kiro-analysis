@@ -8,9 +8,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { completeInviteSchema } from "@/components/validationSchema/auth";
 import useCompleteRegistration from "@/hooks/auth/use-complete-registration";
 import useDisclosure from "@/hooks/use-disclosure";
+import { completeInviteSchema } from "@/utils/validation-schema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import React from "react";
@@ -55,6 +55,19 @@ const CompleteInvite: React.FC = () => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Type name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="newPassword"

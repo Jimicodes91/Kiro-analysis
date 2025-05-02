@@ -73,7 +73,7 @@ export const ENDPOINTS = {
   UPDATE_PASSWORD: "auth/update-password",
   AUTH_LOGIN: "auth/login",
   COMPANY_ADMIN_SIGNUP: "auth/company-admin-signup",
-  SEND_CONSULTANT_INVITE: "auth/send-consultant-invite",
+  SEND_CONSULTANT_INVITE: "auth/send-invite",
   COMPLETE_REGISTRATION: "auth/complete-registration",
   ADD_CLIENT: "auth/add-client",
 
@@ -96,7 +96,11 @@ export const ENDPOINTS = {
   GET_ALL_ADMINS: `admin/all-admin`,
 
   // Company Endpoints
-  CREATE_COMPANY: (userId: string) => `create/${userId}`,
+  CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
+
+  // Company Admin Endpoints
+  GET_COMPANY_USERS: (companyId: string) => `admin/companies/${companyId}/users`,
+  UPDATE_COMPANY_USER_STATUS: (companyId: string) => `admin/users/${companyId}/status`,
 
   // User Endpoints
   GET_USER: (userId: string) => `user/${userId}`,
@@ -105,6 +109,7 @@ export const ENDPOINTS = {
   // Contacts Endpoints
   CREATE_CONTACT: "contacts",
   GET_ALL_CONTACTS: "contacts",
+  UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
 
   /* 
   Project Module Collection
@@ -130,6 +135,7 @@ export const ENDPOINTS = {
     `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status ? `?status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
+  UPDATE_PROJECT_MILESTONE: (projectId: string) => `projects/${projectId}`,
 
   // 1. Project Types
   GET_ALL_PROJECT_TYPES: "projects/types",
@@ -222,18 +228,16 @@ export const ENDPOINTS = {
   GET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
 
   // 9. Document Types
-  CREATE_DOCUMENT_TYPE: (projectId: string) =>
-    `metadata/projects/${projectId}/type/documents`,
-  GET_DOCUMENT_TYPES: (projectId: string) =>
-    `metadata/projects/${projectId}/type/documents`,
+  CREATE_DOCUMENT_TYPE: `metadata/type/documents`,
+  GET_DOCUMENT_TYPES: `metadata/type/documents`,
 
   // 10. Event Types
-  CREATE_EVENT_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/events`,
-  GET_EVENT_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/events`,
+  CREATE_EVENT_TYPE: "metadata/type/events",
+  GET_EVENT_TYPES: "metadata/type/events",
 
   // 11. Task Types
-  CREATE_TASK_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
-  GET_TASK_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
+  CREATE_TASK_TYPE: "metadata/type/tasks",
+  GET_TASK_TYPES: "metadata/type/tasks",
 
   // 12. Activity Logs
   GET_AUDIT_TRAIL: (projectId: string, page = 1, limit = 20) =>
@@ -262,6 +266,9 @@ export const QUERYKEYS = {
   GET_ACTIVE_USERS: "GET_ACTIVE_USERS",
   GET_ALL_ADMINS: "GET_ALL_ADMINS",
 
+  // Company Admin Endpoints
+  GET_COMPANY_USERS: "GET_COMPANY_USERS",
+
   // User Query keys
   GET_USER: "GET_USER",
 
@@ -271,6 +278,7 @@ export const QUERYKEYS = {
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
   GET_PROJECT_DETAILS: "GET_PROJECT_DETAILS",
+  UPDATE_PROJECT_MILESTONE: "UPDATE_PROJECT_MILESTONE",
 
   // 1. Project Types Query keys
   GET_ALL_PROJECT_TYPES: "GET_ALL_PROJECT_TYPES",
@@ -329,8 +337,71 @@ export const PAGES = {
   REGISTER_PAGE: "/register",
   FORGOT_PASSWORD_PAGE: "/forgot-password",
   RESET_PASSWORD_PAGE: "/reset-password",
-
+  ADMIN_PAGE: "/admin",
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
   PROJECT_CREATE_PAGE: "/projects/create",
+};
+
+export const industryList = [
+  { value: "technology", label: "Technology" },
+  { value: "finance", label: "Finance" },
+  { value: "healthcare", label: "Healthcare" },
+  { value: "education", label: "Education" },
+  { value: "retail", label: "Retail" },
+  { value: "manufacturing", label: "Manufacturing" },
+  { value: "consulting", label: "Consulting" },
+  { value: "entertainment", label: "Entertainment" },
+];
+
+export const companySizeList = [
+  { value: "1-10", label: "1-10 Employees" },
+  { value: "11-50", label: "11-50 Employees" },
+  { value: "51-100", label: "51-100 Employees" },
+  { value: "101-250", label: "101-250 Employees" },
+  { value: "251-500", label: "251-500 Employees" },
+  { value: "500+", label: "500+ Employees" },
+];
+
+export const countryList = [
+  { value: "Nigeria", label: "Nigeria" },
+  { value: "usa", label: "United States" },
+  { value: "uk", label: "United Kingdom" },
+  { value: "ca", label: "Canada" },
+];
+
+// Define a type for the state options
+type StateOption = { value: string; label: string };
+
+// Define a type for the country-states mapping
+export type CountryStatesMap = {
+  [key in "Nigeria" | "usa" | "uk" | "ca"]: StateOption[];
+};
+
+// Predefined country-state mappings
+export const COUNTRY_STATES: CountryStatesMap = {
+  Nigeria: [
+    { value: "lagos", label: "Lagos" },
+    { value: "abuja", label: "Abuja" },
+    { value: "ibadan", label: "Ibadan" },
+    { value: "kano", label: "Kano" },
+  ],
+  usa: [
+    { value: "ny", label: "New York" },
+    { value: "ca", label: "California" },
+    { value: "tx", label: "Texas" },
+    { value: "fl", label: "Florida" },
+  ],
+  uk: [
+    { value: "london", label: "London" },
+    { value: "manchester", label: "Manchester" },
+    { value: "birmingham", label: "Birmingham" },
+    { value: "liverpool", label: "Liverpool" },
+  ],
+  ca: [
+    { value: "ontario", label: "Ontario" },
+    { value: "quebec", label: "Quebec" },
+    { value: "bc", label: "British Columbia" },
+    { value: "alberta", label: "Alberta" },
+  ],
 };

@@ -6,28 +6,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
+import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import TaskTableRow from "./task-table-row";
-import { useTaskData } from "./use-task-data";
-// import TableSkeletonRowLoader from "@/components/ui/table-row-skeleton";
 
 const TasksTable = () => {
-  const {
-    tasks,
-    //  loading
-  } = useTaskData();
+  const tasksResponse = useGetAllTasks();
+  const tasks = Array.isArray(tasksResponse?.data?.data?.data)
+    ? tasksResponse.data.data.data
+    : [];
 
-  const renderTableBody = () => {
-    // if (loading) return <TableSkeletonRowLoader length={7} />;
+  const renderTable = () => {
+    if (tasksResponse.isPending) {
+      return <TableSkeletonRowLoader length={6} />;
+    }
+
+    if (tasksResponse?.isError) {
+      return <EmptyTable message="Something went wrong" length={6} />;
+    }
+
+    if (tasks.length === 0) {
+      return <EmptyTable message="No tasks found" length={6} />;
+    }
 
     return (
-      <>
+      <TableBody className="text-xs">
         <TableRow className="border-0 outline-none !bg-transparent">
-          <TableCell className="border-0 h-3 py-0" colSpan={7}></TableCell>
+          <TableCell className="border-0 h-3 py-0" colSpan={6}></TableCell>
         </TableRow>
-        {tasks.map((task) => (
-          <TaskTableRow key={task.id} task={task} />
-        ))}
-      </>
+        {tasks?.map((task) => <TaskTableRow key={task.id} task={task} />)}
+      </TableBody>
     );
   };
 
@@ -38,7 +46,7 @@ const TasksTable = () => {
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
               <TableHead>Task name</TableHead>
-              <TableHead>Client name</TableHead>
+              {/* <TableHead>Client name</TableHead> */}
               <TableHead>Company</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Status</TableHead>
@@ -46,7 +54,7 @@ const TasksTable = () => {
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody className="text-xs">{renderTableBody()}</TableBody>
+          {renderTable()}
         </Table>
       </div>
     </div>

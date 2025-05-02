@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import TableSkeletonRowLoader from "@/components/ui/table-row-skeleton";
+import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
 import useGetAllContacts from "@/hooks/contacts/use-get-all-contacts";
 import ContactTableRow from "./contact-table-row";
 
@@ -15,19 +15,29 @@ const ContactsTable = () => {
   const contacts = Array.isArray(contactsResponse.data?.data?.data)
     ? contactsResponse.data.data.data
     : [];
-  console.log(contacts, "contacts");
-  const renderTableBody = () => {
-    if (contactsResponse.isPending) return <TableSkeletonRowLoader length={8} />;
+
+  const renderTable = () => {
+    if (contactsResponse.isPending) {
+      return <TableSkeletonRowLoader length={8} />;
+    }
+
+    if (contactsResponse?.isError) {
+      return <EmptyTable message="Something went wrong" length={8} />;
+    }
+
+    if (contacts.length === 0) {
+      return <EmptyTable message="No contacts found" length={8} />;
+    }
 
     return (
-      <>
+      <TableBody className="text-xs">
         <TableRow className="border-0 outline-none !bg-transparent">
           <TableCell className="border-0 h-3 py-0" colSpan={8}></TableCell>
         </TableRow>
-        {contacts.map((contact) => (
+        {contacts?.map((contact) => (
           <ContactTableRow key={contact.id} contact={contact} />
         ))}
-      </>
+      </TableBody>
     );
   };
 
@@ -47,7 +57,7 @@ const ContactsTable = () => {
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody className="text-xs">{renderTableBody()}</TableBody>
+          {renderTable()}
         </Table>
       </div>
     </div>

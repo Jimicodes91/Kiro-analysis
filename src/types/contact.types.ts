@@ -13,4 +13,21 @@ export interface Contact {
   no_of_projects: number | null;
   closed_projects: number | null;
   assigne: string | null;
+  assigned_to: {
+    id: string;
+    name: string;
+  }[];
+}
+
+export interface AssignTo {
+  id: string;
+  name: string;
+}
+export interface ContactFormValues {
+  id?: string;
+  name: string;
+  phone: string;
+  email: string;
+  organization: string;
+  assigned_to: AssignTo[];
 }

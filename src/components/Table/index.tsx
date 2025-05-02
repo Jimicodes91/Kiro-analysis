@@ -44,7 +44,7 @@ const SubTable = <S, SK extends keyof S>({
 }: SubTableProps<S, SK>) => {
   return (
     <table className="min-w-full table-fixed">
-      <thead className="border-b border-[#0000001A]">
+      <thead className="border-b border-brand-border">
         <tr>
           {columns.map((column, index) => (
             <th
@@ -138,14 +138,14 @@ function Table<T, K extends keyof T, S = never, SK extends keyof S = never>(
         {/* Table container - both header and body will scroll together */}
         <div className="inline-block min-w-full">
           {/* Header table with rounded corners */}
-          <div className="rounded-lg border border-[#D3D4D4] overflow-hidden">
+          <div className=" border border-[#D3D4D4] overflow-hidden">
             <table className="min-w-full">
-              <thead className="bg-[#EAECEC]">
+              <thead className="bg-[#EAECEC] ">
                 <tr>
                   {columns.map((column, index) => (
                     <th
                       key={`header-${index}`}
-                      className={`${headerClassName} ${column.width || ""}`}
+                      className={`${headerClassName}  ${column.width || ""}`}
                     >
                       {column.header}
                     </th>
@@ -159,7 +159,7 @@ function Table<T, K extends keyof T, S = never, SK extends keyof S = never>(
           </div>
 
           {/* Body table with gap */}
-          <div className="mt-2 rounded-lg border border-[#0000001A] overflow-hidden">
+          <div className="mt-2 rounded-lg border border-brand-border overflow-hidden">
             <table className="min-w-full">
               <thead className="hidden">
                 {/* Hidden header to maintain column width consistency */}

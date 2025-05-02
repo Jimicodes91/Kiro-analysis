@@ -1,8 +1,10 @@
 import Modal from "@/components/Modal";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import FileUpload, { AttachmentFile } from "@/components/ui/file-upload";
+import { Checkbox } from "@/components/ui/checkbox";
+import FileUpload, { AttachmentFile } from "@/components/ui/fileupload";
 import { Input } from "@/components/ui/input";
+import MultiSelect from "@/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
@@ -11,13 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
+import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
+import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
+import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
+import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { cn } from "@/lib/utils";
+import { getUserSession } from "@/services/api.service";
 import { Task, TaskFormData } from "@/types/task.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CalendarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -29,51 +36,160 @@ interface TaskModalProps {
 }
 
 const taskSchema = yup.object({
-  taskName: yup.string().required("Task name is required"),
-  taskType: yup.string().required("Task type is required"),
-  projectType: yup.string().required("Project type is required"),
-  startDate: yup.string().required("Start Date is required"),
-  endDate: yup.string().required("End Date is required"),
+  name: yup.string().required("Task name is required"),
+  task_type_id: yup.string().required("Task type is required"),
+  project_type_id: yup.string().required("Pipeline is required"),
+  project: yup.string().required("Project is required"),
+  start_date: yup.string().required("Start Date is required"),
+  end_date: yup.string().required("End Date is required"),
   status: yup.string().required("Status is required"),
   description: yup.string().required("Description is required"),
-  visibleToClient: yup.boolean().default(false),
+  is_visible_to_client: yup.boolean().default(false),
+  assignees: yup.array().of(yup.string().required()).required("Assignee is required"),
+  attachments: yup
+    .array()
+    .of(yup.string().required())
+    .required("Attachments are required"),
 });
 
 const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) => {
-  const [loading, setLoading] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("");
+  const [selectedProjectTypeId, setSelectedProjectTypeId] = useState<string>("");
+  const [attachmentFiles, setAttachmentFiles] = useState<AttachmentFile[]>([]);
+  const [formInitialized, setFormInitialized] = useState<boolean>(false);
+
   const isViewMode = mode === "view";
   const isCreateMode = mode === "create";
 
-  const { control, handleSubmit, reset, setValue } = useForm<TaskFormData>({
+  // Get data from hooks
+  const session = getUserSession();
+  const usersResponse = useGetCompanyUsers(session?.company_id ?? "");
+  const projectTypesResponse = useGetAllProjectTypes();
+  const taskTypesResponse = useGetAllTaskTypes();
+  const projectsResponse = useGetAllProjects(selectedProjectTypeId);
+  const addTask = useCreateTask(selectedProjectId);
+
+  const users = useMemo(() => usersResponse?.value?.data || [], [usersResponse]);
+  const projects = useMemo(() => projectsResponse?.value?.data || [], [projectsResponse]);
+  const projectTypes = useMemo(
+    () => projectTypesResponse?.value?.data || [],
+    [projectTypesResponse]
+  );
+  const taskTypes = useMemo(
+    () => taskTypesResponse?.value?.data || [],
+    [taskTypesResponse]
+  );
+
+  const userOptions = users?.map((user) => ({
+    value: user.id,
+    label: user.name || user.email,
+  }));
+
+  const { control, handleSubmit, setValue, watch, reset } = useForm<TaskFormData>({
     resolver: yupResolver(taskSchema),
     defaultValues: {
-      taskName: "",
-      taskType: "",
-      projectType: "",
-      startDate: "",
-      endDate: "",
+      name: "",
+      task_type_id: "",
+      project_type_id: "",
+      project: "",
+      start_date: "",
+      end_date: "",
       status: "",
       description: "",
-      visibleToClient: false,
+      is_visible_to_client: false,
       attachments: [],
+      assignees: [],
     },
   });
 
+  // Watch the project_type field to update projects when it changes
+  const watchedProjectType = watch("project_type_id");
+
   useEffect(() => {
-    if (task && (mode === "edit" || mode === "view")) {
-      // Populate form with task data
-      setValue("taskName", task.taskName);
-      setValue("taskType", task.taskType || "");
-      setValue("projectType", task.projectType || "");
-      setValue("startDate", task.startDate);
-      setValue("endDate", task.endDate);
-      setValue("assignTo", task.assignTo);
-      setValue("status", task.status || "");
-      setValue("description", task.description || "");
-      setValue("visibleToClient", task.visibleToClient || false);
-      setValue("attachments", task.attachments || []);
+    if (watchedProjectType) {
+      setSelectedProjectTypeId(watchedProjectType);
     }
-  }, [task, mode, setValue]);
+  }, [watchedProjectType]);
+
+  // Set project ID when project field changes
+  const watchedProject = watch("project");
+  useEffect(() => {
+    if (watchedProject) {
+      setSelectedProjectId(watchedProject);
+    }
+  }, [watchedProject]);
+
+  // Initialize form data from task prop when available
+  useEffect(() => {
+    // Only run this effect if all dependent data is loaded
+    if (
+      !task ||
+      formInitialized ||
+      !(mode === "edit" || mode === "view") ||
+      !users.length ||
+      !projectTypes.length ||
+      !taskTypes.length
+    ) {
+      return;
+    }
+
+    // First, set the project type to ensure projects are loaded
+    if (task.pipeline?.id) {
+      setSelectedProjectTypeId(task.pipeline.id);
+      setValue("project_type_id", task.pipeline.id);
+    }
+
+    // Small delay to ensure projects are loaded after setting project type
+    setTimeout(() => {
+      // Now set the rest of the form values
+      setValue("name", task.name);
+      setValue("task_type_id", task.task_type.id || "");
+      setValue("project", task.project_id || "");
+      setValue("start_date", task.start_date);
+      setValue("end_date", task.end_date);
+
+      // Fix status value to match select options
+      let statusValue = task.status;
+      if (statusValue === "in progress") {
+        statusValue = "in_progress";
+      }
+      setValue("status", statusValue);
+
+      setValue("description", task.description || "");
+      setValue("is_visible_to_client", task.is_visible_to_client === 1 || false);
+
+      // Handle assignees - extract IDs from the assignees array
+      if (task.assignees && Array.isArray(task.assignees)) {
+        const assigneeIds = task.assignees.map((assignee) => assignee.id);
+        setValue("assignees", assigneeIds);
+      }
+
+      // Handle attachments if they exist
+      if (task.document && task.document[0]?.attachments) {
+        const attachments = task.document[0].attachments.map((attachment) => ({
+          name: attachment.media_url.split("/").pop() || "file",
+          url: attachment.media_url,
+          size: 0, // Since we don't have size info in the response
+        }));
+
+        setAttachmentFiles(attachments);
+        setValue(
+          "attachments",
+          attachments.map((a) => a.url)
+        );
+      }
+
+      setFormInitialized(true);
+    }, 100);
+  }, [task, mode, setValue, users, projectTypes, taskTypes, projects, formInitialized]);
+
+  // Reset form initialization state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setFormInitialized(false);
+      reset();
+    }
+  }, [isOpen, reset]);
 
   const handleFormSubmit = async (data: TaskFormData) => {
     if (isViewMode) {
@@ -81,26 +197,20 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
       return;
     }
 
-    setLoading(true);
-    try {
-      if (mode === "edit" && task?.id) {
-        data.id = task.id;
-      }
+    if (mode === "edit" && task?.id) {
+      data.id = task.id;
+    }
 
-      if (mode === "edit") {
-        // await updateTask(data);
-        console.log("Updating task:", data);
-      } else if (mode === "create") {
-        // await createTask(data);
-        console.log("Creating task:", data);
-      }
-
-      onClose();
+    if (mode === "edit") {
+      //updateTask.mutateAsync(data)
+      console.log("Updating task with data:", data);
+    } else if (mode === "create") {
+      const { project, ...newData } = data;
+      setSelectedProjectId(project);
+      console.log("Creating task with data:", newData);
+      addTask.mutateAsync(newData);
       reset();
-    } catch (error) {
-      console.error("Failed to submit form:", error);
-    } finally {
-      setLoading(false);
+      onClose();
     }
   };
 
@@ -119,10 +229,46 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
     return new Date(dateString);
   };
 
-  if (!isOpen) return null;
+  // Format dates for display in view mode
+  const formatDateForDisplay = (dateString: string): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+  // Function to get task type name by ID
+  const getTaskTypeName = (id: string): string => {
+    const taskType = taskTypes.find((tt) => tt.id === id);
+    return taskType ? taskType.name : id;
+  };
+
+  // Function to get project type (pipeline) name by ID
+  const getProjectTypeName = (id: string): string => {
+    const projectType = projectTypes.find((pt) => pt.id === id);
+    return projectType ? projectType.name : id;
+  };
+
+  // Function to get project name by ID
+  const getProjectName = (id: string): string => {
+    const project = projects.find((p) => p.id === id);
+    return project ? project.name : id;
+  };
+
+  // Function to get assignee names
+  const getAssigneeNames = (assigneeIds: string[]): string => {
+    if (!assigneeIds || assigneeIds.length === 0) return "None";
+
+    const assigneeNames = assigneeIds.map((id) => {
+      const user = users.find((u) => u.id === id);
+      return user ? user.name || user.email : id;
+    });
+
+    return assigneeNames.join(", ");
+  };
 
   // Function to handle file uploads and update parent state
   const handleAttachmentsChange = (files: AttachmentFile[]): void => {
+    setAttachmentFiles(files);
     // Update the form state with the file URLs
     setValue(
       "attachments",
@@ -130,27 +276,118 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
     );
   };
 
+  if (!isOpen) return null;
+
+  // Render different view for "view" mode
+  if (isViewMode) {
+    const formValues = watch();
+
+    return (
+      <Modal title="View task" closeModal={onClose}>
+        <div className="p-4 space-y-6">
+          {/* Task Name */}
+          <div>
+            <h3 className="text-sm font-medium text-[#00000099] mb-1">Task name</h3>
+            <p className="font-medium">{formValues.name}</p>
+          </div>
+
+          {/* Task Type */}
+          <div>
+            <h3 className="text-sm font-medium text-[#00000099] mb-1">Task type</h3>
+            <p>{getTaskTypeName(formValues.task_type_id)}</p>
+          </div>
+
+          {/* Pipeline */}
+          <div>
+            <h3 className="text-sm font-medium text-[#00000099] mb-1">Pipeline</h3>
+            <p>{getProjectTypeName(formValues.project_type_id)}</p>
+          </div>
+
+          {/* Project */}
+          <div>
+            <h3 className="text-sm font-medium text-[#00000099] mb-1">Project</h3>
+            <p>{getProjectName(formValues.project)}</p>
+          </div>
+
+          {/* Description */}
+          <div>
+            <h3 className="text-sm font-medium text-[#00000099] mb-1">Description</h3>
+            <p className="whitespace-pre-wrap">{formValues.description}</p>
+          </div>
+
+          {/* Dates */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-sm font-medium text-[#00000099] mb-1">Start date</h3>
+              <p>{formatDateForDisplay(formValues.start_date)}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-[#00000099] mb-1">End date</h3>
+              <p>{formatDateForDisplay(formValues.end_date)}</p>
+            </div>
+          </div>
+
+          {/* Assignees */}
+          <div>
+            <h3 className="text-sm font-medium text-[#00000099] mb-1">Assigned to</h3>
+            <div>
+              <p>{getAssigneeNames(formValues.assignees)}</p>
+            </div>
+          </div>
+
+          {/* Status */}
+          <div>
+            <h3 className="text-sm font-medium text-[#00000099] mb-1">Status</h3>
+            <p className="capitalize">{formValues.status.replace("_", " ")}</p>
+          </div>
+
+          {/* Attachments */}
+          {attachmentFiles.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-[#00000099] mb-1">Attachments</h3>
+              <FileUpload initialAttachments={attachmentFiles} disabled={true} />
+            </div>
+          )}
+
+          {/* Visibility */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="view_visible_to_client"
+              checked={!!formValues.is_visible_to_client}
+              disabled={true}
+            />
+            <label
+              htmlFor="view_visible_to_client"
+              className="text-sm font-medium text-[#00000099]"
+            >
+              Visible to client
+            </label>
+          </div>
+
+          <div className="pt-4">
+            <Button type="button" className="w-full" onClick={onClose}>
+              Close
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
+  // Render form for edit/create mode
   return (
-    <Modal
-      title={isCreateMode ? "Create task" : isViewMode ? "View task" : "Edit task"}
-      closeModal={onClose}
-    >
+    <Modal title={isCreateMode ? "Create task" : "Edit task"} closeModal={onClose}>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="p-4 space-y-4">
         <div>
           <label className="block text-sm font-medium text-[#00000099] mb-1">
             Task name
           </label>
           <Controller
-            name="taskName"
+            name="name"
             control={control}
             render={({ field, fieldState }) => (
               <>
-                <Input
-                  {...field}
-                  disabled={isViewMode}
-                  placeholder="Task name"
-                  className={isViewMode ? "bg-gray-100" : ""}
-                />
+                <Input {...field} placeholder="Task name" />
                 {fieldState.error && (
                   <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
                 )}
@@ -164,23 +401,24 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
             Task type
           </label>
           <Controller
-            name="taskType"
+            name="task_type_id"
             control={control}
             render={({ field, fieldState }) => (
               <>
                 <Select
-                  disabled={isViewMode}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  value={field.value}
                 >
-                  <SelectTrigger className={`${isViewMode ? "bg-gray-100" : ""} w-full`}>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select task type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="conference">Conference</SelectItem>
-                    <SelectItem value="workshop">Workshop</SelectItem>
-                    <SelectItem value="meeting">Meeting</SelectItem>
-                    <SelectItem value="webinar">Webinar</SelectItem>
+                    {taskTypes.map((taskType) => (
+                      <SelectItem key={taskType.id} value={taskType.id}>
+                        {taskType.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
@@ -196,22 +434,80 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
             Pipeline
           </label>
           <Controller
-            name="projectType"
+            name="project_type_id"
             control={control}
             render={({ field, fieldState }) => (
               <>
                 <Select
-                  disabled={isViewMode}
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    setSelectedProjectTypeId(value);
+                    // Reset project selection when pipeline changes
+                    setValue("project", "");
+                  }}
                   defaultValue={field.value}
+                  value={field.value}
                 >
-                  <SelectTrigger className={`${isViewMode ? "bg-gray-100" : ""} w-full`}>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select pipeline" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="internal">Internal</SelectItem>
-                    <SelectItem value="client">Client</SelectItem>
-                    <SelectItem value="public">Public</SelectItem>
+                    {projectTypes.map((projectType) => (
+                      <SelectItem key={projectType.id} value={projectType.id}>
+                        {projectType.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {fieldState.error && (
+                  <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
+                )}
+              </>
+            )}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-[#00000099] mb-1">
+            Project
+          </label>
+          <Controller
+            name="project"
+            control={control}
+            render={({ field, fieldState }) => (
+              <>
+                <Select
+                  disabled={!selectedProjectTypeId}
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue
+                      placeholder={
+                        selectedProjectTypeId ? "Select project" : "Select pipeline first"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {selectedProjectTypeId &&
+                    projects.filter(
+                      (project) => project.project_type_id === selectedProjectTypeId
+                    ).length === 0 ? (
+                      <div className="px-2 py-1 flex justify-center items-center text-sm text-[#00000099]">
+                        No projects found
+                      </div>
+                    ) : (
+                      projects
+                        .filter(
+                          (project) => project.project_type_id === selectedProjectTypeId
+                        )
+                        .map((project) => (
+                          <SelectItem key={project.id} value={project.id}>
+                            {project.name}
+                          </SelectItem>
+                        ))
+                    )}
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
@@ -231,12 +527,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
             control={control}
             render={({ field, fieldState }) => (
               <>
-                <Textarea
-                  {...field}
-                  disabled={isViewMode}
-                  placeholder="Description"
-                  className={`min-h-24 ${isViewMode ? "bg-gray-100" : ""}`}
-                />
+                <Textarea {...field} placeholder="Description" className="min-h-24" />
                 {fieldState.error && (
                   <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
                 )}
@@ -251,7 +542,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
               Start date
             </label>
             <Controller
-              name="startDate"
+              name="start_date"
               control={control}
               render={({ field, fieldState }) => (
                 <>
@@ -261,10 +552,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
                         variant="outline"
                         className={cn(
                           "w-full justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                          isViewMode && "bg-gray-100 pointer-events-none"
+                          !field.value && "text-muted-foreground"
                         )}
-                        disabled={isViewMode}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value ? (
@@ -300,7 +589,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
               End date
             </label>
             <Controller
-              name="endDate"
+              name="end_date"
               control={control}
               render={({ field, fieldState }) => (
                 <>
@@ -310,10 +599,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
                         variant="outline"
                         className={cn(
                           "w-full justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                          isViewMode && "bg-gray-100 pointer-events-none"
+                          !field.value && "text-muted-foreground"
                         )}
-                        disabled={isViewMode}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value ? (
@@ -347,6 +634,24 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
 
         <div>
           <label className="block text-sm font-medium text-[#00000099] mb-1">
+            Assign to
+          </label>
+          <Controller
+            name="assignees"
+            control={control}
+            render={({ field }) => (
+              <MultiSelect
+                options={userOptions}
+                defaultSelected={field.value || []}
+                onChange={field.onChange}
+                placeholder="Assign to"
+              />
+            )}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-[#00000099] mb-1">
             Status
           </label>
           <Controller
@@ -355,17 +660,18 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
             render={({ field, fieldState }) => (
               <>
                 <Select
-                  disabled={isViewMode}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  value={field.value}
                 >
-                  <SelectTrigger className={`${isViewMode ? "bg-gray-100" : ""} w-full`}>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="completed">Completed</SelectItem>
                     <SelectItem value="in_progress">In Progress</SelectItem>
                     <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="not_started">Not Started</SelectItem>
                   </SelectContent>
                 </Select>
                 {fieldState.error && (
@@ -384,24 +690,24 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
             onAttachmentsChange={handleAttachmentsChange}
             maxFileSize={5 * 1024 * 1024} // 5MB max size
             acceptedFileTypes={["pdf", "docx", "xlsx", "png", "jpg"]}
+            initialAttachments={attachmentFiles}
           />
         </div>
 
         <div className="flex items-center space-x-2 mt-10">
           <Controller
-            name="visibleToClient"
+            name="is_visible_to_client"
             control={control}
             render={({ field }) => (
-              <Switch
-                id="visibleToClient"
+              <Checkbox
+                id="is_visible_to_client"
                 checked={!!field.value}
                 onCheckedChange={field.onChange}
-                disabled={isViewMode}
               />
             )}
           />
           <label
-            htmlFor="visibleToClient"
+            htmlFor="is_visible_to_client"
             className="text-sm font-medium text-[#00000099] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             Make visible to client
@@ -409,8 +715,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
         </div>
 
         <div className="pt-4">
-          <Button type="submit" className="w-full" disabled={loading || isViewMode}>
-            {isCreateMode ? "Create task" : isViewMode ? "Close" : "Update task"}
+          <Button type="submit" className="w-full" disabled={false}>
+            {isCreateMode ? "Create task" : "Update task"}
           </Button>
         </div>
       </form>

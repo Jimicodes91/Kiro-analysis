@@ -9,13 +9,16 @@ export interface CreateTaskRequest {
   end_date: string;
   attachments: string[];
   is_visible_to_client: boolean;
+  task_type_id: string;
+  project_type_id: string;
+  assignees: string[];
 }
 
-const useCreateEvent = (projectId: string) => {
+const useCreateTask = (projectId: string) => {
   return useCustomMutation<Record<string, string>, CreateTaskRequest>({
     method: "post",
     endpoint: ENDPOINTS.CREATE_TASK(projectId),
   });
 };
 
-export default useCreateEvent;
+export default useCreateTask;

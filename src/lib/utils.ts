@@ -1,3 +1,5 @@
+import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
+import { ProjectDetails } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
 import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
@@ -31,7 +33,7 @@ export function convertDatesToYMD(obj: Record<string, Given>): Record<string, Gi
   for (const key in obj) {
     const value = obj[key];
     // Check if the value is a string.
-    if (key.toLowerCase().includes("date") && typeof value !== "string") {
+    if (key.toLowerCase().includes("date")) {
       const parsedDate = new Date(value);
       // If the date is valid, format it as YYYY-MM-DD.
       if (!isNaN(parsedDate.getTime())) {
@@ -52,3 +54,77 @@ export function convertDatesToYMD(obj: Record<string, Given>): Record<string, Gi
 
   return result;
 }
+
+export function getFormattedText(name?: string) {
+  if (!name) return "";
+  return name.split("_").join(" ");
+}
+
+export const generateBoardMilestone = (
+  projectTypes: ProjectType[] | undefined,
+  activeProjectType: string
+) => {
+  if (!projectTypes) return [];
+  const milestones = projectTypes?.find(
+    (item) => item.id === activeProjectType
+  )?.milestones;
+
+  if (milestones) {
+    return milestones;
+  } else {
+    return [];
+  }
+};
+
+export const getMileStoneProject = (projects: ProjectDetails[], milestoneId: string) => {
+  const filteredProjects = projects.filter((item) =>
+    milestoneId === "disabled" ? !item.milestone_id : item.milestone_id === milestoneId
+  );
+  return filteredProjects;
+};
+
+export function updateProjectMilestoneById(
+  projects: ProjectDetails[],
+  projectId: string,
+  milestoneId: string
+): ProjectDetails[] {
+  return projects.map((project) =>
+    project.id === projectId ? { ...project, milestone_id: milestoneId } : project
+  );
+}
+
+export function updateProjectsIndex(
+  projects: ProjectDetails[],
+  projectId: string,
+  newIndex: number
+) {
+  // Step 1: Find the project to move
+  const movingProject = projects.find((p) => p.id === projectId);
+  if (!movingProject) {
+    return projects; // if project not found, return original
+  }
+
+  // Step 2: Remove the moving project from the array
+  const remainingProjects = projects.filter((p) => p.id !== projectId);
+
+  // Step 3: Insert the moving project at the desired index
+  const updatedProjects = [
+    ...remainingProjects.slice(0, newIndex),
+    movingProject,
+    ...remainingProjects.slice(newIndex),
+  ];
+
+  // Step 4: Update the `index` field properly
+  return updatedProjects.map((p, idx) => ({
+    ...p,
+    index: idx,
+  }));
+}
+
+export function convertToKilobyte(size: number) {
+  const newSize = size / 1024;
+
+  return newSize.toFixed(2);
+}
+
+// export const getCurrentMilestone = (milestones, milestoneId: string)

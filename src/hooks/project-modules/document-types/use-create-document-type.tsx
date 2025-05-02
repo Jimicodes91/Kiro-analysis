@@ -1,7 +1,10 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
-const useCreateDocumentType = (projectId: string) => {
+const useCreateDocumentType = () => {
+  const queryClient = useQueryClient();
+
   return useCustomMutation<
     Record<string, string>,
     {
@@ -10,7 +13,12 @@ const useCreateDocumentType = (projectId: string) => {
     }
   >({
     method: "post",
-    endpoint: ENDPOINTS.CREATE_DOCUMENT_TYPE(projectId),
+    endpoint: ENDPOINTS.CREATE_DOCUMENT_TYPE,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_DOCUMENT_TYPES],
+      });
+    },
   });
 };
 

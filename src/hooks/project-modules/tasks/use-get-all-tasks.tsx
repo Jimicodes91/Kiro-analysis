@@ -1,11 +1,11 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
-import { TaskDetails } from "@/types/api.types";
+import { Task } from "@/types/task.types";
 
 export interface TaskListResponse {
   success: boolean;
   message: string;
-  data: TaskDetails[];
+  data: Task[];
 }
 
 const useGetAllTasks = (projectId?: string) => {

@@ -1,421 +1,336 @@
-// import Modal from "@/components/Modal";
-// import { Button } from "@/components/ui/button";
-// import { Calendar } from "@/components/ui/calendar";
-// import FileUpload, { AttachmentFile } from "@/components/ui/file-upload";
-// import { Input } from "@/components/ui/input";
-// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { Switch } from "@/components/ui/switch";
-// import { Textarea } from "@/components/ui/textarea";
-// import { cn } from "@/lib/utils";
-// import { Task, TaskFormData } from "@/types/task.types";
-// import { yupResolver } from "@hookform/resolvers/yup";
-// import { CalendarIcon } from "lucide-react";
-// import { useEffect, useState } from "react";
-// import { Controller, useForm } from "react-hook-form";
-// import * as yup from "yup";
+import Modal from "@/components/Modal";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+// import { countries } from "@/components/ui/country-selector";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import MultiSelect from "@/components/ui/multi-select";
+import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
+import useCreateContact from "@/hooks/contacts/use-create-contact";
+import useUpdateContact from "@/hooks/contacts/use-update-contact";
+import getInitials from "@/lib/utils";
+import { getUserSession } from "@/services/api.service";
+import { ContactFormValues } from "@/types/contact.types";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import * as yup from "yup";
 
-// interface TaskModalProps {
-//   isOpen: boolean;
-//   onClose: () => void;
-//   mode: "create" | "view" | "edit";
-//   task?: Task;
-// }
+// Define contact schema
+const contactSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  phone: yup.string().required("Phone number is required"),
+  organization: yup.string().required("Company is required"),
+  assigned_to: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup.string().required(),
+        name: yup.string().required(),
+      })
+    )
+    .required("Please assign this contact to at least one person"),
+});
 
-// const taskSchema = yup.object({
-//   taskName: yup.string().required("Task name is required"),
-//   taskType: yup.string().required("Task type is required"),
-//   projectType: yup.string().required("Project type is required"),
-//   startDate: yup.string().required("Start Date is required"),
-//   endDate: yup.string().required("End Date is required"),
-//   status: yup.string().required("Status is required"),
-//   description: yup.string().required("Description is required"),
-//   visibleToClient: yup.boolean().default(false),
-// });
+// type ContactFormValues = yup.InferType<typeof contactSchema>;
+interface ContactModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mode: "create" | "edit" | "view";
+  contactData?: ContactFormValues;
+}
 
-// const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) => {
-//   const [loading, setLoading] = useState(false);
-//   const isViewMode = mode === "view";
-//   const isCreateMode = mode === "create";
+function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps) {
+  // Get data from hooks
+  const session = getUserSession();
+  const usersResponse = useGetCompanyUsers(session?.company_id ?? "");
+  const createContact = useCreateContact();
+  const updateContact = useUpdateContact(contactData?.id || "");
+  //   const [countryCode, setCountryCode] = useState("+1");
 
-//   const { control, handleSubmit, reset, setValue } = useForm<TaskFormData>({
-//     resolver: yupResolver(taskSchema),
-//     defaultValues: {
-//       taskName: "",
-//       taskType: "",
-//       projectType: "",
-//       startDate: "",
-//       endDate: "",
-//       status: "",
-//       description: "",
-//       visibleToClient: false,
-//       attachments: [],
-//     },
-//   });
+  const form = useForm<ContactFormValues>({
+    resolver: yupResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      organization: "",
+      assigned_to: [],
+    },
+  });
 
-//   useEffect(() => {
-//     if (task && (mode === "edit" || mode === "view")) {
-//       // Populate form with task data
-//       setValue("taskName", task.taskName);
-//       setValue("taskType", task.taskType || "");
-//       setValue("projectType", task.projectType || "");
-//       setValue("startDate", task.startDate);
-//       setValue("endDate", task.endDate);
-//       setValue("assignTo", task.assignTo);
-//       setValue("status", task.status || "");
-//       setValue("description", task.description || "");
-//       setValue("visibleToClient", task.visibleToClient || false);
-//       setValue("attachments", task.attachments || []);
-//     }
-//   }, [task, mode, setValue]);
+  // Load data for edit or view mode
+  useEffect(() => {
+    if (contactData && (mode === "edit" || mode === "view")) {
+      form.reset(contactData);
+      // Extract country code from existing phone number
+      //   if (contactData.phone) {
+      //     const matchedCountry = countries.find((c) =>
+      //       contactData.phone.startsWith(c.dialCode)
+      //     );
+      //     if (matchedCountry) {
+      //       setCountryCode(matchedCountry.dialCode);
+      //     }
+      //   }
+    }
+  }, [contactData, form, mode]);
 
-//   const handleFormSubmit = async (data: TaskFormData) => {
-//     if (isViewMode) {
-//       onClose();
-//       return;
-//     }
+  const users = Array.isArray(usersResponse?.value?.data) ? usersResponse.value.data : [];
 
-//     setLoading(true);
-//     try {
-//       if (mode === "edit" && task?.id) {
-//         data.id = task.id;
-//       }
+  // Convert users to MultiSelect options format
+  const userOptions = users.map((user) => ({
+    value: user.id,
+    label: user.name || user.email,
+  }));
 
-//       if (mode === "edit") {
-//         // await updateTask(data);
-//         console.log("Updating task:", data);
-//       } else if (mode === "create") {
-//         // await createTask(data);
-//         console.log("Creating task:", data);
-//       }
+  const onSubmit = async (data: ContactFormValues) => {
+    // Prepare the payload with consistent structure
+    const payload = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      organization: data.organization,
+      assigned_to: data.assigned_to.map((user) => ({
+        id: user.id,
+        name: user.name,
+      })),
+    };
 
-//       onClose();
-//       reset();
-//     } catch (error) {
-//       console.error("Failed to submit form:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+    if (mode === "create") {
+      createContact
+        .mutateAsync(payload)
+        .then(() => {
+          onClose();
+          form.reset();
+        })
+        .catch(console.error);
+    } else if (mode === "edit") {
+      updateContact
+        .mutateAsync({
+          ...payload,
+        })
+        .then(() => {
+          onClose();
+        })
+        .catch(console.error);
+    }
+  };
 
-//   // Helper function to format date as YYYY-MM-DD
-//   const formatDateForInput = (date: Date | null): string => {
-//     if (!date) return "";
-//     const year = date.getFullYear();
-//     const month = String(date.getMonth() + 1).padStart(2, "0");
-//     const day = String(date.getDate()).padStart(2, "0");
-//     return `${year}-${month}-${day}`;
-//   };
+  return (
+    <Modal
+      title={
+        mode === "create"
+          ? "Add contact"
+          : mode === "edit"
+            ? "Edit contact"
+            : "View contact"
+      }
+      closeModal={onClose}
+      isOpen={isOpen}
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Client name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Name"
+                    {...field}
+                    disabled={mode === "view"}
+                    className="rounded-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Email"
+                    type="email"
+                    {...field}
+                    disabled={mode === "view"}
+                    className="rounded-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="organization"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Company"
+                    {...field}
+                    disabled={mode === "view"}
+                    className="rounded-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone number</FormLabel>
+                <FormControl>
+                  <div className="flex items-center rounded-full border bg-white overflow-hidden h-10">
+                    <div className="flex items-center h-full px-2">
+                      <CountrySelector
+                        value={countryCode}
+                        onChange={(code) => {
+                          setCountryCode(code);
+                          const numberPart = field.value?.replace(/^\+\d+/, "") || "";
+                          field.onChange(`${code}${numberPart}`);
+                        }}
+                        disabled={mode === "view"}
+                      />
+                    </div>
+                    <Input
+                      placeholder="1234567890"
+                      {...field}
+                      value={field.value?.replace(countryCode, "") || ""}
+                      onChange={(e) => {
+                        const numbers = e.target.value.replace(/\D/g, "");
+                        field.onChange(`${countryCode}${numbers}`);
+                      }}
+                      disabled={mode === "view"}
+                      className="border-0 rounded-none h-full"
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          /> */}
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone number</FormLabel>
+                <FormControl>
+                  <PhoneInput
+                    international
+                    defaultCountry="NG"
+                    value={field.value}
+                    onChange={(value) => field.onChange(value)}
+                    onBlur={field.onBlur}
+                    disabled={mode === "view"}
+                    className={`
+            [&>input]:bg-background
+            [&>input]:rounded-full
+            [&>input]:border
+            [&>input]:h-10
+            [&>input]:px-4
+            [&>input]:py-2
+          `}
+                    inputRef={field.ref}
+                    error={
+                      field.value
+                        ? isValidPhoneNumber(field.value)
+                          ? undefined
+                          : "Invalid phone number"
+                        : "Phone number required"
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-//   // Helper function to parse YYYY-MM-DD string to Date object
-//   const parseDate = (dateString: string): Date | null => {
-//     if (!dateString) return null;
-//     return new Date(dateString);
-//   };
+          <FormField
+            control={form.control}
+            name="assigned_to"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Assign to</FormLabel>
+                <FormControl>
+                  <div>
+                    <MultiSelect
+                      options={userOptions}
+                      defaultSelected={field.value?.map((user) => user.id) || []}
+                      onChange={(selectedIds) => {
+                        const selectedUsers = users
+                          .filter((user) => selectedIds.includes(user.id))
+                          .map((user) => ({
+                            id: user.id,
+                            name: user.name || user.email,
+                          }));
+                        field.onChange(selectedUsers);
+                      }}
+                      placeholder="Assign to"
+                      disabled={mode === "view"}
+                    />
 
-//   if (!isOpen) return null;
+                    {/* Display selected users as pills */}
+                    {mode === "view" && field.value?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {field.value.map((user) => (
+                          <div
+                            key={user.id}
+                            className="flex items-center bg-gray-200 rounded-full px-3 py-1"
+                          >
+                            <Avatar className="h-6 w-6 mr-2">
+                              <AvatarFallback className="text-xs">
+                                {getInitials(user.name)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm">{user.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {mode !== "view" && (
+            <div className="pt-3">
+              <Button
+                type="submit"
+                className="w-full"
+                isLoading={createContact.isPending || updateContact.isPending}
+              >
+                {mode === "create" ? "Add contact" : "Save changes"}
+              </Button>
+            </div>
+          )}
+        </form>
+      </Form>
+    </Modal>
+  );
+}
 
-//   // Function to handle file uploads and update parent state
-//   const handleAttachmentsChange = (files: AttachmentFile[]): void => {
-//     // Update the form state with the file URLs
-//     setValue(
-//       "attachments",
-//       files.map((file) => file.url)
-//     );
-//   };
-
-//   return (
-//     <Modal
-//       title={isCreateMode ? "Create task" : isViewMode ? "View task" : "Edit task"}
-//       closeModal={onClose}
-//     >
-//       <form onSubmit={handleSubmit(handleFormSubmit)} className="p-4 space-y-4">
-//         <div>
-//           <label className="block text-sm font-medium text-[#00000099] mb-1">
-//             Task name
-//           </label>
-//           <Controller
-//             name="taskName"
-//             control={control}
-//             render={({ field, fieldState }) => (
-//               <>
-//                 <Input
-//                   {...field}
-//                   disabled={isViewMode}
-//                   placeholder="Task name"
-//                   className={isViewMode ? "bg-gray-100" : ""}
-//                 />
-//                 {fieldState.error && (
-//                   <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
-//                 )}
-//               </>
-//             )}
-//           />
-//         </div>
-
-//         <div>
-//           <label className="block text-sm font-medium text-[#00000099] mb-1">
-//             Task type
-//           </label>
-//           <Controller
-//             name="taskType"
-//             control={control}
-//             render={({ field, fieldState }) => (
-//               <>
-//                 <Select
-//                   disabled={isViewMode}
-//                   onValueChange={field.onChange}
-//                   defaultValue={field.value}
-//                 >
-//                   <SelectTrigger className={`${isViewMode ? "bg-gray-100" : ""} w-full`}>
-//                     <SelectValue placeholder="Select task type" />
-//                   </SelectTrigger>
-//                   <SelectContent>
-//                     <SelectItem value="conference">Conference</SelectItem>
-//                     <SelectItem value="workshop">Workshop</SelectItem>
-//                     <SelectItem value="meeting">Meeting</SelectItem>
-//                     <SelectItem value="webinar">Webinar</SelectItem>
-//                   </SelectContent>
-//                 </Select>
-//                 {fieldState.error && (
-//                   <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
-//                 )}
-//               </>
-//             )}
-//           />
-//         </div>
-
-//         <div>
-//           <label className="block text-sm font-medium text-[#00000099] mb-1">
-//             Pipeline
-//           </label>
-//           <Controller
-//             name="projectType"
-//             control={control}
-//             render={({ field, fieldState }) => (
-//               <>
-//                 <Select
-//                   disabled={isViewMode}
-//                   onValueChange={field.onChange}
-//                   defaultValue={field.value}
-//                 >
-//                   <SelectTrigger className={`${isViewMode ? "bg-gray-100" : ""} w-full`}>
-//                     <SelectValue placeholder="Select pipeline" />
-//                   </SelectTrigger>
-//                   <SelectContent>
-//                     <SelectItem value="internal">Internal</SelectItem>
-//                     <SelectItem value="client">Client</SelectItem>
-//                     <SelectItem value="public">Public</SelectItem>
-//                   </SelectContent>
-//                 </Select>
-//                 {fieldState.error && (
-//                   <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
-//                 )}
-//               </>
-//             )}
-//           />
-//         </div>
-
-//         <div>
-//           <label className="block text-sm font-medium text-[#00000099] mb-1">
-//             Description
-//           </label>
-//           <Controller
-//             name="description"
-//             control={control}
-//             render={({ field, fieldState }) => (
-//               <>
-//                 <Textarea
-//                   {...field}
-//                   disabled={isViewMode}
-//                   placeholder="Description"
-//                   className={`min-h-24 ${isViewMode ? "bg-gray-100" : ""}`}
-//                 />
-//                 {fieldState.error && (
-//                   <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
-//                 )}
-//               </>
-//             )}
-//           />
-//         </div>
-
-//         <div className="grid grid-cols-2 gap-4">
-//           <div>
-//             <label className="block text-sm font-medium text-[#00000099] mb-1">
-//               Start date
-//             </label>
-//             <Controller
-//               name="startDate"
-//               control={control}
-//               render={({ field, fieldState }) => (
-//                 <>
-//                   <Popover>
-//                     <PopoverTrigger asChild>
-//                       <Button
-//                         variant="outline"
-//                         className={cn(
-//                           "w-full justify-start text-left font-normal",
-//                           !field.value && "text-muted-foreground",
-//                           isViewMode && "bg-gray-100 pointer-events-none"
-//                         )}
-//                         disabled={isViewMode}
-//                       >
-//                         <CalendarIcon className="mr-2 h-4 w-4" />
-//                         {field.value ? (
-//                           new Date(field.value).toLocaleDateString()
-//                         ) : (
-//                           <span>Select date</span>
-//                         )}
-//                       </Button>
-//                     </PopoverTrigger>
-//                     <PopoverContent className="w-auto p-0" align="start">
-//                       <Calendar
-//                         mode="single"
-//                         selected={parseDate(field.value) || undefined}
-//                         onSelect={(date) => {
-//                           field.onChange(formatDateForInput(date ?? null));
-//                         }}
-//                         initialFocus
-//                       />
-//                     </PopoverContent>
-//                   </Popover>
-//                   {fieldState.error && (
-//                     <p className="text-red-500 text-xs mt-1">
-//                       {fieldState.error.message}
-//                     </p>
-//                   )}
-//                 </>
-//               )}
-//             />
-//           </div>
-
-//           <div>
-//             <label className="block text-sm font-medium text-[#00000099] mb-1">
-//               End date
-//             </label>
-//             <Controller
-//               name="endDate"
-//               control={control}
-//               render={({ field, fieldState }) => (
-//                 <>
-//                   <Popover>
-//                     <PopoverTrigger asChild>
-//                       <Button
-//                         variant="outline"
-//                         className={cn(
-//                           "w-full justify-start text-left font-normal",
-//                           !field.value && "text-muted-foreground",
-//                           isViewMode && "bg-gray-100 pointer-events-none"
-//                         )}
-//                         disabled={isViewMode}
-//                       >
-//                         <CalendarIcon className="mr-2 h-4 w-4" />
-//                         {field.value ? (
-//                           new Date(field.value).toLocaleDateString()
-//                         ) : (
-//                           <span>Select date</span>
-//                         )}
-//                       </Button>
-//                     </PopoverTrigger>
-//                     <PopoverContent className="w-auto p-0" align="start">
-//                       <Calendar
-//                         mode="single"
-//                         selected={parseDate(field.value) || undefined}
-//                         onSelect={(date) => {
-//                           field.onChange(formatDateForInput(date ?? null));
-//                         }}
-//                         initialFocus
-//                       />
-//                     </PopoverContent>
-//                   </Popover>
-//                   {fieldState.error && (
-//                     <p className="text-red-500 text-xs mt-1">
-//                       {fieldState.error.message}
-//                     </p>
-//                   )}
-//                 </>
-//               )}
-//             />
-//           </div>
-//         </div>
-
-//         <div>
-//           <label className="block text-sm font-medium text-[#00000099] mb-1">
-//             Status
-//           </label>
-//           <Controller
-//             name="status"
-//             control={control}
-//             render={({ field, fieldState }) => (
-//               <>
-//                 <Select
-//                   disabled={isViewMode}
-//                   onValueChange={field.onChange}
-//                   defaultValue={field.value}
-//                 >
-//                   <SelectTrigger className={`${isViewMode ? "bg-gray-100" : ""} w-full`}>
-//                     <SelectValue placeholder="Select status" />
-//                   </SelectTrigger>
-//                   <SelectContent>
-//                     <SelectItem value="completed">Completed</SelectItem>
-//                     <SelectItem value="in_progress">In Progress</SelectItem>
-//                     <SelectItem value="pending">Pending</SelectItem>
-//                   </SelectContent>
-//                 </Select>
-//                 {fieldState.error && (
-//                   <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
-//                 )}
-//               </>
-//             )}
-//           />
-//         </div>
-
-//         <div>
-//           <label className="block text-sm font-medium text-[#00000099] mb-1">
-//             Attach
-//           </label>
-//           <FileUpload
-//             onAttachmentsChange={handleAttachmentsChange}
-//             maxFileSize={5 * 1024 * 1024} // 5MB max size
-//             acceptedFileTypes={["pdf", "docx", "xlsx", "png", "jpg"]}
-//           />
-//         </div>
-
-//         <div className="flex items-center space-x-2 mt-10">
-//           <Controller
-//             name="visibleToClient"
-//             control={control}
-//             render={({ field }) => (
-//               <Switch
-//                 id="visibleToClient"
-//                 checked={!!field.value}
-//                 onCheckedChange={field.onChange}
-//                 disabled={isViewMode}
-//               />
-//             )}
-//           />
-//           <label
-//             htmlFor="visibleToClient"
-//             className="text-sm font-medium text-[#00000099] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-//           >
-//             Make visible to client
-//           </label>
-//         </div>
-
-//         <div className="pt-4">
-//           <Button type="submit" className="w-full" disabled={loading || isViewMode}>
-//             {isCreateMode ? "Create task" : isViewMode ? "Close" : "Update task"}
-//           </Button>
-//         </div>
-//       </form>
-//     </Modal>
-//   );
-// };
-
-// export default TaskModal;
+export default ContactModal;

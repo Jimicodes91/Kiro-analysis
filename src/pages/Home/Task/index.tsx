@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import useGetAllContacts from "@/hooks/contacts/use-get-all-contacts";
+import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import React, { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
@@ -9,12 +9,10 @@ import { IoAdd, IoSearchOutline } from "react-icons/io5";
 import TaskEmptyState from "./task-empty-state";
 import TaskModal from "./task-modal-form"; // Import the TaskModal component
 import TasksTable from "./task-table";
-import { useTaskData } from "./use-task-data";
 
 const Task: React.FC = () => {
   const [, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { tasks } = useTaskData();
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -24,21 +22,10 @@ const Task: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const contacts = useGetAllContacts();
-  // const create_contacts = useCreateContact();
-
-  console.log("contacts", contacts);
-
-  // useEffect(() => {
-  //   create_contacts.mutateAsync({
-  //     name: "Jonh",
-  //     phone: "090878787667",
-  //     email: "nickokla@gmail.com",
-  //     organization: "tunderone",
-  //     active_projects: "3",
-  //     total_projects: "6",
-  //   });
-  // }, []);
+  const tasksResponse = useGetAllTasks();
+  const tasks = Array.isArray(tasksResponse?.data?.data?.data)
+    ? tasksResponse.data.data.data
+    : [];
 
   return (
     <>
@@ -83,7 +70,11 @@ const Task: React.FC = () => {
             </Button>
           </div>
         </div>
-        {tasks.length === 0 ? <TaskEmptyState /> : <TasksTable />}
+        {Array.isArray(tasksResponse?.data?.data?.data) && tasks.length === 0 ? (
+          <TaskEmptyState />
+        ) : (
+          <TasksTable />
+        )}
       </div>
 
       {/* Task Modal for creating new tasks */}

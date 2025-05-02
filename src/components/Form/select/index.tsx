@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { IoIosArrowDown } from "react-icons/io";
 import "../../../index.css";
@@ -136,7 +136,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
 
       {/* Custom dropdown */}
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-[#0000001A] rounded-lg shadow-lg overflow-hidden">
+        <div className="absolute z-10 w-full mt-1 bg-white border border-brand-border rounded-lg shadow-lg overflow-hidden">
           <div className="max-h-60 overflow-y-auto custom-scrollbar">
             {options.map((option) => (
               <div

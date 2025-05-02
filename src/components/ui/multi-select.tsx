@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Check, ChevronDown, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -14,6 +15,7 @@ type MultiSelectProps = {
   placeholder?: string;
   className?: string;
   checkboxSize?: number;
+  disabled?: boolean;
 };
 
 // Helper function to get initials from a name
@@ -32,11 +34,16 @@ const MultiSelect = ({
   onChange,
   placeholder = "Assign to",
   className = "",
-  checkboxSize = 20,
+  checkboxSize = 18,
+  disabled = false,
 }: MultiSelectProps) => {
   const [selected, setSelected] = useState<string[]>(defaultSelected);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setSelected(defaultSelected);
+  }, [defaultSelected]);
 
   const toggleItem = (value: string) => {
     const newSelected = selected.includes(value)
@@ -74,13 +81,17 @@ const MultiSelect = ({
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       {/* Dropdown Field */}
-      <div
-        className="flex items-center justify-between w-full px-4 py-3 text-left border rounded-full cursor-pointer bg-white"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <div className="text-gray-500">{placeholder}</div>
-        <ChevronDown className="w-4 h-4 text-gray-500" />
-      </div>
+      {!disabled && (
+        <div
+          className={`flex items-center justify-between w-full px-4 py-3 text-left border rounded-full ${
+            disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white cursor-pointer"
+          }`}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+        >
+          <div className="text-[#00000080] text-sm font-[400]">{placeholder}</div>
+          {!disabled && <ChevronDown className="w-4 h-4 text-gray-500" />}
+        </div>
+      )}
 
       {/* Dropdown Menu */}
       {isOpen && (
@@ -90,8 +101,10 @@ const MultiSelect = ({
             return (
               <div
                 key={option.value}
-                className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => toggleItem(option.value)}
+                className={`flex items-center px-3 py-2 text-sm font-[400] ${
+                  disabled ? "cursor-not-allowed" : "hover:bg-[#E0EFDE4D] cursor-pointer"
+                }`}
+                onClick={() => !disabled && toggleItem(option.value)}
               >
                 <div className="flex-1">{option.label}</div>
                 <div
@@ -115,28 +128,25 @@ const MultiSelect = ({
       )}
 
       {/* Selected Items Display */}
-      {selected.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
+      {!disabled && selected.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-4">
           {selectedItems.map((item) => (
-            <div
-              key={item.value}
-              className="flex items-center bg-gray-100 rounded-full px-3 py-1"
-            >
-              <div
-                className="flex items-center justify-center w-6 h-6 mr-1 text-xs font-medium bg-gray-200 rounded-full relative group"
-                title={item.label}
-              >
-                {getInitials(item.label)}
-                <div className="absolute bottom-full mb-2 px-2 py-1 bg-gray-800 text-white text-xs whitespace-nowrap rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                  {item.label}
-                </div>
-              </div>
-              <button
-                className="ml-1 p-1 rounded-full hover:bg-gray-200"
-                onClick={(e) => removeItem(item.value, e)}
-              >
-                <X className="w-3 h-3 text-gray-500" />
-              </button>
+            <div key={item.value} className="relative">
+              <Avatar className="h-10 w-10">
+                <AvatarFallback className="text-md bg-[#F1F1F1] border-2 border-[#E0E0E0] font-semibold">
+                  {getInitials(item.label)}
+                </AvatarFallback>
+              </Avatar>
+              {!disabled && (
+                <button
+                  type="button"
+                  onClick={(e) => removeItem(item.value, e)}
+                  className="absolute -top-1 -right-1 bg-[#C0C0C0] border border-white rounded-full p-0.5 flex items-center justify-center"
+                  aria-label={`Remove ${item.label}`}
+                >
+                  <X className="h-3 w-3 text-[#0A1B41]" />
+                </button>
+              )}
             </div>
           ))}
         </div>
