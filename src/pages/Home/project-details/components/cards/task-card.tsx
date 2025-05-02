@@ -9,53 +9,70 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
+import useDisclosure from "@/hooks/use-disclosure";
 import getInitials, { getFormattedText } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
 import { format } from "date-fns";
+import { AnimatePresence } from "framer-motion";
+import DeleteTaskModal from "../modal/delete-task-modal";
 
-function TaskCard({ task }: { task: TaskDetails }) {
+function TaskCard({ task, projectId }: { task: TaskDetails; projectId: string }) {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   return (
-    <div className="px-5 py-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
-      <div className="flex items-center justify-between">
-        <Badge variant={task?.status}>{getFormattedText(task?.status)}</Badge>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Icons.more />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-40" align="end" forceMount>
-            <DropdownMenuGroup>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>Mark as done</DropdownMenuItem>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div>
-        <Heading size="h5">{task?.name}</Heading>
-        <p className="text-sm text-brand-fade">{task?.description}</p>
-      </div>
-      <div className="flex items-center gap-3">
+    <>
+      <div className="px-5 py-3 mb-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
+        <div className="flex items-center justify-between">
+          <Badge variant={task?.status}>{getFormattedText(task?.status)}</Badge>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Icons.more />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40" align="end" forceMount>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Mark as done</DropdownMenuItem>
+                <DropdownMenuItem onClick={onOpen}>Delete</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <div>
-          <p className="text-sm text-brand-fade p-0 m-0 pt-1">
-            Due date:{" "}
-            <span className="text-primary">{format(task?.end_date, "PPP")}</span>
-          </p>
+          <Heading size="h5">{task?.name}</Heading>
+          <p className="text-sm text-brand-fade">{task?.description}</p>
         </div>
-        <div className="flex -space-x-2">
-          {task?.assignees?.map((member, index) => (
-            <div
-              key={index}
-              className="inline-flex items-center justify-center mt-2 w-8 h-8 rounded-full bg-gray-200 text-gray-700 text-sm font-medium ring-2 ring-white"
-            >
-              {getInitials(member?.name ?? member?.email)}
-            </div>
-          ))}
+        <div className="flex items-center gap-3">
+          <div>
+            <p className="text-sm text-brand-fade p-0 m-0 pt-1">
+              Due date:{" "}
+              <span className="text-primary">{format(task?.end_date, "PPP")}</span>
+            </p>
+          </div>
+          <div className="flex -space-x-2">
+            {task?.assignees?.map((member, index) => (
+              <div
+                key={index}
+                className="inline-flex items-center justify-center mt-2 w-8 h-8 rounded-full bg-gray-200 text-gray-700 text-sm font-medium ring-2 ring-white"
+              >
+                {getInitials(member?.name ?? member?.email)}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isOpen && (
+          <DeleteTaskModal
+            projectId={projectId}
+            taskId={task?.id}
+            isOpen={isOpen}
+            onClose={onClose}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
