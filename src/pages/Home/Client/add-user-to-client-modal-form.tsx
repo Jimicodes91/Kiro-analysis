@@ -100,7 +100,7 @@ function AddUserToClientModal({
   );
 
   return (
-    <Modal title="Add User" closeModal={onClose} fullHeight={false}>
+    <Modal title="Add User" closeModal={onClose}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
         <div className="mb-4">
           <label className="block text-sm text-[#00000099] font-medium mb-1">

@@ -18,6 +18,7 @@ import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
+import useUpdateTask from "@/hooks/project-modules/tasks/use-update-task";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { cn } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
@@ -68,6 +69,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
   const taskTypesResponse = useGetAllTaskTypes();
   const projectsResponse = useGetAllProjects(selectedProjectTypeId);
   const addTask = useCreateTask(selectedProjectId);
+  const updateTask = useUpdateTask(selectedProjectId, task?.id || "");
 
   const users = useMemo(() => usersResponse?.value?.data || [], [usersResponse]);
   const projects = useMemo(() => projectsResponse?.value?.data || [], [projectsResponse]);
@@ -102,94 +104,100 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
     },
   });
 
-  // Watch the project_type field to update projects when it changes
-  const watchedProjectType = watch("project_type_id");
-
-  useEffect(() => {
-    if (watchedProjectType) {
-      setSelectedProjectTypeId(watchedProjectType);
-    }
-  }, [watchedProjectType]);
-
   // Set project ID when project field changes
   const watchedProject = watch("project");
+  const watchedProjectType = watch("project_type_id");
+
+  // Set project ID when project field changes
+
   useEffect(() => {
     if (watchedProject) {
       setSelectedProjectId(watchedProject);
     }
-  }, [watchedProject]);
+    if (watchedProjectType) {
+      setSelectedProjectTypeId(watchedProjectType);
+    }
+  }, [watchedProject, watchedProjectType, setValue]);
 
   // Initialize form data from task prop when available
   useEffect(() => {
-    // Only run this effect if all dependent data is loaded
-    if (
-      !task ||
-      formInitialized ||
-      !(mode === "edit" || mode === "view") ||
-      !users.length ||
-      !projectTypes.length ||
-      !taskTypes.length
-    ) {
+    if (!task || formInitialized || !(mode === "edit" || mode === "view")) {
       return;
     }
 
-    // First, set the project type to ensure projects are loaded
-    if (task.pipeline?.id) {
-      setSelectedProjectTypeId(task.pipeline.id);
-      setValue("project_type_id", task.pipeline.id);
+    if (!users.length || !projectTypes.length || !taskTypes.length) {
+      return;
     }
 
-    // Small delay to ensure projects are loaded after setting project type
-    setTimeout(() => {
-      // Now set the rest of the form values
-      setValue("name", task.name);
-      setValue("task_type_id", task.task_type.id || "");
-      setValue("project", task.project_id || "");
-      setValue("start_date", task.start_date);
-      setValue("end_date", task.end_date);
-
-      // Fix status value to match select options
-      let statusValue = task.status;
-      if (statusValue === "in progress") {
-        statusValue = "in_progress";
-      }
-      setValue("status", statusValue);
-
-      setValue("description", task.description || "");
-      setValue("is_visible_to_client", task.is_visible_to_client === 1 || false);
-
-      // Handle assignees - extract IDs from the assignees array
-      if (task.assignees && Array.isArray(task.assignees)) {
-        const assigneeIds = task.assignees.map((assignee) => assignee.id);
-        setValue("assignees", assigneeIds);
+    const initializeForm = () => {
+      // Set the project type (pipeline) to ensure projects are loaded
+      if (task.pipeline?.id) {
+        setSelectedProjectTypeId(task.pipeline.id);
+        setValue("project_type_id", task.pipeline.id);
+      } else {
+        setValue("project_type_id", ""); // Fallback to empty if no pipeline ID
       }
 
-      // Handle attachments if they exist
-      if (task.document && task.document[0]?.attachments) {
-        const attachments = task.document[0].attachments.map((attachment) => ({
-          name: attachment.media_url.split("/").pop() || "file",
-          url: attachment.media_url,
-          size: 0, // Since we don't have size info in the response
-        }));
+      // Small delay to ensure projects are loaded after setting project type
+      setTimeout(() => {
+        setValue("name", task.name);
+        setValue("task_type_id", task.task_type.id || "");
+        setValue("project", task.project_id || "");
+        setValue("start_date", task.start_date);
+        setValue("end_date", task.end_date);
 
-        setAttachmentFiles(attachments);
-        setValue(
-          "attachments",
-          attachments.map((a) => a.url)
-        );
-      }
+        // Fix status value to match select options
+        let statusValue = task.status;
+        if (statusValue === "in progress") {
+          statusValue = "in_progress";
+        }
+        setValue("status", statusValue);
 
-      setFormInitialized(true);
-    }, 100);
-  }, [task, mode, setValue, users, projectTypes, taskTypes, projects, formInitialized]);
+        setValue("description", task.description || "");
+        setValue("is_visible_to_client", task.is_visible_to_client === 1 || false);
 
+        // Handle assignees
+        if (task.assignees && Array.isArray(task.assignees)) {
+          const assigneeIds = task.assignees.map((assignee) => assignee.id);
+          setValue("assignees", assigneeIds);
+        }
+
+        // Handle attachments
+        if (task.document && task.document[0]?.attachments) {
+          const attachments = task.document[0].attachments.map((attachment) => ({
+            name: attachment.media_url.split("/").pop() || "file",
+            url: attachment.media_url,
+            size: 0,
+          }));
+
+          setAttachmentFiles(attachments);
+          setValue(
+            "attachments",
+            attachments.map((a) => a.url)
+          );
+        }
+
+        setFormInitialized(true);
+      }, 100);
+    };
+
+    initializeForm();
+  }, [
+    task,
+    mode,
+    formInitialized,
+    users.length,
+    projectTypes.length,
+    taskTypes.length,
+    setValue,
+  ]);
   // Reset form initialization state when modal closes
   useEffect(() => {
     if (!isOpen) {
       setFormInitialized(false);
       reset();
     }
-  }, [isOpen, reset]);
+  }, [isOpen]);
 
   const handleFormSubmit = async (data: TaskFormData) => {
     if (isViewMode) {
@@ -202,12 +210,13 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
     }
 
     if (mode === "edit") {
-      //updateTask.mutateAsync(data)
-      console.log("Updating task with data:", data);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { project, id: _id, ...newData } = data;
+      setSelectedProjectId(project);
+      updateTask.mutateAsync(newData);
     } else if (mode === "create") {
       const { project, ...newData } = data;
       setSelectedProjectId(project);
-      console.log("Creating task with data:", newData);
       addTask.mutateAsync(newData);
       reset();
       onClose();
