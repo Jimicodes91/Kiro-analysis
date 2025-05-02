@@ -27,6 +27,7 @@ const badgeVariants = cva(
         deactivated: "border-transparent text-[#FF3B30] bg-[#F7EEE2]",
         not_started: "border-transparent bg-blue-100 text-blue-600",
         in_progress: "border-transparent bg-[#F1E6D4] text-[#B78026] py-1",
+        pending: "border-transparent bg-[#F1E6D4] text-[#B78026] py-1",
         blocked: "border-transparent rounded-md bg-stroke-base text-pri-base py-1",
         completed: "border-transparent rounded-md bg-stroke-base text-[#FF3B30] py-1",
       },

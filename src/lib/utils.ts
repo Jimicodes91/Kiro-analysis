@@ -1,7 +1,7 @@
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { ProjectDetails } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
-import { format, formatISO, isToday, parseISO } from "date-fns";
+import { format, isToday, parseISO, startOfDay } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export const formatDate = (isoDate: string): string => {
@@ -156,7 +156,6 @@ export function fileToBase64(file: File): Promise<string> {
   });
 }
 
-const date = new Date();
-const isoDate = formatISO(date);
+export const today = startOfDay(new Date());
 
-console.log(isoDate); // e.g., "2
+export const getSelectableDate = (date: Date) => startOfDay(date) < today;

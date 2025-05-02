@@ -64,7 +64,7 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
             </div>
           </>
         ) : (
-          <>
+          <label htmlFor={id} className="cursor-pointer">
             <div className="upload-info">
               <div className="w-fit mx-auto pb-3">
                 <Upload />
@@ -79,18 +79,15 @@ const DragNdrop = ({ value, onChange, id }: FileUploadProps) => {
               accept=".pdf,.png,.jpg, .jpeg"
             />
             <div className="text-center text-sm space-y-3 text-brand-text">
-              <div className="font-bold text-primary">
-                <span> Drag file here to upload or</span>{" "}
-                <label htmlFor={id} className="inline-flex cursor-pointer text-pri-base">
-                  choose file
-                </label>
-              </div>
+              <p className="font-bold text-primary">
+                <span> Drag file here to upload or</span> choose file
+              </p>
 
               <p className="text-brand-text text-xs text-center">
-                PDF, PNG, JPG format, up to 50MB
+                PDF, PNG, JPG format, up to 5MB
               </p>
             </div>
-          </>
+          </label>
         )}
       </div>
     </section>

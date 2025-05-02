@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
-import { cn, fileToBase64 } from "@/lib/utils";
+import { cn, fileToBase64, getSelectableDate } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { addProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -185,7 +185,7 @@ const EditProjectTaskModal = ({
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) => date < new Date()}
+                          disabled={getSelectableDate}
                           initialFocus
                         />
                       </PopoverContent>

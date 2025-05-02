@@ -1,13 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Icons } from "@/components/ui/icons";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuGroup,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import { Icons } from "@/components/ui/icons";
 import getInitials from "@/lib/utils";
 import { NoteDetails } from "@/types/api.types";
 import { formatRelative } from "date-fns";
@@ -34,7 +34,7 @@ export default function NoteCard({ note }: { note: NoteDetails }) {
             {formatRelative(note?.created_at, new Date())}
           </p>
         </div>
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon">
               <Icons.more />
@@ -47,7 +47,7 @@ export default function NoteCard({ note }: { note: NoteDetails }) {
               <DropdownMenuItem>Delete</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
       <div className="flex justify-between">
         <p

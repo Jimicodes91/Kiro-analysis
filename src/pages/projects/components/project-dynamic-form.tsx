@@ -23,7 +23,7 @@ import { IFormField } from "@/hooks/project-modules/project-forms/use-get-projec
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useCreateProject from "@/hooks/project-modules/use-create-project";
 import { PAGES } from "@/lib/constants";
-import { cn, convertDatesToYMD } from "@/lib/utils";
+import { cn, convertDatesToYMD, getSelectableDate } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -164,7 +164,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                     mode="single"
                                     selected={fieldProps.value}
                                     onSelect={fieldProps.onChange}
-                                    disabled={(date) => date < new Date()}
+                                    disabled={getSelectableDate}
                                     initialFocus
                                   />
                                 </PopoverContent>
