@@ -4,23 +4,31 @@ import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
-import { IoSearchOutline } from "react-icons/io5";
-import ClientEmptyState from "./client-empty-state";
-import ClientsTable from "./client-table";
-import { useClientData } from "./use-client-data";
+import { IoAdd, IoSearchOutline } from "react-icons/io5";
+import EventEmptyState from "./event-empty-state";
+import EventModal from "./event-modal-form"; // Import the EventModal component
+import EventsTable from "./event-table";
+import { useEventData } from "./use-event-data";
 
-const Client: React.FC = () => {
+const Event: React.FC = () => {
   const [, setSearchQuery] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { events } = useEventData();
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
-  const { clients } = useClientData();
+
+  const handleAddEvent = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <>
       <div className="mx-6 my-2">
         <div className="flex justify-between items-center my-4">
           <div className="flex items-center gap-4">
-            <Heading size="h3">Client</Heading>
+            <Heading size="h3">Event</Heading>
             <div className="relative w-full min-w-[300px] bg-[#F3F3F3] rounded-full">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3 text-[#808080]" />
               <Input
@@ -49,12 +57,28 @@ const Client: React.FC = () => {
             >
               Export
             </Button>
+            <Button
+              size="sm"
+              leftIcon={<IoAdd className="text-white w-6 h-6" />}
+              onClick={handleAddEvent}
+            >
+              Add Event
+            </Button>
           </div>
         </div>
-        {clients.length === 0 ? <ClientEmptyState /> : <ClientsTable />}
+        {events.length === 0 ? <EventEmptyState /> : <EventsTable />}
       </div>
+
+      {/* Event Modal for creating new events */}
+      {isModalOpen && (
+        <EventModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          mode="create"
+        />
+      )}
     </>
   );
 };
 
-export default Client;
+export default Event;

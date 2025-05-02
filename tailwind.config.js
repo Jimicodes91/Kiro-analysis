@@ -11,6 +11,8 @@ export default {
     "@/components/**/*.{js,ts,jsx,tsx,mdx}",
     "@/layouts/**/*.{js,ts,jsx,tsx,mdx}",
     "@/modules/**/*.{js,ts,jsx,tsx}",
+
+    "./node_modules/react-phone-number-input/**/*.js",
   ],
   theme: {
     extend: {

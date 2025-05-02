@@ -1,26 +1,38 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
+import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import React, { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
-import { IoSearchOutline } from "react-icons/io5";
-import ClientEmptyState from "./client-empty-state";
-import ClientsTable from "./client-table";
-import { useClientData } from "./use-client-data";
+import { IoAdd, IoSearchOutline } from "react-icons/io5";
+import TaskEmptyState from "./task-empty-state";
+import TaskModal from "./task-modal-form"; // Import the TaskModal component
+import TasksTable from "./task-table";
 
-const Client: React.FC = () => {
+const Task: React.FC = () => {
   const [, setSearchQuery] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
-  const { clients } = useClientData();
+
+  const handleAddTask = () => {
+    setIsModalOpen(true);
+  };
+
+  const tasksResponse = useGetAllTasks();
+  const tasks = Array.isArray(tasksResponse?.data?.data?.data)
+    ? tasksResponse.data.data.data
+    : [];
+
   return (
     <>
       <div className="mx-6 my-2">
         <div className="flex justify-between items-center my-4">
           <div className="flex items-center gap-4">
-            <Heading size="h3">Client</Heading>
+            <Heading size="h3">Task</Heading>
             <div className="relative w-full min-w-[300px] bg-[#F3F3F3] rounded-full">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3 text-[#808080]" />
               <Input
@@ -49,12 +61,32 @@ const Client: React.FC = () => {
             >
               Export
             </Button>
+            <Button
+              size="sm"
+              leftIcon={<IoAdd className="text-white w-6 h-6" />}
+              onClick={handleAddTask}
+            >
+              Add task
+            </Button>
           </div>
         </div>
-        {clients.length === 0 ? <ClientEmptyState /> : <ClientsTable />}
+        {Array.isArray(tasksResponse?.data?.data?.data) && tasks.length === 0 ? (
+          <TaskEmptyState />
+        ) : (
+          <TasksTable />
+        )}
       </div>
+
+      {/* Task Modal for creating new tasks */}
+      {isModalOpen && (
+        <TaskModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          mode="create"
+        />
+      )}
     </>
   );
 };
 
-export default Client;
+export default Task;

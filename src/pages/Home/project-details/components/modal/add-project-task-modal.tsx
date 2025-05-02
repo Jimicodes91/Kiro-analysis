@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import CustomMultiSelect from "@/components/ui/multi-select";
+import CustomMultiSelect from "@/components/ui/multi-lol";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,

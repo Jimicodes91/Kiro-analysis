@@ -10,20 +10,19 @@ export interface CreateTaskRequest {
   end_date: string;
   attachments: string[];
   is_visible_to_client: boolean;
-  project_type_id: string;
   task_type_id: string;
+  project_type_id: string;
   assignees: string[];
 }
 
 const useCreateTask = (projectId: string) => {
   const queryClient = useQueryClient();
-
   return useCustomMutation<Record<string, string>, CreateTaskRequest>({
     method: "post",
     endpoint: ENDPOINTS.CREATE_TASK(projectId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS],
+        queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS, QUERYKEYS.GET_ALL_TASKS],
       });
     },
   });
