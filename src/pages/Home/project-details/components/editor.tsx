@@ -1,7 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toggle } from "@/components/ui/toggle";
 import useCreateNote from "@/hooks/project-modules/note/use-create-note";
-import { Bold, Italic, Repeat } from "lucide-react";
+import { Bold, Italic, Repeat, Send } from "lucide-react";
 import { useState } from "react";
 
 export const NoteEditor = ({ projectId }: { projectId: string }) => {
@@ -13,36 +14,35 @@ export const NoteEditor = ({ projectId }: { projectId: string }) => {
   };
 
   const createNoteHandler = (content: string, isPinned: boolean) => {
-    createNote.mutateAsync({
-      content,
-      mentions: [],
-      attachments: [],
-      is_pinned: isPinned,
-    });
+    createNote
+      .mutateAsync({
+        content,
+        mentions: [],
+        attachments: [],
+        is_pinned: isPinned,
+      })
+      .then(() => {
+        // Reset after send
+        setIsPinned(false);
+        (document.getElementById("editor") as HTMLElement).innerHTML = "";
+      })
+      .catch(console.error);
   };
 
   const handleSend = () => {
     const plainText = (document.getElementById("editor") as HTMLElement).innerHTML;
-    console.log("Sending Note:", {
-      text: plainText,
-      isPinned,
-    });
     createNoteHandler(plainText, isPinned);
-    // Reset after send
-    setIsPinned(false);
-    (document.getElementById("editor") as HTMLElement).innerHTML = "";
   };
 
   return (
     <div className="border-2 border-brand-border rounded-lg p-4 min-h-[110px] flex flex-col justify-between">
       <div
         id="editor"
+        aria-disabled={createNote.isPending}
         contentEditable
         contextMenu=""
         className="min-h-[50px] outline-none text-gray-800"
-      >
-        Add new note
-      </div>
+      ></div>
 
       <div className="flex items-center mt-4">
         {/* Formatting buttons */}
@@ -70,16 +70,13 @@ export const NoteEditor = ({ projectId }: { projectId: string }) => {
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Pin to top
+              Mark Visible to client
             </label>
           </div>
 
-          <button
-            onClick={handleSend}
-            className="ml-2 bg-black text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-800"
-          >
-            ✈️
-          </button>
+          <Button onClick={handleSend} size="icon" isLoading={createNote.isPending}>
+            <Send />
+          </Button>
         </div>
       </div>
     </div>

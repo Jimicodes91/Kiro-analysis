@@ -136,7 +136,7 @@ const ProjectDetail = ({
 
           {/* <p className="mt-2 text-sm text-gray-500">32 days to completion</p> */}
           <p className="mt-2 text-sm text-gray-500">
-            {projectDetails?.timeline} to completion
+            Estimated {projectDetails?.timeline} to completion
           </p>
         </div>
       );
