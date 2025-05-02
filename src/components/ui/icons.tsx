@@ -471,4 +471,107 @@ export const Icons = {
       />
     </svg>
   ),
+  task: (props: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="36"
+      height="36"
+      viewBox="0 0 36 36"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M22.4297 16.4531L16.4297 22.4531L13.4297 19.4531"
+        stroke="black"
+        stroke-width="1.52381"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M22.5 5.625H28.125C28.4234 5.625 28.7095 5.74353 28.9205 5.95451C29.1315 6.16548 29.25 6.45163 29.25 6.75V30.375C29.25 30.6734 29.1315 30.9595 28.9205 31.1705C28.7095 31.3815 28.4234 31.5 28.125 31.5H7.875C7.57663 31.5 7.29048 31.3815 7.07951 31.1705C6.86853 30.9595 6.75 30.6734 6.75 30.375V6.75C6.75 6.45163 6.86853 6.16548 7.07951 5.95451C7.29048 5.74353 7.57663 5.625 7.875 5.625H13.5"
+        stroke="#191819"
+        stroke-width="2.25"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M12.375 10.125V9C12.375 7.50816 12.9676 6.07742 14.0225 5.02252C15.0774 3.96763 16.5082 3.375 18 3.375C19.4918 3.375 20.9226 3.96763 21.9775 5.02252C23.0324 6.07742 23.625 7.50816 23.625 9V10.125H12.375Z"
+        stroke="#191819"
+        stroke-width="2.25"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  ),
+  document: (props: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="27"
+      height="27"
+      viewBox="0 0 27 27"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M21.0938 23.625H5.90625C5.68247 23.625 5.46786 23.5361 5.30963 23.3779C5.15139 23.2196 5.0625 23.005 5.0625 22.7812V4.21875C5.0625 3.99497 5.15139 3.78036 5.30963 3.62213C5.46786 3.46389 5.68247 3.375 5.90625 3.375H16.0312L21.9375 9.28125V22.7812C21.9375 23.005 21.8486 23.2196 21.6904 23.3779C21.5321 23.5361 21.3175 23.625 21.0938 23.625Z"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M16.0312 3.375V9.28125H21.9375"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  ),
+  trash: (props: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="17"
+      height="17"
+      viewBox="0 0 17 17"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M14.3438 3.71875H2.65625"
+        stroke="black"
+        stroke-width="0.944444"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M6.90625 6.90625V11.1562"
+        stroke="black"
+        stroke-width="0.944444"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M10.0938 6.90625V11.1562"
+        stroke="black"
+        stroke-width="1.0625"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M13.2812 3.71875V13.8125C13.2812 13.9534 13.2253 14.0885 13.1257 14.1882C13.026 14.2878 12.8909 14.3438 12.75 14.3438H4.25C4.1091 14.3438 3.97398 14.2878 3.87435 14.1882C3.77472 14.0885 3.71875 13.9534 3.71875 13.8125V3.71875"
+        stroke="black"
+        stroke-width="1.0625"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M11.1562 3.71875V2.65625C11.1562 2.37446 11.0443 2.10421 10.8451 1.90495C10.6458 1.70569 10.3755 1.59375 10.0938 1.59375H6.90625C6.62446 1.59375 6.35421 1.70569 6.15495 1.90495C5.95569 2.10421 5.84375 2.37446 5.84375 2.65625V3.71875"
+        stroke="black"
+        stroke-width="1.0625"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  ),
 };

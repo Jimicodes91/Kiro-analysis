@@ -1,6 +1,5 @@
 import AuthLayout from "@/layouts/auth-layout";
 import AccountLayout from "@/layouts/dashboard-layout/lol";
-import Client from "@/pages/Home/client";
 import ProjectDetailsPageWrapper from "@/pages/Home/project-details";
 import ProjectContextProvider from "@/pages/Home/Project/context/project-context";
 import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";
@@ -14,7 +13,10 @@ import SignUp from "../pages/Auth/SignUp";
 import VerifyEmail from "../pages/Auth/VerifyEmail";
 import Home from "../pages/Home";
 import Admin from "../pages/Home/Admin";
-import Event from "../pages/Home/Event";
+// import Client from "../pages/Home/Client";
+// import Event from "../pages/Home/Event";
+import Contact from "@/pages/Home/Contact";
+import Task from "@/pages/Home/Task";
 import Finance from "../pages/Home/Finance";
 import Message from "../pages/Home/Message";
 import Project from "../pages/Home/Project";
@@ -66,13 +68,17 @@ export const HomeRoutes = {
       element: <Admin />,
     },
     {
-      path: "client",
-      element: <Client />,
+      path: "contact",
+      element: <Contact />,
     },
     {
-      path: "event",
-      element: <Event />,
+      path: "task",
+      element: <Task />,
     },
+    // {
+    //   path: "event",
+    //   element: <Event />,
+    // },
     {
       path: "finance",
       element: <Finance />,

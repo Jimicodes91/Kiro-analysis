@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,10 +29,10 @@ function ClientTableRow({ client }: { client: Client }) {
         <TableCell>{client.plan}</TableCell>
         <TableCell>{client.users}</TableCell>
         <TableCell>
-          <Badge variant={client.status === "Completed" ? "success" : "warn"}>
-            {client.status === "Completed" && <Icons.check className="mt-1.5" />}
-            <span>{client.status}</span>
-          </Badge>
+          {/* <Badge variant={client.status === "Completed" ? "success" : "warn"}> */}
+          {/* {client.status === "Completed" && <Icons.check className="mt-1.5" />} */}
+          <span>{client.status}</span>
+          {/* </Badge> */}
         </TableCell>
         <TableCell>
           <div className="flex -space-x-2">
