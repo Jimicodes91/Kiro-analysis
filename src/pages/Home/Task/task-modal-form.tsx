@@ -199,6 +199,12 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (addTask.isSuccess || updateTask.isSuccess) {
+      onClose();
+    }
+  }, [addTask.isSuccess, updateTask.isSuccess, onClose]);
+
   const handleFormSubmit = async (data: TaskFormData) => {
     if (isViewMode) {
       onClose();
@@ -218,8 +224,6 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
       const { project, ...newData } = data;
       setSelectedProjectId(project);
       addTask.mutateAsync(newData);
-      reset();
-      onClose();
     }
   };
 
@@ -724,7 +728,12 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
         </div>
 
         <div className="pt-4">
-          <Button type="submit" className="w-full" disabled={false}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={false}
+            isLoading={isCreateMode ? addTask.isPending : updateTask.isPending}
+          >
             {isCreateMode ? "Create task" : "Update task"}
           </Button>
         </div>
