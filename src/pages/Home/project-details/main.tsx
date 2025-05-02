@@ -106,7 +106,7 @@ const ProjectDetail = ({
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-gray-700">Milestone</h3>
-              <span className="text-sm font-semibold text-gray-900">40%</span>
+              <span className="text-sm font-semibold text-gray-900">.</span>
             </div>
             <div className="flex items-center w-full text-white text-sm  font-medium">
               {journey?.value?.data?.milestones?.map((item, index, arr) => (
@@ -136,7 +136,8 @@ const ProjectDetail = ({
 
           {/* <p className="mt-2 text-sm text-gray-500">32 days to completion</p> */}
           <p className="mt-2 text-sm text-gray-500">
-            Estimated {projectDetails?.timeline} to completion
+            Estimated {projectDetails?.timeline} to complete{" "}
+            <span className="font-bold">{projectDetails?.milestone?.name}</span> phase
           </p>
         </div>
       );
