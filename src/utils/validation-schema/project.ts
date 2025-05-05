@@ -130,10 +130,14 @@ export const uploadDocumentSchema = z.object({
   description: z.string({
     message: "Description is required",
   }),
-  is_visible_to_client: z.boolean(),
-  attachment: z.string({
-    message: "Assignee is required",
-  }),
+  // is_visible_to_client: z.boolean(),
+  attachment: optionalFileSchema(fileSize, [
+    // CSV files
+    "application/pdf",
+    "image/png",
+    "image/jpeg", // covers both .jpeg and .jpg
+    "application/msword",
+  ]),
 });
 
 export const addTeamSchema = z.object({

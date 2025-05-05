@@ -161,6 +161,7 @@ export const today = startOfDay(new Date());
 export const getSelectableDate = (date: Date) => startOfDay(date) < today;
 
 export function truncateMiddleWords(text: string, startCount = 8, endCount = 16): string {
+  if (!text) return "";
   const words = text.trim().split("");
 
   if (words.length <= startCount + endCount) {
