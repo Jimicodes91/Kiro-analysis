@@ -1,5 +1,6 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
@@ -10,6 +11,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import CustomMultiSelect from "@/components/ui/multi-lol";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -18,18 +21,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllDocumentTypes from "@/hooks/project-modules/document-types/use-get-all-document-types";
 import useCreateDocumentRequest from "@/hooks/project-modules/documents/document-request/use-create-document-request";
+import { cn, getSelectableDate } from "@/lib/utils";
+import { getUserSession } from "@/services/api.service";
 import { requestDocumentSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format, formatISO } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Modal from "../../../../../components/Modal";
 
-const statuses = [
-  { value: "in_progress", label: "In Progress" },
-  { value: "pending", label: "Pending" },
-];
 const RequestDocumentModal = ({
   onClose,
   projectId,
@@ -39,14 +43,21 @@ const RequestDocumentModal = ({
 } & ModalProps) => {
   const createDocumentRequest = useCreateDocumentRequest(projectId);
   const documentTypes = useGetAllDocumentTypes();
+  const session = getUserSession();
+  const users = useGetCompanyUsers(session?.company_id ?? "");
+
   const form = useForm<z.infer<typeof requestDocumentSchema>>({
     resolver: zodResolver(requestDocumentSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof requestDocumentSchema>) => {
+    console.log(data);
     createDocumentRequest
-      // @ts-expect-error ssls
-      .mutateAsync(data)
+      .mutateAsync({
+        ...data,
+        assignee_id: data?.assignee_id?.value,
+        end_date: formatISO(data.end_date),
+      })
       .then(() => {
         form.reset();
         onClose();
@@ -56,7 +67,12 @@ const RequestDocumentModal = ({
 
   return (
     <>
-      <Modal title="Request document" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Request document"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -119,6 +135,46 @@ const RequestDocumentModal = ({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="end_date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full">
+                  <FormLabel>End date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "text-sm h-12 font-normal rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4",
+                            !field.value && "text-muted-foreground"
+                          )}
+                          slotClassName="justify-start"
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span className="text-brand-placeholder">End date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={getSelectableDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -126,24 +182,22 @@ const RequestDocumentModal = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Assignee</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl className="h-12 w-full">
-                      <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                        <SelectValue
-                          placeholder={
-                            <p className="text-brand-placeholder">Select Assignee</p>
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {statuses?.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {item.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <CustomMultiSelect
+                    options={
+                      users?.value
+                        ? users?.value?.data?.map((item) => ({
+                            label: item.name ?? item.email,
+                            value: item.id,
+                          }))
+                        : []
+                    }
+                    isLoading={users.isPending}
+                    onChange={field.onChange}
+                    value={field.value}
+                    isMulti={undefined}
+                    placeholder="Select Assignee"
+                  />
+
                   <FormMessage />
                 </FormItem>
               )}

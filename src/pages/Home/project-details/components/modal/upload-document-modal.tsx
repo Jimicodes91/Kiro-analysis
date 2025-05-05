@@ -52,7 +52,12 @@ const UploadDocumentModal = ({
 
   return (
     <>
-      <Modal title="Upload document" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Upload document"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

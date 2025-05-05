@@ -25,7 +25,7 @@ const CustomMultiSelect = ({
   value,
   isLoading = false,
   options,
-  isMulti = true,
+  isMulti,
 }: MultiSelectProps) => {
   const customStyles: StylesConfig<Option, true> = {
     control: (provided) => ({

@@ -290,6 +290,7 @@ const AddProjectTaskModal = ({
                     onChange={field.onChange}
                     value={field.value}
                     placeholder="Select Assignee"
+                    isMulti
                   />
 
                   <FormMessage />

@@ -114,8 +114,9 @@ export const requestDocumentSchema = z.object({
     message: "End date is required",
   }),
   is_visible_to_client: z.boolean(),
-  assignee_id: z.string({
-    message: "Assignee is required",
+  assignee_id: z.object({
+    label: z.string(),
+    value: z.string(),
   }),
 });
 
