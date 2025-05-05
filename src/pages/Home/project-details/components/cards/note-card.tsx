@@ -49,7 +49,7 @@ export default function NoteCard({ note }: { note: NoteDetails }) {
           </DropdownMenuContent>
         </DropdownMenu> */}
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between items-end">
         <p
           className="text-sm text-primary"
           dangerouslySetInnerHTML={{

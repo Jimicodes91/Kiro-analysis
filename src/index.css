@@ -250,3 +250,45 @@ button {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+body .rsw-toolbar {
+  background: #fff;
+  border: 0;
+  order: 2;
+}
+
+body .rsw-ce {
+  order: 1;
+}
+
+/* body .rsw-btn[data-active=true] {
+  background: transparent !important;
+} */
+
+body .rsw-btn:hover {
+  background: initial;
+}
+
+body .rsw-editor {
+  border: 1.5px solid #ddd;
+  padding: 2px 8px;
+}
+
+body .rsw-editor:focus-within {
+  border: 1.5px solid rgb(56, 56, 236);
+}
+
+body .rsw-ce ul,
+body .rsw-ce ol {
+  list-style-type: disc;
+  list-style: inside;
+}
+
+body .rsw-ce ol {
+  list-style: inside;
+  list-style-type: decimal;
+}
+
+body .rsw-ce:focus {
+  outline: 1px solid transparent;
+}

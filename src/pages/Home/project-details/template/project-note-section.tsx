@@ -1,7 +1,7 @@
 import useGetAllProjectNotes from "@/hooks/project-modules/note/use-get-all-project-notes";
 import { compareAsc, parseISO } from "date-fns";
 import NoteCard from "../components/cards/note-card";
-import { NoteEditor } from "../components/editor";
+import CustomEditor from "../components/editor";
 
 function ProjectNoteSection({ projectId }: { projectId: string }) {
   const projectNotes = useGetAllProjectNotes(projectId);
@@ -47,7 +47,7 @@ function ProjectNoteSection({ projectId }: { projectId: string }) {
   return (
     <>
       <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
-        <NoteEditor projectId={projectId} />
+        <CustomEditor projectId={projectId} />
         <div>{renderBody()}</div>
       </div>
     </>
