@@ -159,3 +159,17 @@ export function fileToBase64(file: File): Promise<string> {
 export const today = startOfDay(new Date());
 
 export const getSelectableDate = (date: Date) => startOfDay(date) < today;
+
+export function truncateMiddleWords(text: string, startCount = 8, endCount = 16): string {
+  const words = text.trim().split("");
+
+  if (words.length <= startCount + endCount) {
+    console.log(words, "lmao");
+    return text; // No need to truncate
+  }
+
+  const startWords = words.slice(0, startCount).join("");
+  const endWords = words.slice(-endCount).join("");
+
+  return `${startWords}.....${endWords}`;
+}

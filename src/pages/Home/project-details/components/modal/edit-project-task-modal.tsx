@@ -48,7 +48,6 @@ const EditProjectTaskModal = ({
   task,
 }: {
   projectId: string;
-  projectTypeId: string;
   task: TaskDetails;
 } & ModalProps) => {
   const taskTypes = useGetAllTaskTypes();

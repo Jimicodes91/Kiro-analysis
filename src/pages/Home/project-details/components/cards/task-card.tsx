@@ -18,14 +18,14 @@ import { AnimatePresence } from "framer-motion";
 import DeleteTaskModal from "../modal/delete-task-modal";
 import EditProjectTaskModal from "../modal/edit-project-task-modal";
 
-function TaskCard({ task, projectId }: { task: TaskDetails; projectId: string }) {
+function TaskCard({ task }: { task: TaskDetails }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const {
     isOpen: isEditOpen,
     onOpen: onEditOpen,
     onClose: onEditClose,
   } = useDisclosure();
-  const updateTask = useUpdateProjectTask(projectId, task?.id);
+  const updateTask = useUpdateProjectTask(task.project_id, task?.id);
 
   const markTaskAsCompleted = () => {
     updateTask
@@ -86,7 +86,7 @@ function TaskCard({ task, projectId }: { task: TaskDetails; projectId: string })
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && (
           <DeleteTaskModal
-            projectId={projectId}
+            projectId={task.project_id}
             taskId={task?.id}
             isOpen={isOpen}
             onClose={onClose}
@@ -98,8 +98,7 @@ function TaskCard({ task, projectId }: { task: TaskDetails; projectId: string })
           <EditProjectTaskModal
             isOpen={isEditOpen}
             task={task}
-            projectTypeId={""}
-            projectId={projectId}
+            projectId={task.project_id}
             onClose={onEditClose}
           />
         )}
