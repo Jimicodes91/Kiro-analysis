@@ -9,15 +9,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
+import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
 import useDisclosure from "@/hooks/use-disclosure";
 import getInitials, { getFormattedText } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
 import { format } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import DeleteTaskModal from "../modal/delete-task-modal";
+import EditProjectTaskModal from "../modal/edit-project-task-modal";
 
 function TaskCard({ task, projectId }: { task: TaskDetails; projectId: string }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure();
+  const updateTask = useUpdateProjectTask(projectId, task?.id);
+
+  const markTaskAsCompleted = () => {
+    updateTask
+      .mutateAsync({
+        status: "completed",
+      })
+      .catch(console.error);
+  };
 
   return (
     <>
@@ -26,14 +42,19 @@ function TaskCard({ task, projectId }: { task: TaskDetails; projectId: string })
           <Badge variant={task?.status}>{getFormattedText(task?.status)}</Badge>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" isLoading={updateTask.isPending}>
                 <Icons.more />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-40" align="end" forceMount>
               <DropdownMenuGroup>
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Mark as done</DropdownMenuItem>
+                <DropdownMenuItem onClick={onEditOpen}>Edit</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={markTaskAsCompleted}
+                  disabled={task.status === "completed"}
+                >
+                  Mark as completed
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={onOpen}>Delete</DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -69,6 +90,17 @@ function TaskCard({ task, projectId }: { task: TaskDetails; projectId: string })
             taskId={task?.id}
             isOpen={isOpen}
             onClose={onClose}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isEditOpen && (
+          <EditProjectTaskModal
+            isOpen={isEditOpen}
+            task={task}
+            projectTypeId={""}
+            projectId={projectId}
+            onClose={onEditClose}
           />
         )}
       </AnimatePresence>

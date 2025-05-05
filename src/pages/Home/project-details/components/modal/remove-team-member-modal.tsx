@@ -37,7 +37,9 @@ const RemoveTeamMemberModal = ({
             updates. This action cannot be undone.
           </p>
           <div className="flex gap-3 items-center justify-end">
-            <Button size="sm">Cancel</Button>
+            <Button size="sm" onClick={onClose}>
+              Cancel
+            </Button>
             <Button
               size="sm"
               variant="destructive"

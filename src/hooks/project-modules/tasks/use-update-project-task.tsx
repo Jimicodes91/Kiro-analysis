@@ -5,8 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 interface UpdateTaskRequest {
   name?: string;
   description?: string;
-  // status: "in_progress" | "completed" | "pending";
-  status: string;
+  status?: "in_progress" | "completed" | "pending";
   start_date?: string;
   end_date?: string;
   attachments?: string[];
@@ -16,17 +15,17 @@ interface UpdateTaskRequest {
   assignees?: string[];
 }
 
-const useUpdateTask = (projectId: string, taskId: string) => {
+const useUpdateProjectTask = (projectId: string, taskId: string) => {
   const queryClient = useQueryClient();
   return useCustomMutation<Record<string, string>, UpdateTaskRequest>({
     method: "patch",
     endpoint: ENDPOINTS.UPDATE_TASK_DETAILS(projectId, taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_ALL_TASKS],
+        queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS],
       });
     },
   });
 };
 
-export default useUpdateTask;
+export default useUpdateProjectTask;

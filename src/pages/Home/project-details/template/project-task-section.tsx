@@ -14,6 +14,7 @@ function ProjectTaskSection({
   projectTypeId: string;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const projectTasks = useGetProjectTasks(projectId);
 
   const renderBody = () => {

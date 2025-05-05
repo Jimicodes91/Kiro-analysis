@@ -2,7 +2,6 @@ import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
-import DragNdrop from "@/components/ui/file-upload";
 import {
   Form,
   FormControl,
@@ -24,10 +23,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
-import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
+import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
 import { cn, fileToBase64, getSelectableDate } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
-import { addProjectTaskSchema } from "@/utils/validation-schema/project";
+import { TaskDetails } from "@/types/api.types";
+import { editProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, formatISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -36,28 +36,44 @@ import { z } from "zod";
 import Modal from "../../../../../components/Modal";
 
 const statuses = [
-  { value: "in_progress", label: "In Progress" },
-  { value: "pending", label: "Pending" },
+  { value: "in_progress" as const, label: "In Progress" },
+  { value: "pending" as const, label: "Pending" },
+  { value: "completed" as const, label: "Completed" },
 ];
+
 const EditProjectTaskModal = ({
   onClose,
   projectId,
   isOpen,
-  projectTypeId,
+  task,
 }: {
   projectId: string;
   projectTypeId: string;
+  task: TaskDetails;
 } & ModalProps) => {
-  const createTask = useCreateTask(projectId);
   const taskTypes = useGetAllTaskTypes();
   const session = getUserSession();
   const users = useGetCompanyUsers(session?.company_id ?? "");
+  const updateTask = useUpdateProjectTask(projectId, task?.id);
 
-  const form = useForm<z.infer<typeof addProjectTaskSchema>>({
-    resolver: zodResolver(addProjectTaskSchema),
+  const form = useForm<z.infer<typeof editProjectTaskSchema>>({
+    resolver: zodResolver(editProjectTaskSchema),
+    defaultValues: {
+      name: task.name,
+      task_type_id: task.task_type_id,
+      description: task.description,
+      status: task.status,
+      end_date: new Date(task.end_date),
+      start_date: new Date(task.start_date),
+      is_visible_to_client: task.is_visible_to_client === 1 ? true : false,
+      assignees: task?.assignees?.map((item) => ({
+        label: item.name ?? item.email,
+        value: item.id,
+      })),
+    },
   });
 
-  const onSubmit = async (data: z.infer<typeof addProjectTaskSchema>) => {
+  const onSubmit = async (data: z.infer<typeof editProjectTaskSchema>) => {
     const { assignees, end_date, start_date, attachment, ...validData } = data;
     let base64File = "";
 
@@ -65,21 +81,19 @@ const EditProjectTaskModal = ({
       try {
         const base64String = await fileToBase64(attachment);
         base64File = base64String;
-        console.log(base64String); // Outputs a data URL (e.g., data:image/png;base64,...)
       } catch (err) {
         console.error("Error converting file:", err);
       }
     }
+    console.log(base64File);
     const assigneesIds = assignees?.map((item) => item.value);
 
-    createTask
+    updateTask
       .mutateAsync({
         ...validData,
-        project_type_id: projectTypeId,
         start_date: formatISO(start_date),
         end_date: formatISO(end_date),
         assignees: assigneesIds,
-        attachments: [base64File],
       })
       .then(() => {
         form.reset();
@@ -90,7 +104,13 @@ const EditProjectTaskModal = ({
 
   return (
     <>
-      <Modal title="Add task" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Edit task"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -288,7 +308,7 @@ const EditProjectTaskModal = ({
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name={"attachment"}
               render={({ field }) => (
@@ -304,7 +324,7 @@ const EditProjectTaskModal = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             <FormField
               control={form.control}
@@ -320,8 +340,8 @@ const EditProjectTaskModal = ({
                 </FormItem>
               )}
             />
-            <Button type="submit" isLoading={createTask.isPending}>
-              Save and continue
+            <Button type="submit" isLoading={updateTask.isPending}>
+              Edit Task
             </Button>
           </form>
         </Form>

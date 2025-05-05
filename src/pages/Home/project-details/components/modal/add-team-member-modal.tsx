@@ -52,7 +52,13 @@ const AddTeamModal = ({
 
   return (
     <>
-      <Modal title="Add team" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Add team"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

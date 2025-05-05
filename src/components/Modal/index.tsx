@@ -13,6 +13,8 @@ interface ModalProps {
   expandRoute?: string;
   showExpandButton?: boolean;
   isOpen?: boolean;
+  closeOnEsc?: boolean;
+  closeOnOverlayClick?: boolean;
 }
 
 const dropIn = {
@@ -46,6 +48,8 @@ const Modal = ({
   expandRoute,
   showExpandButton = false,
   isOpen = false,
+  closeOnEsc = true,
+  closeOnOverlayClick = true,
 }: ModalProps) => {
   const navigate = useNavigate();
   const modalRoot = document.getElementById("modal-root");
@@ -56,7 +60,7 @@ const Modal = ({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && closeOnEsc) {
         closeModal();
       }
     };
@@ -73,7 +77,7 @@ const Modal = ({
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "auto";
     };
-  }, [closeModal, isOpen]);
+  }, [closeModal, isOpen, closeOnEsc]);
 
   if (!isOpen || !modalRoot) return null;
 
@@ -84,9 +88,11 @@ const Modal = ({
     >
       <motion.div
         className="fixed w-full top-0 right-0 h-screen bg-black"
-        onClick={closeModal}
+        onClick={() => {
+          if (closeOnOverlayClick) closeModal();
+        }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.4 }}
+        animate={{ opacity: 0.5 }}
         exit={{ opacity: 1 }}
       />
       <motion.div

@@ -36,9 +36,11 @@ import { z } from "zod";
 import Modal from "../../../../../components/Modal";
 
 const statuses = [
-  { value: "in_progress", label: "In Progress" },
-  { value: "pending", label: "Pending" },
+  { value: "in_progress" as const, label: "In Progress" },
+  { value: "pending" as const, label: "Pending" },
+  { value: "completed" as const, label: "Completed" },
 ];
+
 const AddProjectTaskModal = ({
   onClose,
   projectId,
@@ -65,7 +67,7 @@ const AddProjectTaskModal = ({
       try {
         const base64String = await fileToBase64(attachment);
         base64File = base64String;
-        console.log(base64String); // Outputs a data URL (e.g., data:image/png;base64,...)
+        // console.log(base64String); // Outputs a data URL (e.g., data:image/png;base64,...)
       } catch (err) {
         console.error("Error converting file:", err);
       }
@@ -90,7 +92,13 @@ const AddProjectTaskModal = ({
 
   return (
     <>
-      <Modal title="Add task" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Add task"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

@@ -61,7 +61,13 @@ const CreateEventModal = ({
 
   return (
     <>
-      <Modal title="Create event" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Create event"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

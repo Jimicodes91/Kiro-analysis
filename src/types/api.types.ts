@@ -51,19 +51,25 @@ export interface TaskDetails {
   id: string;
   created_at: string;
   updated_at: string;
-  deleted_at?: string;
   project_id: string;
   company_id: string;
   author_id: string;
-  assignee_id?: string;
+  task_type_id: string;
+  project_type_id: string;
   name: string;
   description: string;
-  status: "in_progress" | "completed";
+  status: "in_progress" | "completed" | "pending";
   start_date: string;
   end_date: string;
   is_visible_to_client: number;
   assignees: Author[];
   document: IDocument[];
+  task_type: TaskTypeDetails;
+  pipeline: ProjectType;
+  company: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface IDocument {
