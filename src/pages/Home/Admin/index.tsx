@@ -3,10 +3,10 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
+import TaskTab from "./fake-task";
+import UserTab from "./fake-user";
 import JourneyTab from "./journey";
 import NoteTab from "./note";
-import TaskTab from "./task";
-import UserTab from "./user";
 
 const Admin: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
