@@ -16,6 +16,7 @@ const BtnBold = createButton(
     size="icon"
     className="h-full w-full rounded-none bg-inherit"
     aria-label="Toggle bold"
+    asChild
   >
     <Bold className="h-4 w-4 text-primary" />
   </Button>,
@@ -29,6 +30,7 @@ const BtnOrderedList = createButton(
     size="icon"
     className="h-full w-full rounded-none bg-inherit"
     aria-label="Ordered list"
+    asChild
   >
     <ListOrdered className="h-4 w-4 text-primary" />
   </Button>,
@@ -41,6 +43,7 @@ const BtnUnOrderedList = createButton(
     size="icon"
     className="h-full w-full rounded-none bg-inherit"
     aria-label="Toggle italic"
+    asChild
   >
     <GoListUnordered className="h-4 w-4 text-primary" />
   </Button>,
@@ -53,6 +56,7 @@ const BtnStrikeThrough = createButton(
     size="icon"
     className="h-full w-full rounded-none bg-inherit"
     aria-label="Toggle italic"
+    asChild
   >
     <Strikethrough className="h-4 w-4 text-primary" />
   </Button>,

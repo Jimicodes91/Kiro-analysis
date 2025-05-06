@@ -1,7 +1,7 @@
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { ProjectDetails } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
-import { format, isToday, parseISO, startOfDay } from "date-fns";
+import { format, formatISO, isToday, parseISO, startOfDay } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export const formatDate = (isoDate: string): string => {
@@ -174,3 +174,11 @@ export function truncateMiddleWords(text: string, startCount = 8, endCount = 16)
 
   return `${startWords}.....${endWords}`;
 }
+
+export const createTimeDateFormat = (date: Date, time: string) => {
+  const [hour, minute] = time.split(":");
+  const newDate = date;
+  newDate.setHours(+hour, +minute, 0, 0);
+
+  return formatISO(newDate);
+};

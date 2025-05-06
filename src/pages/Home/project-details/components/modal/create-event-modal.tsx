@@ -22,7 +22,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useGetAllEventTypes from "@/hooks/project-modules/event-types/use-get-all-event-types";
 import useCreateEvent from "@/hooks/project-modules/events/use-create-event";
-import { cn } from "@/lib/utils";
+import { cn, createTimeDateFormat, getSelectableDate } from "@/lib/utils";
 import { addProjectEventSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -31,10 +31,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Modal from "../../../../../components/Modal";
 
-const statuses = [
-  { value: "in_progress", label: "In Progress" },
-  { value: "pending", label: "Pending" },
-];
 const CreateEventModal = ({
   onClose,
   projectId,
@@ -49,9 +45,18 @@ const CreateEventModal = ({
   });
 
   const onSubmit = async (data: z.infer<typeof addProjectEventSchema>) => {
+    console.log(data, "data");
     createEvent
-      // @ts-expect-error ssls
-      .mutateAsync(data)
+      .mutateAsync({
+        description: data.description,
+        event_type_id: data.event_type_id,
+        is_visible_to_client: data.is_visible_to_client,
+        name: data.name,
+        venue: data.venue,
+        start_datetime: createTimeDateFormat(data.start_date, data.from),
+        end_datetime: createTimeDateFormat(data.start_date, data.to),
+        invites: [""],
+      })
       .then(() => {
         form.reset();
         onClose();
@@ -119,6 +124,19 @@ const CreateEventModal = ({
             />
             <FormField
               control={form.control}
+              name="venue"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Venue</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Venue" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
@@ -135,7 +153,7 @@ const CreateEventModal = ({
               name="start_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
-                  <FormLabel>Start date</FormLabel>
+                  <FormLabel>Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -150,7 +168,7 @@ const CreateEventModal = ({
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span className="text-brand-placeholder">Start date</span>
+                            <span className="text-brand-placeholder">Date</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -161,9 +179,7 @@ const CreateEventModal = ({
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
+                        disabled={getSelectableDate}
                         initialFocus
                       />
                     </PopoverContent>
@@ -175,7 +191,7 @@ const CreateEventModal = ({
             <div className="flex gap-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="from"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>From</FormLabel>
@@ -193,7 +209,7 @@ const CreateEventModal = ({
               />
               <FormField
                 control={form.control}
-                name="name"
+                name="to"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>To</FormLabel>
@@ -205,35 +221,6 @@ const CreateEventModal = ({
                 )}
               />
             </div>
-
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl className="h-12 w-full">
-                      <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                        <SelectValue
-                          placeholder={
-                            <p className="text-brand-placeholder">Select status</p>
-                          }
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {statuses?.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {item.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <FormField
               control={form.control}

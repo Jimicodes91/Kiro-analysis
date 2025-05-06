@@ -26,7 +26,7 @@ function ProjectDocumentSection({ projectId }: { projectId: string }) {
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
             <div
-              className="px-5 py-10 space-y-2 h-[100px] rounded-lg bg-slate-200 flex justify-between  animate-pulse"
+              className="px-5 py-10 space-y-2 h-[400px] rounded-lg bg-slate-200 flex justify-between  animate-pulse"
               key={i}
             ></div>
           ))}

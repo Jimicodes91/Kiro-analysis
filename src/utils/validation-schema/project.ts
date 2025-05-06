@@ -149,33 +149,25 @@ export const addTeamSchema = z.object({
 
 export const addProjectEventSchema = z.object({
   name: z.string({
-    message: "Task name is required",
+    message: "Event title is required",
+  }),
+  venue: z.string({
+    message: "Venue is required",
   }),
   event_type_id: z.string({
-    message: "Task type is required",
-  }),
-  status: z.string({
-    message: "Task type is required",
+    message: "Event type is required",
   }),
   description: z.string({
     message: "Description is required",
   }),
   start_date: z.date({
-    message: "Start date is required",
+    message: "Date is required",
   }),
-  end_date: z.date({
-    message: "End date is required",
+  from: z.string({
+    message: "Start time is required",
+  }),
+  to: z.string({
+    message: "End time is required",
   }),
   is_visible_to_client: z.boolean(),
-  file1: fileSchema(fileSize, [
-    // CSV files
-    "application/pdf",
-    "application/pdf",
-
-    // Excel files
-    // Additional MIME types for better compatibility
-    "application/excel",
-    "application/x-excel",
-    "application/x-msexcel",
-  ]),
 });
