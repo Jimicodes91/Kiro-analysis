@@ -1,5 +1,6 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface AssignTo {
   id: string;
@@ -13,9 +14,15 @@ export interface UpdateContactRequest {
   assigned_to: AssignTo[];
 }
 const useUpdateContact = (contactId: string) => {
+  const queryClient = useQueryClient();
   return useCustomMutation<object, UpdateContactRequest>({
-    method: "patch",
+    method: "put",
     endpoint: ENDPOINTS.UPDATE_CONTACT(contactId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_ALL_CONTACTS],
+      });
+    },
   });
 };
 
