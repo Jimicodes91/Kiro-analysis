@@ -1,7 +1,6 @@
 import Modal from "@/components/Modal";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-// import { countries } from "@/components/ui/country-selector";
 import {
   Form,
   FormControl,
@@ -29,7 +28,12 @@ import * as yup from "yup";
 const contactSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
-  phone: yup.string().required("Phone number is required"),
+  phone: yup
+    .string()
+    .required("Phone number is required")
+    .test("is-valid-phone", "Invalid phone number", (value) => {
+      return value ? isValidPhoneNumber(value) : false;
+    }),
   organization: yup.string().required("Company is required"),
   assigned_to: yup
     .array()
@@ -39,10 +43,10 @@ const contactSchema = yup.object().shape({
         name: yup.string().required(),
       })
     )
-    .required("Please assign this contact to at least one person"),
+    .min(1, "Assign this contact to at least one person")
+    .required("Assign this contact to at least one person"),
 });
 
-// type ContactFormValues = yup.InferType<typeof contactSchema>;
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -56,7 +60,6 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
   const usersResponse = useGetCompanyUsers(session?.company_id ?? "");
   const createContact = useCreateContact();
   const updateContact = useUpdateContact(contactData?.id || "");
-  //   const [countryCode, setCountryCode] = useState("+1");
 
   const form = useForm<ContactFormValues>({
     resolver: yupResolver(contactSchema),
@@ -67,21 +70,15 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
       organization: "",
       assigned_to: [],
     },
+    mode: "onChange",
   });
+
+  const { isDirty } = form.formState;
 
   // Load data for edit or view mode
   useEffect(() => {
     if (contactData && (mode === "edit" || mode === "view")) {
       form.reset(contactData);
-      // Extract country code from existing phone number
-      //   if (contactData.phone) {
-      //     const matchedCountry = countries.find((c) =>
-      //       contactData.phone.startsWith(c.dialCode)
-      //     );
-      //     if (matchedCountry) {
-      //       setCountryCode(matchedCountry.dialCode);
-      //     }
-      //   }
     }
   }, [contactData, form, mode]);
 
@@ -147,12 +144,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
               <FormItem>
                 <FormLabel>Client name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Name"
-                    {...field}
-                    disabled={mode === "view"}
-                    className="rounded-full"
-                  />
+                  <Input placeholder="Name" {...field} disabled={mode === "view"} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,7 +162,6 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                     type="email"
                     {...field}
                     disabled={mode === "view"}
-                    className="rounded-full"
                   />
                 </FormControl>
                 <FormMessage />
@@ -184,53 +175,12 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
               <FormItem>
                 <FormLabel>Company name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Company"
-                    {...field}
-                    disabled={mode === "view"}
-                    className="rounded-full"
-                  />
+                  <Input placeholder="Company" {...field} disabled={mode === "view"} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          {/* <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone number</FormLabel>
-                <FormControl>
-                  <div className="flex items-center rounded-full border bg-white overflow-hidden h-10">
-                    <div className="flex items-center h-full px-2">
-                      <CountrySelector
-                        value={countryCode}
-                        onChange={(code) => {
-                          setCountryCode(code);
-                          const numberPart = field.value?.replace(/^\+\d+/, "") || "";
-                          field.onChange(`${code}${numberPart}`);
-                        }}
-                        disabled={mode === "view"}
-                      />
-                    </div>
-                    <Input
-                      placeholder="1234567890"
-                      {...field}
-                      value={field.value?.replace(countryCode, "") || ""}
-                      onChange={(e) => {
-                        const numbers = e.target.value.replace(/\D/g, "");
-                        field.onChange(`${countryCode}${numbers}`);
-                      }}
-                      disabled={mode === "view"}
-                      className="border-0 rounded-none h-full"
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
           <FormField
             control={form.control}
             name="phone"
@@ -249,18 +199,11 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
             [&>input]:bg-background
             [&>input]:rounded-full
             [&>input]:border
-            [&>input]:h-10
+            [&>input]:h-12
             [&>input]:px-4
             [&>input]:py-2
           `}
                     inputRef={field.ref}
-                    error={
-                      field.value
-                        ? isValidPhoneNumber(field.value)
-                          ? undefined
-                          : "Invalid phone number"
-                        : "Phone number required"
-                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -271,7 +214,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
           <FormField
             control={form.control}
             name="assigned_to"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>Assign to</FormLabel>
                 <FormControl>
@@ -290,6 +233,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                       }}
                       placeholder="Assign to"
                       disabled={mode === "view"}
+                      error={fieldState.error?.message}
                     />
 
                     {/* Display selected users as pills */}
@@ -312,7 +256,6 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                     )}
                   </div>
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -322,6 +265,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                 type="submit"
                 className="w-full"
                 isLoading={createContact.isPending || updateContact.isPending}
+                disabled={mode === "edit" && !isDirty}
               >
                 {mode === "create" ? "Add contact" : "Save changes"}
               </Button>

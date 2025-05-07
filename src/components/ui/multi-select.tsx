@@ -16,6 +16,7 @@ type MultiSelectProps = {
   className?: string;
   checkboxSize?: number;
   disabled?: boolean;
+  error?: string; // Add error prop
 };
 
 // Helper function to get initials from a name
@@ -36,6 +37,7 @@ const MultiSelect = ({
   className = "",
   checkboxSize = 18,
   disabled = false,
+  error, // Add error prop
 }: MultiSelectProps) => {
   const [selected, setSelected] = useState<string[]>(defaultSelected);
   const [isOpen, setIsOpen] = useState(false);
@@ -83,15 +85,16 @@ const MultiSelect = ({
       {/* Dropdown Field */}
       {!disabled && (
         <div
-          className={`flex items-center justify-between w-full px-4 py-3 text-left border rounded-full ${
-            disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white cursor-pointer"
-          }`}
+          className={`flex items-center justify-between w-full px-4 py-3 text-left border rounded-full ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white cursor-pointer"}`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
         >
           <div className="text-[#00000080] text-sm font-[400]">{placeholder}</div>
           {!disabled && <ChevronDown className="w-4 h-4 text-gray-500" />}
         </div>
       )}
+
+      {/* Error Message */}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 
       {/* Dropdown Menu */}
       {isOpen && (
