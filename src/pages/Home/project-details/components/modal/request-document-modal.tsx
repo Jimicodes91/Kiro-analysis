@@ -51,7 +51,6 @@ const RequestDocumentModal = ({
   });
 
   const onSubmit = async (data: z.infer<typeof requestDocumentSchema>) => {
-    console.log(data);
     createDocumentRequest
       .mutateAsync({
         ...data,

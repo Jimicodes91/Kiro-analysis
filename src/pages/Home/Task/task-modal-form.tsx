@@ -149,7 +149,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
 
         // Fix status value to match select options
         let statusValue = task.status;
-        if (statusValue === "in progress") {
+        if (statusValue === "in_progress") {
           statusValue = "in_progress";
         }
         setValue("status", statusValue);

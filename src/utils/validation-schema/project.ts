@@ -49,7 +49,7 @@ export const addProjectTaskSchema = z.object({
   end_date: z.date({
     message: "End date is required",
   }),
-  is_visible_to_client: z.boolean(),
+  is_visible_to_client: z.boolean().default(false),
   assignees: z.array(
     z.object({
       label: z.string(),
@@ -84,7 +84,7 @@ export const editProjectTaskSchema = z.object({
   end_date: z.date({
     message: "End date is required",
   }),
-  is_visible_to_client: z.boolean(),
+  is_visible_to_client: z.boolean().default(false),
   assignees: z.array(
     z.object({
       label: z.string(),
@@ -113,7 +113,7 @@ export const requestDocumentSchema = z.object({
   end_date: z.date({
     message: "End date is required",
   }),
-  is_visible_to_client: z.boolean(),
+  is_visible_to_client: z.boolean().default(false),
   assignee_id: z.object({
     label: z.string(),
     value: z.string(),
@@ -130,7 +130,7 @@ export const uploadDocumentSchema = z.object({
   description: z.string({
     message: "Description is required",
   }),
-  // is_visible_to_client: z.boolean(),
+  // is_visible_to_client: z.boolean().default(false),
   attachment: optionalFileSchema(fileSize, [
     // CSV files
     "application/pdf",
@@ -144,7 +144,7 @@ export const addTeamSchema = z.object({
   user_id: z.string({
     message: "Document name is required",
   }),
-  is_visible_to_client: z.boolean(),
+  is_visible_to_client: z.boolean().default(false),
 });
 
 export const addProjectEventSchema = z.object({
@@ -169,5 +169,5 @@ export const addProjectEventSchema = z.object({
   to: z.string({
     message: "End time is required",
   }),
-  is_visible_to_client: z.boolean(),
+  is_visible_to_client: z.boolean().default(false),
 });
