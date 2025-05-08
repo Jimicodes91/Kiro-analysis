@@ -24,12 +24,12 @@ import { Textarea } from "@/components/ui/textarea";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
-import { cn, fileToBase64, getSelectableDate } from "@/lib/utils";
+import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { TaskDetails } from "@/types/api.types";
 import { editProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, formatISO } from "date-fns";
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -90,8 +90,8 @@ const EditProjectTaskModal = ({
     updateTask
       .mutateAsync({
         ...validData,
-        start_date: formatISO(start_date),
-        end_date: formatISO(end_date),
+        start_date: getUTCISODateFormat(start_date),
+        end_date: getUTCISODateFormat(end_date),
         assignees: assigneesIds,
       })
       .then(() => {

@@ -73,6 +73,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
 
   const users = useMemo(() => usersResponse?.value?.data || [], [usersResponse]);
   const projects = useMemo(() => projectsResponse?.value?.data || [], [projectsResponse]);
+
   const projectTypes = useMemo(
     () => projectTypesResponse?.value?.data || [],
     [projectTypesResponse]
@@ -87,7 +88,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
     label: user.name || user.email,
   }));
 
-  const { control, handleSubmit, setValue, watch, reset } = useForm<TaskFormData>({
+  const { control, handleSubmit, setValue, watch } = useForm<TaskFormData>({
     resolver: yupResolver(taskSchema),
     defaultValues: {
       name: "",
@@ -191,19 +192,6 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
     taskTypes.length,
     setValue,
   ]);
-  // Reset form initialization state when modal closes
-  useEffect(() => {
-    if (!isOpen) {
-      setFormInitialized(false);
-      reset();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (addTask.isSuccess || updateTask.isSuccess) {
-      onClose();
-    }
-  }, [addTask.isSuccess, updateTask.isSuccess, onClose]);
 
   const handleFormSubmit = async (data: TaskFormData) => {
     if (isViewMode) {
@@ -219,11 +207,11 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { project, id: _id, ...newData } = data;
       setSelectedProjectId(project);
-      updateTask.mutateAsync(newData);
+      updateTask.mutateAsync(newData).then(() => onClose());
     } else if (mode === "create") {
       const { project, ...newData } = data;
       setSelectedProjectId(project);
-      addTask.mutateAsync(newData);
+      addTask.mutateAsync(newData).then(() => onClose());
     }
   };
 
@@ -289,14 +277,18 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
     );
   };
 
-  if (!isOpen) return null;
-
   // Render different view for "view" mode
   if (isViewMode) {
     const formValues = watch();
 
     return (
-      <Modal title="View task" closeModal={onClose}>
+      <Modal
+        title="View task"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+      >
         <div className="p-4 space-y-6">
           {/* Task Name */}
           <div>
@@ -389,7 +381,13 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
 
   // Render form for edit/create mode
   return (
-    <Modal title={isCreateMode ? "Create task" : "Edit task"} closeModal={onClose}>
+    <Modal
+      title={isCreateMode ? "Create task" : "Edit task"}
+      closeModal={onClose}
+      isOpen={isOpen}
+      closeOnEsc={false}
+      closeOnOverlayClick={false}
+    >
       <form onSubmit={handleSubmit(handleFormSubmit)} className="p-4 space-y-4">
         <div>
           <label className="block text-sm font-medium text-[#00000099] mb-1">

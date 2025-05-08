@@ -175,10 +175,18 @@ export function truncateMiddleWords(text: string, startCount = 8, endCount = 16)
   return `${startWords}.....${endWords}`;
 }
 
+export const getUTCISODateFormat = (localDate: Date) => {
+  const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+
+  const isoUTC = formatISO(utcDate, { representation: "complete" });
+  // console.log(isoUTC); // e.g., "2025-05-07T12:34:56Z"
+  return isoUTC;
+};
+
 export const createTimeDateFormat = (date: Date, time: string) => {
   const [hour, minute] = time.split(":");
   const newDate = date;
   newDate.setHours(+hour, +minute, 0, 0);
 
-  return formatISO(newDate);
+  return getUTCISODateFormat(newDate);
 };

@@ -24,12 +24,12 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
-import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
-import { cn, fileToBase64, getSelectableDate } from "@/lib/utils";
+import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
+import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { addProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, formatISO } from "date-fns";
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -50,7 +50,7 @@ const AddProjectTaskModal = ({
   projectId: string;
   projectTypeId: string;
 } & ModalProps) => {
-  const createTask = useCreateTask(projectId);
+  const createTask = useCreateProjectTask(projectId);
   const taskTypes = useGetAllTaskTypes();
   const session = getUserSession();
   const users = useGetCompanyUsers(session?.company_id ?? "");
@@ -78,8 +78,8 @@ const AddProjectTaskModal = ({
       .mutateAsync({
         ...validData,
         project_type_id: projectTypeId,
-        start_date: formatISO(start_date),
-        end_date: formatISO(end_date),
+        start_date: getUTCISODateFormat(start_date),
+        end_date: getUTCISODateFormat(end_date),
         assignees: assigneesIds,
         attachments: [base64File],
       })
