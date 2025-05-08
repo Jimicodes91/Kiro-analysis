@@ -22,7 +22,7 @@ createRoot(document.getElementById("root")!).render(
         <ToastContainer
           transition={slideInOutAnimation}
           hideProgressBar
-          newestOnTop
+          newestOnTop={true}
           closeOnClick
           pauseOnHover
           draggable

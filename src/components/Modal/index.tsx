@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import React, { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { BsArrowsAngleExpand } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
@@ -12,6 +13,8 @@ interface ModalProps {
   expandRoute?: string;
   showExpandButton?: boolean;
   isOpen?: boolean;
+  closeOnEsc?: boolean;
+  closeOnOverlayClick?: boolean;
 }
 
 const dropIn = {
@@ -45,60 +48,62 @@ const Modal = ({
   expandRoute,
   showExpandButton = false,
   isOpen = false,
+  closeOnEsc = true,
+  closeOnOverlayClick = true,
 }: ModalProps) => {
   const navigate = useNavigate();
+  const modalRoot = document.getElementById("modal-root");
 
   const handleExpand = () => {
-    if (expandRoute) {
-      navigate(expandRoute);
-    }
+    if (expandRoute) navigate(expandRoute);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && closeOnEsc) {
         closeModal();
-        // searchParams.delete("selectedTab");
-        // setSearchParams(searchParams, { replace: true }); // removes from URL without adding to browser history
       }
     };
 
     if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden"; // ⛔ prevent scrolling
+      document.body.style.overflow = "hidden";
     } else {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = ""; // ✅ re-enable scrolling
+      document.body.style.overflow = "auto";
     }
 
-    // Cleanup
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "auto";
     };
-  }, [closeModal, isOpen]);
+  }, [closeModal, isOpen, closeOnEsc]);
 
-  return (
+  if (!isOpen || !modalRoot) return null;
+
+  return ReactDOM.createPortal(
     <motion.div
-      className={`fixed top-0 right-0 w-full py-6 h-screen scroll-smooth items-start flex justify-end z-50 backdrop-blur-sm ${className}`}
+      className={`fixed top-0 right-0 w-full py-6 h-screen scroll-smooth items-start flex justify-end z-50 backdrop-blur-[2px] ${className}`}
       exit={{ opacity: 0 }}
     >
       <motion.div
         className="fixed w-full top-0 right-0 h-screen bg-black"
-        onClick={closeModal}
+        onClick={() => {
+          if (closeOnOverlayClick) closeModal();
+        }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.4 }}
+        animate={{ opacity: 0.5 }}
         exit={{ opacity: 1 }}
-      ></motion.div>
+      />
       <motion.div
-        className={`bg-white rounded-lg p-4 z-50 w-full max-w-md max-h-full mx-[20px] flex flex-col scroll-smooth`}
+        className="bg-white rounded-lg p-4 z-50 w-full max-w-md max-h-full mx-[20px] flex flex-col scroll-smooth"
         variants={dropIn}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
         <div className="border rounded-lg flex flex-col h-fit custom-scrollbar scroll-smooth overflow-y-auto">
-          {/* Fixed Header */}
-          <div className="flex justify-between pb-4 p-3 rounded-tl-lg rounded-rl-lg border-b border-[1px] sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
+          <div className="flex justify-between pb-4 bg-white p-3 rounded-tl-lg rounded-rl-lg border-b sticky top-0 z-10">
             <div className="flex items-center gap-4">
               {showExpandButton && (
                 <button
@@ -109,7 +114,7 @@ const Modal = ({
                   <BsArrowsAngleExpand />
                 </button>
               )}
-              <div className="text-[18px] font-medium text-[#191819]">{title}</div>
+              <div className="text-[18px] font-semibold text-[#191819]">{title}</div>
             </div>
             <button
               onClick={closeModal}
@@ -131,13 +136,13 @@ const Modal = ({
             </button>
           </div>
 
-          {/* Scrollable Content Area */}
           <div className="h-full flex-grow scroll-smooth">
             <div>{children}</div>
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    modalRoot
   );
 };
 

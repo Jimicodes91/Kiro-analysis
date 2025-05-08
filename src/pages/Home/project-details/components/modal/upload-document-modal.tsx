@@ -1,6 +1,5 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import DragNdrop from "@/components/ui/file-upload";
 import {
   Form,
@@ -21,6 +20,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useGetAllDocumentTypes from "@/hooks/project-modules/document-types/use-get-all-document-types";
 import useUploadDocument from "@/hooks/project-modules/documents/use-upload-document";
+import { fileToBase64 } from "@/lib/utils";
 import { uploadDocumentSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -41,8 +41,23 @@ const UploadDocumentModal = ({
   });
 
   const onSubmit = async (data: z.infer<typeof uploadDocumentSchema>) => {
+    const { attachment, ...validData } = data;
+    let base64File = "";
+
+    if (attachment) {
+      try {
+        const base64String = await fileToBase64(attachment);
+        base64File = base64String;
+        // console.log(base64String); // Outputs a data URL (e.g., data:image/png;base64,...)
+      } catch (err) {
+        console.error("Error converting file:", err);
+      }
+    }
     uploadDocument
-      .mutateAsync(data)
+      .mutateAsync({
+        ...validData,
+        attachment: base64File,
+      })
       .then(() => {
         form.reset();
         onClose();
@@ -52,7 +67,12 @@ const UploadDocumentModal = ({
 
   return (
     <>
-      <Modal title="Upload document" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Upload document"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -122,15 +142,18 @@ const UploadDocumentModal = ({
                 <FormItem>
                   <FormLabel>Attachment</FormLabel>
                   <FormControl>
-                    {/* @ts-expect-error sjsj */}
-                    <DragNdrop id="file" value={field.value} onChange={field.onChange} />
+                    <DragNdrop
+                      id="filesa-sa"
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="is_visible_to_client"
               render={({ field }) => (
@@ -143,7 +166,7 @@ const UploadDocumentModal = ({
                   </FormLabel>
                 </FormItem>
               )}
-            />
+            /> */}
             <Button type="submit" isLoading={uploadDocument.isPending}>
               Upload document
             </Button>

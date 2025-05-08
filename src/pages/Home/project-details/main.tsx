@@ -11,11 +11,11 @@ import { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import ActivityCard from "./components/cards/activity-card";
-import NoteCard from "./components/cards/note-card";
 import { ProjectSummary } from "./components/project-sumarry";
+import ActivitLogSection from "./template/project-activity-section";
 import ProjectDocumentSection from "./template/project-document-section";
-import ProjectEventSection from "./template/project-event.section";
+import ProjectEventSection from "./template/project-event-section";
+import ProjectNoteSection from "./template/project-note-section";
 import ProjectTaskSection from "./template/project-task-section";
 import ProjectTeamSection from "./template/project-team-section";
 
@@ -53,17 +53,22 @@ const ProjectDetail = ({
   const renderSubTabContent = () => {
     switch (activeSubTab) {
       case "Task":
-        return <ProjectTaskSection projectId={projectDetails?.id} />;
+        return (
+          <ProjectTaskSection
+            projectId={projectDetails?.id}
+            projectTypeId={projectDetails?.project_type_id}
+          />
+        );
       case "Notes":
         return (
           <div>
-            <NoteCard />
+            <ProjectNoteSection projectId={projectDetails?.id} />
           </div>
         );
       case "Activity":
         return (
           <div>
-            <ActivityCard />
+            <ActivitLogSection projectId={projectDetails?.id} />
           </div>
         );
       case "Document":
@@ -97,11 +102,11 @@ const ProjectDetail = ({
   const renderMilestone = () => {
     if (journey.isSuccess && journey?.value) {
       return (
-        <div className="p-4 bg-gray-50 rounded-lg border space-y-4 border-brand-border">
+        <div className="px-4 py-6 bg-gray-50 rounded-lg border space-y-4 border-brand-border">
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold text-gray-700">Milestone</h3>
-              <span className="text-sm font-semibold text-gray-900">40%</span>
+              <span className="text-sm font-semibold text-gray-900">.</span>
             </div>
             <div className="flex items-center w-full text-white text-sm  font-medium">
               {journey?.value?.data?.milestones?.map((item, index, arr) => (
@@ -113,7 +118,11 @@ const ProjectDetail = ({
                   isFirst={index === 0}
                   text={item.name}
                   isLast={index === arr.length - 1}
-                  onClick={() => updateMilestoneFxn(item.id)}
+                  onClick={() => {
+                    if (item.id !== projectDetails?.milestone_id) {
+                      updateMilestoneFxn(item.id);
+                    }
+                  }}
                   key={item.id}
                 />
               ))}
@@ -127,7 +136,8 @@ const ProjectDetail = ({
 
           {/* <p className="mt-2 text-sm text-gray-500">32 days to completion</p> */}
           <p className="mt-2 text-sm text-gray-500">
-            {projectDetails?.timeline} to completion
+            Estimated {projectDetails?.timeline} to complete{" "}
+            <span className="font-bold">{projectDetails?.milestone?.name}</span> phase
           </p>
         </div>
       );
@@ -182,14 +192,14 @@ const ProjectDetail = ({
           </div>
         </div>
         <div className="">
-          <div className="p-3 pt-0 space-y-8">
+          <div className="p-0 md:p-3 md:pt-0 space-y-8">
             <>{renderMilestone()}</>
-            <div className="bg-white rounded-lg grid border border-brand-border overflow-hidden">
-              <div className="flex border-b border-gray-200 overflow-auto">
+            <div className="bg-white rounded-lg grid border border-brand-border relative">
+              <div className="flex border-b border-gray-200 overflow-auto sticky top-[10px]">
                 {subTabs.map((tab) => (
                   <button
                     key={tab}
-                    className={`px-6 py-3 relative whitespace-nowrap text-[14px] text-black focus:outline-none transition-all duration-200 ${
+                    className={`px-6 py-3 relative whitespace-nowrap text-[14px] text-black focus:outline-none outline-none boder-0 transition-all duration-200 ${
                       activeSubTab === tab
                         ? "font-bold"
                         : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"
@@ -200,8 +210,8 @@ const ProjectDetail = ({
                     {activeSubTab === tab ? (
                       <motion.div
                         className="absolute bottom-0 left-0 rounded-full h-0.5 w-full bg-primary"
-                        layoutId={`underline-project`}
-                        id="underline-project"
+                        layoutId={`underline-project-tabs`}
+                        id="underline-project-tabs"
                       />
                     ) : null}
                   </button>

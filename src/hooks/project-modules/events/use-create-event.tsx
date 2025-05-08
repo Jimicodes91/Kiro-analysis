@@ -1,5 +1,6 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EventRequest {
   event_type_id: string;
@@ -13,9 +14,16 @@ interface EventRequest {
 }
 
 const useCreateEvent = (projectId: string) => {
+  const queryClient = useQueryClient();
+
   return useCustomMutation<Record<string, string>, EventRequest>({
     method: "post",
     endpoint: ENDPOINTS.CREATE_EVENT(projectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_ALL_PROJECT_EVENTS],
+      });
+    },
   });
 };
 

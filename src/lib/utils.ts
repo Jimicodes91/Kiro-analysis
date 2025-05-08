@@ -1,8 +1,18 @@
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { ProjectDetails } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
-import { format } from "date-fns";
+import { format, formatISO, isToday, parseISO, startOfDay } from "date-fns";
 import { twMerge } from "tailwind-merge";
+
+export const formatDate = (isoDate: string): string => {
+  const date = parseISO(isoDate);
+
+  if (isToday(date)) {
+    return `Today at ${format(date, "h:mm a")}`;
+  }
+
+  return format(date, "PPp"); // fallback format like "Apr 29, 2025 at 9:47 PM"
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -128,3 +138,55 @@ export function convertToKilobyte(size: number) {
 }
 
 // export const getCurrentMilestone = (milestones, milestoneId: string)
+
+export function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result);
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(file); // Converts to base64 string (data URL format)
+  });
+}
+
+export const today = startOfDay(new Date());
+
+export const getSelectableDate = (date: Date) => startOfDay(date) < today;
+
+export function truncateMiddleWords(text: string, startCount = 8, endCount = 16): string {
+  if (!text) return "";
+  const words = text.trim().split("");
+
+  if (words.length <= startCount + endCount) {
+    console.log(words, "lmao");
+    return text; // No need to truncate
+  }
+
+  const startWords = words.slice(0, startCount).join("");
+  const endWords = words.slice(-endCount).join("");
+
+  return `${startWords}.....${endWords}`;
+}
+
+export const getUTCISODateFormat = (localDate: Date) => {
+  const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+
+  const isoUTC = formatISO(utcDate, { representation: "complete" });
+  // console.log(isoUTC); // e.g., "2025-05-07T12:34:56Z"
+  return isoUTC;
+};
+
+export const createTimeDateFormat = (date: Date, time: string) => {
+  const [hour, minute] = time.split(":");
+  const newDate = date;
+  newDate.setHours(+hour, +minute, 0, 0);
+
+  return getUTCISODateFormat(newDate);
+};

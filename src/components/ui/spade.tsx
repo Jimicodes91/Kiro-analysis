@@ -21,7 +21,7 @@ function Spade({ text, isLast, isFirst, isActive, onClick }: SpadeProps) {
           <div
             onClick={onClick}
             className={cn(
-              "flex items-center w-fit capitalize font-medium pl-4 pr-7 text-md py-2.5 relative cursor-pointer transition-colors",
+              "flex items-center w-fit capitalize font-medium pl-4 pr-7 text-xs py-2.5 relative cursor-pointer transition-colors whitespace-nowrap",
               isFirst && "rounded-l-full",
               isLast && "rounded-r-full",
               isActive ? "bg-primary text-white" : "bg-[#092327]/5 text-[#00000080]"

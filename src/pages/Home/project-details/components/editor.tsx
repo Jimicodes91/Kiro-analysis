@@ -1,70 +1,129 @@
-import { Toggle } from "@/components/ui/toggle";
-import { Bold, Italic, Repeat } from "lucide-react";
-import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import useCreateNote from "@/hooks/project-modules/note/use-create-note";
+import { Bold, ListOrdered, Send, Strikethrough } from "lucide-react";
+import React from "react";
+import { GoListUnordered } from "react-icons/go";
+import Editor, {
+  ContentEditableEvent,
+  createButton,
+  Toolbar,
+} from "react-simple-wysiwyg";
 
-export const NoteEditor: React.FC = () => {
-  const [visibleToClient, setVisibleToClient] = useState(false);
+const BtnBold = createButton(
+  "Bold",
+  <Button
+    size="icon"
+    className="h-full w-full rounded-none bg-inherit"
+    aria-label="Toggle bold"
+    asChild
+  >
+    <Bold className="h-4 w-4 text-primary" />
+  </Button>,
 
-  const formatText = (command: "bold" | "italic" | "removeFormat") => {
-    document.execCommand(command, false);
+  "bold"
+);
+
+const BtnOrderedList = createButton(
+  "Numbered list",
+  <Button
+    size="icon"
+    className="h-full w-full rounded-none bg-inherit"
+    aria-label="Ordered list"
+    asChild
+  >
+    <ListOrdered className="h-4 w-4 text-primary" />
+  </Button>,
+  "insertOrderedList"
+);
+
+const BtnUnOrderedList = createButton(
+  "Bullet list",
+  <Button
+    size="icon"
+    className="h-full w-full rounded-none bg-inherit"
+    aria-label="Toggle italic"
+    asChild
+  >
+    <GoListUnordered className="h-4 w-4 text-primary" />
+  </Button>,
+  "insertUnorderedList"
+);
+
+const BtnStrikeThrough = createButton(
+  "Strike through",
+  <Button
+    size="icon"
+    className="h-full w-full rounded-none bg-inherit"
+    aria-label="Toggle italic"
+    asChild
+  >
+    <Strikethrough className="h-4 w-4 text-primary" />
+  </Button>,
+  "strikeThrough"
+);
+
+export default function CustomEditor({ projectId }: { projectId: string }) {
+  const [html, setHtml] = React.useState("");
+  const createNote = useCreateNote(projectId);
+  const [isPinned, setIsPinned] = React.useState(false);
+
+  const createNoteHandler = () => {
+    createNote
+      .mutateAsync({
+        content: html,
+        mentions: [],
+        attachments: [],
+        is_pinned: isPinned,
+      })
+      .then(() => {
+        // Reset after send
+        setIsPinned(false);
+        setHtml("");
+      })
+      .catch(console.error);
   };
 
-  const handleSend = () => {
-    const plainText = (document.getElementById("editor") as HTMLElement).innerHTML;
-    console.log("Sending Note:", {
-      text: plainText,
-      visibleToClient,
-    });
-    // Reset after send
-    setVisibleToClient(false);
-    (document.getElementById("editor") as HTMLElement).innerHTML = "";
-  };
-
+  function onChange(e: ContentEditableEvent) {
+    setHtml(e.target.value);
+  }
   return (
-    <div className="border-2 border-brand-border rounded-lg p-4 min-h-[110px] flex flex-col justify-between">
-      <div
-        id="editor"
-        contentEditable
-        contextMenu=""
-        className="min-h-[50px] outline-none text-gray-800"
-      >
-        Add new note
-      </div>
-
-      <div className="flex items-center mt-4">
-        {/* Formatting buttons */}
-        <div className="flex gap-3">
-          <Toggle aria-label="Toggle bold" onClick={() => formatText("bold")}>
-            <Bold className="h-4 w-4" />
-          </Toggle>
-          <Toggle aria-label="Toggle bold" onClick={() => formatText("italic")}>
-            <Italic className="h-4 w-4" />
-          </Toggle>
-          <Toggle aria-label="Toggle bold" onClick={() => formatText("removeFormat")}>
-            <Repeat className="h-4 w-4" />
-          </Toggle>
+    <Editor
+      value={html}
+      onChange={onChange}
+      containerProps={{ style: { resize: "vertical", minHeight: "150px" } }}
+    >
+      <Toolbar style={{ justifyContent: "space-between" }}>
+        <div className="p-1 space-x-2">
+          <BtnBold />
+          <BtnStrikeThrough />
+          <BtnOrderedList />
+          <BtnUnOrderedList />
         </div>
-
-        {/* Checkbox + Send button */}
         <div className="ml-auto flex items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              checked={visibleToClient}
-              onChange={(e) => setVisibleToClient(e.target.checked)}
-              className="w-4 h-4"
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="terms"
+              checked={isPinned}
+              onCheckedChange={(e) => setIsPinned(e as boolean)}
             />
-            Make visible to client
-          </label>
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Make visible to client
+            </label>
+          </div>
 
-          <button
-            onClick={handleSend}
-            className="ml-2 bg-black text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-800"
+          <Button
+            onClick={createNoteHandler}
+            size="icon"
+            isLoading={createNote.isPending}
           >
-            ✈️
-          </button>
+            <Send />
+          </Button>
         </div>
-      </div>
-    </div>
+      </Toolbar>
+    </Editor>
   );
-};
+}

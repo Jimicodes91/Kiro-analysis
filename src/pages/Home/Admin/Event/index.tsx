@@ -11,7 +11,7 @@ const EventTab: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center my-2 mb-6">
+      <div className="flex justify-between items-center my-2">
         <h1 className="text-[16px] font-[600]">Event type </h1>
         <Button size="sm" onClick={onOpen} leftIcon={<IoAdd className="text-white" />}>
           Add event type

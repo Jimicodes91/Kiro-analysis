@@ -181,7 +181,8 @@ export const ENDPOINTS = {
 
   // 5. Tasks
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
-  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/tasks?project_id=${projectId}`,
+  // GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
   GET_ALL_TASKS: (projectId?: string) =>
     `projects/tasks${projectId ? `?project_id=${projectId}` : ""}`,
   GET_TASK_DETAILS: (projectId: string, taskId: string) =>
@@ -249,6 +250,10 @@ export const ENDPOINTS = {
   ADD_FORM_FIELDS: `projects/forms/fields`,
   TOGGLE_PROJECT_FIELD_REQUIREMENT: (fieldId: string) =>
     `projects/forms/fields/${fieldId}/requirement`,
+
+  // 11. Note Types
+  CREATE_NOTE_TYPE: "metadata/type/notes",
+  GET_NOTE_TYPES: "metadata/type/notes",
 };
 
 // for GET requests
@@ -329,6 +334,9 @@ export const QUERYKEYS = {
   // 13. Project Forms
   GET_PROJECT_FORMS: "GET_PROJECT_FORMS",
   GET_PROJECT_FORM_FIELDS: "GET_PROJECT_FORM_FIELDS",
+
+  // 11. Note Types
+  GET_NOTE_TYPES: "GET_NOTE_TYPES",
 };
 
 export const PAGES = {

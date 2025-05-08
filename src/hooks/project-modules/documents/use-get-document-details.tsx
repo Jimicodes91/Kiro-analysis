@@ -1,11 +1,11 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
-import { Document } from "@/types/api.types";
+import { IDocument } from "@/types/api.types";
 
 export interface DocumentDetailsResponse {
   success: boolean;
   message: string;
-  data: Document;
+  data: IDocument;
 }
 
 const useGetProjectDocumentDetails = (projectId: string, documentId: string) => {

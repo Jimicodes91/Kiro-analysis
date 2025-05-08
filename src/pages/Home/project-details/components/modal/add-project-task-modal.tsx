@@ -12,6 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import CustomMultiSelect from "@/components/ui/multi-lol";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
@@ -21,9 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
-import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
-import { cn } from "@/lib/utils";
+import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
+import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
+import { getUserSession } from "@/services/api.service";
 import { addProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -33,26 +36,53 @@ import { z } from "zod";
 import Modal from "../../../../../components/Modal";
 
 const statuses = [
-  { value: "in_progress", label: "In Progress" },
-  { value: "pending", label: "Pending" },
+  { value: "in_progress" as const, label: "In Progress" },
+  { value: "pending" as const, label: "Pending" },
+  { value: "completed" as const, label: "Completed" },
 ];
+
 const AddProjectTaskModal = ({
   onClose,
   projectId,
   isOpen,
+  projectTypeId,
 }: {
   projectId: string;
+  projectTypeId: string;
 } & ModalProps) => {
-  const createTask = useCreateTask(projectId);
+  const createTask = useCreateProjectTask(projectId);
   const taskTypes = useGetAllTaskTypes();
+  const session = getUserSession();
+  const users = useGetCompanyUsers(session?.company_id ?? "");
+
   const form = useForm<z.infer<typeof addProjectTaskSchema>>({
     resolver: zodResolver(addProjectTaskSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof addProjectTaskSchema>) => {
+    const { assignees, end_date, start_date, attachment, ...validData } = data;
+    let base64File = "";
+
+    if (attachment) {
+      try {
+        const base64String = await fileToBase64(attachment);
+        base64File = base64String;
+        // console.log(base64String); // Outputs a data URL (e.g., data:image/png;base64,...)
+      } catch (err) {
+        console.error("Error converting file:", err);
+      }
+    }
+    const assigneesIds = assignees?.map((item) => item.value);
+
     createTask
-      // @ts-expect-error ssls
-      .mutateAsync(data)
+      .mutateAsync({
+        ...validData,
+        project_type_id: projectTypeId,
+        start_date: getUTCISODateFormat(start_date),
+        end_date: getUTCISODateFormat(end_date),
+        assignees: assigneesIds,
+        attachments: [base64File],
+      })
       .then(() => {
         form.reset();
         onClose();
@@ -62,7 +92,13 @@ const AddProjectTaskModal = ({
 
   return (
     <>
-      <Modal title="Add task" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Add task"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -83,7 +119,7 @@ const AddProjectTaskModal = ({
             />
             <FormField
               control={form.control}
-              name="task_type"
+              name="task_type_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Task type</FormLabel>
@@ -148,7 +184,7 @@ const AddProjectTaskModal = ({
                             ) : (
                               <span className="text-brand-placeholder">Start date</span>
                             )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            <CalendarIcon className="ml-auto h-4 w-4" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
@@ -157,9 +193,7 @@ const AddProjectTaskModal = ({
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
+                          disabled={getSelectableDate}
                           initialFocus
                         />
                       </PopoverContent>
@@ -189,7 +223,7 @@ const AddProjectTaskModal = ({
                             ) : (
                               <span className="text-brand-placeholder">End date</span>
                             )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            <CalendarIcon className="ml-auto h-4 w-4" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
@@ -198,9 +232,7 @@ const AddProjectTaskModal = ({
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
+                          disabled={(date) => date < new Date(form.watch("start_date"))}
                           initialFocus
                         />
                       </PopoverContent>
@@ -213,7 +245,7 @@ const AddProjectTaskModal = ({
 
             <FormField
               control={form.control}
-              name="task_type"
+              name="status"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
@@ -241,12 +273,42 @@ const AddProjectTaskModal = ({
             />
             <FormField
               control={form.control}
-              name={"file1"}
+              name="assignees"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Assignee</FormLabel>
+                  <CustomMultiSelect
+                    options={
+                      users?.value
+                        ? users?.value?.data?.map((item) => ({
+                            label: item.name ?? item.email,
+                            value: item.id,
+                          }))
+                        : []
+                    }
+                    isLoading={users.isPending}
+                    onChange={field.onChange}
+                    value={field.value}
+                    placeholder="Select Assignee"
+                    isMulti
+                  />
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={"attachment"}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Attachment</FormLabel>
                   <FormControl>
-                    <DragNdrop id="file" value={field.value} onChange={field.onChange} />
+                    <DragNdrop
+                      id="file-attachment"
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

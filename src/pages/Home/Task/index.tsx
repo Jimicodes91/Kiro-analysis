@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
+import useDisclosure from "@/hooks/use-disclosure";
 import React, { useState } from "react";
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
@@ -12,14 +13,10 @@ import TasksTable from "./task-table";
 
 const Task: React.FC = () => {
   const [, setSearchQuery] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-  };
-
-  const handleAddTask = () => {
-    setIsModalOpen(true);
   };
 
   const tasksResponse = useGetAllTasks();
@@ -64,7 +61,7 @@ const Task: React.FC = () => {
             <Button
               size="sm"
               leftIcon={<IoAdd className="text-white w-6 h-6" />}
-              onClick={handleAddTask}
+              onClick={onOpen}
             >
               Add task
             </Button>
@@ -78,13 +75,7 @@ const Task: React.FC = () => {
       </div>
 
       {/* Task Modal for creating new tasks */}
-      {isModalOpen && (
-        <TaskModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          mode="create"
-        />
-      )}
+      {isOpen && <TaskModal isOpen={isOpen} onClose={onClose} mode="create" />}
     </>
   );
 };

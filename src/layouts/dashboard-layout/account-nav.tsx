@@ -30,10 +30,9 @@ function AccountNav({ links, isCollapsed, className }: AccountNavProps) {
         <TooltipProvider delayDuration={0}>
           <nav className={cn("grid gap-2 w-full", className)}>
             {links.map((link, index) => (
-              <Tooltip disableHoverableContent={!isCollapsed}>
+              <Tooltip key={index} disableHoverableContent={!isCollapsed}>
                 <TooltipTrigger asChild>
                   <Link
-                    key={index}
                     to={link.path}
                     className={cn(
                       buttonVariants({

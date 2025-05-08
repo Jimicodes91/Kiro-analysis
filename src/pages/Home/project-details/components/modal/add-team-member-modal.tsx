@@ -1,5 +1,6 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -8,7 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -16,8 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetAllDocumentTypes from "@/hooks/project-modules/document-types/use-get-all-document-types";
-import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
+import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
+import useAddProjectMember from "@/hooks/project-modules/project-members/use-add-project-member";
+import { getUserSession } from "@/services/api.service";
 import { addTeamSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,15 +32,16 @@ const AddTeamModal = ({
 }: {
   projectId: string;
 } & ModalProps) => {
-  const createTask = useCreateTask(projectId);
-  const documentTypes = useGetAllDocumentTypes();
+  const addProjectMember = useAddProjectMember(projectId);
+  const session = getUserSession();
+  const users = useGetCompanyUsers(session?.company_id ?? "");
+
   const form = useForm<z.infer<typeof addTeamSchema>>({
     resolver: zodResolver(addTeamSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof addTeamSchema>) => {
-    createTask
-      // @ts-expect-error ssls
+    addProjectMember
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -50,7 +52,13 @@ const AddTeamModal = ({
 
   return (
     <>
-      <Modal title="Add team" closeModal={onClose} isOpen={isOpen}>
+      <Modal
+        title="Add team"
+        closeModal={onClose}
+        isOpen={isOpen}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -58,14 +66,15 @@ const AddTeamModal = ({
           >
             <FormField
               control={form.control}
-              name="email"
+              name="user_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl className="h-12 w-full">
                       <SelectTrigger
-                        isLoading={documentTypes.isLoading}
+                        isLoading={users.isLoading}
+                        disabled={users.isLoading}
                         className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm"
                       >
                         <SelectValue
@@ -74,9 +83,9 @@ const AddTeamModal = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {documentTypes?.value?.data?.map((item) => (
-                        <SelectItem key={item.id} value={item.id}>
-                          {item.name}
+                      {users?.value?.data?.map((user) => (
+                        <SelectItem key={user.id} value={user.id}>
+                          {user?.name ?? user?.email}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -88,18 +97,19 @@ const AddTeamModal = ({
 
             <FormField
               control={form.control}
-              name="name"
+              name="is_visible_to_client"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
-                    <Input placeholder="Assign to" {...field} />
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
-                  <FormMessage />
+                  <FormLabel className="font-normal text-brand-fade">
+                    Make visible to client
+                  </FormLabel>
                 </FormItem>
               )}
             />
-            <Button type="submit" isLoading={createTask.isPending}>
+            <Button type="submit" isLoading={addProjectMember.isPending}>
               Add team
             </Button>
           </form>

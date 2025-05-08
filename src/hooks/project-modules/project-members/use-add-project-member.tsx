@@ -1,5 +1,6 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface AddProjectMember {
   user_id: string;
@@ -7,9 +8,16 @@ export interface AddProjectMember {
 }
 
 const useAddProjectMember = (projectId: string) => {
+  const queryClient = useQueryClient();
+
   return useCustomMutation<Record<string, string>, AddProjectMember>({
     method: "post",
     endpoint: ENDPOINTS.ADD_PROJECT_MEMBER(projectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_PROJECT_MEMBERS],
+      });
+    },
   });
 };
 

@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 interface UpdateTaskRequest {
   name?: string;
   description?: string;
+  // status: "in_progress" | "completed" | "pending";
   status: string;
   start_date?: string;
   end_date?: string;
