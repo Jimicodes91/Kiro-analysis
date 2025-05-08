@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import useGetProjectEvents from "@/hooks/project-modules/events/use-get-project-events";
 import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
-import { FiSliders } from "react-icons/fi";
 import EventCard from "../components/cards/event-card";
 import CreateEventModal from "../components/modal/create-event-modal";
 
@@ -52,9 +51,6 @@ function ProjectEventSection({ projectId }: { projectId: string }) {
     <>
       <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
         <div className="flex justify-end gap-3 items-center">
-          <Button size="icon" variant="outline">
-            <FiSliders />
-          </Button>
           <Button size="sm" onClick={onOpen}>
             Create evemt
           </Button>

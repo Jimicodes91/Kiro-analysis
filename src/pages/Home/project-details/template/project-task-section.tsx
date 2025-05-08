@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
 import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
-import { Filter, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import TaskCard from "../components/cards/task-card";
 import AddProjectTaskModal from "../components/modal/add-project-task-modal";
 
@@ -57,9 +57,6 @@ function ProjectTaskSection({
     <>
       <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
         <div className="flex justify-end gap-3 items-center">
-          <Button size="sm" variant="outline" leftIcon={<Filter />}>
-            Filter
-          </Button>
           <Button size="sm" leftIcon={<Plus />} onClick={onOpen}>
             Add Task
           </Button>

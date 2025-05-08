@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
 import Spade from "@/components/ui/spade";
@@ -8,7 +7,6 @@ import useUpdateProjectMilestone from "@/hooks/project-modules/use-update-projec
 import { ProjectDetails } from "@/types/api.types";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { GoShare } from "react-icons/go";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { ProjectSummary } from "./components/project-sumarry";
@@ -162,9 +160,6 @@ const ProjectDetail = ({
         </div>
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-semibold text-[#191819] ">Project detail</h1>
-          <Button variant="outline" size="sm" leftIcon={<GoShare className="" />}>
-            Export
-          </Button>
         </div>
       </div>
 
