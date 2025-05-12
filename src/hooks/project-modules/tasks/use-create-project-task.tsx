@@ -8,7 +8,7 @@ export interface CreateTaskRequest {
   status: string;
   start_date: string;
   end_date: string;
-  attachments: string[];
+  attachments: (string | null)[];
   is_visible_to_client: boolean;
   task_type_id: string;
   project_type_id: string;

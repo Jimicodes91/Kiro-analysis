@@ -75,7 +75,7 @@ function useCustomMutation<P = Record<string, unknown>, T = Record<string, unkno
     onError: (err: ResponseErrorType) => {
       if (showFailureToast) {
         const errorMsg = errorFormatter(err?.response?.data);
-        console.log(err?.response?.data, "err?.response?.data");
+        // console.log(err?.response?.data, "err?.response?.data");
         Toast.error(errorMsg ?? "Server Error");
       }
       mutatationResult.reset();

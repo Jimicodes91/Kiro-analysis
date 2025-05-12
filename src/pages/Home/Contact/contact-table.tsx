@@ -51,7 +51,7 @@ const ContactsTable = () => {
 
   const renderTable = () => {
     if (contactsResponse.isPending) {
-      return <TableSkeletonRowLoader length={8} />;
+      return <TableSkeletonRowLoader length={8} noOfRows={pageSize} />;
     }
 
     if (contactsResponse?.isError) {

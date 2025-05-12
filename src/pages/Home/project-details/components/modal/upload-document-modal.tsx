@@ -144,6 +144,7 @@ const UploadDocumentModal = ({
                   <FormControl>
                     <DragNdrop
                       id="filesa-sa"
+                      // @ts-expect-error TODO: Fix this type error
                       value={field.value}
                       onChange={field.onChange}
                     />
