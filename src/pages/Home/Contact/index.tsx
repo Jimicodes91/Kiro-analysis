@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import useGetAllContacts from "@/hooks/contacts/use-get-all-contacts";
 import { AnimatePresence } from "framer-motion";
 import React, {
   // useEffect,
@@ -10,7 +9,6 @@ import React, {
 import { GoShare } from "react-icons/go";
 import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
-import ContactEmptyState from "./contact-empty-state";
 import ContactModal from "./contact-modal-form";
 import ContactsTable from "./contact-table";
 
@@ -27,10 +25,6 @@ const Contact: React.FC = () => {
   };
 
   // const addContact = useCreateContact();
-  const contactsResponse = useGetAllContacts();
-  const contacts = Array.isArray(contactsResponse?.data?.data?.data)
-    ? contactsResponse.data.data.data
-    : [];
 
   // useEffect(() => {
   //   addContact.mutateAsync({
@@ -93,11 +87,8 @@ const Contact: React.FC = () => {
             </Button>
           </div>
         </div>
-        {Array.isArray(contactsResponse?.data?.data?.data) && contacts.length === 0 ? (
-          <ContactEmptyState />
-        ) : (
-          <ContactsTable />
-        )}
+
+        <ContactsTable />
       </div>
 
       {/* Contact Modal for creating new contacts */}

@@ -15,10 +15,10 @@ import Home from "../pages/Home";
 import Admin from "../pages/Home/Admin";
 // import Client from "../pages/Home/Client";
 // import Event from "../pages/Home/Event";
+
 import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
 import Finance from "../pages/Home/Finance";
-import Message from "../pages/Home/Message";
 import Project from "../pages/Home/Project";
 import NotFound from "../pages/Notfound";
 import Onboarding from "../pages/Onboarding/index";
@@ -99,10 +99,6 @@ export const HomeRoutes = {
           element: <ProjectDetailsPageWrapper />,
         },
       ],
-    },
-    {
-      path: "message",
-      element: <Message />,
     },
   ],
 };

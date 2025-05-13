@@ -109,6 +109,7 @@ export const ENDPOINTS = {
   // Contacts Endpoints
   CREATE_CONTACT: "contacts",
   GET_ALL_CONTACTS: "contacts",
+  GET_COMPANY_CONTACTS: "contacts/company",
   UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
 
   /* 
@@ -279,6 +280,7 @@ export const QUERYKEYS = {
 
   // Contacts Query keys
   GET_ALL_CONTACTS: "GET_ALL_CONTACTS",
+  GET_COMPANY_CONTACTS: "GET_COMPANY_CONTACTS",
 
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",

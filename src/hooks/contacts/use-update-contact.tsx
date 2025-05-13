@@ -10,7 +10,7 @@ export interface UpdateContactRequest {
   name: string;
   phone: string;
   email: string;
-  organization: string;
+  company_id: string;
   assigned_to: AssignTo[];
 }
 const useUpdateContact = (contactId: string) => {

@@ -1,0 +1,88 @@
+{
+    "type": "Topology",
+    "objects": {
+        "countries": {
+            "type": "GeometryCollection",
+            "geometries": [
+                {
+                    "type": "Polygon",
+                    "properties": {
+                        "name": "Afghanistan"
+                    },
+                    "arcs": [
+                        [
+                            0
+                        ]
+                    ]
+                },
+                {
+                    "type": "Polygon",
+                    "properties": {
+                        "name": "Albania"
+                    },
+                    "arcs": [
+                        [
+                            1
+                        ]
+                    ]
+                }
+            ]
+        }
+    },
+    "arcs": [
+        [
+            [
+                60,
+                30
+            ],
+            [
+                5,
+                10
+            ],
+            [
+                -5,
+                10
+            ],
+            [
+                -5,
+                -10
+            ],
+            [
+                5,
+                -10
+            ]
+        ],
+        [
+            [
+                20,
+                10
+            ],
+            [
+                10,
+                0
+            ],
+            [
+                0,
+                10
+            ],
+            [
+                -10,
+                0
+            ],
+            [
+                0,
+                -10
+            ]
+        ]
+    ],
+    "transform": {
+        "scale": [
+            0.036003600360036,
+            0.018001800180018
+        ],
+        "translate": [
+            -180,
+            -90
+        ]
+    }
+}

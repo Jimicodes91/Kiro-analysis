@@ -26,7 +26,6 @@ import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
 import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
-import { getUserSession } from "@/services/api.service";
 import { addProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -52,8 +51,8 @@ const AddProjectTaskModal = ({
 } & ModalProps) => {
   const createTask = useCreateProjectTask(projectId);
   const taskTypes = useGetAllTaskTypes();
-  const session = getUserSession();
-  const users = useGetCompanyUsers(session?.company_id ?? "");
+
+  const users = useGetCompanyUsers();
 
   const form = useForm<z.infer<typeof addProjectTaskSchema>>({
     resolver: zodResolver(addProjectTaskSchema),

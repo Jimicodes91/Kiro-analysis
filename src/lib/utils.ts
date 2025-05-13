@@ -37,13 +37,13 @@ export default function getInitials(name?: string) {
  * @returns A new object with date values converted to strings.
  */
 
-export type Given = number | string | Date;
+export type Given = number | string | Date | { label: string; value: string }[];
 export function convertDatesToYMD(obj: Record<string, Given>): Record<string, Given> {
   const result: Record<string, Given> = {};
   for (const key in obj) {
     const value = obj[key];
     // Check if the value is a string.
-    if (key.toLowerCase().includes("date")) {
+    if (key.toLowerCase().includes("date") && !Array.isArray(value)) {
       const parsedDate = new Date(value);
       // If the date is valid, format it as YYYY-MM-DD.
       if (!isNaN(parsedDate.getTime())) {
@@ -56,6 +56,13 @@ export function convertDatesToYMD(obj: Record<string, Given>): Record<string, Gi
     if (key === "project_value") {
       // If the value is a number, convert it to a number.
       result[key] = +value;
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      const idList = value?.map((item) => item.value);
+      // @ts-expect-error dddd
+      result[key] = idList;
       continue;
     }
     // Otherwise, copy the value as is.
