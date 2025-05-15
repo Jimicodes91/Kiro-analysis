@@ -28,7 +28,7 @@ function ProjectEmptyStateCard({ hasPipeline = true }: { hasPipeline?: boolean }
               <Button
                 size="sm"
                 onClick={() =>
-                  navigate(PAGES.ADMIN_PAGE + "?selectedTab=pipeline&isCreateMode=1")
+                  navigate(PAGES.ADMIN_PAGE + "?selectedTab=journey&isCreateMode=1")
                 }
               >
                 Create pipeline

@@ -1,38 +1,20 @@
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import useSendConsultantInvite from "@/hooks/auth/use-send-consultant-invite";
+import { Form } from "@/components/ui/form";
 import { PAGES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import { addUserSchema } from "@/utils/validation-schema/admin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFieldArray, useForm } from "react-hook-form";
-import { AiOutlineDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { InferType } from "yup";
 import { inviteTeamSchema } from "../../utils/validation-schema/onboarding";
+import InviteUserForm from "./invite-user-form";
 import { useOnboarding } from "./onboarding-context";
 
 const Step2 = () => {
   const { onPrev } = useOnboarding();
   const navigate = useNavigate();
-  const sendConsultantInvite = useSendConsultantInvite();
+
   const form = useForm({
     resolver: yupResolver(inviteTeamSchema),
+    mode: "onChange",
     defaultValues: {
       teamMembers: [
         {
@@ -52,14 +34,7 @@ const Step2 = () => {
     },
   });
 
-  const onSubmit = async (data: { teamMembers?: InferType<typeof addUserSchema>[] }) => {
-    const teamMembers = data.teamMembers;
-    if (teamMembers) {
-      sendConsultantInvite.mutateAsync(teamMembers[0]).catch((err) => {
-        console.error("One or more failed:", err);
-      });
-    }
-  };
+  const onSubmit = () => {};
 
   return (
     <div>
@@ -68,78 +43,8 @@ const Step2 = () => {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="mb-12 space-y-4">
             {fields.map((item, index) => {
-              const showDeleteButton = index > 0;
               return (
-                <div
-                  key={item.id}
-                  className={cn("flex gap-2", !showDeleteButton && "mr-8")}
-                >
-                  <FormField
-                    control={form.control}
-                    name={`teamMembers.${index}.email`}
-                    render={({ field }) => {
-                      return (
-                        <FormItem className="w-full">
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input
-                              className="w-full"
-                              key={item.id}
-                              placeholder="Email"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      );
-                    }}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`teamMembers.${index}.role`}
-                    key={item.id}
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormLabel>Role</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl className="h-12 w-full">
-                            <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm w-full">
-                              <SelectValue
-                                placeholder={
-                                  <p className="text-brand-placeholder">Select Role</p>
-                                }
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {[
-                              { value: "consultant", label: "Consultant" },
-                              { value: "client", label: "Client" },
-                            ].map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {showDeleteButton && (
-                    <div className="flex items-center self-center pt-6">
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="text-red-500"
-                      >
-                        <AiOutlineDelete size={20} />
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <InviteUserForm index={index} item={item} form={form} remove={remove} />
               );
             })}
             <button
@@ -154,11 +59,15 @@ const Step2 = () => {
             <Button variant="outline" onClick={onPrev}>
               Back
             </Button>
-            <div className="flex gap-2 z-[99] relative">
+            <div className="flex gap-2 z-[20] relative">
               <Button variant="outline" onClick={() => navigate(PAGES.PROJECT_PAGE)}>
                 Skip
               </Button>
-              <Button type="submit" isLoading={sendConsultantInvite.isPending}>
+              <Button
+                onClick={() => {
+                  navigate(PAGES.PROJECT_PAGE);
+                }}
+              >
                 Save and continue
               </Button>
             </div>
