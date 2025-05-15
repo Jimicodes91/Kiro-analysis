@@ -28,8 +28,8 @@ const NoteTypeTable = () => {
           <TableCell className="border-0 h-3 py-0" colSpan={7}></TableCell>
         </TableRow>
         <>
-          {noteTypes?.value?.data?.map((noteTypes) => (
-            <NoteTypeTableRow key={noteTypes.id} noteTypes={noteTypes} />
+          {noteTypes?.value?.data?.map((noteType) => (
+            <NoteTypeTableRow key={noteType.id} noteType={noteType} />
           ))}
         </>
       </TableBody>

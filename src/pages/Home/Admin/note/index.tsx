@@ -16,7 +16,7 @@ const NoteTab = () => {
         </Button>
       </div>
       <NoteTypeTable />
-      {/* Modal to add document type */}
+      {/* Modal to add note type */}
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && <AddNoteTypeModal isOpen={isOpen} onClose={onClose} />}
       </AnimatePresence>
