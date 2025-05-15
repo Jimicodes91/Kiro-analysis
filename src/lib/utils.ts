@@ -197,3 +197,9 @@ export const createTimeDateFormat = (date: Date, time: string) => {
 
   return getUTCISODateFormat(newDate);
 };
+
+export const stringfyList = (words: string[]) => {
+  if (!words) return "";
+
+  return words.map((i) => truncateMiddleWords(i)).join(" ,");
+};
