@@ -10,10 +10,11 @@ import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useDisclosure from "@/hooks/use-disclosure";
 import { DocumentTypeDetails } from "@/types/api.types";
+import { AnimatePresence } from "framer-motion";
+import AddDocumentModal from "./add-document-type-model";
 
 function DocumentTableRow({ documentType }: { documentType: DocumentTypeDetails }) {
-  const { onOpen } = useDisclosure();
-  const { onOpen: onDeleteUserOpen } = useDisclosure();
+  const { onOpen, isOpen, onClose } = useDisclosure();
   return (
     <>
       <TableRow>
@@ -30,26 +31,21 @@ function DocumentTableRow({ documentType }: { documentType: DocumentTypeDetails 
               <DropdownMenuGroup>
                 <>
                   <DropdownMenuItem onClick={onOpen}>Edit Document Type</DropdownMenuItem>
-                  <DropdownMenuItem onClick={onDeleteUserOpen}>
-                    Delete Document Type
-                  </DropdownMenuItem>
                 </>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
       </TableRow>
-      {/* <UpdateUserRoleModal
-        key={user?.role}
-        isOpen={isOpen}
-        onClose={onClose}
-        user={user}
-      />
-      <DeleteUserModal
-        isOpen={isDeleteUserOpen}
-        onClose={onDeleteUserClose}
-        user={user}
-      /> */}
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isOpen && (
+          <AddDocumentModal
+            isOpen={isOpen}
+            onClose={onClose}
+            documentType={documentType}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }
