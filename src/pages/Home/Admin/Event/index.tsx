@@ -18,7 +18,7 @@ const EventTab: React.FC = () => {
         </Button>
       </div>
       <EventTypeTable />
-      {/* Modal to add document type */}
+      {/* Modal to add Event type */}
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && <AddEventTypeModal isOpen={isOpen} onClose={onClose} />}
       </AnimatePresence>

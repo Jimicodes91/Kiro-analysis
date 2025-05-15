@@ -11,19 +11,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateEventType from "@/hooks/project-modules/event-types/use-create-event-type";
+import { DocumentTypeDetails } from "@/types/api.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addEventTypeSchema } from "../../../../utils/validation-schema/admin";
 
-const AddEventTypeModal = ({ onClose, isOpen }: ModalProps) => {
+const AddEventTypeModal = ({
+  onClose,
+  isOpen,
+  eventType,
+}: ModalProps & { eventType?: DocumentTypeDetails }) => {
   const createEvenType = useCreateEventType();
 
   const form = useForm({
     resolver: yupResolver(addEventTypeSchema),
+    defaultValues: {
+      description: eventType?.description ?? "",
+      name: eventType?.name ?? "",
+    },
   });
 
+  const modalText = eventType ? "Edit event type" : "Add event type";
   const onSubmit = async (data: InferType<typeof addEventTypeSchema>) => {
     createEvenType
       .mutateAsync(data)
@@ -36,7 +46,7 @@ const AddEventTypeModal = ({ onClose, isOpen }: ModalProps) => {
 
   return (
     <>
-      <Modal title="Add event type" closeModal={onClose} isOpen={isOpen}>
+      <Modal title={modalText} closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -70,7 +80,7 @@ const AddEventTypeModal = ({ onClose, isOpen }: ModalProps) => {
             />
 
             <Button type="submit" isLoading={createEvenType.isPending}>
-              Add event type
+              {modalText}
             </Button>
           </form>
         </Form>

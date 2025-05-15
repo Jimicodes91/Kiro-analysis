@@ -10,9 +10,11 @@ import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useDisclosure from "@/hooks/use-disclosure";
 import { DocumentTypeDetails } from "@/types/api.types";
+import { AnimatePresence } from "framer-motion";
+import AddEventTypeModal from "./add-even-type-modal";
 
 function EventTypeTableRow({ eventType }: { eventType: DocumentTypeDetails }) {
-  const { onOpen } = useDisclosure();
+  const { onOpen, isOpen, onClose } = useDisclosure();
   return (
     <>
       <TableRow>
@@ -35,6 +37,11 @@ function EventTypeTableRow({ eventType }: { eventType: DocumentTypeDetails }) {
           </DropdownMenu>
         </TableCell>
       </TableRow>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isOpen && (
+          <AddEventTypeModal isOpen={isOpen} onClose={onClose} eventType={eventType} />
+        )}
+      </AnimatePresence>
     </>
   );
 }
