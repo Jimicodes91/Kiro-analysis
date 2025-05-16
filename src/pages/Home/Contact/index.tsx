@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
+import useDebounce from "@/hooks/use-debounce";
 import { AnimatePresence } from "framer-motion";
 import React, {
   // useEffect,
@@ -13,9 +14,10 @@ import ContactModal from "./contact-modal-form";
 import ContactsTable from "./contact-table";
 
 const Contact: React.FC = () => {
-  const [, setSearchQuery] = useState("");
+  const [search, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const debounceText = useDebounce(search, 1000);
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
@@ -46,8 +48,8 @@ const Contact: React.FC = () => {
   // }, []);
   return (
     <>
-      <div className="mx-6 my-2">
-        <div className="flex justify-between items-center my-4">
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center ">
           <div className="flex items-center gap-4">
             <Heading size="h3">Contact</Heading>
             <div className="relative w-full min-w-[300px] bg-[#F3F3F3] rounded-full">
@@ -88,7 +90,7 @@ const Contact: React.FC = () => {
           </div>
         </div>
 
-        <ContactsTable />
+        <ContactsTable search={debounceText} />
       </div>
 
       {/* Contact Modal for creating new contacts */}

@@ -5,6 +5,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import useAddComment from "@/hooks/project-modules/note/comments/use-add-comment";
 import useGetNoteComments from "@/hooks/project-modules/note/comments/use-get-note-comments";
@@ -70,6 +71,7 @@ function NoteCommentSection({ note }: { note: NoteDetails }) {
       .catch(console.error);
   };
 
+  const isLoading = addComment.isPending || noteComments.isRefetching;
   return (
     <div>
       <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
@@ -81,11 +83,19 @@ function NoteCommentSection({ note }: { note: NoteDetails }) {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      placeholder="Leave a comment"
-                      {...field}
-                      disabled={addComment.isPending || noteComments.isRefetching}
-                    />
+                    <div className="relative flex w-full min-w-[300px] bg-[#F3F3F3] rounded-full">
+                      <Input
+                        placeholder="Leave a comment"
+                        {...field}
+                        disabled={isLoading}
+                        className="w-full pr-8"
+                      />
+                      {isLoading && (
+                        <span className="absolute top-[50%] -translate-y-[50%] right-3 text-[#808080]">
+                          <Icons.spinner className="animate-spin" />
+                        </span>
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

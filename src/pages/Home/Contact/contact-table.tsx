@@ -19,10 +19,10 @@ import useGetCompanyContacts from "@/hooks/contacts/use-get-company-contact";
 import { useState } from "react";
 import ContactTableRow from "./contact-table-row";
 
-const ContactsTable = () => {
+const ContactsTable = ({ search }: { search: string }) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
+  console.log(search);
   const contactsResponse = useGetCompanyContacts(page, pageSize);
   const contacts = Array.isArray(contactsResponse.value?.data?.contacts)
     ? contactsResponse.value.data.contacts
