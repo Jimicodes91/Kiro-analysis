@@ -8,12 +8,15 @@ import { Button } from "@/components/ui/button";
 //   DropdownMenuTrigger,
 // } from "@/components/ui/dropdown-menu";
 // import { Icons } from "@/components/ui/icons";
+import useDisclosure from "@/hooks/use-disclosure";
 import getInitials from "@/lib/utils";
 import { NoteDetails } from "@/types/api.types";
 import { formatRelative } from "date-fns";
 import { Dot, MessageCircleDashed } from "lucide-react";
+import NoteCommentSection from "../../template/note-comment-template";
 
 export default function NoteCard({ note }: { note: NoteDetails }) {
+  const { isOpen, onToggle } = useDisclosure();
   return (
     <div className="px-5 py-3 space-y-4 rounded-lg border border-brand-border bg-[#F8F8F8]">
       <div className="flex items-center justify-between">
@@ -57,14 +60,15 @@ export default function NoteCard({ note }: { note: NoteDetails }) {
           }}
         ></p>
         <Button
-          size="sm"
+          size="icon"
           variant="outline"
           className="px-0 py-0 h-fit bg-transparent outline-none shadow-none border-0"
-          leftIcon={<MessageCircleDashed />}
+          onClick={onToggle}
         >
-          0
+          <MessageCircleDashed />
         </Button>
       </div>
+      {isOpen && <NoteCommentSection note={note} />}
     </div>
   );
 }

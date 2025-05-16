@@ -64,20 +64,17 @@ function NoteCommentSection({ note }: { note: NoteDetails }) {
       .mutateAsync(data)
       .then(() => {
         noteComments.refetch().then(() => {
-          form.reset();
+          form.setValue("content", "");
         });
       })
       .catch(console.error);
   };
 
   return (
-    <>
+    <div>
       <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 p-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <FormField
               control={form.control}
               name="content"
@@ -98,7 +95,7 @@ function NoteCommentSection({ note }: { note: NoteDetails }) {
         </Form>
         <div>{renderBody()}</div>
       </div>
-    </>
+    </div>
   );
 }
 
