@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateEventType from "@/hooks/project-modules/event-types/use-create-event-type";
+import useUpdateEventType from "@/hooks/project-modules/event-types/use-update-event-type";
 import { DocumentTypeDetails } from "@/types/api.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,9 @@ const AddEventTypeModal = ({
   eventType,
 }: ModalProps & { eventType?: DocumentTypeDetails }) => {
   const createEvenType = useCreateEventType();
+  const updateEvenType = useUpdateEventType(eventType?.id ?? "");
+  const isEditMode = !!eventType;
+  const toggleEventType = isEditMode ? updateEvenType : createEvenType;
 
   const form = useForm({
     resolver: yupResolver(addEventTypeSchema),
@@ -35,7 +39,7 @@ const AddEventTypeModal = ({
 
   const modalText = eventType ? "Edit event type" : "Add event type";
   const onSubmit = async (data: InferType<typeof addEventTypeSchema>) => {
-    createEvenType
+    toggleEventType
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -79,7 +83,7 @@ const AddEventTypeModal = ({
               )}
             />
 
-            <Button type="submit" isLoading={createEvenType.isPending}>
+            <Button type="submit" isLoading={toggleEventType.isPending}>
               {modalText}
             </Button>
           </form>

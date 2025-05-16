@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateTaskType from "@/hooks/project-modules/task-types/use-create-task-types";
+import useUpdateTaskType from "@/hooks/project-modules/task-types/use-update-task-type";
 import { TaskTypeDetails } from "@/types/api.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,10 @@ const AddTaskTypeModal = ({
   taskType,
 }: ModalProps & { taskType?: TaskTypeDetails }) => {
   const createTaskType = useCreateTaskType();
+  const updateTaskType = useUpdateTaskType(taskType?.id ?? "");
+  const isEditMode = !!taskType;
+
+  const toggleTaskType = isEditMode ? updateTaskType : createTaskType;
 
   const form = useForm({
     resolver: yupResolver(addEventTypeSchema),
@@ -33,9 +38,9 @@ const AddTaskTypeModal = ({
     },
   });
 
-  const modalText = taskType ? "Edit task type" : "Add task type";
+  const modalText = isEditMode ? "Edit task type" : "Add task type";
   const onSubmit = async (data: InferType<typeof addEventTypeSchema>) => {
-    createTaskType
+    toggleTaskType
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -79,7 +84,7 @@ const AddTaskTypeModal = ({
               )}
             />
 
-            <Button type="submit" isLoading={createTaskType.isPending}>
+            <Button type="submit" isLoading={toggleTaskType.isPending}>
               {modalText}
             </Button>
           </form>

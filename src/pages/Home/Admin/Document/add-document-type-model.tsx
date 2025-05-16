@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateDocumentType from "@/hooks/project-modules/document-types/use-create-document-type";
+import useUpdateDocumentType from "@/hooks/project-modules/document-types/use-update-document-type";
 import { DocumentTypeDetails } from "@/types/api.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,9 @@ const AddDocumentModal = ({
   documentType,
 }: ModalProps & { documentType?: DocumentTypeDetails }) => {
   const createDocumentType = useCreateDocumentType();
+  const updateDocumentType = useUpdateDocumentType(documentType?.id ?? "");
+  const isEditMode = !!documentType;
+  const toggleDocumentType = isEditMode ? updateDocumentType : createDocumentType;
 
   const form = useForm({
     resolver: yupResolver(addDocumentTypeSchema),
@@ -33,9 +37,9 @@ const AddDocumentModal = ({
     },
   });
 
-  const modalText = documentType ? "Edit document type" : "Add document type";
+  const modalText = isEditMode ? "Edit document type" : "Add document type";
   const onSubmit = async (data: InferType<typeof addDocumentTypeSchema>) => {
-    createDocumentType
+    toggleDocumentType
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -75,7 +79,7 @@ const AddDocumentModal = ({
             )}
           />
 
-          <Button type="submit" isLoading={createDocumentType.isPending}>
+          <Button type="submit" isLoading={toggleDocumentType.isPending}>
             {modalText}
           </Button>
         </form>

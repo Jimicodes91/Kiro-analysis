@@ -3,7 +3,7 @@ import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { IoAdd } from "react-icons/io5";
-import AddEventTypeModal from "./add-even-type-modal";
+import AddEventTypeModal from "./add-event-type-modal";
 import EventTypeTable from "./event-type-table";
 
 const EventTab: React.FC = () => {

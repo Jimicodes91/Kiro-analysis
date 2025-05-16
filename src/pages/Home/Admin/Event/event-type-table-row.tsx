@@ -11,7 +11,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import useDisclosure from "@/hooks/use-disclosure";
 import { DocumentTypeDetails } from "@/types/api.types";
 import { AnimatePresence } from "framer-motion";
-import AddEventTypeModal from "./add-even-type-modal";
+import AddEventTypeModal from "./add-event-type-modal";
 
 function EventTypeTableRow({ eventType }: { eventType: DocumentTypeDetails }) {
   const { onOpen, isOpen, onClose } = useDisclosure();

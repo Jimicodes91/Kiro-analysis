@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateNoteType from "@/hooks/project-modules/note-types/use-create-note-types";
+import useUpdateNoteType from "@/hooks/project-modules/note-types/use-update-note-types";
 import { TaskTypeDetails } from "@/types/api.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,9 @@ const AddNoteTypeModal = ({
   noteType,
 }: ModalProps & { noteType?: TaskTypeDetails }) => {
   const createNoteType = useCreateNoteType();
+  const updateNoteType = useUpdateNoteType(noteType?.id ?? "");
+  const isEditMode = !!noteType;
+  const toggleNoteType = isEditMode ? updateNoteType : createNoteType;
 
   const form = useForm({
     resolver: yupResolver(addEventTypeSchema),
@@ -35,7 +39,7 @@ const AddNoteTypeModal = ({
 
   const modalText = noteType ? "Edit note type" : "Add note type";
   const onSubmit = async (data: InferType<typeof addEventTypeSchema>) => {
-    createNoteType
+    toggleNoteType
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -79,7 +83,7 @@ const AddNoteTypeModal = ({
               )}
             />
 
-            <Button type="submit" isLoading={createNoteType.isPending}>
+            <Button type="submit" isLoading={toggleNoteType.isPending}>
               {modalText}
             </Button>
           </form>
