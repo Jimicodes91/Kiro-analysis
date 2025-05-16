@@ -10,14 +10,16 @@ import {
 import { Input } from "@/components/ui/input";
 import useCompleteRegistration from "@/hooks/auth/use-complete-registration";
 import useDisclosure from "@/hooks/use-disclosure";
+import { PAGES } from "@/lib/constants";
 import { completeInviteSchema } from "@/utils/validation-schema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { InferType } from "yup";
 import { Logo } from "../../assets";
+import VerificationCard from "./VerificationCard";
 
 const CompleteInvite: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -27,6 +29,7 @@ const CompleteInvite: React.FC = () => {
   const companyId = searchParams.get("companyId");
   const email = searchParams.get("email");
   const completeRegistration = useCompleteRegistration();
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: yupResolver(completeInviteSchema),
@@ -42,6 +45,17 @@ const CompleteInvite: React.FC = () => {
       })
       .catch(console.error);
   };
+
+  if (completeRegistration.isSuccess && completeRegistration.data) {
+    return (
+      <VerificationCard
+        title="Reset link sent"
+        description="Your account has been registered sucessfully, please login"
+        buttonText="Back to login"
+        onButtonClick={() => navigate(PAGES.LOGIN_PAGE)}
+      />
+    );
+  }
 
   return (
     <div className=" flex flex-col space-y-6 animate-in fade-in-0 duration-700 ease-in-out">
