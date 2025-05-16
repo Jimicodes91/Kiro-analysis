@@ -54,7 +54,7 @@ export default function NoteCard({ note }: { note: NoteDetails }) {
       </div>
       <div className="flex justify-between items-end">
         <p
-          className="text-sm text-primary"
+          className="text-sm text-primary note-details"
           dangerouslySetInnerHTML={{
             __html: note.content,
           }}
