@@ -1,7 +1,7 @@
 import { IconProps, Icons } from "@/components/ui/icons";
 import { JSX } from "react";
 
-export type UserType = "ADMIN" | "CLIENT";
+export type UserType = "ADMIN" | "CLIENT" | "CONSULTANT";
 
 export type DashboardLinkType = {
   title: string;
@@ -46,6 +46,7 @@ const universalRoutes = [
 
 export const topNavData: Record<UserType, DashboardLinkType[]> = {
   CLIENT: [...universalRoutes],
+  CONSULTANT: [...universalRoutes],
   ADMIN: [
     ...universalRoutes,
     {
