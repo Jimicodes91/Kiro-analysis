@@ -8,7 +8,7 @@ export interface CommentsListResponse {
   data: CommentDetails[];
 }
 
-const useGetAllComments = (projectId: string, noteId: string) => {
+const useGetNoteComments = (projectId: string, noteId: string) => {
   return useQueryActionHook<CommentsListResponse>({
     method: "get",
     endpoint: ENDPOINTS.GET_NOTE_COMMENTS(projectId, noteId),
@@ -16,4 +16,4 @@ const useGetAllComments = (projectId: string, noteId: string) => {
   });
 };
 
-export default useGetAllComments;
+export default useGetNoteComments;

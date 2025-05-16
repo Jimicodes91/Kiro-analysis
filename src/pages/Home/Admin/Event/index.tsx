@@ -3,7 +3,7 @@ import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { IoAdd } from "react-icons/io5";
-import AddEventTypeModal from "./add-even-type-modal";
+import AddEventTypeModal from "./add-event-type-modal";
 import EventTypeTable from "./event-type-table";
 
 const EventTab: React.FC = () => {
@@ -18,7 +18,7 @@ const EventTab: React.FC = () => {
         </Button>
       </div>
       <EventTypeTable />
-      {/* Modal to add document type */}
+      {/* Modal to add Event type */}
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && <AddEventTypeModal isOpen={isOpen} onClose={onClose} />}
       </AnimatePresence>

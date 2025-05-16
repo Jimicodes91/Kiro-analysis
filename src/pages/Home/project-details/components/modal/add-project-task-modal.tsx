@@ -26,7 +26,6 @@ import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
 import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
-import { getUserSession } from "@/services/api.service";
 import { addProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -52,8 +51,8 @@ const AddProjectTaskModal = ({
 } & ModalProps) => {
   const createTask = useCreateProjectTask(projectId);
   const taskTypes = useGetAllTaskTypes();
-  const session = getUserSession();
-  const users = useGetCompanyUsers(session?.company_id ?? "");
+
+  const users = useGetCompanyUsers();
 
   const form = useForm<z.infer<typeof addProjectTaskSchema>>({
     resolver: zodResolver(addProjectTaskSchema),
@@ -61,33 +60,40 @@ const AddProjectTaskModal = ({
 
   const onSubmit = async (data: z.infer<typeof addProjectTaskSchema>) => {
     const { assignees, end_date, start_date, attachment, ...validData } = data;
-    let base64File = "";
 
-    if (attachment) {
-      try {
-        const base64String = await fileToBase64(attachment);
-        base64File = base64String;
-        // console.log(base64String); // Outputs a data URL (e.g., data:image/png;base64,...)
-      } catch (err) {
-        console.error("Error converting file:", err);
-      }
-    }
+    // Ensure attachment is an array before processing
+    const attachments = Array.isArray(attachment) ? attachment : [];
+
+    // Convert each file to base64 and wait for all to finish
+    const base64FileList = await Promise.all(
+      attachments.map(async (item) => {
+        try {
+          return await fileToBase64(item);
+        } catch (err) {
+          console.error("Error converting file:", err);
+          return null; // Optional: filter these out later
+        }
+      })
+    );
+
     const assigneesIds = assignees?.map((item) => item.value);
 
-    createTask
-      .mutateAsync({
-        ...validData,
-        project_type_id: projectTypeId,
-        start_date: getUTCISODateFormat(start_date),
-        end_date: getUTCISODateFormat(end_date),
-        assignees: assigneesIds,
-        attachments: [base64File],
-      })
-      .then(() => {
-        form.reset();
-        onClose();
-      })
-      .catch(console.error);
+    const payload = {
+      ...validData,
+      project_type_id: projectTypeId,
+      start_date: getUTCISODateFormat(start_date),
+      end_date: getUTCISODateFormat(end_date),
+      assignees: assigneesIds,
+      attachments: base64FileList.filter(Boolean), // Remove nulls
+    };
+
+    try {
+      await createTask.mutateAsync(payload);
+      form.reset();
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -111,7 +117,7 @@ const AddProjectTaskModal = ({
                 <FormItem>
                   <FormLabel>Task name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Task name" {...field} />
+                    <Input placeholder="Task name" {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/select";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useAddProjectMember from "@/hooks/project-modules/project-members/use-add-project-member";
-import { getUserSession } from "@/services/api.service";
 import { addTeamSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -33,8 +32,7 @@ const AddTeamModal = ({
   projectId: string;
 } & ModalProps) => {
   const addProjectMember = useAddProjectMember(projectId);
-  const session = getUserSession();
-  const users = useGetCompanyUsers(session?.company_id ?? "");
+  const users = useGetCompanyUsers();
 
   const form = useForm<z.infer<typeof addTeamSchema>>({
     resolver: zodResolver(addTeamSchema),

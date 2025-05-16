@@ -25,7 +25,6 @@ import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
 import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
-import { getUserSession } from "@/services/api.service";
 import { TaskDetails } from "@/types/api.types";
 import { editProjectTaskSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,8 +50,7 @@ const EditProjectTaskModal = ({
   task: TaskDetails;
 } & ModalProps) => {
   const taskTypes = useGetAllTaskTypes();
-  const session = getUserSession();
-  const users = useGetCompanyUsers(session?.company_id ?? "");
+  const users = useGetCompanyUsers();
   const updateTask = useUpdateProjectTask(projectId, task?.id);
 
   const form = useForm<z.infer<typeof editProjectTaskSchema>>({

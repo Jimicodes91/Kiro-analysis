@@ -144,6 +144,7 @@ const UploadDocumentModal = ({
                   <FormControl>
                     <DragNdrop
                       id="filesa-sa"
+                      // @ts-expect-error TODO: Fix this type error
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -153,20 +154,6 @@ const UploadDocumentModal = ({
               )}
             />
 
-            {/* <FormField
-              control={form.control}
-              name="is_visible_to_client"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <FormLabel className="font-normal text-brand-fade">
-                    Make visible to client
-                  </FormLabel>
-                </FormItem>
-              )}
-            /> */}
             <Button type="submit" isLoading={uploadDocument.isPending}>
               Upload document
             </Button>

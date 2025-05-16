@@ -11,21 +11,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateNoteType from "@/hooks/project-modules/note-types/use-create-note-types";
+import useUpdateNoteType from "@/hooks/project-modules/note-types/use-update-note-types";
+import { TaskTypeDetails } from "@/types/api.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addEventTypeSchema } from "../../../../utils/validation-schema/admin";
 
-const AddNoteTypeModal = ({ onClose, isOpen }: ModalProps) => {
+const AddNoteTypeModal = ({
+  onClose,
+  isOpen,
+  noteType,
+}: ModalProps & { noteType?: TaskTypeDetails }) => {
   const createNoteType = useCreateNoteType();
+  const updateNoteType = useUpdateNoteType(noteType?.id ?? "");
+  const isEditMode = !!noteType;
+  const toggleNoteType = isEditMode ? updateNoteType : createNoteType;
 
   const form = useForm({
     resolver: yupResolver(addEventTypeSchema),
+    defaultValues: {
+      description: noteType?.description ?? "",
+      name: noteType?.name ?? "",
+    },
   });
 
+  const modalText = noteType ? "Edit note type" : "Add note type";
   const onSubmit = async (data: InferType<typeof addEventTypeSchema>) => {
-    createNoteType
+    toggleNoteType
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -36,7 +50,7 @@ const AddNoteTypeModal = ({ onClose, isOpen }: ModalProps) => {
 
   return (
     <>
-      <Modal title="Add note type" closeModal={onClose} isOpen={isOpen}>
+      <Modal title={modalText} closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -69,8 +83,8 @@ const AddNoteTypeModal = ({ onClose, isOpen }: ModalProps) => {
               )}
             />
 
-            <Button type="submit" isLoading={createNoteType.isPending}>
-              Add note type
+            <Button type="submit" isLoading={toggleNoteType.isPending}>
+              {modalText}
             </Button>
           </form>
         </Form>

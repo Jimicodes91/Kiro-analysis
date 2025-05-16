@@ -16,14 +16,28 @@ import DeleteEventModal from "../modal/delete-event-modal";
 
 function EventCard({ event }: { event: EventDetails }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
-
+  const eventDate = new Date(event?.date);
+  const months = [
+    "January",
+    "Feb",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   return (
     <>
       <div className="px-5 py-3 rounded-lg border flex gap-x-4 justify-between border-brand-border bg-[#F8F8F8]">
         <div className="space-y-2 flex gap-x-4 items-center">
           <div className="min-h-[140px] px-12 flex flex-col justify-center items-center bg-[#D9D9D94D] border border-brand-border rounded-lg">
-            <p className="">June</p>
-            <Heading size="h1">21</Heading>
+            <p className="">{months?.[eventDate?.getMonth()]}</p>
+            <Heading size="h1">{eventDate?.getDate()}</Heading>
           </div>
           <div>
             <p className="text-sm">11:00am - 2:00pm</p>

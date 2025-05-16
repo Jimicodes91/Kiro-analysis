@@ -73,8 +73,9 @@ function AddUserModalForm({ onClose, isOpen }: ModalProps) {
                   </FormControl>
                   <SelectContent>
                     {[
-                      { value: "consultant", label: "Consultant" },
-                      { value: "client", label: "Client" },
+                      { value: "CONSULTANT", label: "Consultant" },
+                      { value: "CLIENT", label: "Client" },
+                      { value: "ADMIN", label: "Admin" },
                     ].map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}

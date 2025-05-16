@@ -109,7 +109,10 @@ export async function secureRequest({
 }: SecureRequestProps) {
   const givenMethod = method.toLocaleLowerCase() as CustomMethod;
 
-  const headers = { ...requestHeader };
+  const headers = {
+    "Content-Type": "application/json",
+    ...requestHeader,
+  };
 
   if (givenMethod === "get" || (givenMethod === "delete" && !body)) {
     //dont include body in GET request request will fail
@@ -130,5 +133,7 @@ export async function secureRequest({
       data: body,
     });
   }
+  console.log(body, "oasmaso");
+
   return axios[givenMethod](url, body, { headers });
 }

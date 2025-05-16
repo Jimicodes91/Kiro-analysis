@@ -11,21 +11,36 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateTaskType from "@/hooks/project-modules/task-types/use-create-task-types";
+import useUpdateTaskType from "@/hooks/project-modules/task-types/use-update-task-type";
+import { TaskTypeDetails } from "@/types/api.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addEventTypeSchema } from "../../../../utils/validation-schema/admin";
 
-const AddTaskTypeModal = ({ onClose, isOpen }: ModalProps) => {
+const AddTaskTypeModal = ({
+  onClose,
+  isOpen,
+  taskType,
+}: ModalProps & { taskType?: TaskTypeDetails }) => {
   const createTaskType = useCreateTaskType();
+  const updateTaskType = useUpdateTaskType(taskType?.id ?? "");
+  const isEditMode = !!taskType;
+
+  const toggleTaskType = isEditMode ? updateTaskType : createTaskType;
 
   const form = useForm({
     resolver: yupResolver(addEventTypeSchema),
+    defaultValues: {
+      description: taskType?.description ?? "",
+      name: taskType?.name ?? "",
+    },
   });
 
+  const modalText = isEditMode ? "Edit task type" : "Add task type";
   const onSubmit = async (data: InferType<typeof addEventTypeSchema>) => {
-    createTaskType
+    toggleTaskType
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -36,7 +51,7 @@ const AddTaskTypeModal = ({ onClose, isOpen }: ModalProps) => {
 
   return (
     <>
-      <Modal title="Add task type" closeModal={onClose} isOpen={isOpen}>
+      <Modal title={modalText} closeModal={onClose} isOpen={isOpen}>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -69,8 +84,8 @@ const AddTaskTypeModal = ({ onClose, isOpen }: ModalProps) => {
               )}
             />
 
-            <Button type="submit" isLoading={createTaskType.isPending}>
-              Add task type
+            <Button type="submit" isLoading={toggleTaskType.isPending}>
+              {modalText}
             </Button>
           </form>
         </Form>

@@ -34,7 +34,6 @@ const contactSchema = yup.object().shape({
     .test("is-valid-phone", "Invalid phone number", (value) => {
       return value ? isValidPhoneNumber(value) : false;
     }),
-  organization: yup.string().required("Company is required"),
   assigned_to: yup
     .array()
     .of(
@@ -57,7 +56,7 @@ interface ContactModalProps {
 function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps) {
   // Get data from hooks
   const session = getUserSession();
-  const usersResponse = useGetCompanyUsers(session?.company_id ?? "");
+  const usersResponse = useGetCompanyUsers();
   const createContact = useCreateContact();
   const updateContact = useUpdateContact(contactData?.id || "");
 
@@ -67,7 +66,6 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
       name: "",
       email: "",
       phone: "",
-      organization: "",
       assigned_to: [],
     },
     mode: "onChange",
@@ -92,11 +90,12 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
 
   const onSubmit = async (data: ContactFormValues) => {
     // Prepare the payload with consistent structure
+
     const payload = {
       name: data.name,
       email: data.email,
       phone: data.phone,
-      organization: data.organization,
+      company_id: session?.company_id ?? "",
       assigned_to: data.assigned_to.map((user) => ({
         id: user.id,
         name: user.name,
@@ -163,19 +162,6 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                     {...field}
                     disabled={mode === "view"}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="organization"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Company" {...field} disabled={mode === "view"} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -11,20 +11,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateDocumentType from "@/hooks/project-modules/document-types/use-create-document-type";
+import useUpdateDocumentType from "@/hooks/project-modules/document-types/use-update-document-type";
+import { DocumentTypeDetails } from "@/types/api.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
 import { addDocumentTypeSchema } from "../../../../utils/validation-schema/admin";
 
-const AddDocumentModal = ({ onClose, isOpen }: ModalProps) => {
+const AddDocumentModal = ({
+  onClose,
+  isOpen,
+  documentType,
+}: ModalProps & { documentType?: DocumentTypeDetails }) => {
   const createDocumentType = useCreateDocumentType();
+  const updateDocumentType = useUpdateDocumentType(documentType?.id ?? "");
+  const isEditMode = !!documentType;
+  const toggleDocumentType = isEditMode ? updateDocumentType : createDocumentType;
+
   const form = useForm({
     resolver: yupResolver(addDocumentTypeSchema),
+    defaultValues: {
+      description: documentType?.description ?? "",
+      name: documentType?.name ?? "",
+    },
   });
 
+  const modalText = isEditMode ? "Edit document type" : "Add document type";
   const onSubmit = async (data: InferType<typeof addDocumentTypeSchema>) => {
-    createDocumentType
+    toggleDocumentType
       .mutateAsync(data)
       .then(() => {
         form.reset();
@@ -34,7 +49,7 @@ const AddDocumentModal = ({ onClose, isOpen }: ModalProps) => {
   };
 
   return (
-    <Modal title="Add document type" closeModal={onClose} isOpen={isOpen}>
+    <Modal title={modalText} closeModal={onClose} isOpen={isOpen}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
           <FormField
@@ -64,8 +79,8 @@ const AddDocumentModal = ({ onClose, isOpen }: ModalProps) => {
             )}
           />
 
-          <Button type="submit" isLoading={createDocumentType.isPending}>
-            Add document type
+          <Button type="submit" isLoading={toggleDocumentType.isPending}>
+            {modalText}
           </Button>
         </form>
       </Form>

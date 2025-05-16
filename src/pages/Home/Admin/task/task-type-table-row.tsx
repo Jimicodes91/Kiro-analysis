@@ -10,9 +10,11 @@ import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useDisclosure from "@/hooks/use-disclosure";
 import { TaskTypeDetails } from "@/types/api.types";
+import { AnimatePresence } from "framer-motion";
+import AddTaskTypeModal from "./add-task-type-modal";
 
 function TaskTypeTableRow({ taskType }: { taskType: TaskTypeDetails }) {
-  const { onOpen } = useDisclosure();
+  const { onOpen, isOpen, onClose } = useDisclosure();
   return (
     <>
       <TableRow>
@@ -35,6 +37,11 @@ function TaskTypeTableRow({ taskType }: { taskType: TaskTypeDetails }) {
           </DropdownMenu>
         </TableCell>
       </TableRow>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isOpen && (
+          <AddTaskTypeModal isOpen={isOpen} onClose={onClose} taskType={taskType} />
+        )}
+      </AnimatePresence>
     </>
   );
 }

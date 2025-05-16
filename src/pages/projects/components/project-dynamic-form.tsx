@@ -11,16 +11,8 @@ import {
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { IFormField } from "@/hooks/project-modules/project-forms/use-get-project-form-fields";
-import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useCreateProject from "@/hooks/project-modules/use-create-project";
 import { PAGES } from "@/lib/constants";
 import { cn, convertDatesToYMD, getSelectableDate } from "@/lib/utils";
@@ -31,15 +23,22 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as z from "zod";
+import SelectComponent from "./lol";
 
 export default function CreateProjectDynamicForm({ fields }: { fields: IFormField[] }) {
-  const projectTypes = useGetAllProjectTypes();
   const navigate = useNavigate();
   const createProject = useCreateProject();
 
   const fieldSchema = fields.reduce((acc, field) => {
     const key = field.slug;
-    let validator: z.ZodString | z.ZodNumber | z.ZodDate = z.string({
+    let validator:
+      | z.ZodString
+      | z.ZodNumber
+      | z.ZodDate
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      | z.ZodArray<any>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      | z.ZodEffects<any> = z.string({
       message: `${field.name} is required`,
     }); // Explicitly declare the type
 
@@ -55,6 +54,19 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
         validator = z.coerce.date();
         validator = validator.min(new Date(), `${field.name} must be a valid date`);
       }
+    } else if (field.slug === "project_client") {
+      validator = z
+        .array(
+          z
+            .object({
+              label: z.string(),
+              value: z.string(),
+            })
+            .required()
+        )
+        .refine((val) => (val && val.length === 0 ? false : true), {
+          message: "Client is required",
+        });
     } else {
       if (field.is_required) validator = validator.min(1, `${field.name} is required`);
     }
@@ -93,7 +105,6 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
               {fields
                 .sort((a, b) => a.sort_order - b.sort_order)
                 .map((field) => {
-                  const options = projectTypes?.value?.data ?? [];
                   const isRequired = Boolean(field.is_required);
                   return (
                     <FormField
@@ -111,29 +122,12 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                           </FormLabel>
                           <>
                             {field.type === "select" ? (
-                              <Select
-                                key={projectTypes?.status}
-                                onValueChange={fieldProps.onChange}
-                                defaultValue={fieldProps.value}
-                              >
-                                <FormControl className="h-12">
-                                  <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                                    <SelectValue
-                                      placeholder={
-                                        <p className="text-brand-placeholder">{`Select ${field.name}`}</p>
-                                      }
-                                    />
-                                  </SelectTrigger>
-                                </FormControl>
-
-                                <SelectContent>
-                                  {options?.map((option, idx) => (
-                                    <SelectItem key={idx} value={option.id}>
-                                      {option.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
+                              <SelectComponent
+                                apiLocator={field.api_locator}
+                                fieldProps={fieldProps}
+                                isMultiple={field.is_multiple}
+                                name={field.name}
+                              />
                             ) : field.type === "date" ? (
                               <Popover>
                                 <PopoverTrigger asChild>

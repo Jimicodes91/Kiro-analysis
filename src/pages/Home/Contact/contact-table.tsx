@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
-import useGetAllContacts from "@/hooks/contacts/use-get-all-contacts";
+import useGetCompanyContacts from "@/hooks/contacts/use-get-company-contact";
 import { useState } from "react";
 import ContactTableRow from "./contact-table-row";
 
@@ -23,12 +23,12 @@ const ContactsTable = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const contactsResponse = useGetAllContacts(page, pageSize);
-  const contacts = Array.isArray(contactsResponse.data?.data?.data?.contacts)
-    ? contactsResponse.data.data.data.contacts
+  const contactsResponse = useGetCompanyContacts(page, pageSize);
+  const contacts = Array.isArray(contactsResponse.value?.data?.contacts)
+    ? contactsResponse.value.data.contacts
     : [];
 
-  const pagination = contactsResponse.data?.data?.data?.pagination || {
+  const pagination = contactsResponse.value?.data?.pagination || {
     total: 0,
     page: 1,
     pageSize: 20,
@@ -51,7 +51,7 @@ const ContactsTable = () => {
 
   const renderTable = () => {
     if (contactsResponse.isPending) {
-      return <TableSkeletonRowLoader length={8} />;
+      return <TableSkeletonRowLoader length={8} noOfRows={pageSize} />;
     }
 
     if (contactsResponse?.isError) {

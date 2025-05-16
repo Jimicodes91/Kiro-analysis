@@ -320,7 +320,7 @@ export interface ProjectFormData {
   project_name: string;
   email_address: string;
   project_value: number;
-  project_client: string;
+  project_client: string[];
   resident_country: string;
   client_organization: string;
 }
