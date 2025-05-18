@@ -7,8 +7,6 @@ import React, {
   // useEffect,
   useState,
 } from "react";
-import { GoShare } from "react-icons/go";
-import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
 import ContactModal from "./contact-modal-form";
 import ContactsTable from "./contact-table";
@@ -64,22 +62,6 @@ const Contact: React.FC = () => {
             </div>
           </div>
           <div className="flex justify-between space-x-2">
-            <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<HiOutlineAdjustmentsVertical className="text-[#111] w-6 h-6" />}
-              className="border-black"
-            >
-              Filter
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<GoShare className="text-[#111] w-6 h-6" />}
-              className="border-black"
-            >
-              Export
-            </Button>
             <Button
               size="sm"
               leftIcon={<IoAdd className="text-white w-6 h-6" />}

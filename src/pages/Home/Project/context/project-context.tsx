@@ -1,6 +1,5 @@
 import { getCookie, setCookie } from "cookies-next";
 import React from "react";
-import { Outlet } from "react-router-dom";
 
 interface ProjectContextInterface {
   changeActiveProjectType: (projectType: string) => void;
@@ -11,7 +10,7 @@ const ProjectCtx = React.createContext<ProjectContextInterface>(
   {} as ProjectContextInterface
 );
 
-const ProjectContextProvider = () => {
+const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => {
   const storeActiveProjectType = getCookie("active_project");
   const [activeProjectType, setActiveProjectType] = React.useState<string | undefined>(
     storeActiveProjectType as string
@@ -29,7 +28,7 @@ const ProjectContextProvider = () => {
         changeActiveProjectType,
       }}
     >
-      <Outlet />
+      {children}
     </ProjectCtx.Provider>
   );
 };

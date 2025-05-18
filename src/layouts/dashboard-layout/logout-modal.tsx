@@ -11,14 +11,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { PAGES } from "@/lib/constants";
 import { logout } from "@/services/api.service";
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 function LogoutModal({ isOpen, onClose }: ModalProps) {
-  const authLogout = useMutation({
-    mutationFn: logout,
-  });
-
   const navigate = useNavigate();
   return (
     <AlertDialog open={isOpen}>
@@ -38,9 +33,8 @@ function LogoutModal({ isOpen, onClose }: ModalProps) {
             <Button
               variant="outline"
               size="sm"
-              isLoading={authLogout.isPending}
               onClick={() => {
-                authLogout.mutateAsync(undefined).then(() => {
+                logout().then(() => {
                   navigate(PAGES.LOGIN_PAGE);
                 });
               }}

@@ -311,7 +311,7 @@ export interface ProjectType {
 }
 export interface ProjectFormData {
   end_date: string;
-  pipeline: string;
+  journey: string;
   post_code: string;
   start_date: string;
   description: string;

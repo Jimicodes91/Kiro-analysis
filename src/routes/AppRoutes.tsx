@@ -1,7 +1,6 @@
 import AuthLayout from "@/layouts/auth-layout";
 import AccountLayout from "@/layouts/dashboard-layout/lol";
 import ProjectDetailsPageWrapper from "@/pages/Home/project-details";
-import ProjectContextProvider from "@/pages/Home/Project/context/project-context";
 import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";
 import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
 import { RouteObject } from "react-router-dom";
@@ -16,6 +15,7 @@ import Admin from "../pages/Home/Admin";
 // import Client from "../pages/Home/Client";
 // import Event from "../pages/Home/Event";
 
+import ProtectedRoute from "@/components/ui/protected-route";
 import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
 import Finance from "../pages/Home/Finance";
@@ -64,10 +64,6 @@ export const HomeRoutes = {
       element: <Home />,
     },
     {
-      path: "admin",
-      element: <Admin />,
-    },
-    {
       path: "contact",
       element: <Contact />,
     },
@@ -84,19 +80,24 @@ export const HomeRoutes = {
       element: <Finance />,
     },
     {
-      element: <ProjectContextProvider />,
+      path: "projects",
+      element: <Project />,
+    },
+    {
+      path: "projects/create",
+      element: <CreateProjectTemplate />,
+    },
+    {
+      path: "projects/:id",
+      element: <ProjectDetailsPageWrapper />,
+    },
+
+    {
+      element: <ProtectedRoute allowedRoles={["ADMIN"]} />,
       children: [
         {
-          path: "projects",
-          element: <Project />,
-        },
-        {
-          path: "projects/create",
-          element: <CreateProjectTemplate />,
-        },
-        {
-          path: "projects/:id",
-          element: <ProjectDetailsPageWrapper />,
+          path: "admin",
+          element: <Admin />,
         },
       ],
     },
