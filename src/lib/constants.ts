@@ -111,6 +111,15 @@ export const ENDPOINTS = {
   GET_ALL_CONTACTS: "contacts",
   UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
 
+  // Finance Endpoints
+  CREATE_FINANCE_RECORD: "org-finance",
+  UPDATE_FINANCE_RECORD: (financeId: string) => `org-finance/${financeId}`,
+  MARK_FINANCE_RECORD_AS_PAID: (financeId: string) =>
+    `org-finance/${financeId}/mark-as-paid`,
+  GET_ALL_FINANCE_RECORDS: (companyId: string, page?: number, pageSize?: number) =>
+    `org-finance/?companyId=${companyId}&page=${page}&pageSize=${pageSize}`,
+  GET_INDIVIDUAL_FINANCE_RECORD: (financeId: string) => `org-finance/${financeId}`,
+
   /* 
   Project Module Collection
     1. Project Types
@@ -279,6 +288,10 @@ export const QUERYKEYS = {
 
   // Contacts Query keys
   GET_ALL_CONTACTS: "GET_ALL_CONTACTS",
+
+  // Finance Query keys
+  GET_ALL_FINANCE_RECORDS: "GET_ALL_FINANCE_RECORDS",
+  GET_INDIVIDUAL_FINANCE_RECORD: "GET_INDIVIDUAL_FINANCE_RECORD",
 
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
