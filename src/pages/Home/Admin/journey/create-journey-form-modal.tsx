@@ -34,7 +34,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
       stages: [
         {
           name: "",
-          duration: 0,
+          duration: 1,
         },
       ],
     },
@@ -87,7 +87,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
             )}
           />
           {stagesFields.map((item, index) => (
-            <div className="flex gap-2 items-end" key={item.id}>
+            <div className="flex gap-2" key={item.id}>
               <div className="w-full">
                 <FormField
                   control={form.control}
@@ -123,7 +123,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
                   onClick={() => remove(index)}
                   size="icon"
                   variant="outline"
-                  className="flex-shrink-0"
+                  className="flex-shrink-0 mt-8"
                 >
                   <LuTrash />
                 </Button>
@@ -139,7 +139,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
                     <Button
                       leftIcon={<LuPlus />}
                       variant="ghost"
-                      onClick={() => append({ name: "", duration: 0 })}
+                      onClick={() => append({ name: "", duration: 1 })}
                       size="sm"
                       className="px-0 hover:bg-transparent"
                     >

@@ -74,7 +74,7 @@ export interface Task {
   project_type_id: string;
   name: string;
   description: string;
-  status: string;
+  status: "completed" | "in_progress" | "pending";
   start_date: string;
   end_date: string;
   is_visible_to_client: number;

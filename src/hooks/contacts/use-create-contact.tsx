@@ -10,7 +10,7 @@ export interface CreateContactRequest {
   name: string;
   phone: string;
   email: string;
-  organization: string;
+  company_id: string;
   assigned_to: AssignTo[];
 }
 
@@ -21,7 +21,7 @@ const useCreateContact = () => {
     endpoint: ENDPOINTS.CREATE_CONTACT,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_ALL_CONTACTS],
+        queryKey: [QUERYKEYS.GET_COMPANY_CONTACTS],
       });
     },
   });

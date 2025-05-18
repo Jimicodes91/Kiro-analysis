@@ -18,13 +18,14 @@ export interface IFormField {
   type: string;
   is_required: number;
   is_custom: number;
-  is_multiple: number;
+  is_multiple: 1 | 0;
   max_files?: string;
   accepted_types?: string;
   options?: string[];
   default_value?: string;
   sort_order: number;
   slug: string;
+  api_locator: "journey-list" | "contact-list";
 }
 
 const useGetProjectFormFields = () => {

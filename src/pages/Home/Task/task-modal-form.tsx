@@ -21,7 +21,6 @@ import useCreateTask from "@/hooks/project-modules/tasks/use-create-task";
 import useUpdateTask from "@/hooks/project-modules/tasks/use-update-task";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { cn } from "@/lib/utils";
-import { getUserSession } from "@/services/api.service";
 import { Task, TaskFormData } from "@/types/task.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CalendarIcon } from "lucide-react";
@@ -63,8 +62,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
   const isCreateMode = mode === "create";
 
   // Get data from hooks
-  const session = getUserSession();
-  const usersResponse = useGetCompanyUsers(session?.company_id ?? "");
+  const usersResponse = useGetCompanyUsers();
   const projectTypesResponse = useGetAllProjectTypes();
   const taskTypesResponse = useGetAllTaskTypes();
   const projectsResponse = useGetAllProjects(selectedProjectTypeId);
@@ -149,7 +147,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, mode, task }) =>
 
         // Fix status value to match select options
         let statusValue = task.status;
-        if (statusValue === "in progress") {
+        if (statusValue === "in_progress") {
           statusValue = "in_progress";
         }
         setValue("status", statusValue);

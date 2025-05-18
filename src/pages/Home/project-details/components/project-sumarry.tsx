@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import getInitials, { getFormattedText } from "@/lib/utils";
+import getInitials, { getFormattedText, stringfyList } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 
 export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDetails }) {
@@ -19,7 +19,7 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Client</h3>
                 <p className="text-sm text-gray-900">
-                  {projectDetails?.form_data?.project_client}
+                  {stringfyList(projectDetails?.form_data?.project_client)}
                 </p>
               </div>
               <div>

@@ -7,7 +7,7 @@ import { BeatLoader } from "react-spinners";
 import { Icons } from "./icons";
 
 const buttonVariants = cva(
-  "inline-flex items-center relative justify-center transition-all text-md transition-all duration-300 rounded-lg gap-2 whitespace-nowrap rounded-full text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-90 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center relative justify-center transition-all text-md transition-all duration-300 rounded-lg gap-2 whitespace-nowrap rounded-full text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {

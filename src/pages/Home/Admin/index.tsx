@@ -13,6 +13,7 @@ const Admin: React.FC = () => {
   const selectedTab = searchParams.get("selectedTab") || "user";
 
   const handleTabChange = (value: string) => {
+    searchParams.delete("isCreateMode");
     searchParams.set("selectedTab", value?.toLowerCase());
     setSearchParams(searchParams);
   };

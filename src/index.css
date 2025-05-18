@@ -279,11 +279,14 @@ body .rsw-editor:focus-within {
 }
 
 body .rsw-ce ul,
+body .note-details ul,
+body .note-details ol,
 body .rsw-ce ol {
   list-style-type: disc;
   list-style: inside;
 }
 
+body .note-details ol,
 body .rsw-ce ol {
   list-style: inside;
   list-style-type: decimal;

@@ -46,7 +46,8 @@ const CustomMultiSelect = ({
       color: "#fff",
       overflow: "hidden",
       padding: "3px",
-      fontSize: "1rem",
+      fontSize: "0.9rem",
+      maxWidth: "80px",
     }),
     multiValueLabel: (base) => ({
       ...base,

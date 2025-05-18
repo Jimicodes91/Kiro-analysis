@@ -17,7 +17,7 @@ const TaskTab: React.FC = () => {
         </Button>
       </div>
       <TaskTypeTable />
-      {/* Modal to add document type */}
+      {/* Modal to add task type */}
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && <AddTaskTypeModal isOpen={isOpen} onClose={onClose} />}
       </AnimatePresence>

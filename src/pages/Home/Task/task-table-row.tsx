@@ -11,7 +11,7 @@ import {
 import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 // import useDisclosure from "@/hooks/use-disclosure";
-import getInitials from "@/lib/utils";
+import getInitials, { getFormattedText } from "@/lib/utils";
 import { Task } from "@/types/task.types";
 import { useState } from "react";
 import TaskModal from "./task-modal-form";
@@ -39,17 +39,9 @@ function TaskTableRow({ task }: { task: Task }) {
         <TableCell>{task.company.name}</TableCell>
         <TableCell>{task.end_date}</TableCell>
         <TableCell>
-          <Badge
-            variant={
-              task.status === "completed"
-                ? "success"
-                : task.status === "in_progress"
-                  ? "in_progress"
-                  : "not_started"
-            }
-          >
+          <Badge variant={task.status}>
             {/* {task.status === "completed" && <Icons.check className="mt-1.5" />} */}
-            <span>{task.status}</span>
+            <span>{getFormattedText(task.status)}</span>
           </Badge>
         </TableCell>
         <TableCell>

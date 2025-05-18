@@ -25,14 +25,33 @@ import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllDocumentTypes from "@/hooks/project-modules/document-types/use-get-all-document-types";
 import useCreateDocumentRequest from "@/hooks/project-modules/documents/document-request/use-create-document-request";
 import { cn, getSelectableDate } from "@/lib/utils";
-import { getUserSession } from "@/services/api.service";
-import { requestDocumentSchema } from "@/utils/validation-schema/project";
+// import { requestDocumentSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, formatISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Modal from "../../../../../components/Modal";
+
+export const requestDocumentSchema = z.object({
+  name: z.string({
+    message: "Document name is required",
+  }),
+  document_type_id: z.string({
+    message: "Document type is required",
+  }),
+  description: z.string({
+    message: "Description is required",
+  }),
+  end_date: z.date({
+    message: "End date is required",
+  }),
+  is_visible_to_client: z.boolean().default(false),
+  assignee_id: z.object({
+    label: z.string(),
+    value: z.string(),
+  }),
+});
 
 const RequestDocumentModal = ({
   onClose,
@@ -43,15 +62,13 @@ const RequestDocumentModal = ({
 } & ModalProps) => {
   const createDocumentRequest = useCreateDocumentRequest(projectId);
   const documentTypes = useGetAllDocumentTypes();
-  const session = getUserSession();
-  const users = useGetCompanyUsers(session?.company_id ?? "");
+  const users = useGetCompanyUsers();
 
   const form = useForm<z.infer<typeof requestDocumentSchema>>({
     resolver: zodResolver(requestDocumentSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof requestDocumentSchema>) => {
-    console.log(data);
     createDocumentRequest
       .mutateAsync({
         ...data,

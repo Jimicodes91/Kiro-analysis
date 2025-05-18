@@ -10,14 +10,16 @@ import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useDisclosure from "@/hooks/use-disclosure";
 import { TaskTypeDetails } from "@/types/api.types";
+import { AnimatePresence } from "framer-motion";
+import AddNoteTypeModal from "./add-note-type-modal";
 
-function NoteTypeTableRow({ noteTypes }: { noteTypes: TaskTypeDetails }) {
-  const { onOpen } = useDisclosure();
+function NoteTypeTableRow({ noteType }: { noteType: TaskTypeDetails }) {
+  const { onOpen, isOpen, onClose } = useDisclosure();
   return (
     <>
       <TableRow>
-        <TableCell>{noteTypes?.name}</TableCell>
-        <TableCell>{noteTypes?.description}</TableCell>
+        <TableCell>{noteType?.name}</TableCell>
+        <TableCell>{noteType?.description}</TableCell>
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -33,6 +35,11 @@ function NoteTypeTableRow({ noteTypes }: { noteTypes: TaskTypeDetails }) {
           </DropdownMenu>
         </TableCell>
       </TableRow>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isOpen && (
+          <AddNoteTypeModal isOpen={isOpen} onClose={onClose} noteType={noteType} />
+        )}
+      </AnimatePresence>
     </>
   );
 }

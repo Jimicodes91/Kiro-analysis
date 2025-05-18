@@ -1,5 +1,5 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
-import { getFormattedText } from "@/lib/utils";
+import { getFormattedText, stringfyList } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import React, { useState } from "react";
 import { BsActivity } from "react-icons/bs";
@@ -107,7 +107,7 @@ const ProjectModal: React.FC<ProjectModalProps & ModalProps> = ({
                     <h3 className="text-sm text-brand-fade">Owner</h3>
                   </div>
                   <div>
-                    <p>{project?.form_data?.project_client}</p>
+                    <p>{stringfyList(project?.form_data?.project_client)}</p>
                   </div>
                 </div>
                 <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">

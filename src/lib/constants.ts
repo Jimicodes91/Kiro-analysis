@@ -109,6 +109,7 @@ export const ENDPOINTS = {
   // Contacts Endpoints
   CREATE_CONTACT: "contacts",
   GET_ALL_CONTACTS: "contacts",
+  GET_COMPANY_CONTACTS: "contacts/company",
   UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
 
   // Finance Endpoints
@@ -239,14 +240,18 @@ export const ENDPOINTS = {
 
   // 9. Document Types
   CREATE_DOCUMENT_TYPE: `metadata/type/documents`,
+  UPDATE_DOCUMENT_TYPE: (documentTypeId: string) =>
+    `metadata/type/documents/${documentTypeId}`,
   GET_DOCUMENT_TYPES: `metadata/type/documents`,
 
   // 10. Event Types
   CREATE_EVENT_TYPE: "metadata/type/events",
+  UPDATE_EVENT_TYPE: (eventTypeId: string) => `metadata/type/events/${eventTypeId}`,
   GET_EVENT_TYPES: "metadata/type/events",
 
   // 11. Task Types
   CREATE_TASK_TYPE: "metadata/type/tasks",
+  UPDATE_TASK_TYPE: (taskTypeId: string) => `metadata/type/tasks/${taskTypeId}`,
   GET_TASK_TYPES: "metadata/type/tasks",
 
   // 12. Activity Logs
@@ -262,6 +267,7 @@ export const ENDPOINTS = {
 
   // 11. Note Types
   CREATE_NOTE_TYPE: "metadata/type/notes",
+  UPDATE_NOTE_TYPE: (noteTypeId: string) => `metadata/type/notes/${noteTypeId}`,
   GET_NOTE_TYPES: "metadata/type/notes",
 };
 
@@ -288,6 +294,7 @@ export const QUERYKEYS = {
 
   // Contacts Query keys
   GET_ALL_CONTACTS: "GET_ALL_CONTACTS",
+  GET_COMPANY_CONTACTS: "GET_COMPANY_CONTACTS",
 
   // Finance Query keys
   GET_ALL_FINANCE_RECORDS: "GET_ALL_FINANCE_RECORDS",

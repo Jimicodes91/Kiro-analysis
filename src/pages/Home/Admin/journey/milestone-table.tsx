@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
+  TableBody,
   TableCell,
   TableHead,
   TableHeader,
@@ -38,7 +39,7 @@ function MilestoneTable({
 
     return (
       <>
-        <>
+        <TableBody>
           {getMilestones?.value?.data?.map((milestone) => (
             <MilestoneTableRow
               milestone={milestone}
@@ -46,7 +47,7 @@ function MilestoneTable({
               refetch={getMilestones.refetch}
             />
           ))}
-        </>
+        </TableBody>
       </>
     );
   };
@@ -85,33 +86,36 @@ function MilestoneTable({
               <TableHead className="w-4"></TableHead>
             </TableHeader>
             <>{renderTableBody()}</>
-            {isCreateFormOpen && (
-              <MilestoneForm
-                onClose={onClose}
-                refetch={getMilestones.refetch}
-                key={String(isOpen)}
-                projectTypeId={projectType.id}
-              />
-            )}
-            <TableRow className="!bg-white !border-t-0">
-              <TableCell colSpan={3} className="w-fit">
-                <div className="grid">
-                  <div className="items-center gap-3 flex">
-                    <Button
-                      leftIcon={<LuPlus />}
-                      variant="ghost"
-                      onClick={onOpen}
-                      size="sm"
-                      className="px-0 hover:bg-transparent"
-                    >
-                      Add stage
-                    </Button>
 
-                    <Separator className="w-fit" />
+            <TableBody>
+              {isCreateFormOpen && (
+                <MilestoneForm
+                  onClose={onClose}
+                  refetch={getMilestones.refetch}
+                  key={String(isOpen)}
+                  projectTypeId={projectType.id}
+                />
+              )}
+              <TableRow className="!bg-white !border-t-0">
+                <TableCell colSpan={3} className="w-fit">
+                  <div className="grid">
+                    <div className="items-center gap-3 flex">
+                      <Button
+                        leftIcon={<LuPlus />}
+                        variant="ghost"
+                        onClick={onOpen}
+                        size="sm"
+                        className="px-0 hover:bg-transparent"
+                      >
+                        Add stage
+                      </Button>
+
+                      <Separator className="w-fit" />
+                    </div>
                   </div>
-                </div>
-              </TableCell>
-            </TableRow>
+                </TableCell>
+              </TableRow>
+            </TableBody>
           </Table>
         </motion.td>
       </motion.tr>

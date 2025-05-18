@@ -42,10 +42,12 @@ const CreateEventModal = ({
   const eventTypes = useGetAllEventTypes();
   const form = useForm<z.infer<typeof addProjectEventSchema>>({
     resolver: zodResolver(addProjectEventSchema),
+    defaultValues: {
+      is_visible_to_client: false,
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof addProjectEventSchema>) => {
-    console.log(data, "data");
     createEvent
       .mutateAsync({
         description: data.description,
