@@ -8,7 +8,6 @@ export interface ContactListResponse {
   data: ContactData;
 }
 
-// Update your hook to accept page and pageSize parameters
 const useGetAllContacts = (page: number = 1, pageSize: number = 20) => {
   return useQueryActionHook<ContactListResponse>({
     method: "get",
