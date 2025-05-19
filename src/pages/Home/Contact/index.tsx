@@ -15,7 +15,7 @@ const Contact: React.FC = () => {
   const [search, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const debounceText = useDebounce(search, 1200);
+  const debounceText = useDebounce(search, 1000);
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
@@ -24,26 +24,6 @@ const Contact: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  // const addContact = useCreateContact();
-
-  // useEffect(() => {
-  //   addContact.mutateAsync({
-  //     name: "Bola Ahmed",
-  //     phone: "+2349012121212",
-  //     email: "bolaahmed@gent.com",
-  //     organization: "Bola Ahmed",
-  //     assigned_to: [
-  //       {
-  //         id: "ab34483c-9bb9-4e93-9980-60df27821df6",
-  //         name: "Kolawole Ayoade",
-  //       },
-  //       {
-  //         id: "8c82bb6f-b34b-4ce6-879c-1cf5caabdc70",
-  //         name: "Goodness Moses",
-  //       },
-  //     ],
-  //   });
-  // }, []);
   return (
     <>
       <div className="p-6 space-y-6">

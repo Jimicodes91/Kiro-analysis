@@ -13,7 +13,7 @@ const useSearchCompanyContacts = (page?: number, pageSize?: number, search?: str
   const session = getUserSession();
   const companyId = session?.company_id ?? "";
   return useQueryActionHook<ContactListResponse>({
-    method: "post",
+    method: "get",
     endpoint: `${ENDPOINTS.SEARCH_COMPANY_CONTACTS}?companyId=${companyId}${page ? `&page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}${search ? `&q=${search}` : ""}`,
     queryKey: [QUERYKEYS.GET_COMPANY_CONTACTS, `${page}`, `${pageSize}`, `${search}`],
   });

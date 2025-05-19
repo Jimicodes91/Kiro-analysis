@@ -6,12 +6,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TablePagination } from "@/components/ui/table-pagination";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
 import useGetAllUsers from "@/hooks/admin/use-get-all-users";
+import PaginationContextProvider from "@/lib/context/pagination-context";
+import React from "react";
 import UserTableRow from "./user-table-row";
 
 const UsersTable = ({ search }: { search: string }) => {
-  const users = useGetAllUsers(1, 20, search);
+  const [pageProp, setPageProp] = React.useState({
+    page: 1,
+    pageSize: 10,
+  });
+  const users = useGetAllUsers(pageProp.page, pageProp.pageSize, search);
 
   const renderTableBody = () => {
     if (users.isPending) return <TableSkeletonRowLoader length={7} />;
@@ -51,6 +58,13 @@ const UsersTable = ({ search }: { search: string }) => {
           </TableHeader>
           {renderTableBody()}
         </Table>
+        <PaginationContextProvider
+          pageProp={pageProp}
+          setPageProp={setPageProp}
+          total={users.value?.data?.pagination?.total ?? 0}
+        >
+          <TablePagination />
+        </PaginationContextProvider>
       </div>
     </div>
   );
