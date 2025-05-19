@@ -18,12 +18,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetAllContacts from "@/hooks/contacts/use-get-all-contacts";
+import useGetCompanyContacts from "@/hooks/contacts/use-get-company-contact";
 import useCreateFinanceRecord from "@/hooks/finance/use-create-finance-record";
 import useUpdateFinanceRecord from "@/hooks/finance/use-update-finance-record";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
-import { cn } from "@/lib/utils";
+import { cn, getSelectableDate } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { Billing } from "@/types/billing.types";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -57,6 +57,10 @@ const billingSchema = yup.object().shape({
     })
     .required("Amount paid is required")
     .min(0, "Amount cannot be negative")
+    .max(
+      yup.ref("total_project_cost"),
+      "Amount paid cannot be more than total project cost"
+    )
     .typeError("Amount paid must be a number"),
   outstanding_balance: yup
     .number()
@@ -84,7 +88,7 @@ interface FinanceModalProps {
 function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps) {
   const createBilling = useCreateFinanceRecord();
   const updateBilling = useUpdateFinanceRecord(billingData?.id || "");
-  const clientsResponse = useGetAllContacts();
+  const clientsResponse = useGetCompanyContacts();
   const projectType = useGetAllProjectTypes();
   const projectTypeId = projectType?.data?.data?.data[0]?.id;
   const projectsResponse = useGetAllProjects(projectTypeId);
@@ -264,7 +268,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                       <Input
                         type="number"
                         className="pl-7"
-                        placeholder="0.00"
+                        // placeholder="0.00"
                         value={field.value === undefined ? "" : field.value}
                         onChange={(e) => {
                           const value =
@@ -294,7 +298,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                       <Input
                         type="number"
                         className="pl-7"
-                        placeholder="0.00"
+                        // placeholder="0.00"
                         value={field.value === undefined ? "" : field.value}
                         onChange={(e) => {
                           const value =
@@ -323,7 +327,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                       <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
                       <Input
                         type="number"
-                        className="pl-7"
+                        className="pl-7 bg-[#EFEFEF]"
                         placeholder="0.00"
                         value={field.value === undefined ? "" : field.value}
                         disabled={true}
@@ -368,6 +372,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                         onSelect={(date) =>
                           field.onChange(date ? format(date, "dd MMM yyyy") : "")
                         }
+                        disabled={getSelectableDate}
                         initialFocus
                       />
                     </PopoverContent>
@@ -382,10 +387,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                 <Button
                   type="submit"
                   className="w-full"
-                  isLoading={
-                    createBilling.isPending
-                    // || updateBilling.isPending
-                  }
+                  isLoading={createBilling.isPending || updateBilling.isPending}
                   disabled={mode === "edit" && !isDirty}
                 >
                   {mode === "create" ? "Save" : "Save changes"}

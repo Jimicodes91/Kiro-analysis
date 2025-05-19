@@ -9,7 +9,6 @@ export interface ContactListResponse {
   data: ContactData;
 }
 
-// Update your hook to accept page and pageSize parameters
 const useGetCompanyContacts = (page?: number, pageSize?: number) => {
   const session = getUserSession();
   const companyId = session?.company_id ?? "";
