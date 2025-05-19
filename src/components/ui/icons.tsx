@@ -575,13 +575,12 @@ export const Icons = {
     </svg>
   ),
   user: (props: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18" {...props}>
       <path
         stroke="#000"
         strokeMiterlimit="10"
         strokeWidth="1.125"
         d="M9 11.25c2.4853 0 4.5-2.01472 4.5-4.5s-2.0147-4.5-4.5-4.5c-2.48528 0-4.5 2.01472-4.5 4.5s2.01472 4.5 4.5 4.5Z"
-        {...props}
       />
       <path
         stroke="#000"
@@ -593,14 +592,13 @@ export const Icons = {
     </svg>
   ),
   subscription: (props: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.125"
         d="M12.9516 7.01172h2.8125v-2.8125"
-        {...props}
       />
       <path
         stroke="currentColor"
@@ -615,6 +613,24 @@ export const Icons = {
         strokeLinejoin="round"
         strokeWidth=".8"
         d="M9.28125 6.76758v5.02732M10.6348 8.31445c0-.12696-.025-.25268-.0736-.36997-.0486-.1173-.1198-.22388-.2096-.31366-.0898-.08977-.1964-.16098-.3137-.20957-.11725-.04859-.24297-.07359-.36993-.07359h-.87012c-.25641 0-.50232.10185-.68363.28316-.18131.18131-.28317.42722-.28317.68363 0 .25641.10186.50232.28317.68363.18131.18131.42722.28317.68363.28317h1.06348c.25637 0 .50227.10186.68367.28317.1813.18131.2831.42722.2831.68358 0 .2565-.1018.5024-.2831.6837-.1814.1813-.4273.2831-.68367.2831H8.70117c-.25641 0-.50232-.1018-.68363-.2831-.18131-.1813-.28316-.4272-.28316-.6837"
+      />
+    </svg>
+  ),
+  company: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18" {...props}>
+      <path
+        stroke="#191819"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.125"
+        d="M1.125 15.1875h15.75M10.125 15.1875V2.8125c0-.14918-.0593-.29226-.16475-.39775C9.85476 2.30926 9.71168 2.25 9.5625 2.25h-6.75c-.14918 0-.29226.05926-.39775.16475-.10549.10549-.16475.24857-.16475.39775v12.375M15.75 15.1875v-7.875c0-.14918-.0593-.29226-.1648-.39775-.1054-.10549-.2485-.16475-.3977-.16475H10.125M4.5 5.0625h2.25"
+      />
+      <path
+        stroke="#000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.125"
+        d="M5.625 9.5625h2.25M4.5 12.375h2.25M12.375 12.375H13.5M12.375 9.5625H13.5"
       />
     </svg>
   ),

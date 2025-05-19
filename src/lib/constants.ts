@@ -63,6 +63,11 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       exact: true,
     },
     {
+      title: "Company",
+      icon: Icons.company,
+      path: "/company",
+    },
+    {
       title: "Users",
       icon: Icons.user,
       path: "/users",

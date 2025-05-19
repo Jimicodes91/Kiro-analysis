@@ -19,6 +19,7 @@ import ProtectedRoute from "@/components/ui/protected-route";
 import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
 import NotFound from "@/pages/Notfound";
+import SysAdminUsersPage from "@/pages/sysadmin/users";
 import Finance from "../pages/Home/Finance";
 import Project from "../pages/Home/Project";
 import Onboarding from "../pages/Onboarding/index";
@@ -77,10 +78,10 @@ export const HomeRoutes = {
       path: "task",
       element: <Task />,
     },
-    // {
-    //   path: "event",
-    //   element: <Event />,
-    // },
+    {
+      path: "users",
+      element: <SysAdminUsersPage />,
+    },
     {
       path: "finance",
       element: <Finance />,
