@@ -41,6 +41,7 @@ const CompleteInvite: React.FC = () => {
         companyId: companyId ?? "",
         email: email ?? "",
         role: role ?? "",
+        name: data.name,
         password: data.newPassword,
       })
       .catch(console.error);

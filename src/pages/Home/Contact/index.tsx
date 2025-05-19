@@ -15,7 +15,7 @@ const Contact: React.FC = () => {
   const [search, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const debounceText = useDebounce(search, 1000);
+  const debounceText = useDebounce(search, 1200);
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };

@@ -1,7 +1,7 @@
 import { IconProps, Icons } from "@/components/ui/icons";
 import { JSX } from "react";
 
-export type UserType = "ADMIN" | "CLIENT" | "CONSULTANT";
+export type UserType = "ADMIN" | "SYSADMIN" | "CLIENT" | "CONSULTANT";
 
 export type DashboardLinkType = {
   title: string;
@@ -53,6 +53,24 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       title: "Admin",
       icon: Icons.admin,
       path: "/admin",
+    },
+  ],
+  SYSADMIN: [
+    {
+      title: "Home",
+      icon: Icons.dashboard,
+      path: "/home",
+      exact: true,
+    },
+    {
+      title: "Users",
+      icon: Icons.user,
+      path: "/users",
+    },
+    {
+      title: "Subscription",
+      icon: Icons.subscription,
+      path: "/subscription",
     },
   ],
 };
@@ -111,6 +129,7 @@ export const ENDPOINTS = {
   CREATE_CONTACT: "contacts",
   GET_ALL_CONTACTS: "contacts",
   GET_COMPANY_CONTACTS: "contacts/company",
+  SEARCH_COMPANY_CONTACTS: "contacts/search",
   UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
 
   // Finance Endpoints
@@ -296,6 +315,7 @@ export const QUERYKEYS = {
   // Contacts Query keys
   GET_ALL_CONTACTS: "GET_ALL_CONTACTS",
   GET_COMPANY_CONTACTS: "GET_COMPANY_CONTACTS",
+  SEARCH_COMPANY_CONTACTS: "SEARCH_COMPANY_CONTACTS",
 
   // Finance Query keys
   GET_ALL_FINANCE_RECORDS: "GET_ALL_FINANCE_RECORDS",

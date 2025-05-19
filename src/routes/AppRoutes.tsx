@@ -18,9 +18,9 @@ import Admin from "../pages/Home/Admin";
 import ProtectedRoute from "@/components/ui/protected-route";
 import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
+import NotFound from "@/pages/Notfound";
 import Finance from "../pages/Home/Finance";
 import Project from "../pages/Home/Project";
-import NotFound from "../pages/Notfound";
 import Onboarding from "../pages/Onboarding/index";
 
 export const AuthRoutes: RouteObject[] = [
@@ -52,7 +52,13 @@ export const AuthRoutes: RouteObject[] = [
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: <AccountLayout />,
+    children: [
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
   },
 ];
 
