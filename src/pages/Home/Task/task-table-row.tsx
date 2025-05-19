@@ -35,12 +35,10 @@ function TaskTableRow({ task }: { task: Task }) {
     <>
       <TableRow>
         <TableCell>{task.name}</TableCell>
-        {/* <TableCell> -{task.clientName}</TableCell> */}
         <TableCell>{task.company.name}</TableCell>
         <TableCell>{task.end_date}</TableCell>
         <TableCell>
           <Badge variant={task.status}>
-            {/* {task.status === "completed" && <Icons.check className="mt-1.5" />} */}
             <span>{getFormattedText(task.status)}</span>
           </Badge>
         </TableCell>
