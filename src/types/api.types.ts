@@ -394,3 +394,22 @@ export interface ContactData {
   contacts: ContactDetails[];
   pagination: Pagination;
 }
+
+export interface FinanceDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  client_name: string;
+  project_title: string;
+  total_project_cost: string;
+  amount_paid: string;
+  outstanding_balance: string;
+  next_payment_due_date: string;
+  payment_status: string | null;
+  organization_id: string;
+}
+export interface FinanceData {
+  org_finance: FinanceDetails[];
+  pagination: Pagination;
+}
