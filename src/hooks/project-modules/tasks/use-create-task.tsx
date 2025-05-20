@@ -22,7 +22,7 @@ const useCreateTask = (projectId: string) => {
     endpoint: ENDPOINTS.CREATE_TASK(projectId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS, QUERYKEYS.GET_ALL_TASKS],
+        queryKey: [QUERYKEYS.GET_ALL_TASKS, QUERYKEYS.GET_ALL_PROJECT_TASKS],
       });
     },
   });

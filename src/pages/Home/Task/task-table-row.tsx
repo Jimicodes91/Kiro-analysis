@@ -18,6 +18,8 @@ import TaskModal from "./task-modal-form";
 
 function TaskTableRow({ task }: { task: Task }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentMode, setCurrentMode] = useState<"create" | "view" | "edit">("view");
   // const { onOpen: onDeleteOpen } = useDisclosure();
 
@@ -40,7 +42,6 @@ function TaskTableRow({ task }: { task: Task }) {
         <TableCell>{task.end_date}</TableCell>
         <TableCell>
           <Badge variant={task.status}>
-            {/* {task.status === "completed" && <Icons.check className="mt-1.5" />} */}
             <span>{getFormattedText(task.status)}</span>
           </Badge>
         </TableCell>
@@ -88,6 +89,21 @@ function TaskTableRow({ task }: { task: Task }) {
           mode={currentMode}
         />
       )}
+
+      {/* {isViewModalOpen && (
+        <TaskModal
+          isOpen={isViewModalOpen}
+          onClose={() => setIsViewModalOpen(false)}
+          task={task}
+        />
+      )}
+      {isEditModalOpen && (
+        <TaskModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          task={task}
+        />
+      )} */}
     </>
   );
 }
