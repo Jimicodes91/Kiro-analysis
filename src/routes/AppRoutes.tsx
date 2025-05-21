@@ -19,6 +19,10 @@ import ProtectedRoute from "@/components/ui/protected-route";
 import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
 import NotFound from "@/pages/Notfound";
+import SysAdminCompanyPage from "@/pages/sysadmin/company";
+import SysAdminCompanySubscriptionPage from "@/pages/sysadmin/company/sections/subscritptions-section";
+import SysAdminHomePage from "@/pages/sysadmin/home";
+import SysAdminSubscriptionPage from "@/pages/sysadmin/subscriptions";
 import SysAdminUsersPage from "@/pages/sysadmin/users";
 import Finance from "../pages/Home/Finance";
 import Project from "../pages/Home/Project";
@@ -79,8 +83,29 @@ export const HomeRoutes = {
       element: <Task />,
     },
     {
-      path: "users",
-      element: <SysAdminUsersPage />,
+      path: "sysadmin",
+      children: [
+        {
+          path: "users",
+          element: <SysAdminUsersPage />,
+        },
+        {
+          path: "home",
+          element: <SysAdminHomePage />,
+        },
+        {
+          path: "subscription",
+          element: <SysAdminSubscriptionPage />,
+        },
+        {
+          path: "companies/:companyId",
+          element: <SysAdminCompanyPage />,
+        },
+        {
+          path: "companies/:companyId/subscription",
+          element: <SysAdminCompanySubscriptionPage />,
+        },
+      ],
     },
     {
       path: "finance",

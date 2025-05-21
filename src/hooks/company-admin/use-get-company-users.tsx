@@ -9,14 +9,23 @@ export interface IUserList {
   data: UserDetails[];
 }
 
-const useGetCompanyUsers = () => {
+const useGetCompanyUsers = (
+  page?: number,
+  pageSize?: number,
+  givenCompanyId?: string
+) => {
   const session = getUserSession();
   const companyId = session?.company_id ?? "";
 
   return useQueryActionHook<IUserList>({
     method: "get",
-    endpoint: ENDPOINTS.GET_COMPANY_USERS(companyId),
-    queryKey: [QUERYKEYS.GET_COMPANY_USERS],
+    endpoint: ENDPOINTS.GET_COMPANY_USERS(givenCompanyId ?? companyId, page, pageSize),
+    queryKey: [
+      QUERYKEYS.GET_COMPANY_USERS,
+      `${page}`,
+      `${pageSize}`,
+      `${givenCompanyId}`,
+    ],
   });
 };
 

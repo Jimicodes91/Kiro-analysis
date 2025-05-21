@@ -1,5 +1,6 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { Feature } from "@/types/api.types";
 import { useQueryClient } from "@tanstack/react-query";
 
 export interface CreatePlanRequest {
@@ -10,13 +11,6 @@ export interface CreatePlanRequest {
   currency: string;
   features: Feature[];
   is_active: boolean;
-}
-
-export interface Feature {
-  id: string;
-  name: string;
-  enabled: boolean;
-  description: string;
 }
 
 const useCreatePlan = () => {

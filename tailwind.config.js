@@ -70,6 +70,7 @@ export default {
           gray: "#F4F4F4",
           table: "#F7F7F7",
           fade: "#19181980",
+          light: "#00000066",
         },
       },
       fontFamily: {

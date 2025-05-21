@@ -413,3 +413,45 @@ export interface FinanceData {
   org_finance: FinanceDetails[];
   pagination: Pagination;
 }
+
+export interface CompanyDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  industry_type: string;
+  size: string;
+  country: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  admin_id: string;
+  consultant_id: string;
+  client_id: string;
+  is_active: number;
+  subscription_status: string;
+  subscription_expiry_date: string;
+  project_id: string;
+  client_users: string;
+  consultant_users: string;
+}
+
+export interface Feature {
+  id: string;
+  name: string;
+  enabled: boolean;
+  description: string;
+}
+
+export interface SubscriptionPlan {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  display_name: string;
+  price: string;
+  price_per_seat: number;
+  currency: string;
+  features: Feature[];
+  is_active: number;
+}

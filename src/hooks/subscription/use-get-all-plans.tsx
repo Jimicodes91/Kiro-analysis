@@ -1,15 +1,15 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
-import { NoteDetails } from "@/types/api.types";
+import { SubscriptionPlan } from "@/types/api.types";
 
-export interface NoteListResponse {
+export interface SubscriptionPlanResponse {
   success: boolean;
   message: string;
-  data: NoteDetails[];
+  data: SubscriptionPlan[];
 }
 
 const useGetAllPlans = () => {
-  return useQueryActionHook<NoteListResponse>({
+  return useQueryActionHook<SubscriptionPlanResponse>({
     method: "get",
     endpoint: ENDPOINTS.GET_ALL_PLANS,
     queryKey: [QUERYKEYS.GET_ALL_PLANS],

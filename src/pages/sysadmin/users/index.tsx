@@ -18,7 +18,6 @@ const SysAdminUsersPage: React.FC = () => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
-  console.log(debounceText, "debounceText");
 
   return (
     <div className="p-6">

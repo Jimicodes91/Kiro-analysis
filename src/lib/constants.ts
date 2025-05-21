@@ -59,23 +59,23 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
     {
       title: "Home",
       icon: Icons.dashboard,
-      path: "/home",
+      path: "/sysadmin/home",
       exact: true,
     },
     {
       title: "Company",
       icon: Icons.company,
-      path: "/company",
+      path: "/sysadmin/company",
     },
     {
       title: "Users",
       icon: Icons.user,
-      path: "/users",
+      path: "/sysadmin/users",
     },
     {
       title: "Subscription",
       icon: Icons.subscription,
-      path: "/subscription",
+      path: "/sysadmin/subscription",
     },
   ],
 };
@@ -123,7 +123,8 @@ export const ENDPOINTS = {
   CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
 
   // Company Admin Endpoints
-  GET_COMPANY_USERS: (companyId: string) => `admin/companies/${companyId}/users`,
+  GET_COMPANY_USERS: (companyId: string, page?: number, pageSize?: number) =>
+    `admin/companies/${companyId}/users${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
   UPDATE_COMPANY_USER_STATUS: (companyId: string) => `admin/users/${companyId}/status`,
 
   // User Endpoints
@@ -294,6 +295,13 @@ export const ENDPOINTS = {
   CREATE_NOTE_TYPE: "metadata/type/notes",
   UPDATE_NOTE_TYPE: (noteTypeId: string) => `metadata/type/notes/${noteTypeId}`,
   GET_NOTE_TYPES: "metadata/type/notes",
+
+  // Subscription
+  GET_ALL_PLANS: "billing/plans",
+  GET_PLAN: (planType: string) => `billing/plans/${planType}`,
+  CREATE_PLAN: "billing/plans",
+  UPDATE_PLAN: (planType: string) => `billing/plans/${planType}`,
+  DELETE_PLAN: (planType: string) => `billing/plans/${planType}`,
 };
 
 // for GET requests
@@ -383,6 +391,10 @@ export const QUERYKEYS = {
 
   // 11. Note Types
   GET_NOTE_TYPES: "GET_NOTE_TYPES",
+
+  // Subscription
+  GET_ALL_PLANS: "GET_ALL_PLANS",
+  GET_PLAN: "GET_PLAN",
 };
 
 export const PAGES = {
