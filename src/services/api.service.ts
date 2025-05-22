@@ -133,7 +133,6 @@ export async function secureRequest({
       data: body,
     });
   }
-  console.log(body, "oasmaso");
 
   return axios[givenMethod](url, body, { headers });
 }

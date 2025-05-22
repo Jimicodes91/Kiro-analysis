@@ -8,19 +8,16 @@ export interface ProjectListResponse {
   data: ProjectDetails[];
 }
 
-const useGetAllProjects = (
-  projectTypeId?: string,
-  status?: ProjectStatusDict | "all"
-) => {
+const useGetClientProjects = (clientId: string, status?: ProjectStatusDict | "all") => {
   const statusKey = status ?? "";
-  const projectTypeIdKey = projectTypeId ?? "";
+
   return useQueryActionHook<ProjectListResponse>({
     method: "get",
-    enabled: Boolean(projectTypeId),
-    endpoint: ENDPOINTS.GET_ALL_PROJECTS(projectTypeId, status),
-    queryKey: [QUERYKEYS.GET_ALL_PROJECTS, projectTypeIdKey, statusKey],
+    enabled: Boolean(clientId),
+    endpoint: ENDPOINTS.GET_CLIENT_PROJECTS(clientId, status),
+    queryKey: [QUERYKEYS.GET_CLIENT_PROJECTS, clientId, statusKey],
     refetchOnWindowFocus: true,
   });
 };
 
-export default useGetAllProjects;
+export default useGetClientProjects;

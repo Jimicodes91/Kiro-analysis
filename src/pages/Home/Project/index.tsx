@@ -2,6 +2,7 @@ import NotFound from "@/pages/Notfound";
 import { getUserSession } from "@/services/api.service";
 import { Navigate } from "react-router-dom";
 import NonClientProjectView from "./view/admin-view";
+import ClientProjectView from "./view/client-view";
 
 const ProjectsRouteWrapper = () => {
   const user = getUserSession(); // Assuming you get { user: { role: 'ADMIN' | 'CLIENT' } }
@@ -13,9 +14,9 @@ const ProjectsRouteWrapper = () => {
   switch (user.role) {
     case "ADMIN":
       return <NonClientProjectView />;
-    case "SYSADMIN":
-      return <NonClientProjectView />;
     case "CLIENT":
+      return <ClientProjectView />;
+    case "SYSADMIN":
     case "CONSULTANT":
       return <NonClientProjectView />;
     default:

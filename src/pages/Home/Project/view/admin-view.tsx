@@ -1,23 +1,29 @@
-import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
+import { projectStatusList } from "@/lib/constants";
 import ProjectEmptyState from "@/pages/projects/components/project-empty-state";
 import { useEffect } from "react";
-import { GoShare } from "react-icons/go";
-import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../../components/ui/view-toggle";
 import BoardLoadingWrapper from "../templates/loading-wrapper";
-import ActiveProjectTypeProjectWrapper from "../templates/selected-project-wrapper";
+import ActiveProjectTypeProjectWrapperOnAdminView from "../templates/selected-project-wrapper-admin copy";
 import ProjectTable from "./../components/project-table";
 import { useProjectContext } from "./../context/project-context";
 
 const NonClientProjectView = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const viewMode = searchParams.get("viewMode") || "board";
-  const { activeProjectType, changeActiveProjectType } = useProjectContext();
-  const allProjects = useGetAllProjects(activeProjectType);
+  const { activeProjectType, changeActiveProjectType, changeStatus, status } =
+    useProjectContext();
+  const allProjects = useGetAllProjects(activeProjectType, status);
   const projectTypes = useGetAllProjectTypes();
 
   const handleTabChange = (value: string) => {
@@ -53,7 +59,7 @@ const NonClientProjectView = () => {
   }
 
   return (
-    <ActiveProjectTypeProjectWrapper>
+    <ActiveProjectTypeProjectWrapperOnAdminView>
       <>
         <div className="flex justify-between gap-3 flex-wrap items-center">
           <ViewToggle
@@ -65,20 +71,24 @@ const NonClientProjectView = () => {
             ]}
           />
           <div className="flex justify-between space-x-2">
-            <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<HiOutlineAdjustmentsVertical className="text-[#111] w-6 h-6" />}
-            >
-              Filter
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<GoShare className="text-[#111] w-6 h-6" />}
-            >
-              Export
-            </Button>
+            <div>
+              <Select value={status} onValueChange={changeStatus}>
+                <SelectTrigger className="min-w-[150px] h-10">
+                  <SelectValue placeholder="Select status" className="capitalize" />
+                </SelectTrigger>
+                <SelectContent>
+                  {projectStatusList?.map((item) => (
+                    <SelectItem
+                      className="capitalize"
+                      key={item.value}
+                      value={`${item.value}`}
+                    >
+                      {item.text}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -90,7 +100,7 @@ const NonClientProjectView = () => {
           )}
         </div>
       </>
-    </ActiveProjectTypeProjectWrapper>
+    </ActiveProjectTypeProjectWrapperOnAdminView>
   );
 };
 

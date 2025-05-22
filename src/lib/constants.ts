@@ -81,11 +81,41 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
 };
 
 export enum ProjectStatus {
-  NOT_STARTED = "not_started",
   IN_PROGRESS = "in_progress",
-  BLOCKED = "blocked",
   COMPLETED = "completed",
+  DUE = "due",
+  ON_TRACK = "on_track",
+  LATE = "late",
 }
+
+export type ProjectStatusDict = `${ProjectStatus}`;
+
+export const projectStatusList: { text: string; value: ProjectStatusDict | "all" }[] = [
+  {
+    text: "All Status",
+    value: "all",
+  },
+  {
+    text: "In Progress",
+    value: "in_progress",
+  },
+  {
+    text: "Completed",
+    value: "completed",
+  },
+  {
+    text: "Due",
+    value: "due",
+  },
+  {
+    text: "On Track",
+    value: "on_track",
+  },
+  {
+    text: "Late",
+    value: "late",
+  },
+];
 
 export const ENDPOINTS = {
   // Auth Endpoint
@@ -167,8 +197,10 @@ export const ENDPOINTS = {
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
-  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatus) =>
-    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status ? `?status=${status}` : ""}`,
+  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatusDict | "all") =>
+    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
+  GET_CLIENT_PROJECTS: (clientId?: string, status?: ProjectStatusDict | "all") =>
+    `projects${clientId ? `?client_id=${clientId}` : ""}${status ? `?status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_MILESTONE: (projectId: string) => `projects/${projectId}`,
@@ -336,6 +368,7 @@ export const QUERYKEYS = {
 
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
+  GET_CLIENT_PROJECTS: "GET_CLIENT_PROJECTS",
   GET_PROJECT_DETAILS: "GET_PROJECT_DETAILS",
   UPDATE_PROJECT_MILESTONE: "UPDATE_PROJECT_MILESTONE",
 

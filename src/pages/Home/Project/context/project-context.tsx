@@ -1,9 +1,12 @@
+import { ProjectStatusDict } from "@/lib/constants";
 import { getCookie, setCookie } from "cookies-next";
 import React from "react";
 
 interface ProjectContextInterface {
   changeActiveProjectType: (projectType: string) => void;
   activeProjectType: string | undefined;
+  status: ProjectStatusDict | "all";
+  changeStatus: (status: ProjectStatusDict | "all") => void;
 }
 
 const ProjectCtx = React.createContext<ProjectContextInterface>(
@@ -15,10 +18,15 @@ const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => 
   const [activeProjectType, setActiveProjectType] = React.useState<string | undefined>(
     storeActiveProjectType as string
   );
+  const [status, setStatus] = React.useState<ProjectStatusDict | "all">("all");
 
   const changeActiveProjectType = (projectType: string) => {
     setActiveProjectType(projectType);
     setCookie("active_project", projectType);
+  };
+
+  const changeStatus = (status: ProjectStatusDict | "all") => {
+    setStatus(status);
   };
 
   return (
@@ -26,6 +34,8 @@ const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => 
       value={{
         activeProjectType,
         changeActiveProjectType,
+        status,
+        changeStatus,
       }}
     >
       {children}
