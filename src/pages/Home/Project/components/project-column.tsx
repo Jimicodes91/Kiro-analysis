@@ -16,15 +16,9 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({ column, projects }) => {
     <div className="flex flex-col space-y-2 min-h-[calc(100vh-290px)] h-full">
       <div className="px-1.5 pt-1.5">
         <div className="flex justify-center gap-2 py-3 border border-brand-border items-center rounded-md bg-[#0923270D]">
-          <h3 className="font-bold">{column.name}</h3>
-          {/* {columnProjects?.length > 0 && (
-            <span className="bg-gray-50 shadow text-primary font-bold px-2 py-1 text-sm rounded-sm">
-              {columnProjects?.length}
-            </span>
-          )} */}
+          <h3 className="uppercase text-sm font-semibold">{column.name}</h3>
         </div>
       </div>
-      {/* droppableId="all-columns" direction="horizontal" type="column" */}
       <Droppable
         isDropDisabled={column.id === "disabled"}
         droppableId={column.id}

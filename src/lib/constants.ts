@@ -1,7 +1,7 @@
 import { IconProps, Icons } from "@/components/ui/icons";
 import { JSX } from "react";
 
-export type UserType = "ADMIN" | "CLIENT";
+export type UserType = "ADMIN" | "SYSADMIN" | "CLIENT" | "CONSULTANT";
 
 export type DashboardLinkType = {
   title: string;
@@ -46,6 +46,7 @@ const universalRoutes = [
 
 export const topNavData: Record<UserType, DashboardLinkType[]> = {
   CLIENT: [...universalRoutes],
+  CONSULTANT: [...universalRoutes],
   ADMIN: [
     ...universalRoutes,
     {
@@ -54,14 +55,67 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       path: "/admin",
     },
   ],
+  SYSADMIN: [
+    {
+      title: "Home",
+      icon: Icons.dashboard,
+      path: "/sysadmin/home",
+      exact: true,
+    },
+    {
+      title: "Company",
+      icon: Icons.company,
+      path: "/sysadmin/company",
+    },
+    {
+      title: "Users",
+      icon: Icons.user,
+      path: "/sysadmin/users",
+    },
+    {
+      title: "Subscription",
+      icon: Icons.subscription,
+      path: "/sysadmin/subscription",
+    },
+  ],
 };
 
 export enum ProjectStatus {
-  NOT_STARTED = "not_started",
   IN_PROGRESS = "in_progress",
-  BLOCKED = "blocked",
   COMPLETED = "completed",
+  DUE = "due",
+  ON_TRACK = "on_track",
+  LATE = "late",
 }
+
+export type ProjectStatusDict = `${ProjectStatus}`;
+
+export const projectStatusList: { text: string; value: ProjectStatusDict | "all" }[] = [
+  {
+    text: "All Status",
+    value: "all",
+  },
+  {
+    text: "In Progress",
+    value: "in_progress",
+  },
+  {
+    text: "Completed",
+    value: "completed",
+  },
+  {
+    text: "Due",
+    value: "due",
+  },
+  {
+    text: "On Track",
+    value: "on_track",
+  },
+  {
+    text: "Late",
+    value: "late",
+  },
+];
 
 export const ENDPOINTS = {
   // Auth Endpoint
@@ -102,7 +156,8 @@ export const ENDPOINTS = {
   CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
 
   // Company Admin Endpoints
-  GET_COMPANY_USERS: (companyId: string) => `admin/companies/${companyId}/users`,
+  GET_COMPANY_USERS: (companyId: string, page?: number, pageSize?: number) =>
+    `admin/companies/${companyId}/users${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
   UPDATE_COMPANY_USER_STATUS: (companyId: string) => `admin/users/${companyId}/status`,
 
   // User Endpoints
@@ -113,6 +168,7 @@ export const ENDPOINTS = {
   CREATE_CONTACT: "contacts",
   GET_ALL_CONTACTS: "contacts",
   GET_COMPANY_CONTACTS: "contacts/company",
+  SEARCH_COMPANY_CONTACTS: "contacts/search",
   UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
 
   // Finance Endpoints
@@ -144,8 +200,10 @@ export const ENDPOINTS = {
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
-  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatus) =>
-    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status ? `?status=${status}` : ""}`,
+  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatusDict | "all") =>
+    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
+  GET_CLIENT_PROJECTS: (clientId?: string, status?: ProjectStatusDict | "all") =>
+    `projects${clientId ? `?client_id=${clientId}` : ""}${status ? `?status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_MILESTONE: (projectId: string) => `projects/${projectId}`,
@@ -272,6 +330,13 @@ export const ENDPOINTS = {
   CREATE_NOTE_TYPE: "metadata/type/notes",
   UPDATE_NOTE_TYPE: (noteTypeId: string) => `metadata/type/notes/${noteTypeId}`,
   GET_NOTE_TYPES: "metadata/type/notes",
+
+  // Subscription
+  GET_ALL_PLANS: "billing/plans",
+  GET_PLAN: (planType: string) => `billing/plans/${planType}`,
+  CREATE_PLAN: "billing/plans",
+  UPDATE_PLAN: (planType: string) => `billing/plans/${planType}`,
+  DELETE_PLAN: (planType: string) => `billing/plans/${planType}`,
 };
 
 // for GET requests
@@ -298,6 +363,7 @@ export const QUERYKEYS = {
   // Contacts Query keys
   GET_ALL_CONTACTS: "GET_ALL_CONTACTS",
   GET_COMPANY_CONTACTS: "GET_COMPANY_CONTACTS",
+  SEARCH_COMPANY_CONTACTS: "SEARCH_COMPANY_CONTACTS",
 
   // Finance Query keys
   GET_ALL_FINANCE_RECORDS: "GET_ALL_FINANCE_RECORDS",
@@ -305,6 +371,7 @@ export const QUERYKEYS = {
 
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
+  GET_CLIENT_PROJECTS: "GET_CLIENT_PROJECTS",
   GET_PROJECT_DETAILS: "GET_PROJECT_DETAILS",
   UPDATE_PROJECT_MILESTONE: "UPDATE_PROJECT_MILESTONE",
 
@@ -360,6 +427,10 @@ export const QUERYKEYS = {
 
   // 11. Note Types
   GET_NOTE_TYPES: "GET_NOTE_TYPES",
+
+  // Subscription
+  GET_ALL_PLANS: "GET_ALL_PLANS",
+  GET_PLAN: "GET_PLAN",
 };
 
 export const PAGES = {

@@ -1,5 +1,5 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, UserType } from "@/lib/constants";
 
 export interface User {
   id: string;
@@ -9,7 +9,7 @@ export interface User {
   email: string;
   pfp: unknown;
   name: string;
-  role: "ADMIN";
+  role: UserType;
   company_id: string;
   company_name: string;
   is_blocked: number;
