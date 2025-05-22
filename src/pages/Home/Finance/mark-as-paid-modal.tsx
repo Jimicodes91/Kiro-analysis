@@ -9,6 +9,7 @@
 //   FormMessage,
 // } from "@/components/ui/form";
 // import { Input } from "@/components/ui/input";
+// import useMarkFinanceRecordAsPaid from "@/hooks/finance/use-mark-finance_record_as-paid";
 // import { yupResolver } from "@hookform/resolvers/yup";
 // import { useForm } from "react-hook-form";
 // import * as yup from "yup";
@@ -19,7 +20,7 @@
 //     .number()
 //     .required("Amount paid is required")
 //     .positive("Amount must be positive"),
-//   receipt: yup.mixed(),
+//   payment_proof: yup.mixed(),
 // });
 
 // interface MarkAsPaidModalProps {
@@ -31,7 +32,7 @@
 
 // interface MarkAsPaidFormValues {
 //   amount_paid: number;
-//   receipt?: File | null;
+//   payment_proof?: File | null;
 // }
 
 // function MarkAsPaidModal({
@@ -40,14 +41,14 @@
 //   billingId,
 //   currentAmountPaid
 // }: MarkAsPaidModalProps) {
-//   // Get data from hooks
-//   // const markAsPaid = useMarkBillingAsPaid(billingId);
+
+//   const markAsPaid = useMarkFinanceRecordAsPaid(billingId);
 
 //   const form = useForm<MarkAsPaidFormValues>({
 //     resolver: yupResolver(markAsPaidSchema),
 //     defaultValues: {
 //       amount_paid: 0,
-//       receipt: null,
+//       payment_proof: null,
 //     },
 //     mode: "onChange",
 //   });
@@ -56,8 +57,8 @@
 //     // Prepare formData for file upload
 //     const formData = new FormData();
 //     formData.append("amount_paid", data.amount_paid.toString());
-//     if (data.receipt) {
-//       formData.append("receipt", data.receipt);
+//     if (data.payment_proof) {
+//       formData.append("payment_proof", data.payment_proof);
 //     }
 
 //     markAsPaid
@@ -98,7 +99,7 @@
 
 //           <FormField
 //             control={form.control}
-//             name="receipt"
+//             name="payment_proof"
 //             render={({ field: { value, onChange, ...fieldProps } }) => (
 //               <FormItem>
 //                 <FormLabel>Attach</FormLabel>
@@ -127,7 +128,7 @@
 //                     <Input
 //                       type="file"
 //                       className="hidden"
-//                       id="receipt-upload"
+//                       id="payment_proof-upload"
 //                       accept=".pdf,.docx,.xlsx,.png,.jpg,.jpeg"
 //                       onChange={(e) => {
 //                         const file = e.target.files?.[0] || null;
@@ -141,7 +142,7 @@
 //                       size="sm"
 //                       className="mt-2"
 //                       onClick={() => {
-//                         document.getElementById("receipt-upload")?.click();
+//                         document.getElementById("payment_proof-upload")?.click();
 //                       }}
 //                     >
 //                       Select file
