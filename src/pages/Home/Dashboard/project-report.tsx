@@ -26,8 +26,8 @@ const ProjectCard: React.FC<{ cardDetails: CardDetails }> = ({ cardDetails }) =>
           <div
             className={`text-xs flex items-center ${increase >= 0 ? "text-[#00AA3B]" : "text-red-500"}`}
           >
-            {increase >= 0 ? "↑" : "↓"} {Math.abs(increase)}%{" "}
-            <span className="text-[#191819]"> increase from last month</span>
+            {increase >= 0 ? "↑" : "↓"} {Math.abs(increase)}%
+            <span className="ml-1 text-[#191819]">increase from last month</span>
           </div>
         )}
       </CardContent>
@@ -39,7 +39,7 @@ const ProjectReport: React.FC<ProjectReportProps> = ({ cards, onViewMore }) => {
   return (
     <div>
       <SectionHeader title="Project report" onViewMore={onViewMore} small={false} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-4 mb-4">
         {cards.map((card, index) => (
           <ProjectCard key={index} cardDetails={card} />
         ))}

@@ -77,6 +77,9 @@ export const ENDPOINTS = {
   COMPLETE_REGISTRATION: "auth/complete-registration",
   ADD_CLIENT: "auth/add-client",
 
+  // Home Endpoints
+  GET_DASHBOARD_METRICS: "projects/metrics",
+
   // Admin Endpoints
   GET_DASHBOARD_DETAILS: "admin/dashboard",
   GET_ALL_COMPANIES: "admin/companies",
