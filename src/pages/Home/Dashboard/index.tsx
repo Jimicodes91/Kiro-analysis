@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
     <div>
       <div className="mx-6 my-2">
         <DashboardHeader />
-        <div className="bg-white rounded-[6px] border border-[#0000001A] px-4 pb-2 pt-2">
+        <div className="bg-white rounded-[6px] border border-[#0000001A] px-4 pt-2">
           <ProjectReport cards={projectCards} onViewMore={handleViewMoreProjectReport} />
           {/* <ProjectStatus projects={projectsData} /> */}
         </div>

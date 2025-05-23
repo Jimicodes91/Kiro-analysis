@@ -203,3 +203,16 @@ export const stringfyList = (words: string[]) => {
 
   return words.map((i) => truncateMiddleWords(i)).join(" ,");
 };
+
+export const formatCurrency = (amount: string | number) => {
+  if (!amount) return "";
+  const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
+  if (isNaN(numAmount)) return "";
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numAmount);
+};

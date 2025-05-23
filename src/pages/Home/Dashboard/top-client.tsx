@@ -29,31 +29,47 @@ const TopClient: React.FC<TopClientProps> = ({ clients, onViewMore }) => {
 
       {/* <div className="flex-grow overflow-hidden flex flex-col">
       <div className="overflow-auto max-h-80"> */}
-      <Table>
-        <TableHeader className="border bg-white">
-          <TableRow className="hover:bg-transparent ">
-            <TableHead className="text-gray-500 font-normal">Client name</TableHead>
-            <TableHead className="text-gray-500 font-normal">Company</TableHead>
-            <TableHead className="text-gray-500 font-normal">No of project</TableHead>
-            <TableHead className="text-gray-500 font-normal">Active project</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {clients.map((client) => (
-            <TableRow
-              key={client.id}
-              className="hover:bg-gray-30 border-b border-[#0000001A]"
-            >
-              <TableCell className="py-4 max-w-[60px] truncate">{client.name}</TableCell>
-              <TableCell className="max-w-[60px] truncate">{client.company}</TableCell>
-              <TableCell className="max-w-[60px] truncate">
-                {client.noOfProject}
-              </TableCell>
-              <TableCell>{client.activeProject}</TableCell>
+      <div className="bg-white rounded-lg border border-[#0000001A] overflow-hidden">
+        <Table>
+          <TableHeader className="bg-white">
+            <TableRow className="border-b border-#0000001A hover:bg-gray-50">
+              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
+                Client name
+              </TableHead>
+              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
+                Company
+              </TableHead>
+              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
+                No of project
+              </TableHead>
+              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
+                Active project
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {clients.map((client) => (
+              <TableRow
+                key={client.id}
+                className="border-b border-gray-100 hover:bg-gray-50 transition-colors last:border-b-0"
+              >
+                <TableCell className="py-4 px-4 text-sm text-gray-900 font-medium max-w-[60px] truncate">
+                  {client.name}
+                </TableCell>
+                <TableCell className="py-4 px-4 text-sm text-gray-600 max-w-[60px] truncate">
+                  {client.company}
+                </TableCell>
+                <TableCell className="py-4 px-4 text-sm text-gray-600 max-w-[60px] truncate">
+                  {client.noOfProject}
+                </TableCell>
+                <TableCell py-4 px-4 text-sm text-gray-600>
+                  {client.activeProject}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       {/* </div>
       </div> */}
     </div>
