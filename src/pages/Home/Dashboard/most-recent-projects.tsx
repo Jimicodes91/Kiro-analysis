@@ -30,33 +30,49 @@ const MostRecentProject: React.FC<MostRecentProjectCardProps> = ({ projects }) =
 
       {/* <div className="flex-grow overflow-hidden flex flex-col">
         <div className="overflow-auto max-h-80"> */}
-      <Table>
-        <TableHeader className="border bg-white">
-          <TableRow className="hover:bg-transparent ">
-            <TableHead className="text-gray-500 font-normal">Project name</TableHead>
-            <TableHead className="text-gray-500 font-normal">Company</TableHead>
-            <TableHead className="text-gray-500 font-normal">Status</TableHead>
-            <TableHead className="text-gray-500 font-normal">Expected end date</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {projects.map((project) => (
-            <TableRow
-              key={project.id}
-              className="hover:bg-gray-30 border-b border-[#0000001A]"
-            >
-              <TableCell className="py-4">{project.name}</TableCell>
-              <TableCell>{project.company}</TableCell>
-              <TableCell>
-                <Badge variant={project.status}>
-                  <span>{getFormattedText(project.status)}</span>
-                </Badge>
-              </TableCell>
-              <TableCell>{project.expectedEndDate}</TableCell>
+      <div className="bg-white rounded-lg border border-[#0000001A] overflow-hidden">
+        <Table>
+          <TableHeader className="bg-white">
+            <TableRow className="border-b border-#0000001A hover:bg-gray-50">
+              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
+                Project name
+              </TableHead>
+              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
+                Company
+              </TableHead>
+              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
+                Status
+              </TableHead>
+              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
+                Expected end date
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {projects.map((project) => (
+              <TableRow
+                key={project.id}
+                className="border-b border-gray-100 hover:bg-gray-50 transition-colors last:border-b-0"
+              >
+                <TableCell className="py-4 px-4 text-sm text-gray-900 font-medium">
+                  {project.name}
+                </TableCell>
+                <TableCell className="py-4 px-4 text-sm text-gray-600">
+                  {project.company}
+                </TableCell>
+                <TableCell className="py-4 px-4">
+                  <Badge variant={project.status}>
+                    <span>{getFormattedText(project.status)}</span>
+                  </Badge>
+                </TableCell>
+                <TableCell py-4 px-4 text-sm text-gray-600>
+                  {project.expectedEndDate}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
     //   </div>
     // </div>
