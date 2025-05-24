@@ -16,7 +16,11 @@ import { LuPlus } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { useProjectContext } from "../context/project-context";
 
-const ActiveProjectTypeProjectWrapper = ({ children }: { children: React.ReactNode }) => {
+const ActiveProjectTypeProjectWrapperOnAdminView = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const navigate = useNavigate();
   const [, setSearchQuery] = useState("");
   const projectTypes = useGetAllProjectTypes();
@@ -78,4 +82,4 @@ const ActiveProjectTypeProjectWrapper = ({ children }: { children: React.ReactNo
   );
 };
 
-export default ActiveProjectTypeProjectWrapper;
+export default ActiveProjectTypeProjectWrapperOnAdminView;

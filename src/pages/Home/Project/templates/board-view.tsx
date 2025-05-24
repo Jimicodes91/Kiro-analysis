@@ -105,6 +105,7 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
     //   return;
     // }
 
+    console.log(result, "result");
     // Moving from one list to another
     setMilestoneProjects((prev) => {
       return updateProjectMilestoneById(prev, draggableId, destination.droppableId);

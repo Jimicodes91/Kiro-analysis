@@ -8,16 +8,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { formatCurrency } from "@/lib/utils";
 import { Billing } from "@/types/billing.types";
 import { format } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import FinanceModal from "./finance-modal-form";
-// import MarkAsPaidModal from "./mark-as-paid-modal";
+import MarkAsPaidModal from "./mark-as-paid-modal";
 
 function FinanceTableRow({ billing }: { billing: Billing }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  //   const [isMarkAsPaidModalOpen, setIsMarkAsPaidModalOpen] = useState(false);
+  const [isMarkAsPaidModalOpen, setIsMarkAsPaidModalOpen] = useState(false);
   const [currentMode, setCurrentMode] = useState<"create" | "view" | "edit">("view");
 
   const handleEditClick = () => {
@@ -30,21 +31,8 @@ function FinanceTableRow({ billing }: { billing: Billing }) {
     setIsModalOpen(true);
   };
 
-  //   const handleMarkAsPaidClick = () => {
-  //     setIsMarkAsPaidModalOpen(true);
-  //   };
-
-  const formatCurrency = (amount: string | number) => {
-    if (!amount) return "";
-    const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
-    if (isNaN(numAmount)) return "";
-
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(numAmount);
+  const handleMarkAsPaidClick = () => {
+    setIsMarkAsPaidModalOpen(true);
   };
 
   return (
@@ -68,7 +56,8 @@ function FinanceTableRow({ billing }: { billing: Billing }) {
                 <DropdownMenuItem onClick={handleViewClick}>View</DropdownMenuItem>
                 <DropdownMenuItem onClick={handleEditClick}>Edit</DropdownMenuItem>
                 <DropdownMenuItem
-                // onClick={handleMarkAsPaidClick}
+                  onClick={handleMarkAsPaidClick}
+                  disabled={billing?.payment_status === "paid"}
                 >
                   Mark as paid
                 </DropdownMenuItem>
@@ -89,16 +78,17 @@ function FinanceTableRow({ billing }: { billing: Billing }) {
         )}
       </AnimatePresence>
 
-      {/* <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isMarkAsPaidModalOpen && (
           <MarkAsPaidModal
             isOpen={isMarkAsPaidModalOpen}
             onClose={() => setIsMarkAsPaidModalOpen(false)}
             billingId={billing.id}
             currentAmountPaid={billing.amount_paid}
+            totalProjectCost={billing?.total_project_cost}
           />
         )}
-      </AnimatePresence> */}
+      </AnimatePresence>
     </>
   );
 }

@@ -28,7 +28,7 @@ export default function NoteCard({ note }: { note: NoteDetails }) {
                 {getInitials(note?.author?.name ?? note?.author?.email)}
               </AvatarFallback>
             </Avatar>
-            <p className="text-sm font-bold">
+            <p className="text-sm font-bold capitalize">
               {note?.author?.name ?? note?.author?.email}
             </p>
           </div>

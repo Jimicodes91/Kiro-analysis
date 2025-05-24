@@ -3,13 +3,6 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-export enum ProjectStatus {
-  NOT_STARTED = "not_started",
-  IN_PROGRESS = "in_progress",
-  BLOCKED = "blocked",
-  COMPLETED = "completed",
-}
-
 const badgeVariants = cva(
   "inline-flex items-center capitalize rounded-full border text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
@@ -22,9 +15,12 @@ const badgeVariants = cva(
         destructive: "border-transparent bg-[#FB002B]/10 text-[#FB002B]",
         outline: "text-foreground",
         success: "border-transparent bg-[#00AA3B1A] text-[#00AA3B]",
+        on_track: "border-transparent bg-[#00AA3B1A] text-[#00AA3B]",
         completed: "border-transparent bg-[#00AA3B1A] text-[#00AA3B]",
         active: "border-transparent bg-[#ECFDF3] text-[#027A48]",
         inactive: "border-transparent text-[#FFCC00] bg-[#FAFAE5]",
+        late: "border-transparent text-[#FFCC00] bg-[#FAFAE5]",
+        due: "border-transparent text-[#FFCC00] bg-[#FAFAE5]",
         deactivated: "border-transparent text-[#FF3B30] bg-[#F7EEE2]",
         not_started: "border-transparent bg-blue-100 text-blue-600",
         pending: "border-transparent bg-blue-100 text-blue-600",

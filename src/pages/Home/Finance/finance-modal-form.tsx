@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Loader from "@/components/ui/loader";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
@@ -26,55 +27,13 @@ import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { cn, getSelectableDate } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { Billing } from "@/types/billing.types";
+import { billingSchema } from "@/utils/validation-schema/finance";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-
-const billingSchema = yup.object().shape({
-  client_name: yup.string().required("Client name is required"),
-  project_title: yup.string().required("Project title is required"),
-  total_project_cost: yup
-    .number()
-    .nullable()
-    .transform((value, originalValue) => {
-      return originalValue === "" || originalValue === null || originalValue === undefined
-        ? undefined
-        : value;
-    })
-    .required("Total amount is required")
-    .positive("Amount must be positive")
-    .typeError("Total project cost must be a number"),
-  amount_paid: yup
-    .number()
-    .nullable()
-    .transform((value, originalValue) => {
-      return originalValue === "" || originalValue === null || originalValue === undefined
-        ? undefined
-        : value;
-    })
-    .required("Amount paid is required")
-    .min(0, "Amount cannot be negative")
-    .max(
-      yup.ref("total_project_cost"),
-      "Amount paid cannot be more than total project cost"
-    )
-    .typeError("Amount paid must be a number"),
-  outstanding_balance: yup
-    .number()
-    .nullable()
-    .transform((value, originalValue) => {
-      return originalValue === "" || originalValue === null || originalValue === undefined
-        ? undefined
-        : value;
-    })
-    .required("Outstanding balance is required")
-    .min(0, "Balance cannot be negative")
-    .typeError("Outstanding balance must be a number"),
-  next_payment_due_date: yup.string().required("Next payment due date is required"),
-});
 
 type BillingSchemaType = yup.InferType<typeof billingSchema>;
 
@@ -127,22 +86,32 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
     mode: "onChange",
   });
 
-  const { isDirty } = form.formState;
+  const { isDirty, dirtyFields } = form.formState;
 
   const totalAmount = form.watch("total_project_cost");
   const amountPaid = form.watch("amount_paid");
 
   useEffect(() => {
-    if (totalAmount !== undefined && amountPaid !== undefined) {
+    const shouldCalculate =
+      mode === "create" ||
+      (mode === "edit" && (dirtyFields.total_project_cost || dirtyFields.amount_paid));
+
+    if (shouldCalculate && totalAmount !== undefined && amountPaid !== undefined) {
       const outstandingBalance = totalAmount - amountPaid;
       form.setValue(
         "outstanding_balance",
-        outstandingBalance >= 0 ? outstandingBalance : 0
+        outstandingBalance >= 0 ? outstandingBalance : 0,
+        { shouldDirty: false } // Don't mark outstanding_balance as dirty
       );
-    } else {
-      form.setValue("outstanding_balance", 0);
     }
-  }, [totalAmount, amountPaid, form]);
+  }, [
+    totalAmount,
+    amountPaid,
+    form,
+    mode,
+    dirtyFields.total_project_cost,
+    dirtyFields.amount_paid,
+  ]);
 
   const onSubmit = async (data: BillingSchemaType) => {
     const payload = {
@@ -187,10 +156,9 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
       closeModal={onClose}
       isOpen={isOpen}
     >
-      {isLoading ? (
-        <div className="flex flex-col items-center justify-center py-24">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
-          <p className="text-sm text-muted-foreground">Loading form data...</p>
+      {isLoading && mode !== "create" ? (
+        <div className="min-h-[calc(100vh-70px)] flex items-center">
+          <Loader />
         </div>
       ) : (
         <Form {...form}>
@@ -210,7 +178,10 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                       onValueChange={field.onChange}
                       disabled={mode === "view"}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger
+                        className="w-full"
+                        isLoading={clientsResponse.isLoading}
+                      >
                         <SelectValue placeholder="Client name" />
                       </SelectTrigger>
                       <SelectContent>
@@ -239,7 +210,10 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                       onValueChange={field.onChange}
                       disabled={mode === "view"}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger
+                        className="w-full"
+                        isLoading={projectType.isLoading || projectsResponse.isLoading}
+                      >
                         <SelectValue placeholder="Project title" />
                       </SelectTrigger>
                       <SelectContent>

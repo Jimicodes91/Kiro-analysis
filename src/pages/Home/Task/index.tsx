@@ -4,8 +4,6 @@ import { Input } from "@/components/ui/input";
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import useDisclosure from "@/hooks/use-disclosure";
 import React, { useState } from "react";
-import { GoShare } from "react-icons/go";
-import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
 import TaskEmptyState from "./task-empty-state";
 // import TaskModal from "./task-modal-form";
@@ -43,7 +41,7 @@ const Task: React.FC = () => {
             </div>
           </div>
           <div className="flex justify-between space-x-2">
-            <Button
+            {/* <Button
               size="sm"
               variant="outline"
               leftIcon={<HiOutlineAdjustmentsVertical className="text-[#111] w-6 h-6" />}
@@ -58,7 +56,7 @@ const Task: React.FC = () => {
               className="border-black"
             >
               Export
-            </Button>
+            </Button> */}
             <Button
               size="sm"
               leftIcon={<IoAdd className="text-white w-6 h-6" />}

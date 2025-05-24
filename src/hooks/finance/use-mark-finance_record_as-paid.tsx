@@ -10,7 +10,7 @@ const useMarkFinanceRecordAsPaid = (financeId: string) => {
   const queryClient = useQueryClient();
   return useCustomMutation<object, BillingRequest>({
     method: "patch",
-    endpoint: ENDPOINTS.UPDATE_FINANCE_RECORD(financeId),
+    endpoint: ENDPOINTS.MARK_FINANCE_RECORD_AS_PAID(financeId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERYKEYS.GET_ALL_FINANCE_RECORDS],

@@ -1,5 +1,5 @@
+import ProgressBar from "@/components/ui/progress-bar";
 import Sidebar from "../../components/Sidebar";
-import ProgressBar from "../../components/progressBar";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import { useOnboarding } from "./onboarding-context";

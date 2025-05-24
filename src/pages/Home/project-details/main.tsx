@@ -28,6 +28,7 @@ const ProjectDetail = ({
       .then(() => refetchProject())
       .catch(console.error);
   };
+
   const renderMilestone = () => {
     if (journey.isSuccess && journey?.value) {
       return (

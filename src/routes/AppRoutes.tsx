@@ -1,7 +1,6 @@
 import AuthLayout from "@/layouts/auth-layout";
 import AccountLayout from "@/layouts/dashboard-layout/lol";
 import ProjectDetailsPageWrapper from "@/pages/Home/project-details";
-import ProjectContextProvider from "@/pages/Home/Project/context/project-context";
 import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";
 import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
 import { RouteObject } from "react-router-dom";
@@ -16,11 +15,17 @@ import Admin from "../pages/Home/Admin";
 // import Client from "../pages/Home/Client";
 // import Event from "../pages/Home/Event";
 
+import ProtectedRoute from "@/components/ui/protected-route";
 import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
+import NotFound from "@/pages/Notfound";
+import SysAdminCompanyPage from "@/pages/sysadmin/company";
+import SysAdminCompanySubscriptionPage from "@/pages/sysadmin/company/sections/subscritptions-section";
+import SysAdminHomePage from "@/pages/sysadmin/home";
+import SysAdminSubscriptionPage from "@/pages/sysadmin/subscriptions";
+import SysAdminUsersPage from "@/pages/sysadmin/users";
 import Finance from "../pages/Home/Finance";
 import Project from "../pages/Home/Project";
-import NotFound from "../pages/Notfound";
 import Onboarding from "../pages/Onboarding/index";
 
 export const AuthRoutes: RouteObject[] = [
@@ -52,7 +57,13 @@ export const AuthRoutes: RouteObject[] = [
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: <AccountLayout />,
+    children: [
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
   },
 ];
 
@@ -64,10 +75,6 @@ export const HomeRoutes = {
       element: <Home />,
     },
     {
-      path: "admin",
-      element: <Admin />,
-    },
-    {
       path: "contact",
       element: <Contact />,
     },
@@ -75,28 +82,54 @@ export const HomeRoutes = {
       path: "task",
       element: <Task />,
     },
-    // {
-    //   path: "event",
-    //   element: <Event />,
-    // },
+    {
+      path: "sysadmin",
+      children: [
+        {
+          path: "users",
+          element: <SysAdminUsersPage />,
+        },
+        {
+          path: "home",
+          element: <SysAdminHomePage />,
+        },
+        {
+          path: "subscription",
+          element: <SysAdminSubscriptionPage />,
+        },
+        {
+          path: "companies/:companyId",
+          element: <SysAdminCompanyPage />,
+        },
+        {
+          path: "companies/:companyId/subscription",
+          element: <SysAdminCompanySubscriptionPage />,
+        },
+      ],
+    },
     {
       path: "finance",
       element: <Finance />,
     },
     {
-      element: <ProjectContextProvider />,
+      path: "projects",
+      element: <Project />,
+    },
+    {
+      path: "projects/create",
+      element: <CreateProjectTemplate />,
+    },
+    {
+      path: "projects/:id",
+      element: <ProjectDetailsPageWrapper />,
+    },
+
+    {
+      element: <ProtectedRoute allowedRoles={["ADMIN"]} />,
       children: [
         {
-          path: "projects",
-          element: <Project />,
-        },
-        {
-          path: "projects/create",
-          element: <CreateProjectTemplate />,
-        },
-        {
-          path: "projects/:id",
-          element: <ProjectDetailsPageWrapper />,
+          path: "admin",
+          element: <Admin />,
         },
       ],
     },

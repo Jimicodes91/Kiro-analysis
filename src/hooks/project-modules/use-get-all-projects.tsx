@@ -1,5 +1,5 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
-import { ENDPOINTS, ProjectStatus, QUERYKEYS } from "@/lib/constants";
+import { ENDPOINTS, ProjectStatusDict, QUERYKEYS } from "@/lib/constants";
 import { ProjectDetails } from "@/types/api.types";
 
 export interface ProjectListResponse {
@@ -8,7 +8,10 @@ export interface ProjectListResponse {
   data: ProjectDetails[];
 }
 
-const useGetAllProjects = (projectTypeId?: string, status?: ProjectStatus) => {
+const useGetAllProjects = (
+  projectTypeId?: string,
+  status?: ProjectStatusDict | "all"
+) => {
   const statusKey = status ?? "";
   const projectTypeIdKey = projectTypeId ?? "";
   return useQueryActionHook<ProjectListResponse>({

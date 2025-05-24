@@ -9,13 +9,13 @@ export interface ContactListResponse {
   data: ContactData;
 }
 
-const useGetCompanyContacts = (page?: number, pageSize?: number) => {
+const useGetCompanyContacts = (page?: number, pageSize?: number, search?: string) => {
   const session = getUserSession();
   const companyId = session?.company_id ?? "";
   return useQueryActionHook<ContactListResponse>({
     method: "get",
-    endpoint: `${ENDPOINTS.GET_COMPANY_CONTACTS}/${companyId}${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
-    queryKey: [QUERYKEYS.GET_COMPANY_CONTACTS, `${page}`, `${pageSize}`],
+    endpoint: `${ENDPOINTS.GET_COMPANY_CONTACTS}/${companyId}${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}${search ? `&search=${search}` : ""}`,
+    queryKey: [QUERYKEYS.GET_COMPANY_CONTACTS, `${page}`, `${pageSize}`, `${search}`],
   });
 };
 

@@ -311,7 +311,7 @@ export interface ProjectType {
 }
 export interface ProjectFormData {
   end_date: string;
-  pipeline: string;
+  journey: string;
   post_code: string;
   start_date: string;
   description: string;
@@ -396,20 +396,121 @@ export interface ContactData {
 }
 
 export interface FinanceDetails {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
+  amount_paid: string;
   client_name: string;
+  created_at: string;
+  deleted_at: string | null;
+  has_paid: number; // likely 0 or 1 as number
+  id: string;
+  next_payment_due_date: string;
+  organization_id: string;
+  outstanding_balance: string;
+  payment_date: string | null;
+  payment_proof_url: string | null;
+  payment_status: string | null;
   project_title: string;
   total_project_cost: string;
-  amount_paid: string;
-  outstanding_balance: string;
-  next_payment_due_date: string;
-  payment_status: string | null;
-  organization_id: string;
+  updated_at: string;
 }
 export interface FinanceData {
   org_finance: FinanceDetails[];
   pagination: Pagination;
+}
+
+export interface CompanyDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  industry_type: string;
+  size: string;
+  country: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  admin_id: string;
+  consultant_id: string;
+  client_id: string;
+  is_active: number;
+  subscription_status: string;
+  subscription_expiry_date: string;
+  project_id: string;
+  client_users: string;
+  consultant_users: string;
+}
+
+export interface Feature {
+  id: string;
+  name: string;
+  enabled: boolean;
+  description: string;
+}
+
+export interface SubscriptionPlan {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  display_name: string;
+  price: string;
+  price_per_seat: number;
+  currency: string;
+  features: Feature[];
+  is_active: number;
+}
+interface Progress {
+  days_to_completion: number;
+  percentage_complete: number;
+}
+
+interface RecentProject {
+  id: string;
+  name: string;
+  status: string;
+  start_date: string;
+  expected_end_date: string;
+  milestone_id: string;
+  milestone_name: string;
+  progress: Progress;
+  company: string;
+}
+
+interface TopPipeline {
+  id: string;
+  name: string;
+  project_count: number;
+  active_project_count: number;
+  completion_days: number;
+}
+
+interface TopClient {
+  client_id: string;
+  client_name: string;
+  company_name: string;
+  project_count: number;
+  active_project_count: number;
+}
+
+interface ProjectReport {
+  total: number;
+  completed: number;
+  in_progress: number;
+  current_month_count: number;
+  last_month_count: number;
+  percentage_increase: number;
+}
+
+interface TaskReport {
+  total: number;
+  completed: number;
+  in_progress: number;
+  overdue: number;
+}
+
+export interface DashboardData {
+  project_report: ProjectReport;
+  task_report: TaskReport;
+  recent_projects: RecentProject[];
+  top_pipeline: TopPipeline[];
+  top_clients: TopClient[];
 }

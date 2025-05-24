@@ -1,18 +1,21 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
-import { UserDetails } from "@/types/api.types";
+import { Pagination, UserDetails } from "@/types/api.types";
 
 export interface IUserList {
   success: boolean;
   message: string;
-  data: UserDetails[];
+  data: {
+    data: UserDetails[];
+    pagination: Pagination;
+  };
 }
 
-const useGetAllUsers = () => {
+const useGetAllUsers = (page?: number, pageSize?: number, search?: string) => {
   return useQueryActionHook<IUserList>({
     method: "get",
-    endpoint: ENDPOINTS.GET_ALL_USERS,
-    queryKey: [QUERYKEYS.GET_ALL_USERS],
+    endpoint: `${ENDPOINTS.GET_ALL_USERS}${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}${search ? `&search=${search}` : ""}`,
+    queryKey: [QUERYKEYS.GET_ALL_USERS, `${page}`, `${pageSize}`, `${search}`],
   });
 };
 
