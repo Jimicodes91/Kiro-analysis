@@ -443,6 +443,7 @@ export interface CompanyDetails {
   project_id: string;
   client_users: string;
   consultant_users: string;
+  active_users_count: number;
 }
 
 export interface Feature {
