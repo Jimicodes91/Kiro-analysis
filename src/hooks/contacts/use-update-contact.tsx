@@ -20,7 +20,7 @@ const useUpdateContact = (contactId: string) => {
     endpoint: ENDPOINTS.UPDATE_CONTACT(contactId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_ALL_CONTACTS],
+        queryKey: [QUERYKEYS.GET_COMPANY_CONTACTS],
       });
     },
   });

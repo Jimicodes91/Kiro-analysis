@@ -51,7 +51,6 @@ const UsersTable = ({ givenCompanyId }: { givenCompanyId?: string }) => {
               <TableHead>Currency</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Toggle Status</TableHead>
-              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           {renderTableBody()}

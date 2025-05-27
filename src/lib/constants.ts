@@ -337,6 +337,8 @@ export const ENDPOINTS = {
   CREATE_PLAN: "billing/plans",
   UPDATE_PLAN: (planType: string) => `billing/plans/${planType}`,
   DELETE_PLAN: (planType: string) => `billing/plans/${planType}`,
+  GET_COMPANY_SUBSCRIPTION_PLAN: (companyId: string) =>
+    `subscription/${companyId}/subscription`,
 };
 
 // for GET requests
@@ -431,6 +433,7 @@ export const QUERYKEYS = {
   // Subscription
   GET_ALL_PLANS: "GET_ALL_PLANS",
   GET_PLAN: "GET_PLAN",
+  GET_COMPANY_SUBSCRIPTION_PLAN: "GET_COMPANY_SUBSCRIPTION_PLAN",
 };
 
 export const PAGES = {
