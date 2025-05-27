@@ -43,11 +43,6 @@ const errorFormatter = (data: {
     });
     return message;
   }
-  if (typeof data.data === "string") {
-    let message = data?.message;
-    message += `\n\t\n [${data.data}]`;
-    return message;
-  }
 
   if (data.message) return data.message;
   return "Server error";
