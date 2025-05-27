@@ -50,7 +50,7 @@ const errorFormatter = (data: {
   }
 
   if (data.message) return data.message;
-  return "Another error";
+  return "Server error";
 };
 
 function useCustomMutation<P = Record<string, unknown>, T = Record<string, unknown>>(

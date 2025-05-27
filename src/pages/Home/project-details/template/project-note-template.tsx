@@ -3,7 +3,13 @@ import { compareAsc, parseISO } from "date-fns";
 import NoteCard from "../components/cards/note-card";
 import CustomEditor from "../components/editor";
 
-function ProjectNoteSection({ projectId }: { projectId: string }) {
+function ProjectNoteSection({
+  projectId,
+  mode = "edit",
+}: {
+  projectId: string;
+  mode?: "readonly" | "edit";
+}) {
   const projectNotes = useGetAllProjectNotes(projectId);
 
   const renderBody = () => {
@@ -47,7 +53,7 @@ function ProjectNoteSection({ projectId }: { projectId: string }) {
   return (
     <>
       <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
-        <CustomEditor projectId={projectId} />
+        {mode === "edit" && <CustomEditor projectId={projectId} />}
         <div>{renderBody()}</div>
       </div>
     </>
