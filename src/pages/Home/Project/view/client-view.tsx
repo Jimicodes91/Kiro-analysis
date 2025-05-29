@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,22 +8,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useGetClientProjects from "@/hooks/project-modules/use-get-client-projects";
-import { PAGES, projectStatusList } from "@/lib/constants";
+import { projectStatusList } from "@/lib/constants";
 import { getFormattedText } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import { LuPlus } from "react-icons/lu";
-import { useNavigate } from "react-router-dom";
 import { ClientProjectCard } from "../../project-details/components/project-card";
 import { useProjectContext } from "../context/project-context";
 
 const ClientProjectView = () => {
-  const navigate = useNavigate();
   const [, setSearchQuery] = useState("");
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
+
   const { changeStatus, status } = useProjectContext();
   const user = getUserSession();
   const allProjects = useGetClientProjects(user?.id ?? "", status);
@@ -90,14 +87,6 @@ const ClientProjectView = () => {
                 }}
               />
             </div>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Button
-              onClick={() => navigate(PAGES.PROJECT_CREATE_PAGE)}
-              leftIcon={<LuPlus fontSize={10} />}
-            >
-              Add project
-            </Button>
           </div>
         </div>
         <div className="border-[1px] border-brand-border rounded-lg mt-4 p-4 space-y-6 min-h-[calc(100vh-200px)]">

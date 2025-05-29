@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { z } from "zod";
 
 export const addUserSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -39,4 +40,21 @@ export const addStageSchema = yup.object().shape({
     .string()
     .required("Duration is required")
     .min(1, `Duration must be at least 1`),
+});
+
+export const addCompanySubscriptionSchema = z.object({
+  start_date: z.date({
+    message: "Start date is required",
+  }),
+  end_date: z.date({
+    message: "End date is required",
+  }),
+  plan_id: z
+    .string({
+      required_error: "Plan is required",
+    })
+    .min(1, "Plan is required"),
+  seats: z.string({
+    required_error: "Seats is required",
+  }),
 });

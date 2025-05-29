@@ -59,13 +59,7 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
     {
       title: "Home",
       icon: Icons.dashboard,
-      path: "/sysadmin/home",
-      exact: true,
-    },
-    {
-      title: "Company",
-      icon: Icons.company,
-      path: "/sysadmin/company",
+      path: "/sysadmin",
     },
     {
       title: "Users",
@@ -150,7 +144,7 @@ export const ENDPOINTS = {
   GET_INACTIVE_ORGANIZATIONS: "admin/inactive-organization",
   GET_ALL_USERS: `admin/all`,
   GET_ACTIVE_USERS: `admin/active-users`,
-  GET_ALL_ADMINS: `admin/all-admin`,
+  GET_ALL_SYSADMINS: `admin/all-sysadmins`,
 
   // Company Endpoints
   CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
@@ -203,7 +197,7 @@ export const ENDPOINTS = {
   GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatusDict | "all") =>
     `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
   GET_CLIENT_PROJECTS: (clientId?: string, status?: ProjectStatusDict | "all") =>
-    `projects${clientId ? `?client_id=${clientId}` : ""}${status ? `?status=${status}` : ""}`,
+    `projects${clientId ? `?client_id=${clientId}` : ""}${status && status !== "all" ? `?status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_MILESTONE: (projectId: string) => `projects/${projectId}`,
@@ -354,7 +348,7 @@ export const QUERYKEYS = {
   GET_INACTIVE_ORGANIZATIONS: "GET_INACTIVE_ORGANIZATIONS",
   GET_ALL_USERS: "GET_ALL_USERS",
   GET_ACTIVE_USERS: "GET_ACTIVE_USERS",
-  GET_ALL_ADMINS: "GET_ALL_ADMINS",
+  GET_ALL_SYSADMINS: "GET_ALL_SYSADMINS",
 
   // Company Admin Endpoints
   GET_COMPANY_USERS: "GET_COMPANY_USERS",
@@ -446,6 +440,9 @@ export const PAGES = {
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
   PROJECT_CREATE_PAGE: "/projects/create",
+
+  // Sysadmin Page
+  SYSADMIN_HOME_PAGE: "/sysadmin",
 };
 
 export const industryList = [

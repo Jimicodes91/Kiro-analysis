@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import useGetDashboardDetails from "@/hooks/admin/use-get-dashboard-details";
 // import { ArrowUpRight } from "lucide-react";
 
 interface CardDetails {
@@ -8,7 +9,6 @@ interface CardDetails {
 }
 
 interface ProjectReportProps {
-  cards: CardDetails[];
   onViewMore?: () => void;
 }
 const ProjectCard: React.FC<{ cardDetails: CardDetails }> = ({ cardDetails }) => {
@@ -34,14 +34,48 @@ const ProjectCard: React.FC<{ cardDetails: CardDetails }> = ({ cardDetails }) =>
   );
 };
 
-const ProjectReport: React.FC<ProjectReportProps> = ({ cards }) => {
+const ProjectReport: React.FC<ProjectReportProps> = () => {
+  const dashboardDetails = useGetDashboardDetails();
+
+  const renderTableBody = () => {
+    if (dashboardDetails.isPending)
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4 animate-pulse">
+          <div className="h-[156px] w-full rounded-lg bg-slate-200"></div>
+          <div className="h-[156px] w-full rounded-lg bg-slate-200"></div>
+          <div className="h-[156px] w-full rounded-lg bg-slate-200"></div>
+        </div>
+      );
+
+    if (dashboardDetails?.isError) return <div></div>;
+
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+        <ProjectCard
+          cardDetails={{
+            title: "Total Projects",
+            count: dashboardDetails?.value?.data?.totalProjects ?? 0,
+          }}
+        />
+        <ProjectCard
+          cardDetails={{
+            title: "Total Companies",
+            count: dashboardDetails?.value?.data?.totalOrganizations ?? 0,
+          }}
+        />
+        <ProjectCard
+          cardDetails={{
+            title: "Total subscriptions",
+            count: dashboardDetails?.value?.data?.totalActiveSubscriptions ?? 0,
+          }}
+        />
+      </div>
+    );
+  };
+
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-        {cards.map((card, index) => (
-          <ProjectCard key={index} cardDetails={card} />
-        ))}
-      </div>
+      <>{renderTableBody()}</>
     </div>
   );
 };

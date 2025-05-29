@@ -2,9 +2,11 @@ import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
 import { useQueryClient } from "@tanstack/react-query";
 
+export type ProjectMemberType = "internal" | "client";
 export interface AddProjectMember {
   user_id: string;
   is_visible_to_client: boolean;
+  member_type: ProjectMemberType;
 }
 
 const useAddProjectMember = (projectId: string) => {

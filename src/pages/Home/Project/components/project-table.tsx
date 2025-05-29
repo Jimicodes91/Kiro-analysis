@@ -48,8 +48,7 @@ const ProjectTable = ({ projectData }: ProjectTableProps) => {
               <TableHead>Expected end date</TableHead>
               <TableHead>Completed date</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Project team</TableHead>
-              <TableHead>Client team</TableHead>
+              <TableHead>Project client(s)</TableHead>
             </TableRow>
           </TableHeader>
           {renderTableBody()}

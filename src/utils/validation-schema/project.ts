@@ -208,7 +208,6 @@ export const addTeamSchema = z.object({
   user_id: z.string({
     message: "Document name is required",
   }),
-  is_visible_to_client: z.boolean().default(false),
 });
 
 export const addProjectEventSchema = z.object({

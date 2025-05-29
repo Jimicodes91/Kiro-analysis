@@ -16,6 +16,7 @@ import { IFormField } from "@/hooks/project-modules/project-forms/use-get-projec
 import useCreateProject from "@/hooks/project-modules/use-create-project";
 import { PAGES } from "@/lib/constants";
 import { cn, convertDatesToYMD, getSelectableDate } from "@/lib/utils";
+import { useProjectContext } from "@/pages/Home/Project/context/project-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -28,6 +29,7 @@ import SelectComponent from "./lol";
 export default function CreateProjectDynamicForm({ fields }: { fields: IFormField[] }) {
   const navigate = useNavigate();
   const createProject = useCreateProject();
+  const { changeActiveProjectType } = useProjectContext();
 
   const fieldSchema = fields.reduce((acc, field) => {
     const key = field.slug;
@@ -88,6 +90,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
     createProject
       .mutateAsync(convertDatesToYMD(values))
       .then(() => {
+        if ("journey" in values) changeActiveProjectType(values?.journey as string);
         form.reset();
         navigate(PAGES.PROJECT_PAGE);
       })

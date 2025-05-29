@@ -61,7 +61,9 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Client</h3>
-                <p className="text-sm text-gray-900">Uchenna Okenwa</p>
+                <p className="text-sm text-gray-900">
+                  {clientList?.map((client) => client.name)}
+                </p>
               </div>
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Project Type</h3>
@@ -70,19 +72,6 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
                 </p>
               </div>
 
-              <div>
-                <h3 className="text-sm text-brand-fade font-[500]">Assignee</h3>
-                <div className="flex -space-x-2">
-                  {["Johnbosco", "Nene", "Temi"]?.map((member) => (
-                    <div
-                      key={member}
-                      className="inline-flex items-center justify-center mt-2 w-8 h-8 rounded-full bg-gray-200 text-gray-700 text-sm font-medium ring-2 ring-white"
-                    >
-                      {getInitials(member)}
-                    </div>
-                  ))}
-                </div>
-              </div>
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Phase</h3>
                 <p className="text-sm text-gray-900">{projectDetails?.milestone?.name}</p>

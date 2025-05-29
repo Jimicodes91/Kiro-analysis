@@ -83,6 +83,7 @@ export const HomeRoutes = {
       element: <Task />,
     },
     {
+      element: <ProtectedRoute allowedRoles={["SYSADMIN"]} />,
       path: "sysadmin",
       children: [
         {
@@ -90,7 +91,7 @@ export const HomeRoutes = {
           element: <SysAdminUsersPage />,
         },
         {
-          path: "home",
+          path: "",
           element: <SysAdminHomePage />,
         },
         {
@@ -98,11 +99,11 @@ export const HomeRoutes = {
           element: <SysAdminSubscriptionPage />,
         },
         {
-          path: "companies/:companyId",
+          path: ":companyId/companies",
           element: <SysAdminCompanyPage />,
         },
         {
-          path: "companies/:companyId/subscription",
+          path: ":companyId/companies/subscription",
           element: <SysAdminCompanySubscriptionPage />,
         },
       ],

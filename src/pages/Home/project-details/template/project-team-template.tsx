@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import ViewToggle from "@/components/ui/view-toggle";
+import { ProjectMemberType } from "@/hooks/project-modules/project-members/use-add-project-member";
 import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
 import useDisclosure from "@/hooks/use-disclosure";
 import { AnimatePresence } from "framer-motion";
@@ -10,8 +11,8 @@ import AddTeamModal from "../components/modal/add-team-member-modal";
 
 function ProjectTeamSection({ projectId }: { projectId: string }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [activeTab, setActiveTab] = React.useState("1");
-  const projectMembers = useGetProjectMembers(projectId);
+  const [activeTab, setActiveTab] = React.useState<ProjectMemberType>("internal");
+  const projectMembers = useGetProjectMembers(projectId, activeTab);
 
   const renderBody = () => {
     if (projectMembers.isPending)
@@ -53,15 +54,16 @@ function ProjectTeamSection({ projectId }: { projectId: string }) {
 
   return (
     <>
-      <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
+      <div className="space-y-7 animate-in fade-in-0 duration-700 ease-in-out">
         <div className="flex items-center justify-between">
           <div className="w-fit">
             <ViewToggle
               activeTab={activeTab}
+              // @ts-expect-error Something
               setActiveTab={setActiveTab}
               options={[
-                { value: "1", label: "Client" },
-                { value: "2", label: "Internal" },
+                { value: "client" as const, label: "Client" },
+                { value: "internal" as const, label: "Internal" },
               ]}
             />
           </div>
@@ -75,7 +77,12 @@ function ProjectTeamSection({ projectId }: { projectId: string }) {
       </div>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && (
-          <AddTeamModal isOpen={isOpen} projectId={projectId} onClose={onClose} />
+          <AddTeamModal
+            memberType={activeTab}
+            isOpen={isOpen}
+            projectId={projectId}
+            onClose={onClose}
+          />
         )}
       </AnimatePresence>
     </>

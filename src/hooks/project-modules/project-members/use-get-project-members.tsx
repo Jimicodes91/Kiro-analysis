@@ -1,6 +1,7 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
 import { Member } from "@/types/api.types";
+import { ProjectMemberType } from "./use-add-project-member";
 
 export interface MemberListResponse {
   success: boolean;
@@ -8,11 +9,11 @@ export interface MemberListResponse {
   data: Member[];
 }
 
-const useGetProjectMembers = (projectId: string) => {
+const useGetProjectMembers = (projectId: string, memberType: ProjectMemberType) => {
   return useQueryActionHook<MemberListResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_PROJECT_MEMBERS(projectId),
-    queryKey: [QUERYKEYS.GET_PROJECT_MEMBERS, projectId],
+    endpoint: `${ENDPOINTS.GET_PROJECT_MEMBERS(projectId)}${memberType ? `?member_type=${memberType}` : ""}`,
+    queryKey: [QUERYKEYS.GET_PROJECT_MEMBERS, projectId, `${memberType}`],
   });
 };
 

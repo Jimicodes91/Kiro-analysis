@@ -109,7 +109,7 @@ const SysAdminCompanyPage: React.FC = () => {
                       Cancel
                     </Button>
                     <Button size="sm">
-                      <Link to={`/sysadmin/companies/${companyDetails?.id}/subscription`}>
+                      <Link to={`/sysadmin/${companyDetails?.id}/companies/subscription`}>
                         Upgrade
                       </Link>
                     </Button>

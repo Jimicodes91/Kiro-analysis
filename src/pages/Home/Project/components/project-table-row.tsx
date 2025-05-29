@@ -38,18 +38,6 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
             ))}
           </div>
         </TableCell>
-        <TableCell>
-          <div className="flex -space-x-2">
-            {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
-              <div
-                key={index}
-                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-              >
-                {getInitials(member)}
-              </div>
-            ))}
-          </div>
-        </TableCell>
       </TableRow>
 
       {/* Modal for project details - same as in ProjectCard */}
