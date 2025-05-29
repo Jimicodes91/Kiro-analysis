@@ -9,12 +9,14 @@ import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import getInitials, { getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
+import { useNavigate } from "react-router-dom";
 
 export function ClientProjectCard({
   projectDetails,
 }: {
   projectDetails: ProjectDetails;
 }) {
+  const navigate = useNavigate();
   return (
     <div>
       <Accordion
@@ -71,23 +73,13 @@ export function ClientProjectCard({
                         ))}
                       </div>
                     </div>
-                    <div className="h-9 pl-[2px] bg-[#0000001A]"></div>
-                    <div className="flex items-center gap-2">
-                      <p>Project team</p>
-                      <div className="flex -space-x-2">
-                        {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
-                          <div
-                            key={index}
-                            className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-                          >
-                            {getInitials(member)}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
                   </div>
                   <div>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/projects/${projectDetails.id}`)}
+                    >
                       View details
                     </Button>
                   </div>

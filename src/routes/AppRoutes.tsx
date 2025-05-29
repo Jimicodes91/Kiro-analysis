@@ -19,6 +19,7 @@ import ProtectedRoute from "@/components/ui/protected-route";
 import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
 import NotFound from "@/pages/Notfound";
+import ProfilePage from "@/pages/profile";
 import SysAdminCompanyPage from "@/pages/sysadmin/company";
 import SysAdminCompanySubscriptionPage from "@/pages/sysadmin/company/sections/subscritptions-section";
 import SysAdminHomePage from "@/pages/sysadmin/home";
@@ -70,18 +71,33 @@ export const AuthRoutes: RouteObject[] = [
 export const HomeRoutes = {
   element: <AccountLayout />,
   children: [
+    // Free role route accessible by all except SYSADMIN
     {
-      path: "home",
-      element: <Home />,
+      path: "profile",
+      element: <ProfilePage />,
     },
+
+    // Accessible by only ADMIN and CONSULTANT
     {
-      path: "contact",
-      element: <Contact />,
+      element: <ProtectedRoute allowedRoles={["ADMIN", "CONSULTANT"]} />,
+      path: "",
+      children: [
+        {
+          path: "home",
+          element: <Home />,
+        },
+        {
+          path: "contact",
+          element: <Contact />,
+        },
+        {
+          path: "task",
+          element: <Task />,
+        },
+      ],
     },
-    {
-      path: "task",
-      element: <Task />,
-    },
+
+    // Accessible by only SYSADMIN
     {
       element: <ProtectedRoute allowedRoles={["SYSADMIN"]} />,
       path: "sysadmin",

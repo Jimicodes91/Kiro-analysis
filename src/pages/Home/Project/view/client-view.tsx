@@ -13,7 +13,7 @@ import { getFormattedText } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import { ClientProjectCard } from "../../project-details/components/project-card";
+import { ClientProjectCard } from "../../project-details/components/client-project-card";
 import { useProjectContext } from "../context/project-context";
 
 const ClientProjectView = () => {
@@ -56,9 +56,7 @@ const ClientProjectView = () => {
     if (allProjects?.value?.data?.length === 0)
       return (
         <div className="py-20 px-4 rounded-lg border flex justify-center border-brand-border bg-[#F8F8F8]">
-          <p className="text-sm text-brand-fade p-0 m-0">
-            No project currently assigned to you
-          </p>
+          <p className="text-sm text-brand-fade p-0 m-0">No project found</p>
         </div>
       );
 

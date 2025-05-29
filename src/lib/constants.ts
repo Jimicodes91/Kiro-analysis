@@ -45,7 +45,13 @@ const universalRoutes = [
 ];
 
 export const topNavData: Record<UserType, DashboardLinkType[]> = {
-  CLIENT: [...universalRoutes],
+  CLIENT: [
+    {
+      title: "Projects",
+      icon: Icons.project,
+      path: "/projects",
+    },
+  ],
   CONSULTANT: [...universalRoutes],
   ADMIN: [
     ...universalRoutes,
@@ -197,7 +203,7 @@ export const ENDPOINTS = {
   GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatusDict | "all") =>
     `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
   GET_CLIENT_PROJECTS: (clientId?: string, status?: ProjectStatusDict | "all") =>
-    `projects${clientId ? `?client_id=${clientId}` : ""}${status && status !== "all" ? `?status=${status}` : ""}`,
+    `projects${clientId ? `?client_id=${clientId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_MILESTONE: (projectId: string) => `projects/${projectId}`,
