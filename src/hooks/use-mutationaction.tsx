@@ -43,14 +43,9 @@ const errorFormatter = (data: {
     });
     return message;
   }
-  if (typeof data.data === "string") {
-    let message = data?.message;
-    message += `\n\t\n [${data.data}]`;
-    return message;
-  }
 
   if (data.message) return data.message;
-  return "Another error";
+  return "Server error";
 };
 
 function useCustomMutation<P = Record<string, unknown>, T = Record<string, unknown>>(

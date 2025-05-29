@@ -5,10 +5,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import getInitials, { getFormattedText, stringfyList } from "@/lib/utils";
+import getInitials, { getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 
 export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDetails }) {
+  const clientList = projectDetails?.form_fields?.find(
+    (item) => item.slug === "project_client"
+  )?.value as { name: string }[];
+
   return (
     <div>
       <Accordion collapsible type="single" className="w-full" defaultValue="item-1">
@@ -17,10 +21,17 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
           <AccordionContent>
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm text-brand-fade font-[500]">Client</h3>
-                <p className="text-sm text-gray-900">
-                  {stringfyList(projectDetails?.form_data?.project_client)}
-                </p>
+                <h3 className="text-sm text-brand-fade font-[500]">Project Client</h3>
+                <div className="flex items-center -space-x-2">
+                  {clientList?.map((item) => (
+                    <div
+                      key={item.name}
+                      className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
+                    >
+                      {getInitials(item.name)}
+                    </div>
+                  ))}
+                </div>
               </div>
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Company</h3>
@@ -42,13 +53,6 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
             </div>
           </AccordionContent>
         </AccordionItem>
-
-        {/* <AccordionItem value="item-3">
-        <AccordionTrigger>Is it animated?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It&apos;s animated by default, but you can disable it if you prefer.
-        </AccordionContent>
-      </AccordionItem> */}
       </Accordion>
       <Accordion collapsible type="single" defaultValue="item-2" className="w-full">
         <AccordionItem value="item-2">
@@ -69,9 +73,9 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Assignee</h3>
                 <div className="flex -space-x-2">
-                  {["Johnbosco", "Nene", "Temi"]?.map((member, index) => (
+                  {["Johnbosco", "Nene", "Temi"]?.map((member) => (
                     <div
-                      key={index}
+                      key={member}
                       className="inline-flex items-center justify-center mt-2 w-8 h-8 rounded-full bg-gray-200 text-gray-700 text-sm font-medium ring-2 ring-white"
                     >
                       {getInitials(member)}

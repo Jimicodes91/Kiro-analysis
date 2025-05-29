@@ -50,7 +50,7 @@ const CompleteInvite: React.FC = () => {
   if (completeRegistration.isSuccess && completeRegistration.data) {
     return (
       <VerificationCard
-        title="Reset link sent"
+        title="Invitation accepted successfully"
         description="Your account has been registered sucessfully, please login"
         buttonText="Back to login"
         onButtonClick={() => navigate(PAGES.LOGIN_PAGE)}

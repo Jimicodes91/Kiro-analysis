@@ -8,17 +8,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
-import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
-import useToggleCompanyUserStatus from "@/hooks/company-admin/use-toggle-comppany-user-status";
 import useDisclosure from "@/hooks/use-disclosure";
 import { CompanyDetails } from "@/types/api.types";
+import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
 function CompaniesTableRow({ company }: { company: CompanyDetails }) {
   const { onOpen } = useDisclosure();
 
-  const toggleUserStatus = useToggleCompanyUserStatus(company?.id ?? "");
+  // const toggleUserStatus = useToggleCompanyUserStatus(company?.id ?? "");
   return (
     <>
       <TableRow>
@@ -28,12 +27,7 @@ function CompaniesTableRow({ company }: { company: CompanyDetails }) {
         <TableCell className="capitalize">{company?.industry_type}</TableCell>
 
         <TableCell>
-          <Badge variant={company?.is_active ? "success" : "destructive"}>
-            <span>{company?.is_active ? "Active" : "Inactive"}</span>
-          </Badge>
-        </TableCell>
-        <TableCell>
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <Switch
               disabled={toggleUserStatus.isPending}
               id="airplane-mode"
@@ -43,10 +37,16 @@ function CompaniesTableRow({ company }: { company: CompanyDetails }) {
             {toggleUserStatus.isPending && (
               <Icons.spinner className="animate-spin h-4 w-4" />
             )}
-          </div>
+          </div> */}
+          {format(company?.created_at, "PPP")}
         </TableCell>
-        <TableCell className="capitalize">{company?.size}</TableCell>
 
+        <TableCell className="capitalize">{company?.active_users_count}</TableCell>
+        <TableCell>
+          <Badge variant={company?.is_active ? "success" : "destructive"}>
+            <span>{company?.is_active ? "Active" : "Inactive"}</span>
+          </Badge>
+        </TableCell>
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

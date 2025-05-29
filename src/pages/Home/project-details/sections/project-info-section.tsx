@@ -1,6 +1,6 @@
 import Heading from "@/components/ui/heading";
 import { ProjectDetails } from "@/types/api.types";
-import { ProjectSummary } from "../components/project-sumarry";
+import { ProjectSummary } from "../components/project-summary";
 
 const ProjectInfoSection = ({ projectDetails }: { projectDetails: ProjectDetails }) => {
   return (

@@ -50,10 +50,10 @@ const CompaniesTable = () => {
             <TableRow className="hover:bg-[#EAECEC] rounded-full border">
               <TableHead>Company name</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Industry Type</TableHead>
               <TableHead>Date created</TableHead>
-              <TableHead>Active user</TableHead>
+              <TableHead className="min-w-[100px]">Active user</TableHead>
+              <TableHead className="min-w-[100px]">Status</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>

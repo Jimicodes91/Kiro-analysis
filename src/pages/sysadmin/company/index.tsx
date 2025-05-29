@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import useGetCompanyDetails from "@/hooks/admin/use-get-company";
+import useGetCompanySubscription from "@/hooks/subscription/use-get-company-subscription-plan";
 import useDisclosure from "@/hooks/use-disclosure";
 import UsersTable from "@/pages/Home/Admin/user/user-table";
 import ProjectDetailSkeleton from "@/pages/Home/project-details/components/project-skeleton";
@@ -19,7 +20,7 @@ const SysAdminCompanyPage: React.FC = () => {
   const { companyId } = useParams<{ companyId: string }>();
   const company = useGetCompanyDetails(companyId ?? "");
   const companyDetails = company?.value?.data;
-
+  useGetCompanySubscription(companyId ?? "");
   if (company.isError && company.error) {
     return <p>Something went wrong</p>;
   }
@@ -40,7 +41,7 @@ const SysAdminCompanyPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white grid grid-cols-auth-layout flex-1 gap-x-5">
+        <div className="bg-white grid grid-cols-1 md:grid-cols-auth-layout flex-1 gap-x-5">
           <div className="p-4 min-h-full flex-1 h-max space-y-4 rounded-lg border border-brand-border">
             <div className="space-y-6">
               <Heading size="h5" className="capitalize">
@@ -74,11 +75,11 @@ const SysAdminCompanyPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="pt-0 h-full grid grid-cols-1 grid-rows-[auto_1fr] gap-4">
+          <div className="pt-4 md:pt-0 h-full grid grid-cols-1 grid-rows-[auto_1fr] gap-4">
             <div className="rounded-lg w-full p-4 border border-brand-border">
               <div className="space-y-6">
                 <Heading size="h5">Subscription plan</Heading>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center flex-wrap gap-4">
                   <div className="flex items-center gap-3  min-w-max md:min-w-[400px] justify-between">
                     <div className="space-y-1">
                       <h3 className="text-xs text-brand-light font-[500]">

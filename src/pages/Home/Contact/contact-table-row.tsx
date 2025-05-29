@@ -35,7 +35,7 @@ function ContactTableRow({ contact }: { contact: Contact }) {
     <>
       <TableRow>
         <TableCell>{contact?.name}</TableCell>
-        <TableCell>{contact?.email}</TableCell>
+        <TableCell className="lowercase">{contact?.email}</TableCell>
         <TableCell>{contact?.phone}</TableCell>
         <TableCell>{contact?.no_of_projects || 0}</TableCell>
         <TableCell>{contact?.active_projects || 0}</TableCell>
