@@ -126,7 +126,7 @@ export const addProjectTaskSchema = z.object({
       "application/msword",
     ],
     maxFiles
-  ),
+  ).optional(),
 });
 
 export const editProjectTaskSchema = z.object({

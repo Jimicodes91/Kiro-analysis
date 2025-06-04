@@ -66,6 +66,7 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       title: "Home",
       icon: Icons.dashboard,
       path: "/sysadmin",
+      exact: true,
     },
     {
       title: "Users",
