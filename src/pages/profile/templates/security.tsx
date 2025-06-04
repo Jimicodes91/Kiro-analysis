@@ -30,7 +30,7 @@ const ProfileSecurityTemplate: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col animate-in fade-in-0 duration-700 ease-in-out">
+    <div className="flex flex-col animate-in py-3 fade-in-0 duration-700 ease-in-out">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField

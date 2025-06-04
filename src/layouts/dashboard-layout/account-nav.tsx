@@ -39,7 +39,7 @@ function AccountNav({ links, isCollapsed, className }: AccountNavProps) {
                         variant: "ghost",
                       }),
                       !isActive(link) ? "text-[#425563]" : "font-bold",
-                      "justify-start h-[20px] rounded-none w-full relative text-[0.9rem] min-w-full hover:bg-secondary"
+                      "justify-start h-[20px] py-5 rounded-none w-full relative text-[0.9rem] min-w-full hover:bg-secondary"
                     )}
                   >
                     <link.icon className="h-10 w-10 text-lg font-bold" />

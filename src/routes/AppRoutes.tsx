@@ -20,6 +20,9 @@ import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
 import NotFound from "@/pages/Notfound";
 import ProfilePage from "@/pages/profile";
+import NotificationSection from "@/pages/profile/templates/notification";
+import EditProfileDetails from "@/pages/profile/templates/profile-details";
+import ProfileSecurityTemplate from "@/pages/profile/templates/security";
 import SysAdminCompanyPage from "@/pages/sysadmin/company";
 import SysAdminCompanySubscriptionPage from "@/pages/sysadmin/company/sections/subscritptions-section";
 import SysAdminHomePage from "@/pages/sysadmin/home";
@@ -73,8 +76,27 @@ export const HomeRoutes = {
   children: [
     // Free role route accessible by all except SYSADMIN
     {
-      path: "profile",
+      path: "profile-setting",
       element: <ProfilePage />,
+    },
+    // Accessible by only ADMIN and CONSULTANT
+    {
+      element: <ProfilePage />,
+      path: "profile-setting",
+      children: [
+        {
+          path: "",
+          element: <EditProfileDetails />,
+        },
+        {
+          path: "notification",
+          element: <NotificationSection />,
+        },
+        {
+          path: "security",
+          element: <ProfileSecurityTemplate />,
+        },
+      ],
     },
 
     // Accessible by only ADMIN and CONSULTANT

@@ -99,9 +99,7 @@ const EditProfileDetails: React.FC = () => {
             )}
           />
           <div className="space-y-2">
-            <Button type="submit" fullWidth={true}>
-              Save Changes
-            </Button>
+            <Button type="submit">Save Changes</Button>
           </div>
         </form>
       </Form>
