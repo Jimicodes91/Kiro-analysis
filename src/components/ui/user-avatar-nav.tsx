@@ -9,7 +9,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import getInitials from "@/lib/utils";
+import getInitials, { truncateMiddleWords } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { User } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -41,7 +41,7 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
               <User />
             </AvatarFallback>
           </Avatar>
-          <p>{user?.name}</p>
+          <p>{truncateMiddleWords(user?.name ?? "", 8, 8)}</p>
           <DropdownMenuLabel className="font-normal">
             <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
           </DropdownMenuLabel>
