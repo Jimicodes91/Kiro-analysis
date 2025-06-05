@@ -37,7 +37,7 @@ const Login: React.FC = () => {
         if (response.data.data.user.company_id) {
           const userRole = response.data.data.user.role;
 
-          const isSysAdmin = userRole === "SYSADMIN" && callback?.includes("sysadmin");
+          const isSysAdmin = userRole === "SUPER_ADMIN" && callback?.includes("sysadmin");
 
           if (isSysAdmin) {
             navigate(

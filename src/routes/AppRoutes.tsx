@@ -121,7 +121,7 @@ export const HomeRoutes = {
 
     // Accessible by only SYSADMIN
     {
-      element: <ProtectedRoute allowedRoles={["SYSADMIN"]} />,
+      element: <ProtectedRoute allowedRoles={["SUPER_ADMIN"]} />,
       path: "sysadmin",
       children: [
         {

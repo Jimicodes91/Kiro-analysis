@@ -1,7 +1,7 @@
 import { IconProps, Icons } from "@/components/ui/icons";
 import { JSX } from "react";
 
-export type UserType = "ADMIN" | "SYSADMIN" | "CLIENT" | "CONSULTANT";
+export type UserType = "ADMIN" | "SUPER_ADMIN" | "CLIENT" | "CONSULTANT";
 
 export type DashboardLinkType = {
   title: string;
@@ -61,7 +61,7 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       path: "/admin",
     },
   ],
-  SYSADMIN: [
+  SUPER_ADMIN: [
     {
       title: "Home",
       icon: Icons.dashboard,
