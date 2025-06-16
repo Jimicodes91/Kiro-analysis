@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import useUpdateProfile from "@/hooks/user/use-update-profile";
 import { getUserSession, updateUserSession } from "@/services/api.service";
@@ -17,6 +18,9 @@ import PhoneInputWithCountrySelect, {
   isValidPhoneNumber,
 } from "react-phone-number-input";
 import * as yup from "yup";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User } from "lucide-react";
 
 const editProfileSchema = yup.object().shape({
   name: yup.string().min(3, "Name must be at least 3 characters").optional(),
@@ -63,6 +67,20 @@ const EditProfileDetails: React.FC = () => {
 
   return (
     <div className=" flex flex-col space-y-6 animate-in fade-in-0 duration-700 ease-in-out">
+      <div className="flex items-center gap-2">
+        <div>
+          <Avatar className="h-16 w-16">
+            <AvatarImage src={"/"} alt="@shadcn" />
+            <AvatarFallback className="bg-[#E4E6E7] text-primary">
+              <User />
+            </AvatarFallback>
+          </Avatar>
+        </div>
+        <div>
+          <Heading size="h6">{user?.name}</Heading>
+          <p className="text-xs">{user?.email}</p>
+        </div>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

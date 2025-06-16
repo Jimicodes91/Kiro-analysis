@@ -23,7 +23,7 @@ const Finance: React.FC = () => {
   };
 
   const session = getUserSession();
-  const billingsResponse = useGetAllFinanceRecords(session?.company_id ?? "");
+  const billingsResponse = useGetAllFinanceRecords(session?.company_id ?? "", 1, 10);
   const billings = Array.isArray(billingsResponse?.data?.data?.data)
     ? billingsResponse.data.data.data
     : [];

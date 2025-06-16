@@ -32,7 +32,7 @@ function ProfilePageWrapper() {
 
         <div className="grid gap-4 grid-cols-[200px_1fr]">
           <div className="bg-[#F7F7F7B2] w-full h-fit py-2 rounded-lg border-[#0000001A] border">
-            <AccountNav isCollapsed={false} links={links} />
+            <AccountNav isCollapsed={false} links={links} layoutId={"profile-layout"} />
             <Separator />
             <div className="py-1 flex items-center">
               <Button leftIcon={<Trash />} className="text-[#FB002B]" variant="link">

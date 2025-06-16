@@ -14,9 +14,15 @@ interface AccountNavProps {
   isCollapsed: boolean;
   className?: string;
   links: DashboardLinkType[];
+  layoutId?: string;
 }
 
-function AccountNav({ links, isCollapsed, className }: AccountNavProps) {
+function AccountNav({
+  links,
+  isCollapsed,
+  className,
+  layoutId = `account-layout`,
+}: AccountNavProps) {
   const { pathname } = useLocation();
   const isActive = (link: AccountNavProps["links"][0]) =>
     link.exact ? pathname === link.path : pathname?.includes(link.path);
@@ -62,7 +68,7 @@ function AccountNav({ links, isCollapsed, className }: AccountNavProps) {
                     {isActive(link) ? (
                       <motion.div
                         className="absolute top-0 right-0 rounded-none h-full w-[3px] bg-primary"
-                        layoutId={`underline-line`}
+                        layoutId={layoutId}
                         id="underline"
                       />
                     ) : null}
