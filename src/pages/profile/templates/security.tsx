@@ -8,8 +8,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import useUpdatePassword from "@/hooks/auth/use-update-password";
 import useDisclosure from "@/hooks/use-disclosure";
 import { ButtonToggler } from "@/pages/Auth/CompleteInvite";
+import { getUserSession } from "@/services/api.service";
 import { changePasswordSchema } from "@/utils/validation-schema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
@@ -20,13 +22,27 @@ const ProfileSecurityTemplate: React.FC = () => {
   const { isOpen, onToggle } = useDisclosure();
   const { isOpen: isPasswordOpen, onToggle: onToggleShow } = useDisclosure();
   const { isOpen: isOldPasswordOpen, onToggle: onToggleOldPassword } = useDisclosure();
+  const user = getUserSession();
 
+  const updatePassword = useUpdatePassword();
   const form = useForm({
     resolver: yupResolver(changePasswordSchema),
   });
+  const { isValid } = form.formState;
 
   const onSubmit = (data: InferType<typeof changePasswordSchema>) => {
-    console.log(data);
+    updatePassword
+      .mutateAsync({
+        currentPassword: data.oldPassword,
+        newPassword: data.newPassword,
+        userId: user?.id ?? "",
+      })
+      .then(() => {
+        form.setValue("oldPassword", "");
+        form.setValue("newPassword", "");
+        form.setValue("confirmNewPassword", "");
+      })
+      .catch(console.error);
   };
 
   return (
@@ -35,7 +51,7 @@ const ProfileSecurityTemplate: React.FC = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="newPassword"
+            name="oldPassword"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Old Password</FormLabel>
@@ -97,7 +113,13 @@ const ProfileSecurityTemplate: React.FC = () => {
             )}
           />
           <div className="space-y-2">
-            <Button type="submit">Save Changes</Button>
+            <Button
+              type="submit"
+              isLoading={updatePassword.isPending}
+              disabled={!isValid}
+            >
+              Save Changes
+            </Button>
           </div>
         </form>
       </Form>

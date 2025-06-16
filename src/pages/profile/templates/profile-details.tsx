@@ -8,6 +8,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import useUpdateProfile from "@/hooks/user/use-update-profile";
+import { getUserSession, updateUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -17,10 +19,11 @@ import PhoneInputWithCountrySelect, {
 import * as yup from "yup";
 
 const editProfileSchema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
+  name: yup.string().min(3, "Name must be at least 3 characters").optional(),
+  email: yup.string().optional().email("Invalid email").required("Email is required"),
   phone: yup
     .string()
+    .optional()
     .required("Phone number is required")
     .test("is-valid-phone", "Invalid phone number", (value) => {
       return value ? isValidPhoneNumber(value) : false;
@@ -28,12 +31,34 @@ const editProfileSchema = yup.object().shape({
 });
 
 const EditProfileDetails: React.FC = () => {
+  const user = getUserSession();
+  const updateProfile = useUpdateProfile(user?.id ?? "");
+
   const form = useForm({
     resolver: yupResolver(editProfileSchema),
+    mode: "onChange",
+    defaultValues: {
+      name: user?.name || "",
+      email: user?.email || "",
+      phone: user?.phone_number || "",
+    },
   });
 
+  const { isDirty } = form.formState;
+
   const onSubmit = async (data: yup.InferType<typeof editProfileSchema>) => {
-    console.log(data);
+    updateProfile
+      .mutateAsync({
+        name: data.name,
+        phone_number: data.phone || user?.phone_number || "",
+      })
+      .then(() => {
+        updateUserSession({
+          name: data.name,
+          phone_number: data.phone || user?.phone_number || "",
+        });
+      })
+      .catch(console.error);
   };
 
   return (
@@ -61,7 +86,7 @@ const EditProfileDetails: React.FC = () => {
                 <FormItem>
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email Address" {...field} />
+                    <Input disabled placeholder="Email Address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,7 +124,9 @@ const EditProfileDetails: React.FC = () => {
             )}
           />
           <div className="space-y-2">
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit" isLoading={updateProfile.isPending} disabled={!isDirty}>
+              Save Changes
+            </Button>
           </div>
         </form>
       </Form>

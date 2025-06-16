@@ -58,3 +58,9 @@ export const addCompanySubscriptionSchema = z.object({
     required_error: "Seats is required",
   }),
 });
+
+export const addPlanSchema = yup.object().shape({
+  name: yup.string().required("Plan name is required"),
+  duration: yup.string().required("Duration is required"),
+  price: yup.string().required("Duration is required"),
+});
