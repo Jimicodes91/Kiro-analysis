@@ -1,9 +1,7 @@
-import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
-import { Separator } from "@/components/ui/separator";
 import AccountNav from "@/layouts/dashboard-layout/account-nav";
-import { Bell, Lock, Trash } from "lucide-react";
+import { Lock } from "lucide-react";
 import { Outlet } from "react-router-dom";
 
 const links = [
@@ -13,11 +11,11 @@ const links = [
     path: "/profile-setting",
     exact: true,
   },
-  {
-    title: "Notification",
-    icon: () => <Bell />,
-    path: "/profile-setting/notification",
-  },
+  // {
+  //   title: "Notification",
+  //   icon: () => <Bell />,
+  //   path: "/profile-setting/notification",
+  // },
   {
     title: "Security",
     icon: () => <Lock />,
@@ -33,12 +31,12 @@ function ProfilePageWrapper() {
         <div className="grid gap-4 grid-cols-[200px_1fr]">
           <div className="bg-[#F7F7F7B2] w-full h-fit py-2 rounded-lg border-[#0000001A] border">
             <AccountNav isCollapsed={false} links={links} layoutId={"profile-layout"} />
-            <Separator />
+            {/* <Separator />
             <div className="py-1 flex items-center">
               <Button leftIcon={<Trash />} className="text-[#FB002B]" variant="link">
                 Delete account
               </Button>
-            </div>
+            </div> */}
           </div>
           <div className="p-5 rounded-lg border min-h-[500px]">
             <Outlet />
