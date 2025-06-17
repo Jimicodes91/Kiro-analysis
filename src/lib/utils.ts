@@ -163,7 +163,7 @@ export function fileToBase64(file: File): Promise<string> {
   });
 }
 
-export const today = startOfDay(new Date());
+export const today = startOfDay(new Date("2015-01-01"));
 
 export const getSelectableDate = (date: Date) => startOfDay(date) < today;
 
