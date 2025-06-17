@@ -28,6 +28,7 @@ const ProfileSecurityTemplate: React.FC = () => {
   const form = useForm({
     resolver: yupResolver(changePasswordSchema),
   });
+
   const { isValid } = form.formState;
 
   const onSubmit = (data: InferType<typeof changePasswordSchema>) => {
@@ -48,7 +49,7 @@ const ProfileSecurityTemplate: React.FC = () => {
   return (
     <div className="flex flex-col animate-in py-3 fade-in-0 duration-700 ease-in-out">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <FormField
             control={form.control}
             name="oldPassword"

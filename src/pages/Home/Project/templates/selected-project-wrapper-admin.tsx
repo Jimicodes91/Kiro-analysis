@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { PAGES } from "@/lib/constants";
-import React, { useState } from "react";
+import React from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuPlus } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
@@ -22,12 +22,11 @@ const ActiveProjectTypeProjectWrapperOnAdminView = ({
   children: React.ReactNode;
 }) => {
   const navigate = useNavigate();
-  const [, setSearchQuery] = useState("");
+
   const projectTypes = useGetAllProjectTypes();
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-  const { changeActiveProjectType, activeProjectType } = useProjectContext();
+
+  const { changeActiveProjectType, activeProjectType, search, handleSearch } =
+    useProjectContext();
 
   return (
     <div>
@@ -40,9 +39,11 @@ const ActiveProjectTypeProjectWrapperOnAdminView = ({
               <Input
                 placeholder="Search keyword"
                 className="w-full pl-8"
+                value={search}
                 onChange={(e) => {
                   handleSearch(e.target.value);
                 }}
+                type="search"
               />
             </div>
           </div>

@@ -201,8 +201,12 @@ export const ENDPOINTS = {
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
-  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatusDict | "all") =>
-    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
+  GET_ALL_PROJECTS: (
+    projectTypeId?: string,
+    status?: ProjectStatusDict | "all",
+    search?: string
+  ) =>
+    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}${search ? `&search=${search}` : ""}`,
   GET_CLIENT_PROJECTS: (clientId?: string, status?: ProjectStatusDict | "all") =>
     `projects${clientId ? `?client_id=${clientId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
@@ -255,8 +259,8 @@ export const ENDPOINTS = {
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
   GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/tasks?project_id=${projectId}`,
   // GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
-  GET_ALL_TASKS: (projectId?: string) =>
-    `projects/tasks${projectId ? `?project_id=${projectId}` : ""}`,
+  GET_ALL_TASKS: (search?: string) =>
+    `projects/tasks${search ? `?search=${search}` : ""}`,
   GET_TASK_DETAILS: (projectId: string, taskId: string) =>
     `projects/${projectId}/tasks/${taskId}`,
   UPDATE_TASK_DETAILS: (projectId: string, taskId: string) =>
