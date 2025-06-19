@@ -31,8 +31,8 @@ function EventCard({ event }: { event: EventDetails }) {
     "Nov",
     "Dec",
   ];
-  const startTime = event.start_datetime.split(",")[1];
-  const endTime = event.end_datetime.split(",")[1];
+  const startTime = event.start_datetime.split(",")[1] ?? "";
+  const endTime = event.end_datetime.split(",")[1] ?? "";
   return (
     <>
       <div className="px-5 py-3 rounded-lg border flex gap-x-4 justify-between border-brand-border bg-[#F8F8F8]">
