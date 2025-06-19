@@ -21,11 +21,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllDocumentTypes from "@/hooks/project-modules/document-types/use-get-all-document-types";
 import useCreateDocumentRequest from "@/hooks/project-modules/documents/document-request/use-create-document-request";
+import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
 import { cn, getSelectableDate } from "@/lib/utils";
-// import { requestDocumentSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, formatISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -62,7 +61,7 @@ const RequestDocumentModal = ({
 } & ModalProps) => {
   const createDocumentRequest = useCreateDocumentRequest(projectId);
   const documentTypes = useGetAllDocumentTypes();
-  const users = useGetCompanyUsers();
+  const projectMembers = useGetProjectMembers(projectId);
 
   const form = useForm<z.infer<typeof requestDocumentSchema>>({
     resolver: zodResolver(requestDocumentSchema),
@@ -201,14 +200,14 @@ const RequestDocumentModal = ({
                   <FormLabel>Assignee</FormLabel>
                   <CustomMultiSelect
                     options={
-                      users?.value
-                        ? users?.value?.data?.map((item) => ({
-                            label: item.name ?? item.email,
-                            value: item.id,
+                      projectMembers?.value
+                        ? projectMembers?.value?.data?.map((member) => ({
+                            label: member?.user?.name ?? member?.user?.email,
+                            value: member.user_id,
                           }))
                         : []
                     }
-                    isLoading={users.isPending}
+                    isLoading={projectMembers.isPending}
                     onChange={field.onChange}
                     value={field.value}
                     isMulti={undefined}

@@ -8,13 +8,14 @@ interface FileUploadProps {
   value?: File[];
   onChange: (files: File[]) => void;
   id: string;
+  isMulti?: boolean;
 }
 
 const MAX_FILES = 3;
 const MAX_FILE_SIZE_MB = 5;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
-const DragNdrop = ({ value = [], onChange, id }: FileUploadProps) => {
+const DragNdrop = ({ value = [], onChange, id, isMulti = true }: FileUploadProps) => {
   const validateFiles = (files: FileList): File[] => {
     const validFiles: File[] = [];
 
@@ -107,7 +108,7 @@ const DragNdrop = ({ value = [], onChange, id }: FileUploadProps) => {
               name={id}
               onChange={handleFileChange}
               accept=".pdf,.png,.jpg,.jpeg"
-              multiple
+              multiple={isMulti}
             />
             <div className="text-center text-sm space-y-3 text-brand-text">
               <p className="font-bold text-primary">

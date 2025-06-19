@@ -9,7 +9,7 @@ export interface MemberListResponse {
   data: Member[];
 }
 
-const useGetProjectMembers = (projectId: string, memberType: ProjectMemberType) => {
+const useGetProjectMembers = (projectId: string, memberType?: ProjectMemberType) => {
   return useQueryActionHook<MemberListResponse>({
     method: "get",
     endpoint: `${ENDPOINTS.GET_PROJECT_MEMBERS(projectId)}${memberType ? `?member_type=${memberType}` : ""}`,
