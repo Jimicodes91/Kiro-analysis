@@ -1,3 +1,4 @@
+import { getIsClient } from "@/services/api.service";
 import { ProjectDetails } from "@/types/api.types";
 import { motion } from "framer-motion";
 import React from "react";
@@ -19,6 +20,7 @@ type SubTabType =
 
 function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails }) {
   const [activeSubTab, setActiveSubTab] = React.useState<SubTabType>("Task");
+  const isClient = getIsClient();
 
   const subTabs: SubTabType[] = [
     "Task",
@@ -36,6 +38,7 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
           <ProjectTaskSection
             projectId={projectDetails?.id}
             projectTypeId={projectDetails?.project_type_id}
+            mode={isClient ? "readonly" : "edit"}
           />
         );
       case "Notes":
@@ -60,7 +63,10 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
       case "Event":
         return (
           <>
-            <ProjectEventSection projectId={projectDetails?.id} />
+            <ProjectEventSection
+              mode={isClient ? "readonly" : "edit"}
+              projectId={projectDetails?.id}
+            />
           </>
         );
       case "Project team":

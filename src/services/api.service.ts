@@ -35,6 +35,11 @@ export function getUserSession() {
   return JSON.parse(session as string) as LoginResponse["data"]["user"];
 }
 
+export const getIsClient = () => {
+  const user = getUserSession();
+  return user?.role === "CLIENT";
+};
+
 export function updateUserSession(updatedUser: Partial<LoginResponse["data"]["user"]>) {
   const session = getCookie("user_session");
   if (!session) {

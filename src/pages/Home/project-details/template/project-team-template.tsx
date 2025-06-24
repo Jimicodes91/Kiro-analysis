@@ -3,6 +3,7 @@ import ViewToggle from "@/components/ui/view-toggle";
 import { ProjectMemberType } from "@/hooks/project-modules/project-members/use-add-project-member";
 import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
 import useDisclosure from "@/hooks/use-disclosure";
+import { getIsClient } from "@/services/api.service";
 import { AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
 import React from "react";
@@ -11,8 +12,9 @@ import AddTeamModal from "../components/modal/add-team-member-modal";
 
 function ProjectTeamSection({ projectId }: { projectId: string }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [activeTab, setActiveTab] = React.useState<ProjectMemberType>("internal");
+  const [activeTab, setActiveTab] = React.useState<ProjectMemberType>("client");
   const projectMembers = useGetProjectMembers(projectId, activeTab);
+  const isClient = getIsClient();
 
   const renderBody = () => {
     if (projectMembers.isPending)
@@ -61,16 +63,22 @@ function ProjectTeamSection({ projectId }: { projectId: string }) {
               activeTab={activeTab}
               // @ts-expect-error Something
               setActiveTab={setActiveTab}
-              options={[
-                { value: "client" as const, label: "Client" },
-                { value: "internal" as const, label: "Internal" },
-              ]}
+              options={
+                isClient
+                  ? [{ value: "client" as const, label: "Client" }]
+                  : [
+                      { value: "client" as const, label: "Client" },
+                      { value: "internal" as const, label: "Internal" },
+                    ]
+              }
             />
           </div>
 
-          <Button size="sm" leftIcon={<Plus />} onClick={onOpen}>
-            Add Team
-          </Button>
+          {!isClient && (
+            <Button size="sm" leftIcon={<Plus />} onClick={onOpen}>
+              Add Team
+            </Button>
+          )}
         </div>
 
         <div>{renderBody()}</div>
@@ -78,7 +86,7 @@ function ProjectTeamSection({ projectId }: { projectId: string }) {
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && (
           <AddTeamModal
-            memberType={activeTab}
+            memberType={isClient ? "client" : activeTab}
             isOpen={isOpen}
             projectId={projectId}
             onClose={onClose}

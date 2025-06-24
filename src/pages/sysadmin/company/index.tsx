@@ -54,7 +54,10 @@ const SysAdminCompanyPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-xs text-brand-light font-[500]">Status</h3>
-                  <Badge variant="in_progress">In Progress</Badge>
+
+                  <Badge variant={companyDetails?.is_active ? "success" : "destructive"}>
+                    <span>{companyDetails?.is_active ? "Active" : "Inactive"}</span>
+                  </Badge>
                 </div>
                 <div>
                   <h3 className="text-xs text-brand-light font-[500]">Created date</h3>
@@ -129,7 +132,7 @@ const SysAdminCompanyPage: React.FC = () => {
                     Add user
                   </Button>
                 </div>
-                <UsersTable givenCompanyId={companyDetails?.id} />
+                <UsersTable isEditable={false} givenCompanyId={companyDetails?.id} />
               </div>
             </div>
           </div>

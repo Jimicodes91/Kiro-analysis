@@ -18,7 +18,9 @@ function SubscriptionTableRow({ plan }: { plan: SubscriptionPlan }) {
     <>
       <TableRow>
         <TableCell>{plan?.display_name}</TableCell>
-        <TableCell>{plan?.price_per_seat}</TableCell>
+        <TableCell>
+          {plan?.currency} {plan?.price}
+        </TableCell>
 
         <TableCell>
           <Badge variant={plan?.is_active ? "success" : "destructive"}>
