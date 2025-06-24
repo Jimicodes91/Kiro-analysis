@@ -12,8 +12,6 @@ import SignUp from "../pages/Auth/SignUp";
 import VerifyEmail from "../pages/Auth/VerifyEmail";
 import Home from "../pages/Home";
 import Admin from "../pages/Home/Admin";
-// import Client from "../pages/Home/Client";
-// import Event from "../pages/Home/Event";
 
 import ProtectedRoute from "@/components/ui/protected-route";
 import Contact from "@/pages/Home/Contact";
@@ -60,13 +58,7 @@ export const AuthRoutes: RouteObject[] = [
   },
   {
     path: "*",
-    element: <AccountLayout />,
-    children: [
-      {
-        path: "*",
-        element: <NotFound />,
-      },
-    ],
+    element: <NotFound fullScreen />,
   },
 ];
 

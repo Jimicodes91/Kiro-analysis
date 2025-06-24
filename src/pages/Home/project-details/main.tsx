@@ -1,4 +1,3 @@
-import { Icons } from "@/components/ui/icons";
 import Spade from "@/components/ui/spade";
 import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
 import useGetProjectDetails from "@/hooks/project-modules/use-get-project-details";
@@ -53,14 +52,10 @@ const ProjectDetail = ({
                       updateMilestoneFxn(item.id);
                     }
                   }}
+                  isLoading={updateProjectMilestone.isPending}
                   key={item.id}
                 />
               ))}
-              {updateProjectMilestone.isPending && (
-                <div className="ml-2">
-                  <Icons.spinner className="text-primary animate-spin h-4 w-4" />
-                </div>
-              )}
             </div>
           </div>
 
