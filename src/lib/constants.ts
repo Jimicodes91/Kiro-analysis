@@ -257,7 +257,8 @@ export const ENDPOINTS = {
 
   // 5. Tasks
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
-  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/tasks?project_id=${projectId}`,
+  GET_ALL_PROJECT_TASKS: (projectId: string, assigneeId?: string) =>
+    `projects/tasks?project_id=${projectId}${assigneeId ? `&assignee_id=${assigneeId}` : ""}`,
   // GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
   GET_ALL_TASKS: (search?: string) =>
     `projects/tasks${search ? `?search=${search}` : ""}`,

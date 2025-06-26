@@ -60,6 +60,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                   {project.name} / {project.form_data.client_organization}
                 </Heading>
               </div>
+              <div className="flex justify-between text-xs space-x-2 mb-1">
+                <div className="flex flex-col gap-y-1"></div>
+              </div>
             </div>
           </div>
         )}

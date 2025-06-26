@@ -51,9 +51,6 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
           <Link to="/profile-setting">Profile Settings</Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
-          <Link to="/settings">Support</Link>
-        </DropdownMenuItem>
         <DropdownMenuSeparator className="bg-[#0000001A]" />
         <DropdownMenuItem onClick={onOpen}>Log out</DropdownMenuItem>
       </DropdownMenuContent>

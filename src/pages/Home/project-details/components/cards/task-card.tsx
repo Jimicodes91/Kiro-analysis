@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import DeleteTaskModal from "../modal/delete-task-modal";
 import EditProjectTaskModal from "../modal/edit-project-task-modal";
+import UploadDocumentModal from "../modal/upload-document-modal";
 
 function TaskCard({ task }: { task: TaskDetails }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -24,6 +25,11 @@ function TaskCard({ task }: { task: TaskDetails }) {
     isOpen: isEditOpen,
     onOpen: onEditOpen,
     onClose: onEditClose,
+  } = useDisclosure();
+  const {
+    isOpen: isUploadOpen,
+    onOpen: onUploadOpen,
+    onClose: onUploadClose,
   } = useDisclosure();
   const updateTask = useUpdateProjectTask(task.project_id, task?.id);
 
@@ -35,6 +41,7 @@ function TaskCard({ task }: { task: TaskDetails }) {
       .catch(console.error);
   };
 
+  const isRequest = task?.task_type?.name === "Document Request";
   return (
     <>
       <div className="px-5 py-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
@@ -56,6 +63,11 @@ function TaskCard({ task }: { task: TaskDetails }) {
                   Mark as completed
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onOpen}>Delete</DropdownMenuItem>
+                {isRequest && task.status !== "completed" && (
+                  <DropdownMenuItem onClick={onUploadOpen}>
+                    Upload requested document
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -100,6 +112,15 @@ function TaskCard({ task }: { task: TaskDetails }) {
             task={task}
             projectId={task.project_id}
             onClose={onEditClose}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isUploadOpen && (
+          <UploadDocumentModal
+            isOpen={isUploadOpen}
+            projectId={task.project_id}
+            onClose={onUploadClose}
           />
         )}
       </AnimatePresence>
