@@ -7,7 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
-import getInitials, { getFormattedText } from "@/lib/utils";
+import { getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { useNavigate } from "react-router-dom";
 
@@ -59,21 +59,7 @@ export function ClientProjectCard({
               </div>
               <div className="border-t border-brand-border py-2 pt-5">
                 <div className="flex justify-between items-center px-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <p>Client team</p>
-                      <div className="flex -space-x-2">
-                        {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
-                          <div
-                            key={index}
-                            className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-                          >
-                            {getInitials(member)}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  <div className="flex items-center gap-4"></div>
                   <div>
                     <Button
                       variant="outline"

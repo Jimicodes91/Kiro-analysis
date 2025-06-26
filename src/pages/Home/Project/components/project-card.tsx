@@ -1,7 +1,7 @@
 import { Icons } from "@/components/ui/icons";
 import useDisclosure from "@/hooks/use-disclosure";
 import { QUERYKEYS } from "@/lib/constants";
-import getInitials, { cn, getFormattedText } from "@/lib/utils";
+import { cn, getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { Draggable } from "@hello-pangea/dnd";
 import { useQueryClient } from "@tanstack/react-query";
@@ -59,21 +59,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 <Heading size="h5" className="font-medium leading-[22px]">
                   {project.name} / {project.form_data.client_organization}
                 </Heading>
-              </div>
-              <div className="flex justify-between text-xs space-x-2 mb-1">
-                <div className="flex flex-col gap-y-1">
-                  <p className="text-gray-500">Project Client</p>
-                  <div className="flex -space-x-2">
-                    {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
-                      <div
-                        key={index}
-                        className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-                      >
-                        {getInitials(member)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
