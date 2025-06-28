@@ -9,9 +9,11 @@ import AddProjectTaskModal from "../components/modal/add-project-task-modal";
 function ProjectTaskSection({
   projectId,
   projectTypeId,
+  mode = "edit",
 }: {
   projectId: string;
   projectTypeId: string;
+  mode?: "readonly" | "edit";
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -56,11 +58,13 @@ function ProjectTaskSection({
   return (
     <>
       <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
-        <div className="flex justify-end gap-3 items-center">
-          <Button size="sm" leftIcon={<Plus />} onClick={onOpen}>
-            Add Task
-          </Button>
-        </div>
+        {mode === "edit" && (
+          <div className="flex justify-end gap-3 items-center">
+            <Button size="sm" leftIcon={<Plus />} onClick={onOpen}>
+              Add Task
+            </Button>
+          </div>
+        )}
         <div>{renderBody()}</div>
       </div>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
