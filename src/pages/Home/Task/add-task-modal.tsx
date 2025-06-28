@@ -1,9 +1,3 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-
 import Modal from "@/components/Modal";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -18,7 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-// import CustomMultiSelect from "@/components/ui/multi-lol";
 import MultiSelect from "@/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -34,114 +27,40 @@ import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
+import { taskStatuses } from "@/lib/constants";
 import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
-
-// Status options for the dropdown
-const statuses = [
-  { value: "in_progress", label: "In Progress" },
-  { value: "pending", label: "Pending" },
-  { value: "completed", label: "Completed" },
-];
-
-// File validation constants
-const FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const MAX_FILES = 3;
-const ALLOWED_FILE_TYPES = [
-  "application/pdf",
-  "image/png",
-  "image/jpeg",
-  "application/msword",
-];
-
-// Validation schema using Yup
-const addTaskSchema = yup.object({
-  name: yup
-    .string()
-    .required("Task name is required")
-    .min(3, "Task name must be at least 3 characters"),
-  task_type_id: yup.string().required("Task type is required"),
-  project_type_id: yup.string().required("Pipeline is required"),
-  project_id: yup.string().required("Project is required"),
-  status: yup
-    .string()
-    .oneOf(["in_progress", "pending", "completed"], "Invalid status")
-    .required("Status is required"),
-  description: yup.string().required("Description is required"),
-  start_date: yup.date().required("Start date is required"),
-  end_date: yup.date().required("End date is required"),
-  is_visible_to_client: yup.boolean().default(false),
-  assignees: yup
-    .array()
-    .of(yup.string().required())
-    .min(1, "At least one assignee is required")
-    .required("Assignees are required"),
-  attachment: yup
-    .array()
-    .test("fileSize", "Each file must be less than 5MB", (files) => {
-      if (!files || files.length === 0) return true;
-      return files.every((file) => file.size <= FILE_SIZE);
-    })
-    .test("fileType", "Only PDF, PNG, JPG, and DOC files are allowed", (files) => {
-      if (!files || files.length === 0) return true;
-      return files.every((file) => ALLOWED_FILE_TYPES.includes(file.type));
-    })
-    .test("maxFiles", `You can upload up to ${MAX_FILES} files`, (files) => {
-      if (!files) return true;
-      return files.length <= MAX_FILES;
-    })
-    .required("Attachment is required"),
-});
+import { taskFormSchema } from "@/utils/validation-schema/task";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 interface AddTaskModalProps {
   onClose: () => void;
   isOpen: boolean;
 }
 
+type TaskFormData = yup.InferType<typeof taskFormSchema>;
+
 const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
   const taskTypes = useGetAllTaskTypes();
   const projectTypes = useGetAllProjectTypes();
   const users = useGetCompanyUsers();
 
-  const form = useForm({
-    resolver: yupResolver(addTaskSchema),
-    defaultValues: {
-      name: "",
-      task_type_id: "",
-      project_type_id: "",
-      project_id: "",
-      description: "",
-      status: undefined,
-      start_date: undefined,
-      end_date: undefined,
-      is_visible_to_client: false,
-      assignees: [],
-      attachment: [],
-    },
+  const form = useForm<TaskFormData>({
+    resolver: yupResolver(taskFormSchema),
   });
 
   // Watch project_type_id to fetch related projects
   const selectedProjectTypeId = form.watch("project_type_id");
   const projects = useGetAllProjects(selectedProjectTypeId);
 
-  // Watch project_id to determine which createTask hook to use
+  // Watch project_id to determine which project_id to pass to the createTask hook
   const selectedProjectId = form.watch("project_id");
   const createTask = useCreateProjectTask(selectedProjectId);
 
-  interface FormData {
-    name: string;
-    task_type_id: string;
-    project_type_id: string;
-    project_id: string;
-    description: string;
-    status: string;
-    start_date: Date;
-    end_date: Date;
-    is_visible_to_client: boolean;
-    assignees: string[];
-    attachment?: File[]; // Made optional
-  }
-
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: TaskFormData) => {
     const { end_date, start_date, attachment, ...validData } = data;
 
     // Ensure attachment is an array before processing
@@ -154,7 +73,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
           return await fileToBase64(item);
         } catch (err) {
           console.error("Error converting file:", err);
-          return null; // Optional: filter these out later
+          return null;
         }
       })
     );
@@ -438,7 +357,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {statuses?.map((item) => (
+                    {taskStatuses?.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
                         {item.label}
                       </SelectItem>

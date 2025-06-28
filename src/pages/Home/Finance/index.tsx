@@ -5,8 +5,8 @@ import useGetAllFinanceRecords from "@/hooks/finance/use-get-all-finance-records
 import { getUserSession } from "@/services/api.service";
 import { AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
-import { GoShare } from "react-icons/go";
-import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
+// import { GoShare } from "react-icons/go";
+// import { HiOutlineAdjustmentsVertical } from "react-icons/hi2";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
 import FinanceEmptyState from "./finance-empty-state";
 import FinanceModal from "./finance-modal-form";
@@ -50,7 +50,7 @@ const Finance: React.FC = () => {
             </div>
           </div>
           <div className="flex justify-between space-x-2">
-            <Button
+            {/* <Button
               size="sm"
               variant="outline"
               leftIcon={<HiOutlineAdjustmentsVertical className="text-[#111] w-6 h-6" />}
@@ -65,7 +65,7 @@ const Finance: React.FC = () => {
               className="border-black"
             >
               Export
-            </Button>
+            </Button> */}
             <Button
               size="sm"
               leftIcon={<IoAdd className="text-white w-6 h-6" />}

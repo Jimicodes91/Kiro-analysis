@@ -10,18 +10,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
-// import useDisclosure from "@/hooks/use-disclosure";
+import useDisclosure from "@/hooks/use-disclosure";
 import getInitials, { getFormattedText } from "@/lib/utils";
 import { Task } from "@/types/task.types";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import TaskModal from "./task-modal-form";
+import DeleteTaskModal from "./delete-task-modal";
+import ViewEditTaskModal from "./edit-task-modal";
 
 function TaskTableRow({ task }: { task: Task }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [currentMode, setCurrentMode] = useState<"create" | "view" | "edit">("view");
-  // const { onOpen: onDeleteOpen } = useDisclosure();
+  const [currentMode, setCurrentMode] = useState<"view" | "edit">("view");
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const handleEditClick = () => {
     setCurrentMode("edit");
@@ -71,38 +71,36 @@ function TaskTableRow({ task }: { task: Task }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-40" align="end" forceMount>
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={handleViewClick}>View Task</DropdownMenuItem>
-                <DropdownMenuItem onClick={handleEditClick}>Edit Task</DropdownMenuItem>
-                {/* <DropdownMenuItem onClick={onDeleteOpen}>Delete Task</DropdownMenuItem> */}
+                <DropdownMenuItem onClick={handleViewClick}>View</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleEditClick}>Edit</DropdownMenuItem>
+                <DropdownMenuItem onClick={onOpen}>Delete</DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
       </TableRow>
 
-      {isModalOpen && (
-        <TaskModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          task={task}
-          mode={currentMode}
-        />
-      )}
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isOpen && (
+          <DeleteTaskModal
+            projectId={task?.project_id}
+            taskId={task?.id}
+            isOpen={isOpen}
+            onClose={onClose}
+          />
+        )}
+      </AnimatePresence>
 
-      {/* {isViewModalOpen && (
-        <TaskModal
-          isOpen={isViewModalOpen}
-          onClose={() => setIsViewModalOpen(false)}
-          task={task}
-        />
-      )}
-      {isEditModalOpen && (
-        <TaskModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          task={task}
-        />
-      )} */}
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isModalOpen && (
+          <ViewEditTaskModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            taskData={task}
+            mode={currentMode}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -22,8 +22,7 @@ import {
 import useGetCompanyContacts from "@/hooks/contacts/use-get-company-contact";
 import useCreateFinanceRecord from "@/hooks/finance/use-create-finance-record";
 import useUpdateFinanceRecord from "@/hooks/finance/use-update-finance-record";
-import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
-import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
+import useGetAllCompanyProjects from "@/hooks/project-modules/use-get-all-company-projects";
 import { cn, getSelectableDate } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { Billing } from "@/types/billing.types";
@@ -48,9 +47,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
   const createBilling = useCreateFinanceRecord();
   const updateBilling = useUpdateFinanceRecord(billingData?.id || "");
   const clientsResponse = useGetCompanyContacts();
-  const projectType = useGetAllProjectTypes();
-  const projectTypeId = projectType?.data?.data?.data[0]?.id;
-  const projectsResponse = useGetAllProjects(projectTypeId);
+  const projectsResponse = useGetAllCompanyProjects();
   const session = getUserSession();
 
   const clients = Array.isArray(clientsResponse?.data?.data?.data?.contacts)
@@ -61,11 +58,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
     ? projectsResponse.data.data.data
     : [];
 
-  const isLoading =
-    clientsResponse.isLoading ||
-    projectType.isLoading ||
-    (projectTypeId && projectsResponse.isLoading) ||
-    !session;
+  const isLoading = clientsResponse.isLoading || projectsResponse.isLoading || !session;
 
   const form = useForm<BillingSchemaType>({
     resolver: yupResolver(billingSchema),
@@ -212,7 +205,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                     >
                       <SelectTrigger
                         className="w-full"
-                        isLoading={projectType.isLoading || projectsResponse.isLoading}
+                        isLoading={projectsResponse.isLoading}
                       >
                         <SelectValue placeholder="Project title" />
                       </SelectTrigger>

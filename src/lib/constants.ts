@@ -117,6 +117,21 @@ export const projectStatusList: { text: string; value: ProjectStatusDict | "all"
   },
 ];
 
+export const taskStatuses: { label: string; value: string }[] = [
+  {
+    label: "Pending",
+    value: "pending",
+  },
+  {
+    label: "In Progress",
+    value: "in_progress",
+  },
+  {
+    label: "Completed",
+    value: "completed",
+  },
+];
+
 export const ENDPOINTS = {
   // Auth Endpoint
   ADMIN_SIGNUP: "auth/admin-signup",

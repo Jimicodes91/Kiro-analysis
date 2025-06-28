@@ -5,9 +5,8 @@ import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import useDisclosure from "@/hooks/use-disclosure";
 import React, { useState } from "react";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
-import TaskEmptyState from "./task-empty-state";
-// import TaskModal from "./task-modal-form";
 import AddTaskModal from "./add-task-modal";
+import TaskEmptyState from "./task-empty-state";
 import TasksTable from "./task-table";
 
 const Task: React.FC = () => {
@@ -73,7 +72,6 @@ const Task: React.FC = () => {
         )}
       </div>
 
-      {/* {isOpen && <TaskModal isOpen={isOpen} onClose={onClose} mode="create" />} */}
       {isOpen && <AddTaskModal isOpen={isOpen} onClose={onClose} />}
     </>
   );
