@@ -128,6 +128,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                           <>
                             {field.type === "select" ? (
                               <SelectComponent
+                                // @ts-expect-error Type error
                                 apiLocator={field.api_locator}
                                 fieldProps={fieldProps}
                                 isMultiple={field.is_multiple}
