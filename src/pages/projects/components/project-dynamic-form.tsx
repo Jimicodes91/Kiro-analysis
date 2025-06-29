@@ -54,7 +54,9 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
       validator = z.coerce.string();
       if (field.is_required) {
         validator = z.coerce.date();
-        validator = validator.min(new Date(), `${field.name} must be a valid date`);
+        if (field.slug === "end_date") {
+          validator = validator.min(new Date(), `${field.name} must be a valid date`);
+        }
       }
     } else if (field.slug === "project_client") {
       validator = z
@@ -139,6 +141,12 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                       rightIcon={
                                         <CalendarIcon className="mr-auto h-4 w-4 opacity-50" />
                                       }
+                                      disabled={
+                                        field.slug === "end_date"
+                                          ? // @ts-expect-error Date issue
+                                            !form.watch("start_date")
+                                          : false
+                                      }
                                       variant={"outline"}
                                       className={cn(
                                         "flex w-full justify-stretch h-12  font-normal rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm",
@@ -161,7 +169,12 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                     mode="single"
                                     selected={fieldProps.value}
                                     onSelect={fieldProps.onChange}
-                                    disabled={getSelectableDate}
+                                    disabled={
+                                      field.slug === "end_date"
+                                        ? // @ts-expect-error Date issue
+                                          (value) => value < form.watch("start_date")
+                                        : getSelectableDate
+                                    }
                                     initialFocus
                                   />
                                 </PopoverContent>

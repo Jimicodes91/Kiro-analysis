@@ -1,4 +1,5 @@
 import { Icons } from "@/components/ui/icons";
+import PersonAvatar from "@/components/ui/person-avatar";
 import useDisclosure from "@/hooks/use-disclosure";
 import { QUERYKEYS } from "@/lib/constants";
 import { cn, getFormattedText } from "@/lib/utils";
@@ -25,6 +26,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
       mutationKey: [QUERYKEYS.UPDATE_PROJECT_MILESTONE, project.id],
     })
   );
+
+  const clientList = project?.form_fields?.find((item) => item.slug === "project_client")
+    ?.value as { name: string; email: string }[];
 
   return (
     <>
@@ -61,7 +65,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 </Heading>
               </div>
               <div className="flex justify-between text-xs space-x-2 mb-1">
-                <div className="flex flex-col gap-y-1"></div>
+                <div className="flex flex-col gap-y-1">
+                  <div className="flex -space-x-2">
+                    {clientList?.map((item) => (
+                      <PersonAvatar key={item.name} name={item.name} email={item.email} />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

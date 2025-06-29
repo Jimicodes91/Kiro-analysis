@@ -5,13 +5,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import getInitials, { getFormattedText } from "@/lib/utils";
+import PersonAvatar from "@/components/ui/person-avatar";
+import { getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 
 export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDetails }) {
   const clientList = projectDetails?.form_fields?.find(
     (item) => item.slug === "project_client"
-  )?.value as { name: string }[];
+  )?.value as { name: string; email: string }[];
 
   return (
     <div>
@@ -24,12 +25,7 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
                 <h3 className="text-sm text-brand-fade font-[500]">Project Client</h3>
                 <div className="flex items-center -space-x-2">
                   {clientList?.map((item) => (
-                    <div
-                      key={item.name}
-                      className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-                    >
-                      {getInitials(item.name)}
-                    </div>
+                    <PersonAvatar key={item.name} name={item.name} email={item.email} />
                   ))}
                 </div>
               </div>

@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
+import PersonAvatar from "@/components/ui/person-avatar";
 import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
 import useDisclosure from "@/hooks/use-disclosure";
-import getInitials, { getFormattedText } from "@/lib/utils";
+import { getFormattedText } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
 import { format } from "date-fns";
 import { AnimatePresence } from "framer-motion";
@@ -84,13 +85,12 @@ function TaskCard({ task }: { task: TaskDetails }) {
             </p>
           </div>
           <div className="flex -space-x-2">
-            {task?.assignees?.map((member, index) => (
-              <div
-                key={index}
-                className="inline-flex items-center justify-center mt-2 w-8 h-8 rounded-full bg-gray-200 text-gray-700 text-sm font-medium ring-2 ring-white"
-              >
-                {getInitials(member?.name ?? member?.email)}
-              </div>
+            {task?.assignees?.map((member) => (
+              <PersonAvatar
+                key={member.name}
+                name={member?.name ?? ""}
+                email={member?.email}
+              />
             ))}
           </div>
         </div>
