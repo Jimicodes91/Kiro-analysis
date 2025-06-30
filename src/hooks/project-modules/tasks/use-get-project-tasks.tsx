@@ -8,11 +8,11 @@ export interface TaskListResponse {
   data: TaskDetails[];
 }
 
-const useGetProjectTasks = (projectId: string) => {
+const useGetProjectTasks = (projectId: string, assigneeId?: string) => {
   return useQueryActionHook<TaskListResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_ALL_PROJECT_TASKS(projectId),
-    queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS, projectId],
+    endpoint: ENDPOINTS.GET_ALL_PROJECT_TASKS(projectId, assigneeId),
+    queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS, projectId, `${assigneeId}`],
   });
 };
 

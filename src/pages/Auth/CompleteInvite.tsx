@@ -140,7 +140,7 @@ const CompleteInvite: React.FC = () => {
 
 export default CompleteInvite;
 
-const ButtonToggler = ({
+export const ButtonToggler = ({
   isShown,
   onClick,
 }: {

@@ -163,7 +163,7 @@ export function fileToBase64(file: File): Promise<string> {
   });
 }
 
-export const today = startOfDay(new Date());
+export const today = startOfDay(new Date("2015-01-01"));
 
 export const getSelectableDate = (date: Date) => startOfDay(date) < today;
 
@@ -172,7 +172,6 @@ export function truncateMiddleWords(text: string, startCount = 8, endCount = 16)
   const words = text.trim().split("");
 
   if (words.length <= startCount + endCount) {
-    console.log(words, "lmao");
     return text; // No need to truncate
   }
 
@@ -186,7 +185,6 @@ export const getUTCISODateFormat = (localDate: Date) => {
   const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
 
   const isoUTC = formatISO(utcDate, { representation: "complete" });
-  // console.log(isoUTC); // e.g., "2025-05-07T12:34:56Z"
   return isoUTC;
 };
 

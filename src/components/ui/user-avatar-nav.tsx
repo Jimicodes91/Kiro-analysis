@@ -1,7 +1,6 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -10,9 +9,10 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/ui/icons";
-import getInitials from "@/lib/utils";
+import getInitials, { truncateMiddleWords } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
+import { User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function UserNav({ onOpen }: { onOpen?: () => void }) {
   const user = getUserSession();
@@ -20,7 +20,7 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-3" rightIcon={<Icons.caret />}>
+        <Button variant="ghost" className="px-1 py-1">
           <Avatar className="h-8 w-8">
             <AvatarImage src={"/"} alt="@shadcn" />
             <AvatarFallback className="bg-[#E4E6E7] text-primary">
@@ -29,14 +29,29 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
+      <DropdownMenuContent
+        className="w-60 p-1.5 bg-[#F9F9F9] border-[#0000001A] shadow-none border"
+        align="end"
+        forceMount
+      >
+        <div className="bg-[#E5F1E3E5] rounded-sm py-4 flex gap-1 flex-col items-center">
+          <Avatar className="h-14 w-14">
+            <AvatarImage src={"/"} alt="@shadcn" />
+            <AvatarFallback className="bg-[#E4E6E7] text-primary">
+              <User />
+            </AvatarFallback>
+          </Avatar>
+          <p>{truncateMiddleWords(user?.name ?? "", 8, 8)}</p>
+          <DropdownMenuLabel className="font-normal">
             <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuGroup></DropdownMenuGroup>
+          </DropdownMenuLabel>
+        </div>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to="/profile-setting">Profile Settings</Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator className="bg-[#0000001A]" />
         <DropdownMenuItem onClick={onOpen}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

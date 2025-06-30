@@ -7,6 +7,8 @@ interface ProjectContextInterface {
   activeProjectType: string | undefined;
   status: ProjectStatusDict | "all";
   changeStatus: (status: ProjectStatusDict | "all") => void;
+  search: string;
+  handleSearch: (s: string) => void;
 }
 
 const ProjectCtx = React.createContext<ProjectContextInterface>(
@@ -19,6 +21,7 @@ const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => 
     storeActiveProjectType as string
   );
   const [status, setStatus] = React.useState<ProjectStatusDict | "all">("all");
+  const [search, setSearch] = React.useState("");
 
   const changeActiveProjectType = (projectType: string) => {
     setActiveProjectType(projectType);
@@ -29,6 +32,10 @@ const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => 
     setStatus(status);
   };
 
+  const handleSearch = (query: string) => {
+    setSearch(query);
+  };
+
   return (
     <ProjectCtx.Provider
       value={{
@@ -36,6 +43,8 @@ const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => 
         changeActiveProjectType,
         status,
         changeStatus,
+        search,
+        handleSearch,
       }}
     >
       {children}

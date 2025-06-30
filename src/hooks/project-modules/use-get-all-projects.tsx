@@ -10,15 +10,17 @@ export interface ProjectListResponse {
 
 const useGetAllProjects = (
   projectTypeId?: string,
-  status?: ProjectStatusDict | "all"
+  status?: ProjectStatusDict | "all",
+  search?: string
 ) => {
   const statusKey = status ?? "";
+  const searchKey = search ?? "";
   const projectTypeIdKey = projectTypeId ?? "";
   return useQueryActionHook<ProjectListResponse>({
     method: "get",
     enabled: Boolean(projectTypeId),
-    endpoint: ENDPOINTS.GET_ALL_PROJECTS(projectTypeId, status),
-    queryKey: [QUERYKEYS.GET_ALL_PROJECTS, projectTypeIdKey, statusKey],
+    endpoint: ENDPOINTS.GET_ALL_PROJECTS(projectTypeId, status, search),
+    queryKey: [QUERYKEYS.GET_ALL_PROJECTS, projectTypeIdKey, statusKey, searchKey],
     refetchOnWindowFocus: true,
   });
 };

@@ -35,6 +35,7 @@ const Contact: React.FC = () => {
               <Input
                 placeholder="Search keyword"
                 className="w-full pl-8 text-[#00000080]"
+                type="search"
                 onChange={(e) => {
                   handleSearch(e.target.value);
                 }}

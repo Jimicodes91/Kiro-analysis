@@ -12,13 +12,14 @@ import SignUp from "../pages/Auth/SignUp";
 import VerifyEmail from "../pages/Auth/VerifyEmail";
 import Home from "../pages/Home";
 import Admin from "../pages/Home/Admin";
-// import Client from "../pages/Home/Client";
-// import Event from "../pages/Home/Event";
 
 import ProtectedRoute from "@/components/ui/protected-route";
 import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
 import NotFound from "@/pages/Notfound";
+import ProfilePage from "@/pages/profile";
+import EditProfileDetails from "@/pages/profile/templates/profile-details";
+import ProfileSecurityTemplate from "@/pages/profile/templates/security";
 import SysAdminCompanyPage from "@/pages/sysadmin/company";
 import SysAdminCompanySubscriptionPage from "@/pages/sysadmin/company/sections/subscritptions-section";
 import SysAdminHomePage from "@/pages/sysadmin/home";
@@ -57,32 +58,61 @@ export const AuthRoutes: RouteObject[] = [
   },
   {
     path: "*",
-    element: <AccountLayout />,
-    children: [
-      {
-        path: "*",
-        element: <NotFound />,
-      },
-    ],
+    element: <NotFound fullScreen />,
   },
 ];
 
 export const HomeRoutes = {
   element: <AccountLayout />,
   children: [
+    // Free role route accessible by all except SYSADMIN
     {
-      path: "home",
-      element: <Home />,
+      path: "profile-setting",
+      element: <ProfilePage />,
     },
+    // Accessible by only ADMIN and CONSULTANT
     {
-      path: "contact",
-      element: <Contact />,
+      element: <ProfilePage />,
+      path: "profile-setting",
+      children: [
+        {
+          path: "",
+          element: <EditProfileDetails />,
+        },
+        // {
+        //   path: "notification",
+        //   element: <NotificationSection />,
+        // },
+        {
+          path: "security",
+          element: <ProfileSecurityTemplate />,
+        },
+      ],
     },
+
+    // Accessible by only ADMIN and CONSULTANT
     {
-      path: "task",
-      element: <Task />,
+      element: <ProtectedRoute allowedRoles={["ADMIN", "CONSULTANT"]} />,
+      path: "",
+      children: [
+        {
+          path: "home",
+          element: <Home />,
+        },
+        {
+          path: "contact",
+          element: <Contact />,
+        },
+        {
+          path: "task",
+          element: <Task />,
+        },
+      ],
     },
+
+    // Accessible by only SYSADMIN
     {
+      element: <ProtectedRoute allowedRoles={["SUPER_ADMIN"]} />,
       path: "sysadmin",
       children: [
         {
@@ -90,7 +120,7 @@ export const HomeRoutes = {
           element: <SysAdminUsersPage />,
         },
         {
-          path: "home",
+          path: "",
           element: <SysAdminHomePage />,
         },
         {
@@ -98,11 +128,11 @@ export const HomeRoutes = {
           element: <SysAdminSubscriptionPage />,
         },
         {
-          path: "companies/:companyId",
+          path: ":companyId/companies",
           element: <SysAdminCompanyPage />,
         },
         {
-          path: "companies/:companyId/subscription",
+          path: ":companyId/companies/subscription",
           element: <SysAdminCompanySubscriptionPage />,
         },
       ],

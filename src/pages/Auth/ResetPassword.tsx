@@ -34,8 +34,8 @@ const ResetPassword: React.FC = () => {
         token: token,
         newPassword: data.newPassword,
       })
-      .catch(console.error)
-      .then(() => navigate(PAGES.LOGIN_PAGE));
+      .then(() => navigate(PAGES.LOGIN_PAGE))
+      .catch(console.error);
   };
 
   return (

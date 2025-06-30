@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +10,8 @@ import {
 import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 // import useDisclosure from "@/hooks/use-disclosure";
-import getInitials, { getFormattedText } from "@/lib/utils";
+import PersonAvatar from "@/components/ui/person-avatar";
+import { getFormattedText } from "@/lib/utils";
 import { Task } from "@/types/task.types";
 import { useState } from "react";
 import TaskModal from "./task-modal-form";
@@ -45,15 +45,12 @@ function TaskTableRow({ task }: { task: Task }) {
         <TableCell>
           {Array.isArray(task?.assignees) && task.assignees.length > 0 ? (
             <div className="flex -space-x-2">
-              {task.assignees.map((assignee, index) => (
-                <Avatar
-                  key={assignee.id || index}
-                  className="h-7 w-7 border-2 border-white"
-                >
-                  <AvatarFallback className="text-xs bg-gray-200">
-                    {getInitials(assignee.name ?? assignee.email)}
-                  </AvatarFallback>
-                </Avatar>
+              {task.assignees.map((assignee) => (
+                <PersonAvatar
+                  key={assignee.name}
+                  name={assignee?.name ?? ""}
+                  email={assignee?.email}
+                />
               ))}
             </div>
           ) : (

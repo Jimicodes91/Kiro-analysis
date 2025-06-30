@@ -5,9 +5,9 @@ const useUpdateProfile = (userId: string) => {
   return useCustomMutation<
     Record<string, string>,
     {
-      name: string;
-      email: string;
-      password: string;
+      name?: string;
+      email?: string;
+      phone_number?: string;
     }
   >({
     method: "put",

@@ -182,6 +182,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                     onBlur={field.onBlur}
                     disabled={mode === "view"}
                     className={`
+            [&>input]:text-sm
             [&>input]:bg-background
             [&>input]:rounded-full
             [&>input]:border

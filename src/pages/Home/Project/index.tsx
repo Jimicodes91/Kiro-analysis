@@ -16,7 +16,7 @@ const ProjectsRouteWrapper = () => {
       return <NonClientProjectView />;
     case "CLIENT":
       return <ClientProjectView />;
-    case "SYSADMIN":
+    case "SUPER_ADMIN":
     case "CONSULTANT":
       return <NonClientProjectView />;
     default:

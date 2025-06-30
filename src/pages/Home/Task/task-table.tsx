@@ -10,8 +10,8 @@ import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-sk
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import TaskTableRow from "./task-table-row";
 
-const TasksTable = () => {
-  const tasksResponse = useGetAllTasks();
+const TasksTable = ({ search }: { search: string }) => {
+  const tasksResponse = useGetAllTasks(search);
   const tasks = Array.isArray(tasksResponse?.data?.data?.data)
     ? tasksResponse.data.data.data
     : [];

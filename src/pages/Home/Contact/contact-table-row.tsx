@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,7 +9,7 @@ import {
 import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 // import useDisclosure from "@/hooks/use-disclosure";
-import getInitials from "@/lib/utils";
+import PersonAvatar from "@/components/ui/person-avatar";
 import { Contact } from "@/types/contact.types";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -43,15 +42,8 @@ function ContactTableRow({ contact }: { contact: Contact }) {
         <TableCell>
           {Array.isArray(contact?.assigned_to) && contact.assigned_to.length > 0 ? (
             <div className="flex -space-x-2">
-              {contact.assigned_to.map((assignee, index) => (
-                <Avatar
-                  key={assignee.id || index}
-                  className="h-7 w-7 border-2 border-white"
-                >
-                  <AvatarFallback className="text-xs bg-gray-200">
-                    {getInitials(assignee.name)}
-                  </AvatarFallback>
-                </Avatar>
+              {contact.assigned_to.map((assignee) => (
+                <PersonAvatar key={assignee.name} name={assignee.name} />
               ))}
             </div>
           ) : (

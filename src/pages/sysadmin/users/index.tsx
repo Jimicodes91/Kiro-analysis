@@ -20,7 +20,7 @@ const SysAdminUsersPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 space-y-5">
       <div className="flex justify-between items-center my-2">
         <div className="flex items-center gap-4">
           <Heading size="h3">User</Heading>
@@ -37,7 +37,7 @@ const SysAdminUsersPage: React.FC = () => {
           </div>
         </div>
         <Button size="sm" leftIcon={<LuPlus className="text-white" />} onClick={onOpen}>
-          Add user
+          Add Sysadmin
         </Button>
       </div>
       <UsersTable search={debounceText} />

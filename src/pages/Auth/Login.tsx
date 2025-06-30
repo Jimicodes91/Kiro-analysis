@@ -22,7 +22,7 @@ const Login: React.FC = () => {
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
-  const callback = searchParams.get("callback");
+  const callback = searchParams.get("callback") ?? "";
 
   const onSubmit = async (data: InferType<typeof loginSchema>) => {
     authLogin
@@ -35,8 +35,27 @@ const Login: React.FC = () => {
         setCookie("user_session_token", response.data.data.token);
         setCookie("user_session", JSON.stringify(response.data.data.user));
         if (response.data.data.user.company_id) {
-          navigate(callback ? callback : PAGES.PROJECT_PAGE);
-          // navigate(PAGES.PROJECT_PAGE);
+          const userRole = response.data.data.user.role;
+
+          const isSysAdmin = userRole === "SUPER_ADMIN" && callback?.includes("sysadmin");
+
+          if (isSysAdmin) {
+            navigate(
+              callback
+                ? isSysAdmin
+                  ? callback
+                  : PAGES.SYSADMIN_HOME_PAGE
+                : PAGES.SYSADMIN_HOME_PAGE
+            );
+          } else {
+            navigate(
+              callback
+                ? !isSysAdmin
+                  ? PAGES.PROJECT_PAGE
+                  : callback
+                : PAGES.PROJECT_PAGE
+            );
+          }
         } else {
           navigate(PAGES.ONBOARDING_PAGE);
         }

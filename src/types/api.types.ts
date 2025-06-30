@@ -171,7 +171,7 @@ export interface Member {
   user_id: string;
   is_visible_to_client: number;
   added_by: string;
-  users: User[];
+  user: User;
   creator: Creator;
 }
 

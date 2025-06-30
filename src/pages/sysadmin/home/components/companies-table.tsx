@@ -21,7 +21,8 @@ const CompaniesTable = () => {
   const companies = useGetAllCompanies(pageProp.page, pageProp.pageSize);
 
   const renderTableBody = () => {
-    if (companies.isPending) return <TableSkeletonRowLoader length={7} />;
+    if (companies.isPending)
+      return <TableSkeletonRowLoader length={7} noOfRows={pageProp.pageSize} />;
 
     if (companies?.isError)
       return <EmptyTable message="Something went wrong" length={7} />;

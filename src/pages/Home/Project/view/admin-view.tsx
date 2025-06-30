@@ -8,22 +8,25 @@ import {
 } from "@/components/ui/select";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
+import useDebounce from "@/hooks/use-debounce";
 import { projectStatusList } from "@/lib/constants";
 import ProjectEmptyState from "@/pages/projects/components/project-empty-state";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../../components/ui/view-toggle";
 import BoardLoadingWrapper from "../templates/loading-wrapper";
-import ActiveProjectTypeProjectWrapperOnAdminView from "../templates/selected-project-wrapper-admin copy";
+import ActiveProjectTypeProjectWrapperOnAdminView from "../templates/selected-project-wrapper-admin";
 import ProjectTable from "./../components/project-table";
 import { useProjectContext } from "./../context/project-context";
 
 const NonClientProjectView = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const viewMode = searchParams.get("viewMode") || "board";
-  const { activeProjectType, changeActiveProjectType, changeStatus, status } =
+  const { activeProjectType, changeActiveProjectType, changeStatus, status, search } =
     useProjectContext();
-  const allProjects = useGetAllProjects(activeProjectType, status);
+  const debounceSearch = useDebounce(search, 1000);
+
+  const allProjects = useGetAllProjects(activeProjectType, status, debounceSearch);
   const projectTypes = useGetAllProjectTypes();
 
   const handleTabChange = (value: string) => {

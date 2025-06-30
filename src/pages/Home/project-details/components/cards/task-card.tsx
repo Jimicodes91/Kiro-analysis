@@ -9,14 +9,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
+import PersonAvatar from "@/components/ui/person-avatar";
 import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
 import useDisclosure from "@/hooks/use-disclosure";
-import getInitials, { getFormattedText } from "@/lib/utils";
+import { getFormattedText } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
 import { format } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import DeleteTaskModal from "../modal/delete-task-modal";
 import EditProjectTaskModal from "../modal/edit-project-task-modal";
+import UploadDocumentModal from "../modal/upload-document-modal";
 
 function TaskCard({ task }: { task: TaskDetails }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -24,6 +26,11 @@ function TaskCard({ task }: { task: TaskDetails }) {
     isOpen: isEditOpen,
     onOpen: onEditOpen,
     onClose: onEditClose,
+  } = useDisclosure();
+  const {
+    isOpen: isUploadOpen,
+    onOpen: onUploadOpen,
+    onClose: onUploadClose,
   } = useDisclosure();
   const updateTask = useUpdateProjectTask(task.project_id, task?.id);
 
@@ -35,6 +42,7 @@ function TaskCard({ task }: { task: TaskDetails }) {
       .catch(console.error);
   };
 
+  const isRequest = task?.task_type?.name === "Document Request";
   return (
     <>
       <div className="px-5 py-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
@@ -56,6 +64,11 @@ function TaskCard({ task }: { task: TaskDetails }) {
                   Mark as completed
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onOpen}>Delete</DropdownMenuItem>
+                {isRequest && task.status !== "completed" && (
+                  <DropdownMenuItem onClick={onUploadOpen}>
+                    Upload requested document
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -72,13 +85,12 @@ function TaskCard({ task }: { task: TaskDetails }) {
             </p>
           </div>
           <div className="flex -space-x-2">
-            {task?.assignees?.map((member, index) => (
-              <div
-                key={index}
-                className="inline-flex items-center justify-center mt-2 w-8 h-8 rounded-full bg-gray-200 text-gray-700 text-sm font-medium ring-2 ring-white"
-              >
-                {getInitials(member?.name ?? member?.email)}
-              </div>
+            {task?.assignees?.map((member) => (
+              <PersonAvatar
+                key={member.name}
+                name={member?.name ?? ""}
+                email={member?.email}
+              />
             ))}
           </div>
         </div>
@@ -100,6 +112,15 @@ function TaskCard({ task }: { task: TaskDetails }) {
             task={task}
             projectId={task.project_id}
             onClose={onEditClose}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isUploadOpen && (
+          <UploadDocumentModal
+            isOpen={isUploadOpen}
+            projectId={task.project_id}
+            onClose={onUploadClose}
           />
         )}
       </AnimatePresence>
