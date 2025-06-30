@@ -1,5 +1,6 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { ProjectTypeMilestone } from "../milestones/use-all-get-project-type-milestones";
 
 export interface IProjectTypesInterface {
   success: boolean;
@@ -17,6 +18,7 @@ export interface ProjectType {
   slug: string;
   is_system: number;
   progress_metrics: ProgressMetrics;
+  milestones: ProjectTypeMilestone[];
 }
 
 export interface ProgressMetrics {

@@ -8,12 +8,12 @@ export interface EventTypeListResponse {
   data: EventTypeDetails[];
 }
 
-const useGetAllProjectEventTypes = (projectId: string) => {
+const useGetAllEventTypes = () => {
   return useQueryActionHook<EventTypeListResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_EVENT_TYPES(projectId),
-    queryKey: [QUERYKEYS.GET_EVENT_TYPES, projectId],
+    endpoint: ENDPOINTS.GET_EVENT_TYPES,
+    queryKey: [QUERYKEYS.GET_EVENT_TYPES],
   });
 };
 
-export default useGetAllProjectEventTypes;
+export default useGetAllEventTypes;

@@ -9,6 +9,7 @@ const Toast = {
     toast(
       <ToastTemplate
         message={message}
+        header="Request Successful"
         icon={
           <div className="toast-icon">
             <SuccessIcon />
@@ -25,10 +26,11 @@ const Toast = {
       }
     );
   },
-  error: (message: string) => {
+  error: (message: string, header = "Request Failed") => {
     toast(
       <ToastTemplate
         message={message}
+        header={header}
         icon={
           <div className="toast-icon" style={{ fontSize: "32px" }}>
             <ErrorIcon />

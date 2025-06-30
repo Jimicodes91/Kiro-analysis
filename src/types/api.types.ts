@@ -1,3 +1,5 @@
+import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
+import { ProjectStatus } from "@/lib/constants";
 import { QueryFunction, QueryKey } from "@tanstack/react-query";
 import { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from "axios";
 
@@ -30,7 +32,7 @@ export type CredentialsServerResponseModel<T> = T;
 export interface ResponseErrorType {
   message: string;
   name: string;
-  errors?: Record<string, unknown>;
+  data: { errors?: string[] };
 
   response: {
     data: {
@@ -49,22 +51,28 @@ export interface TaskDetails {
   id: string;
   created_at: string;
   updated_at: string;
-  deleted_at?: string;
   project_id: string;
   company_id: string;
   author_id: string;
-  assignee_id?: string;
+  task_type_id: string;
+  project_type_id: string;
   name: string;
   description: string;
-  status: string;
+  status: "in_progress" | "completed" | "pending";
   start_date: string;
   end_date: string;
   is_visible_to_client: number;
-  assignee: string[];
-  document: Document[];
+  assignees: Author[];
+  document: IDocument[];
+  task_type: TaskTypeDetails;
+  pipeline: ProjectType;
+  company: {
+    id: string;
+    name: string;
+  };
 }
 
-export interface Document {
+export interface IDocument {
   id: string;
   created_at: string;
   updated_at: string;
@@ -163,7 +171,7 @@ export interface Member {
   user_id: string;
   is_visible_to_client: number;
   added_by: string;
-  users: User[];
+  user: User;
   creator: Creator;
 }
 
@@ -249,6 +257,7 @@ export interface Trail {
   name: string;
   description: string;
   entity: Entity;
+  author: Author;
 }
 
 export interface Entity {
@@ -274,17 +283,55 @@ export interface ProjectDetails {
   consultant_id?: string;
   milestone_id?: string;
   project_type_id: string;
-  status: string;
+  status: `${ProjectStatus}`;
   name: string;
   start_date: string;
   end_date: string;
   completed_at?: string;
-  custom_fields: CustomFields;
-  documents: Document[];
-  stage_id?: string;
-  description?: string;
-  milestone?: string;
+  jurisdiction?: string;
+  visa_required?: string;
+  package?: string;
+  form_data: ProjectFormData;
+  documents?: string[];
+  project_type: ProjectType;
+  custom_fields?: string;
+  milestone?: ProjectTypeMilestone;
+  client?: string;
   timeline: string;
+  form_fields: FormField[];
+}
+export interface FormField {
+  id: string;
+  name: string;
+  type: string;
+  is_required: number;
+  value: unknown;
+  slug: string;
+}
+
+export interface ProjectType {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  company_id: string;
+  name: string;
+  slug: string;
+  is_system: number;
+}
+export interface ProjectFormData {
+  end_date: string;
+  journey: string;
+  post_code: string;
+  start_date: string;
+  description: string;
+  nationality: string;
+  phone_number: string;
+  project_name: string;
+  email_address: string;
+  project_value: number;
+  project_client: string[];
+  resident_country: string;
+  client_organization: string;
 }
 
 export interface CustomFields {
@@ -293,4 +340,187 @@ export interface CustomFields {
   articles_file: string[];
   legal_structure: string;
   incorporation_date: string;
+}
+
+export interface UserDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
+  email: string;
+  pfp?: string;
+  password: string;
+  name?: string;
+  role: string;
+  company_id?: string;
+  is_blocked: number;
+  is_verified: number;
+  timezone?: string;
+  language: string;
+  currency: string;
+  is_active: number;
+  last_login?: string;
+  verification_token?: string;
+  token_expires?: number;
+  googleId?: string;
+  refresh_token?: string;
+  refresh_token_expires?: string;
+  password_setup_token?: string;
+  login_count: number;
+  password_setup_token_expires?: string;
+}
+export interface ContactDetails {
+  id: string;
+  created_at: string; // ISO 8601 string
+  updated_at: string; // ISO 8601 string
+  deleted_at: string; // ISO 8601 string
+  name: string;
+  email: string;
+  phone: string;
+  organization: string;
+  address: string | null;
+  active_projects: number;
+  total_projects: number;
+  no_of_projects: number | null;
+  closed_projects: number | null;
+  assigne: string | null;
+  assigned_to: {
+    id: string;
+    name: string;
+  }[];
+}
+
+export interface Pagination {
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface ContactData {
+  contacts: ContactDetails[];
+  pagination: Pagination;
+}
+
+export interface FinanceDetails {
+  amount_paid: string;
+  client_name: string;
+  created_at: string;
+  deleted_at: string | null;
+  has_paid: number; // likely 0 or 1 as number
+  id: string;
+  next_payment_due_date: string;
+  organization_id: string;
+  outstanding_balance: string;
+  payment_date: string | null;
+  payment_proof_url: string | null;
+  payment_status: string | null;
+  project_title: string;
+  total_project_cost: string;
+  updated_at: string;
+}
+export interface FinanceData {
+  org_finance: FinanceDetails[];
+  pagination: Pagination;
+}
+
+export interface CompanyDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  industry_type: string;
+  size: string;
+  country: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  admin_id: string;
+  consultant_id: string;
+  client_id: string;
+  is_active: number;
+  subscription_status: string;
+  subscription_expiry_date: string;
+  project_id: string;
+  client_users: string;
+  consultant_users: string;
+  active_users_count: number;
+}
+
+export interface Feature {
+  id: string;
+  name: string;
+  enabled: boolean;
+  description: string;
+}
+
+export interface SubscriptionPlan {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  display_name: string;
+  price: string;
+  price_per_seat: number;
+  currency: string;
+  features: Feature[];
+  is_active: number;
+}
+interface Progress {
+  days_to_completion: number;
+  percentage_complete: number;
+}
+
+interface RecentProject {
+  id: string;
+  name: string;
+  status: string;
+  start_date: string;
+  expected_end_date: string;
+  milestone_id: string;
+  milestone_name: string;
+  progress: Progress;
+  company: string;
+}
+
+interface TopPipeline {
+  id: string;
+  name: string;
+  project_count: number;
+  active_project_count: number;
+  completion_days: number;
+}
+
+interface TopClient {
+  client_id: string;
+  client_name: string;
+  company_name: string;
+  project_count: number;
+  active_project_count: number;
+}
+
+interface ProjectReport {
+  total: number;
+  completed: number;
+  in_progress: number;
+  current_month_count: number;
+  last_month_count: number;
+  percentage_increase: number;
+}
+
+interface TaskReport {
+  total: number;
+  completed: number;
+  in_progress: number;
+  overdue: number;
+}
+
+export interface DashboardData {
+  project_report: ProjectReport;
+  task_report: TaskReport;
+  recent_projects: RecentProject[];
+  top_pipeline: TopPipeline[];
+  top_clients: TopClient[];
 }

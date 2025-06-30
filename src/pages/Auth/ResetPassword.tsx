@@ -4,12 +4,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { InferType } from "yup";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
 import Toast from "../../components/Toast";
-import { resetPasswordSchema } from "../../components/validationSchema/auth";
-import { ResetPasswordFormProps } from "../../types";
+import { resetPasswordSchema } from "../../utils/validation-schema/auth";
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const ResetPassword: React.FC = () => {
     resolver: yupResolver(resetPasswordSchema),
   });
 
-  const onSubmit = (data: ResetPasswordFormProps) => {
+  const onSubmit = (data: InferType<typeof resetPasswordSchema>) => {
     if (!token) {
       return Toast.error("No token available");
     }
@@ -34,8 +34,8 @@ const ResetPassword: React.FC = () => {
         token: token,
         newPassword: data.newPassword,
       })
-      .catch(console.error)
-      .then(() => navigate(PAGES.LOGIN_PAGE));
+      .then(() => navigate(PAGES.LOGIN_PAGE))
+      .catch(console.error);
   };
 
   return (

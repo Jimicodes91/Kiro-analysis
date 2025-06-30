@@ -1,0 +1,46 @@
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Icons } from "@/components/ui/icons";
+import { TableCell, TableRow } from "@/components/ui/table";
+import useDisclosure from "@/hooks/use-disclosure";
+import { TaskTypeDetails } from "@/types/api.types";
+import { AnimatePresence } from "framer-motion";
+import AddNoteTypeModal from "./add-note-type-modal";
+
+function NoteTypeTableRow({ noteType }: { noteType: TaskTypeDetails }) {
+  const { onOpen, isOpen, onClose } = useDisclosure();
+  return (
+    <>
+      <TableRow>
+        <TableCell>{noteType?.name}</TableCell>
+        <TableCell>{noteType?.description}</TableCell>
+        <TableCell>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Icons.more />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40" align="end" forceMount>
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={onOpen}>Edit Note Type</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+      </TableRow>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isOpen && (
+          <AddNoteTypeModal isOpen={isOpen} onClose={onClose} noteType={noteType} />
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+export default NoteTypeTableRow;

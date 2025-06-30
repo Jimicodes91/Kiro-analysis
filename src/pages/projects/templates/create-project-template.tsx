@@ -9,11 +9,14 @@ import CreateProjectDynamicForm from "../components/project-dynamic-form";
 
 function CreateProjectTemplate() {
   const projectFormFields = useGetProjectFormFields();
-
   const renderForm = () => {
     if (projectFormFields.isLoading) return <Loader />;
 
-    if (!projectFormFields.isLoading && projectFormFields?.value) {
+    if (
+      !projectFormFields.isLoading &&
+      projectFormFields?.value &&
+      projectFormFields?.value?.data
+    ) {
       return <CreateProjectDynamicForm fields={projectFormFields?.value?.data} />;
     }
     return <p>Some thing went wrong</p>;

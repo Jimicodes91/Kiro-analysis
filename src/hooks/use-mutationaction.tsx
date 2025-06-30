@@ -13,7 +13,7 @@ type MutatationParam = Partial<UseMutationOptions> &
 function getMutationAction<P, T>(mutationData: Partial<SecureRequestProps>) {
   const { endpoint, method, headers, extraConfig = {} } = mutationData;
 
-  const url = (import.meta.env.VITE_API_BASE_URL_TWO as string) + endpoint;
+  const url = (import.meta.env.VITE_API_BASE_URL as string) + endpoint;
 
   return {
     mutationFn: (body: Record<string, unknown>) =>
@@ -28,21 +28,24 @@ function getMutationAction<P, T>(mutationData: Partial<SecureRequestProps>) {
   };
 }
 
-const errorFormatter = (data: unknown) => {
+const errorFormatter = (data: {
+  message: string;
+  data?: {
+    errors: string[];
+  };
+  errors?: Record<string, unknown>;
+}) => {
   if (data === null) return "";
-  if (Array.isArray(data)) {
-    return "Array Error";
-  }
-  if (typeof data === "object") {
-    const castedData = data as Record<string, unknown>;
-    const keys = Object.keys(data);
-    let message = "";
-    keys.forEach((item) => {
-      message += `\n ${castedData[item]}`;
+  if (Array.isArray(data?.data?.errors)) {
+    let message = data?.message;
+    data?.data?.errors.forEach((item) => {
+      message += `\n\t\n [${item}]`;
     });
     return message;
   }
-  return "Another erorr";
+
+  if (data.message) return data.message;
+  return "Server error";
 };
 
 function useCustomMutation<P = Record<string, unknown>, T = Record<string, unknown>>(
@@ -67,8 +70,8 @@ function useCustomMutation<P = Record<string, unknown>, T = Record<string, unkno
     onError: (err: ResponseErrorType) => {
       if (showFailureToast) {
         const errorMsg = errorFormatter(err?.response?.data);
-
-        Toast.error(errorMsg);
+        // console.log(err?.response?.data, "err?.response?.data");
+        Toast.error(errorMsg ?? "Server Error");
       }
       mutatationResult.reset();
     },

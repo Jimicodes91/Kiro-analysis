@@ -1,33 +1,20 @@
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { PAGES } from "@/lib/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { AiOutlineDelete } from "react-icons/ai";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { MainButton } from "../../components/Form/button";
-import { FormInput } from "../../components/Form/input";
-import { FormSelect } from "../../components/Form/select";
-import Toast from "../../components/Toast";
-import { inviteTeamSchema } from "../../components/validationSchema/onboarding";
-import { sendConsultantInviteApi } from "../../services";
-import { prevStep, setTeamMembers } from "../../store/slices/onboardingSlice";
-import { TeamMember } from "../../types";
+import { inviteTeamSchema } from "../../utils/validation-schema/onboarding";
+import InviteUserForm from "./invite-user-form";
+import { useOnboarding } from "./onboarding-context";
 
 const Step2 = () => {
-  const dispatch = useDispatch();
+  const { onPrev } = useOnboarding();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    getValues,
-    formState: { errors },
-  } = useForm({
+  const form = useForm({
     resolver: yupResolver(inviteTeamSchema),
+    mode: "onChange",
     defaultValues: {
       teamMembers: [
         {
@@ -37,135 +24,56 @@ const Step2 = () => {
       ],
     },
   });
+
   const { fields, append, remove } = useFieldArray({
-    control,
     name: "teamMembers",
+    control: form.control,
+    rules: {
+      required: "Please append at least 1 item",
+      minLength: 1,
+    },
   });
 
-  const onSubmit = async (data: { teamMembers?: TeamMember[] }) => {
-    const teamMembers = data.teamMembers || [];
-    console.log(data, "teamMembers");
-    // Update team members in Redux store
-    dispatch(setTeamMembers(teamMembers));
-
-    // Set loading state
-    setLoading(true);
-
-    try {
-      // Detailed invite process with individual error handling
-      await Promise.all(
-        teamMembers.map(async (member) => {
-          try {
-            await sendConsultantInviteApi({
-              email: member.email,
-              role: member.role,
-            });
-          } catch (error) {
-            // Log the error for debugging
-            console.error(`Failed to invite ${member.email}:`, error);
-            // Rethrow to trigger the catch block in the main try-catch
-            throw error;
-          }
-        })
-      );
-
-      // Show success toast
-      Toast.success("Team members invited successfully");
-
-      // Navigate to project screen
-      navigate(PAGES.PROJECT_PAGE);
-    } catch (error) {
-      // Handle any errors during invitation
-      console.error("Error inviting team members:", error);
-
-      // Generic error toast
-      Toast.error("Failed to invite team members");
-    } finally {
-      // Reset loading state
-      setLoading(false);
-    }
-  };
-
-  const handleBack = () => {
-    const currentTeamMembers = getValues("teamMembers") || [];
-    dispatch(setTeamMembers(currentTeamMembers));
-    dispatch(prevStep());
-  };
+  const onSubmit = () => {};
 
   return (
     <div>
       <h1 className="text-[24px] font-bold mb-12">Invite your team</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-12 space-y-4">
-          {fields.map((item, index) => {
-            const showDeleteButton = fields.length > 1;
-            return (
-              <div
-                key={item.id}
-                className={
-                  showDeleteButton ? "grid grid-cols-2 gap-4" : "grid grid-cols-2 gap-4"
-                }
-              >
-                <FormInput
-                  label="Email"
-                  placeholder="Email"
-                  {...register(`teamMembers.${index}.email`)}
-                  error={errors.teamMembers?.[index]?.email?.message}
-                />
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <FormSelect
-                      label="Role"
-                      options={[
-                        { value: "consultant", label: "Consultant" },
-                        { value: "client", label: "Client" },
-                        { value: "customer", label: "Customer" },
-                      ]}
-                      register={register(`teamMembers.${index}.role`)}
-                      error={errors.teamMembers?.[index]?.role?.message}
-                    />
-                  </div>
-                  {showDeleteButton && (
-                    <div className="flex items-center self-center pt-6">
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="text-red-500"
-                      >
-                        <AiOutlineDelete size={20} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-          <button
-            type="button"
-            onClick={() => append({ email: "", role: "" })}
-            className="text-primary font-bold"
-          >
-            + Add another user
-          </button>
-        </div>
-        <div className="flex justify-between mt-12">
-          <MainButton variant="outlined" onClick={handleBack} type="button">
-            Back
-          </MainButton>
-          <div className="flex gap-2">
-            <MainButton
-              variant="outlined"
-              onClick={() => navigate(PAGES.PROJECT_PAGE)}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="mb-12 space-y-4">
+            {fields.map((item, index) => {
+              return (
+                <InviteUserForm index={index} item={item} form={form} remove={remove} />
+              );
+            })}
+            <button
               type="button"
+              onClick={() => append({ email: "", role: "" })}
+              className="text-primary font-bold"
             >
-              Skip
-            </MainButton>
-            <Button type="submit" isLoading={loading}>
-              Save and continue
-            </Button>
+              + Add another user
+            </button>
           </div>
-        </div>
-      </form>
+          <div className="flex justify-between mt-10">
+            <Button variant="outline" onClick={onPrev}>
+              Back
+            </Button>
+            <div className="flex gap-2 z-[20] relative">
+              <Button variant="outline" onClick={() => navigate(PAGES.PROJECT_PAGE)}>
+                Skip
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate(PAGES.PROJECT_PAGE);
+                }}
+              >
+                Save and continue
+              </Button>
+            </div>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 };

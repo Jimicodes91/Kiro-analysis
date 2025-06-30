@@ -1,4 +1,6 @@
-import { type ReactNode } from "react";
+import { motion } from "framer-motion";
+import { type ReactNode, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { BsArrowsAngleExpand } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
@@ -10,8 +12,33 @@ interface ModalProps {
   className?: string;
   expandRoute?: string;
   showExpandButton?: boolean;
-  fullHeight?: boolean;
+  isOpen?: boolean;
+  closeOnEsc?: boolean;
+  closeOnOverlayClick?: boolean;
 }
+
+const dropIn = {
+  hidden: {
+    y: "-30vh",
+  },
+  visible: {
+    y: "0",
+    transition: {
+      duration: 0.3,
+      type: "spring",
+      damping: 25,
+    },
+  },
+  exit: {
+    y: "-30vh",
+    opacity: 0.3,
+    transition: {
+      duration: 0.2,
+      type: "spring",
+      damping: 25,
+    },
+  },
+};
 
 const Modal = ({
   title,
@@ -20,34 +47,64 @@ const Modal = ({
   className,
   expandRoute,
   showExpandButton = false,
-  fullHeight = true,
+  isOpen = false,
+  closeOnEsc = true,
+  closeOnOverlayClick = true,
 }: ModalProps) => {
   const navigate = useNavigate();
+  const modalRoot = document.getElementById("modal-root");
 
   const handleExpand = () => {
-    if (expandRoute) {
-      navigate(expandRoute);
-    }
+    if (expandRoute) navigate(expandRoute);
   };
 
-  return (
-    <div
-      className={`fixed top-0 right-0 w-full h-full flex  ${
-        fullHeight ? "items-center" : "items-start"
-      } justify-end z-50 bg-[#00000033] ${className}`}
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && closeOnEsc) {
+        closeModal();
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+    } else {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "auto";
+    };
+  }, [closeModal, isOpen, closeOnEsc]);
+
+  if (!isOpen || !modalRoot) return null;
+
+  return ReactDOM.createPortal(
+    <motion.div
+      className={`fixed top-0 right-0 w-full py-6 h-screen scroll-smooth items-start flex justify-end z-50 backdrop-blur-[2px] ${className}`}
+      exit={{ opacity: 0 }}
     >
-      <div
-        className="absolute w-full h-full bg-gray-900 opacity-50"
-        onClick={closeModal}
-      ></div>
-      <div
-        className={`bg-white  border-[1px] rounded-lg p-4 z-50 w-[90%] md:w-[60%] lg:w-[40%] ${
-          fullHeight ? "h-full max-h-[90%]" : " max-h-[90%] mt-6"
-        } mx-[3%] flex flex-col overflow-hidden`}
+      <motion.div
+        className="fixed w-full top-0 right-0 h-screen bg-black"
+        onClick={() => {
+          if (closeOnOverlayClick) closeModal();
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.5 }}
+        exit={{ opacity: 1 }}
+      />
+      <motion.div
+        className="bg-white rounded-lg p-4 z-50 w-full max-w-md max-h-full mx-[20px] flex flex-col scroll-smooth"
+        // @ts-expect-error kddkjd
+        variants={dropIn}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
       >
-        <div className=" border-[1px] rounded-lg flex flex-col h-full">
-          {/* Fixed Header */}
-          <div className="flex justify-between pb-4 p-3  border-b border-[1px] bg-white sticky top-0 z-10 border-t-0 border-l-0 border-r-0">
+        <div className="border rounded-lg flex flex-col h-fit custom-scrollbar scroll-smooth overflow-y-auto">
+          <div className="flex justify-between pb-4 bg-white p-3 rounded-tl-lg rounded-rl-lg border-b sticky top-0 z-10">
             <div className="flex items-center gap-4">
               {showExpandButton && (
                 <button
@@ -58,7 +115,7 @@ const Modal = ({
                   <BsArrowsAngleExpand />
                 </button>
               )}
-              <div className="text-[18px] font-medium text-[#191819]">{title}</div>
+              <div className="text-[18px] font-semibold text-[#191819]">{title}</div>
             </div>
             <button
               onClick={closeModal}
@@ -80,13 +137,13 @@ const Modal = ({
             </button>
           </div>
 
-          {/* Scrollable Content Area */}
-          <div className="overflow-y-auto flex-grow custom-scrollbar">
+          <div className="h-full flex-grow scroll-smooth">
             <div>{children}</div>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>,
+    modalRoot
   );
 };
 

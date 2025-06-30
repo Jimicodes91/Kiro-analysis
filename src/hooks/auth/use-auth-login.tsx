@@ -1,5 +1,5 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS } from "@/lib/constants";
+import { ENDPOINTS, UserType } from "@/lib/constants";
 
 export interface User {
   id: string;
@@ -9,8 +9,9 @@ export interface User {
   email: string;
   pfp: unknown;
   name: string;
-  role: "ADMIN";
+  role: UserType;
   company_id: string;
+  company_name: string;
   is_blocked: number;
   is_verified: number;
   timezone: unknown;
@@ -26,6 +27,7 @@ export interface User {
   password_setup_token: unknown;
   login_count: number;
   password_setup_token_expires: unknown;
+  phone_number: string | null;
 }
 
 export interface LoginResponse {

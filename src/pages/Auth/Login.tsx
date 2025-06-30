@@ -4,14 +4,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { setCookie } from "cookies-next";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { InferType } from "yup";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
-import { loginSchema } from "../../components/validationSchema/auth";
-import { LoginUser } from "../../types";
+import { loginSchema } from "../../utils/validation-schema/auth";
 
 const Login: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const authLogin = useAuthLogin();
   const {
@@ -21,8 +22,9 @@ const Login: React.FC = () => {
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
+  const callback = searchParams.get("callback") ?? "";
 
-  const onSubmit = async (data: LoginUser) => {
+  const onSubmit = async (data: InferType<typeof loginSchema>) => {
     authLogin
       .mutateAsync({
         email: data.email,
@@ -33,7 +35,27 @@ const Login: React.FC = () => {
         setCookie("user_session_token", response.data.data.token);
         setCookie("user_session", JSON.stringify(response.data.data.user));
         if (response.data.data.user.company_id) {
-          navigate(PAGES.PROJECT_PAGE);
+          const userRole = response.data.data.user.role;
+
+          const isSysAdmin = userRole === "SUPER_ADMIN" && callback?.includes("sysadmin");
+
+          if (isSysAdmin) {
+            navigate(
+              callback
+                ? isSysAdmin
+                  ? callback
+                  : PAGES.SYSADMIN_HOME_PAGE
+                : PAGES.SYSADMIN_HOME_PAGE
+            );
+          } else {
+            navigate(
+              callback
+                ? !isSysAdmin
+                  ? PAGES.PROJECT_PAGE
+                  : callback
+                : PAGES.PROJECT_PAGE
+            );
+          }
         } else {
           navigate(PAGES.ONBOARDING_PAGE);
         }

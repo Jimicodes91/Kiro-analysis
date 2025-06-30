@@ -1,76 +1,61 @@
+import useResendVerificationEmail from "@/hooks/auth/use-resend-verification-email";
+import useVerifyEmail from "@/hooks/auth/use-verify-email";
 import { PAGES } from "@/lib/constants";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Toast from "../../components/Toast";
-import { resendVerificationEmailApi, verifyEmailApi } from "../../services";
 import VerificationCard from "./VerificationCard";
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
+  const email = searchParams.get("token");
+  const resendVerificationEmail = useResendVerificationEmail();
   const navigate = useNavigate();
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const verifyEmail = useVerifyEmail(token as string);
 
   useEffect(() => {
-    if (!token) {
-      setStatus("error");
-      return;
-    }
-
-    const verifyEmail = async () => {
-      try {
-        await verifyEmailApi({ token });
-        setStatus("success");
-        setTimeout(() => navigate(PAGES.LOGIN_PAGE), 2000);
-      } catch (error) {
-        console.log(error);
-        setStatus("error");
-      }
-    };
-
-    verifyEmail();
-  }, [token, navigate]);
+    if (verifyEmail.isSuccess && verifyEmail.data)
+      setTimeout(() => navigate(PAGES.LOGIN_PAGE), 2000);
+  }, [verifyEmail, navigate]);
 
   const resendVerification = async () => {
-    const email = "";
-    try {
-      const response = await resendVerificationEmailApi({ email });
-      Toast.success(response.message || "Verification link sent");
-    } catch (error) {
-      console.error("Error resending verification:", error);
-      const errorMessage =
-        (error as { data?: string })?.data || "Error sending verification link";
-      Toast.error(errorMessage);
+    resendVerificationEmail.mutateAsync({ email: email ?? "" }).catch(console.error);
+  };
+
+  const renderBody = () => {
+    if (verifyEmail.isSuccess && verifyEmail.data) {
+      return (
+        <VerificationCard
+          title="Email verified successfully!"
+          description="Redirecting to login..."
+          noButton
+        />
+      );
     }
+
+    if (verifyEmail.isError && verifyEmail.error) {
+      return (
+        <VerificationCard
+          title="Verification failed"
+          description="Invalid or expired link."
+          buttonText="Resend verification link"
+          onButtonClick={() => resendVerification()}
+        />
+      );
+    }
+    return (
+      <VerificationCard title="Verifying your email..." noButton>
+        <>
+          <FaSpinner className="animate-spin mx-auto text-primary" size={40} />
+        </>
+      </VerificationCard>
+    );
   };
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <div className="p-6 text-center max-w-sm w-full">
-        {status === "loading" && (
-          <VerificationCard title="Verifying your email..." noButton>
-            <>
-              <FaSpinner className="animate-spin mx-auto text-primary" size={40} />
-            </>
-          </VerificationCard>
-        )}
-        {status === "success" && (
-          <VerificationCard
-            title="Email verified successfully!"
-            description="Redirecting to login..."
-            noButton
-          />
-        )}
-        {status === "error" && (
-          <VerificationCard
-            title="Verification failed"
-            description="Invalid or expired link."
-            buttonText="Resend verification link"
-            onButtonClick={() => resendVerification()}
-          />
-        )}
-      </div>
+      <div className="p-6 text-center max-w-sm w-full">{renderBody()}</div>
     </div>
   );
 };

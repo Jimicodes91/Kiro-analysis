@@ -1,7 +1,7 @@
 import { IconProps, Icons } from "@/components/ui/icons";
 import { JSX } from "react";
 
-export type UserType = "ADMIN" | "CLIENT";
+export type UserType = "ADMIN" | "SUPER_ADMIN" | "CLIENT" | "CONSULTANT";
 
 export type DashboardLinkType = {
   title: string;
@@ -23,15 +23,20 @@ const universalRoutes = [
     path: "/projects",
   },
   {
-    title: "Client",
-    icon: Icons.users,
-    path: "/client",
+    title: "Contact",
+    icon: Icons.client,
+    path: "/contact",
   },
   {
-    title: "Event",
-    icon: Icons.event,
-    path: "/event",
+    title: "Task",
+    icon: Icons.task,
+    path: "/task",
   },
+  // {
+  //   title: "Event",
+  //   icon: Icons.event,
+  //   path: "/event",
+  // },
   {
     title: "Finance",
     icon: Icons.coins,
@@ -40,7 +45,14 @@ const universalRoutes = [
 ];
 
 export const topNavData: Record<UserType, DashboardLinkType[]> = {
-  CLIENT: [...universalRoutes],
+  CLIENT: [
+    {
+      title: "Projects",
+      icon: Icons.project,
+      path: "/projects",
+    },
+  ],
+  CONSULTANT: [...universalRoutes],
   ADMIN: [
     ...universalRoutes,
     {
@@ -49,14 +61,62 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       path: "/admin",
     },
   ],
+  SUPER_ADMIN: [
+    {
+      title: "Home",
+      icon: Icons.dashboard,
+      path: "/sysadmin",
+      exact: true,
+    },
+    {
+      title: "Users",
+      icon: Icons.user,
+      path: "/sysadmin/users",
+    },
+    {
+      title: "Subscription",
+      icon: Icons.subscription,
+      path: "/sysadmin/subscription",
+    },
+  ],
 };
 
 export enum ProjectStatus {
-  NOT_STARTED = "not_started",
   IN_PROGRESS = "in_progress",
-  BLOCKED = "blocked",
   COMPLETED = "completed",
+  DUE = "due",
+  ON_TRACK = "on_track",
+  LATE = "late",
 }
+
+export type ProjectStatusDict = `${ProjectStatus}`;
+
+export const projectStatusList: { text: string; value: ProjectStatusDict | "all" }[] = [
+  {
+    text: "All Status",
+    value: "all",
+  },
+  {
+    text: "In Progress",
+    value: "in_progress",
+  },
+  {
+    text: "Completed",
+    value: "completed",
+  },
+  {
+    text: "Due",
+    value: "due",
+  },
+  {
+    text: "On Track",
+    value: "on_track",
+  },
+  {
+    text: "Late",
+    value: "late",
+  },
+];
 
 export const ENDPOINTS = {
   // Auth Endpoint
@@ -68,9 +128,12 @@ export const ENDPOINTS = {
   UPDATE_PASSWORD: "auth/update-password",
   AUTH_LOGIN: "auth/login",
   COMPANY_ADMIN_SIGNUP: "auth/company-admin-signup",
-  SEND_CONSULTANT_INVITE: "auth/send-consultant-invite",
+  SEND_CONSULTANT_INVITE: "auth/send-invite",
   COMPLETE_REGISTRATION: "auth/complete-registration",
   ADD_CLIENT: "auth/add-client",
+
+  // Home Endpoints
+  GET_DASHBOARD_METRICS: "projects/metrics",
 
   // Admin Endpoints
   GET_DASHBOARD_DETAILS: "admin/dashboard",
@@ -88,14 +151,35 @@ export const ENDPOINTS = {
   GET_INACTIVE_ORGANIZATIONS: "admin/inactive-organization",
   GET_ALL_USERS: `admin/all`,
   GET_ACTIVE_USERS: `admin/active-users`,
-  GET_ALL_ADMINS: `admin/all-admin`,
+  GET_ALL_SYSADMINS: `admin/all-sysadmins`,
 
   // Company Endpoints
-  CREATE_COMPANY: (userId: string) => `create/${userId}`,
+  CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
+
+  // Company Admin Endpoints
+  GET_COMPANY_USERS: (companyId: string, page?: number, pageSize?: number) =>
+    `admin/companies/${companyId}/users${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
+  UPDATE_COMPANY_USER_STATUS: (companyId: string) => `admin/users/${companyId}/status`,
 
   // User Endpoints
   GET_USER: (userId: string) => `user/${userId}`,
   UPDATE_PROFILE: (userId: string) => `user/profile/${userId}`,
+
+  // Contacts Endpoints
+  CREATE_CONTACT: "contacts",
+  GET_ALL_CONTACTS: "contacts",
+  GET_COMPANY_CONTACTS: "contacts/company",
+  SEARCH_COMPANY_CONTACTS: "contacts/search",
+  UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
+
+  // Finance Endpoints
+  CREATE_FINANCE_RECORD: "org-finance",
+  UPDATE_FINANCE_RECORD: (financeId: string) => `org-finance/${financeId}`,
+  MARK_FINANCE_RECORD_AS_PAID: (financeId: string) =>
+    `org-finance/${financeId}/mark-as-paid`,
+  GET_ALL_FINANCE_RECORDS: (companyId: string, page?: number, pageSize?: number) =>
+    `org-finance/?companyId=${companyId}&page=${page}&pageSize=${pageSize}`,
+  GET_INDIVIDUAL_FINANCE_RECORD: (financeId: string) => `org-finance/${financeId}`,
 
   /* 
   Project Module Collection
@@ -117,10 +201,17 @@ export const ENDPOINTS = {
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
-  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatus) =>
-    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status ? `?status=${status}` : ""}`,
+  GET_ALL_PROJECTS: (
+    projectTypeId?: string,
+    status?: ProjectStatusDict | "all",
+    search?: string
+  ) =>
+    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}${search ? `&search=${search}` : ""}`,
+  GET_CLIENT_PROJECTS: (clientId?: string, status?: ProjectStatusDict | "all") =>
+    `projects${clientId ? `?client_id=${clientId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
+  UPDATE_PROJECT_MILESTONE: (projectId: string) => `projects/${projectId}`,
 
   // 1. Project Types
   GET_ALL_PROJECT_TYPES: "projects/types",
@@ -166,7 +257,11 @@ export const ENDPOINTS = {
 
   // 5. Tasks
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
-  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_ALL_PROJECT_TASKS: (projectId: string, assigneeId?: string) =>
+    `projects/tasks?project_id=${projectId}${assigneeId ? `&assignee_id=${assigneeId}` : ""}`,
+  // GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
+  GET_ALL_TASKS: (search?: string) =>
+    `projects/tasks${search ? `?search=${search}` : ""}`,
   GET_TASK_DETAILS: (projectId: string, taskId: string) =>
     `projects/${projectId}/tasks/${taskId}`,
   UPDATE_TASK_DETAILS: (projectId: string, taskId: string) =>
@@ -211,18 +306,20 @@ export const ENDPOINTS = {
   GET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
 
   // 9. Document Types
-  CREATE_DOCUMENT_TYPE: (projectId: string) =>
-    `metadata/projects/${projectId}/type/documents`,
-  GET_DOCUMENT_TYPES: (projectId: string) =>
-    `metadata/projects/${projectId}/type/documents`,
+  CREATE_DOCUMENT_TYPE: `metadata/type/documents`,
+  UPDATE_DOCUMENT_TYPE: (documentTypeId: string) =>
+    `metadata/type/documents/${documentTypeId}`,
+  GET_DOCUMENT_TYPES: `metadata/type/documents`,
 
   // 10. Event Types
-  CREATE_EVENT_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/events`,
-  GET_EVENT_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/events`,
+  CREATE_EVENT_TYPE: "metadata/type/events",
+  UPDATE_EVENT_TYPE: (eventTypeId: string) => `metadata/type/events/${eventTypeId}`,
+  GET_EVENT_TYPES: "metadata/type/events",
 
   // 11. Task Types
-  CREATE_TASK_TYPE: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
-  GET_TASK_TYPES: (projectId: string) => `metadata/projects/${projectId}/type/tasks`,
+  CREATE_TASK_TYPE: "metadata/type/tasks",
+  UPDATE_TASK_TYPE: (taskTypeId: string) => `metadata/type/tasks/${taskTypeId}`,
+  GET_TASK_TYPES: "metadata/type/tasks",
 
   // 12. Activity Logs
   GET_AUDIT_TRAIL: (projectId: string, page = 1, limit = 20) =>
@@ -234,6 +331,20 @@ export const ENDPOINTS = {
   ADD_FORM_FIELDS: `projects/forms/fields`,
   TOGGLE_PROJECT_FIELD_REQUIREMENT: (fieldId: string) =>
     `projects/forms/fields/${fieldId}/requirement`,
+
+  // 11. Note Types
+  CREATE_NOTE_TYPE: "metadata/type/notes",
+  UPDATE_NOTE_TYPE: (noteTypeId: string) => `metadata/type/notes/${noteTypeId}`,
+  GET_NOTE_TYPES: "metadata/type/notes",
+
+  // Subscription
+  GET_ALL_PLANS: "billing/plans",
+  GET_PLAN: (planType: string) => `billing/plans/${planType}`,
+  CREATE_PLAN: "billing/plans",
+  UPDATE_PLAN: (planType: string) => `billing/plans/${planType}`,
+  DELETE_PLAN: (planType: string) => `billing/plans/${planType}`,
+  GET_COMPANY_SUBSCRIPTION_PLAN: (companyId: string) =>
+    `subscription/${companyId}/subscription`,
 };
 
 // for GET requests
@@ -249,14 +360,28 @@ export const QUERYKEYS = {
   GET_INACTIVE_ORGANIZATIONS: "GET_INACTIVE_ORGANIZATIONS",
   GET_ALL_USERS: "GET_ALL_USERS",
   GET_ACTIVE_USERS: "GET_ACTIVE_USERS",
-  GET_ALL_ADMINS: "GET_ALL_ADMINS",
+  GET_ALL_SYSADMINS: "GET_ALL_SYSADMINS",
+
+  // Company Admin Endpoints
+  GET_COMPANY_USERS: "GET_COMPANY_USERS",
 
   // User Query keys
   GET_USER: "GET_USER",
 
+  // Contacts Query keys
+  GET_ALL_CONTACTS: "GET_ALL_CONTACTS",
+  GET_COMPANY_CONTACTS: "GET_COMPANY_CONTACTS",
+  SEARCH_COMPANY_CONTACTS: "SEARCH_COMPANY_CONTACTS",
+
+  // Finance Query keys
+  GET_ALL_FINANCE_RECORDS: "GET_ALL_FINANCE_RECORDS",
+  GET_INDIVIDUAL_FINANCE_RECORD: "GET_INDIVIDUAL_FINANCE_RECORD",
+
   // 0. Project Module Collection
   GET_ALL_PROJECTS: "GET_ALL_PROJECTS",
+  GET_CLIENT_PROJECTS: "GET_CLIENT_PROJECTS",
   GET_PROJECT_DETAILS: "GET_PROJECT_DETAILS",
+  UPDATE_PROJECT_MILESTONE: "UPDATE_PROJECT_MILESTONE",
 
   // 1. Project Types Query keys
   GET_ALL_PROJECT_TYPES: "GET_ALL_PROJECT_TYPES",
@@ -279,6 +404,7 @@ export const QUERYKEYS = {
 
   // 5. Tasks Query keys
   GET_ALL_PROJECT_TASKS: "GET_ALL_PROJECT_TASKS",
+  GET_ALL_TASKS: "GET_ALL_TASKS",
   GET_TASK_DETAILS: "GET_TASK_DETAILS",
 
   // 6. Documents Query keys
@@ -306,6 +432,14 @@ export const QUERYKEYS = {
   // 13. Project Forms
   GET_PROJECT_FORMS: "GET_PROJECT_FORMS",
   GET_PROJECT_FORM_FIELDS: "GET_PROJECT_FORM_FIELDS",
+
+  // 11. Note Types
+  GET_NOTE_TYPES: "GET_NOTE_TYPES",
+
+  // Subscription
+  GET_ALL_PLANS: "GET_ALL_PLANS",
+  GET_PLAN: "GET_PLAN",
+  GET_COMPANY_SUBSCRIPTION_PLAN: "GET_COMPANY_SUBSCRIPTION_PLAN",
 };
 
 export const PAGES = {
@@ -314,8 +448,74 @@ export const PAGES = {
   REGISTER_PAGE: "/register",
   FORGOT_PASSWORD_PAGE: "/forgot-password",
   RESET_PASSWORD_PAGE: "/reset-password",
-
+  ADMIN_PAGE: "/admin",
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
   PROJECT_CREATE_PAGE: "/projects/create",
+
+  // Sysadmin Page
+  SYSADMIN_HOME_PAGE: "/sysadmin",
+};
+
+export const industryList = [
+  { value: "technology", label: "Technology" },
+  { value: "finance", label: "Finance" },
+  { value: "healthcare", label: "Healthcare" },
+  { value: "education", label: "Education" },
+  { value: "retail", label: "Retail" },
+  { value: "manufacturing", label: "Manufacturing" },
+  { value: "consulting", label: "Consulting" },
+  { value: "entertainment", label: "Entertainment" },
+];
+
+export const companySizeList = [
+  { value: "1-10", label: "1-10 Employees" },
+  { value: "11-50", label: "11-50 Employees" },
+  { value: "51-100", label: "51-100 Employees" },
+  { value: "101-250", label: "101-250 Employees" },
+  { value: "251-500", label: "251-500 Employees" },
+  { value: "500+", label: "500+ Employees" },
+];
+
+export const countryList = [
+  { value: "Nigeria", label: "Nigeria" },
+  { value: "usa", label: "United States" },
+  { value: "uk", label: "United Kingdom" },
+  { value: "ca", label: "Canada" },
+];
+
+// Define a type for the state options
+type StateOption = { value: string; label: string };
+
+// Define a type for the country-states mapping
+export type CountryStatesMap = {
+  [key in "Nigeria" | "usa" | "uk" | "ca"]: StateOption[];
+};
+
+// Predefined country-state mappings
+export const COUNTRY_STATES: CountryStatesMap = {
+  Nigeria: [
+    { value: "lagos", label: "Lagos" },
+    { value: "abuja", label: "Abuja" },
+    { value: "ibadan", label: "Ibadan" },
+    { value: "kano", label: "Kano" },
+  ],
+  usa: [
+    { value: "ny", label: "New York" },
+    { value: "ca", label: "California" },
+    { value: "tx", label: "Texas" },
+    { value: "fl", label: "Florida" },
+  ],
+  uk: [
+    { value: "london", label: "London" },
+    { value: "manchester", label: "Manchester" },
+    { value: "birmingham", label: "Birmingham" },
+    { value: "liverpool", label: "Liverpool" },
+  ],
+  ca: [
+    { value: "ontario", label: "Ontario" },
+    { value: "quebec", label: "Quebec" },
+    { value: "bc", label: "British Columbia" },
+    { value: "alberta", label: "Alberta" },
+  ],
 };

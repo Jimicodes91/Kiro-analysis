@@ -11,7 +11,7 @@ const DashBoardHeader: React.FC = () => {
   const company = useGetCompanyDetails(user?.company_id ?? "");
 
   return (
-    <div className="flex w-full md:flex justify-between md:items-center mb-3 border-b border-[#0000001A] p-3 ">
+    <div className="flex w-full md:flex justify-between md:items-center mb-3 border-b border-brand-border p-3 ">
       <div className=" flex w-full items-center">
         <div className="flex gap-2 items-center">
           <div className="grid place-items-center h-11 w-11 rounded-full bg-gray-100">
@@ -26,7 +26,7 @@ const DashBoardHeader: React.FC = () => {
 
         <div className="flex-[1]   flex justify-end items-center center">
           <button
-            className="mr-5 cursor-pointer relative border-2 border-[#0000001A] p-2 rounded-full
+            className="mr-5 cursor-pointer relative border-2 border-brand-border p-2 rounded-full
             "
             type="button"
           >

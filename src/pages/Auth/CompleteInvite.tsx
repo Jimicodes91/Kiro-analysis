@@ -8,16 +8,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { completeInviteSchema } from "@/components/validationSchema/auth";
 import useCompleteRegistration from "@/hooks/auth/use-complete-registration";
 import useDisclosure from "@/hooks/use-disclosure";
+import { PAGES } from "@/lib/constants";
+import { completeInviteSchema } from "@/utils/validation-schema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { InferType } from "yup";
 import { Logo } from "../../assets";
+import VerificationCard from "./VerificationCard";
 
 const CompleteInvite: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -27,6 +29,7 @@ const CompleteInvite: React.FC = () => {
   const companyId = searchParams.get("companyId");
   const email = searchParams.get("email");
   const completeRegistration = useCompleteRegistration();
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: yupResolver(completeInviteSchema),
@@ -38,10 +41,22 @@ const CompleteInvite: React.FC = () => {
         companyId: companyId ?? "",
         email: email ?? "",
         role: role ?? "",
+        name: data.name,
         password: data.newPassword,
       })
       .catch(console.error);
   };
+
+  if (completeRegistration.isSuccess && completeRegistration.data) {
+    return (
+      <VerificationCard
+        title="Invitation accepted successfully"
+        description="Your account has been registered sucessfully, please login"
+        buttonText="Back to login"
+        onButtonClick={() => navigate(PAGES.LOGIN_PAGE)}
+      />
+    );
+  }
 
   return (
     <div className=" flex flex-col space-y-6 animate-in fade-in-0 duration-700 ease-in-out">
@@ -55,6 +70,19 @@ const CompleteInvite: React.FC = () => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Type name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="newPassword"
@@ -112,7 +140,7 @@ const CompleteInvite: React.FC = () => {
 
 export default CompleteInvite;
 
-const ButtonToggler = ({
+export const ButtonToggler = ({
   isShown,
   onClick,
 }: {

@@ -1,40 +1,65 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-
 interface SpadeProps {
   text: string;
   isLast?: boolean;
   isFirst?: boolean;
   isActive: boolean;
+  onClick?: () => void;
+  isLoading?: boolean;
 }
 
-function Spade({ text, isLast, isFirst, isActive }: SpadeProps) {
+function Spade({ text, isLast, isFirst, isActive, onClick }: SpadeProps) {
   return (
-    <div
-      className={cn(
-        "flex items-center w-full capitalize px-10 text-md py-3 relative cursor-pointer",
-        isFirst && "rounded-l-full",
-        isLast && "rounded-r-full",
-        isActive ? "bg-primary text-white" : "bg-[#092327]/10 text-primary"
-      )}
-    >
-      {!isFirst && (
-        <div
-          className="w-[18px] h-12 absolute -top-0.5 -left-3 bg-white flex items-center justify-center text-xl font-bold"
-          style={{
-            clipPath: "polygon(0% 0%, 57% 0%, 100% 50%, 57% 100%, 0% 100%, 43% 50%)",
-          }}
-        ></div>
-      )}
-      {text}
-      {!isLast && (
-        <div
-          className="w-[18px] h-12 absolute -top-0.5 -right-[15px] bg-white  flex items-center justify-center text-xl font-bold"
-          style={{
-            clipPath: "polygon(0% 0%, 50% 0%, 100% 50%, 50% 100%, 0% 100%, 50% 50%)",
-          }}
-        ></div>
-      )}
-    </div>
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            onClick={onClick}
+            className={cn(
+              "flex items-center w-full capitalize min-w-10 text-center justify-center font-medium pl-4 pr-7 text-xs py-2.5 relative cursor-pointer transition-colors whitespace-nowrap",
+              isFirst && "rounded-l-full",
+              isLast && "rounded-r-full",
+              isActive ? "bg-primary text-white" : "bg-[#092327]/5 text-[#00000080]"
+            )}
+          >
+            {!isFirst && (
+              <div
+                className="w-[18px] h-[46px] absolute -top-0.5 -left-3 bg-white flex items-center justify-center text-xl font-bold"
+                style={{
+                  clipPath:
+                    "polygon(0% 0%, 57% 0%, 100% 50%, 57% 100%, 0% 100%, 43% 50%)",
+                }}
+              ></div>
+            )}
+            {text}
+            {!isLast && (
+              <div
+                className="w-[18px] h-[46px] absolute -top-0.5 -right-[15px] bg-transparent  flex items-center justify-center text-xl font-bold"
+                style={{
+                  clipPath:
+                    "polygon(0% 0%, 50% 0%, 100% 50%, 50% 100%, 0% 100%, 50% 50%)",
+                }}
+              ></div>
+            )}
+          </div>
+        </TooltipTrigger>
+        <TooltipContent
+          sideOffset={10}
+          className="text-primary text-xs p-2 bg-white border"
+          arrowPadding={100}
+        >
+          <p>
+            Progress this project to <span className="font-bold">{text}</span> phase
+          </p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 

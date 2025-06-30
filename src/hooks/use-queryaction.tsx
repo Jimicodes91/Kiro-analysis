@@ -14,7 +14,7 @@ type ActionParams<T> = Partial<SecureRequestProps> &
 export function getQueryAction<T>(payload: ActionParams<T>) {
   const { endpoint, method, body, headers } = payload;
 
-  const url = (import.meta.env.VITE_API_BASE_URL_TWO as string) + endpoint;
+  const url = (import.meta.env.VITE_API_BASE_URL as string) + endpoint;
 
   return {
     queryFn: () => {
