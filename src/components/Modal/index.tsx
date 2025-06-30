@@ -97,6 +97,7 @@ const Modal = ({
       />
       <motion.div
         className="bg-white rounded-lg p-4 z-50 w-full max-w-md max-h-full mx-[20px] flex flex-col scroll-smooth"
+        // @ts-expect-error kddkjd
         variants={dropIn}
         initial="hidden"
         animate="visible"
