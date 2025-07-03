@@ -426,6 +426,44 @@ export interface FinanceData {
   pagination: Pagination;
 }
 
+export interface PaymentHistory {
+  amount_paid: string;
+  client_name: string;
+  created_at: string;
+  deleted_at: string | null;
+  has_paid: number;
+  id: string;
+  next_payment_due_date: string;
+  organization_id: string;
+  outstanding_balance: string;
+  payment_date: string;
+  payment_proof_url: string | null;
+  payment_status: string;
+  project_title: string;
+  total_project_cost: string;
+  updated_at: string;
+}
+
+export interface IndividualFinanceRecord {
+  amount_paid: string;
+  client_name: string;
+  created_at: string;
+  deleted_at: string | null;
+  has_paid: number;
+  id: string;
+  lastPaymentDate: string;
+  next_payment_due_date: string;
+  organization_id: string;
+  outstanding_balance: string;
+  payment_date: string;
+  payment_proof_url: string | null;
+  payment_status: string;
+  project_title: string;
+  total_project_cost: string;
+  updated_at: string;
+  paymentHistory: PaymentHistory[];
+}
+
 export interface CompanyDetails {
   id: string;
   created_at: string;
