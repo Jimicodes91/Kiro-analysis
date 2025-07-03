@@ -16,6 +16,7 @@ import { IFormField } from "@/hooks/project-modules/project-forms/use-get-projec
 import useCreateProject from "@/hooks/project-modules/use-create-project";
 import { PAGES } from "@/lib/constants";
 import { cn, convertDatesToYMD, getSelectableDate } from "@/lib/utils";
+import { useProjectContext } from "@/pages/Home/Project/context/project-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -28,6 +29,7 @@ import SelectComponent from "./lol";
 export default function CreateProjectDynamicForm({ fields }: { fields: IFormField[] }) {
   const navigate = useNavigate();
   const createProject = useCreateProject();
+  const { changeActiveProjectType } = useProjectContext();
 
   const fieldSchema = fields.reduce((acc, field) => {
     const key = field.slug;
@@ -52,7 +54,9 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
       validator = z.coerce.string();
       if (field.is_required) {
         validator = z.coerce.date();
-        validator = validator.min(new Date(), `${field.name} must be a valid date`);
+        if (field.slug === "end_date") {
+          validator = validator.min(new Date(), `${field.name} must be a valid date`);
+        }
       }
     } else if (field.slug === "project_client") {
       validator = z
@@ -88,6 +92,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
     createProject
       .mutateAsync(convertDatesToYMD(values))
       .then(() => {
+        if ("journey" in values) changeActiveProjectType(values?.journey as string);
         form.reset();
         navigate(PAGES.PROJECT_PAGE);
       })
@@ -123,6 +128,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                           <>
                             {field.type === "select" ? (
                               <SelectComponent
+                                // @ts-expect-error Type error
                                 apiLocator={field.api_locator}
                                 fieldProps={fieldProps}
                                 isMultiple={field.is_multiple}
@@ -135,6 +141,12 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                     <Button
                                       rightIcon={
                                         <CalendarIcon className="mr-auto h-4 w-4 opacity-50" />
+                                      }
+                                      disabled={
+                                        field.slug === "end_date"
+                                          ? // @ts-expect-error Date issue
+                                            !form.watch("start_date")
+                                          : false
                                       }
                                       variant={"outline"}
                                       className={cn(
@@ -158,7 +170,12 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                     mode="single"
                                     selected={fieldProps.value}
                                     onSelect={fieldProps.onChange}
-                                    disabled={getSelectableDate}
+                                    disabled={
+                                      field.slug === "end_date"
+                                        ? // @ts-expect-error Date issue
+                                          (value) => value < form.watch("start_date")
+                                        : getSelectableDate
+                                    }
                                     initialFocus
                                   />
                                 </PopoverContent>

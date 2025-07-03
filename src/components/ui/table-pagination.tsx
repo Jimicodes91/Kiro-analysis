@@ -54,7 +54,7 @@ export function TablePagination() {
           variant="outline"
           size="sm"
           onClick={onNext}
-          disabled={currentPageNumber === totalPages}
+          disabled={currentPageNumber === totalPages || totalPages === 0}
           className="text-xs"
         >
           Next

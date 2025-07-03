@@ -13,7 +13,13 @@ import PaginationContextProvider from "@/lib/context/pagination-context";
 import React from "react";
 import UserTableRow from "./user-table-row";
 
-const UsersTable = ({ givenCompanyId }: { givenCompanyId?: string }) => {
+const UsersTable = ({
+  givenCompanyId,
+  isEditable = true,
+}: {
+  givenCompanyId?: string;
+  isEditable?: boolean;
+}) => {
   const [pageProp, setPageProp] = React.useState({
     page: 1,
     pageSize: 10,
@@ -34,7 +40,9 @@ const UsersTable = ({ givenCompanyId }: { givenCompanyId?: string }) => {
           <TableCell className="border-0 h-3 py-0" colSpan={7}></TableCell>
         </TableRow>
         <>
-          {users?.value?.data?.map((user) => <UserTableRow key={user.id} user={user} />)}
+          {users?.value?.data?.map((user) => (
+            <UserTableRow isEditable={isEditable} key={user.id} user={user} />
+          ))}
         </>
       </TableBody>
     );
@@ -48,9 +56,8 @@ const UsersTable = ({ givenCompanyId }: { givenCompanyId?: string }) => {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Currency</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Toggle Status</TableHead>
+              {isEditable && <TableHead>Toggle Status</TableHead>}
             </TableRow>
           </TableHeader>
           {renderTableBody()}

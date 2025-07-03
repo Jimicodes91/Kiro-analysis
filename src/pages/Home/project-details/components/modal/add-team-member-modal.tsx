@@ -1,6 +1,5 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -17,7 +16,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
-import useAddProjectMember from "@/hooks/project-modules/project-members/use-add-project-member";
+import useAddProjectMember, {
+  ProjectMemberType,
+} from "@/hooks/project-modules/project-members/use-add-project-member";
 import { addTeamSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -28,8 +29,10 @@ const AddTeamModal = ({
   onClose,
   projectId,
   isOpen,
+  memberType = "client",
 }: {
   projectId: string;
+  memberType: ProjectMemberType;
 } & ModalProps) => {
   const addProjectMember = useAddProjectMember(projectId);
   const users = useGetCompanyUsers();
@@ -40,7 +43,11 @@ const AddTeamModal = ({
 
   const onSubmit = async (data: z.infer<typeof addTeamSchema>) => {
     addProjectMember
-      .mutateAsync(data)
+      .mutateAsync({
+        ...data,
+        is_visible_to_client: memberType === "client",
+        member_type: memberType,
+      })
       .then(() => {
         form.reset();
         onClose();
@@ -51,7 +58,7 @@ const AddTeamModal = ({
   return (
     <>
       <Modal
-        title="Add team"
+        title={`Add ${memberType} team`}
         closeModal={onClose}
         isOpen={isOpen}
         closeOnEsc={false}
@@ -60,7 +67,7 @@ const AddTeamModal = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 p-4"
+            className="flex flex-col gap-6 p-4"
           >
             <FormField
               control={form.control}
@@ -93,20 +100,6 @@ const AddTeamModal = ({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="is_visible_to_client"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <FormLabel className="font-normal text-brand-fade">
-                    Make visible to client
-                  </FormLabel>
-                </FormItem>
-              )}
-            />
             <Button type="submit" isLoading={addProjectMember.isPending}>
               Add team
             </Button>

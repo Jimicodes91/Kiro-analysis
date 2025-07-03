@@ -7,18 +7,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
-import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
+import useGetAllPlans from "@/hooks/subscription/use-get-all-plans";
 import SubscriptionTableRow from "./subscription-table-row";
 
 const SubscriptionTable = () => {
-  const users = useGetCompanyUsers();
+  const allPlans = useGetAllPlans();
 
   const renderTableBody = () => {
-    if (users.isPending) return <TableSkeletonRowLoader length={7} />;
+    if (allPlans.isPending) return <TableSkeletonRowLoader length={7} />;
 
-    if (users?.isError) return <EmptyTable message="Something went wrong" length={7} />;
+    if (allPlans?.isError)
+      return <EmptyTable message="Something went wrong" length={7} />;
 
-    if (users?.value?.data?.length === 0)
+    if (allPlans?.value?.data?.length === 0)
       return <EmptyTable message="No user found" length={7} />;
 
     return (
@@ -27,8 +28,8 @@ const SubscriptionTable = () => {
           <TableCell className="border-0 h-3 py-0" colSpan={7}></TableCell>
         </TableRow>
         <>
-          {users?.value?.data?.map((user) => (
-            <SubscriptionTableRow key={user.id} user={user} />
+          {allPlans?.value?.data?.map((plan) => (
+            <SubscriptionTableRow key={plan.id} plan={plan} />
           ))}
         </>
       </TableBody>
@@ -43,7 +44,6 @@ const SubscriptionTable = () => {
               <TableHead>Plan name</TableHead>
               <TableHead>Price per seat</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Duration</TableHead>
               <TableHead>Duration</TableHead>
               <TableHead>Action</TableHead>
               <TableHead></TableHead>

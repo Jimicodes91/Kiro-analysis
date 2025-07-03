@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
+import useDebounce from "@/hooks/use-debounce";
 import useDisclosure from "@/hooks/use-disclosure";
 import React, { useState } from "react";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
@@ -10,8 +11,10 @@ import TaskEmptyState from "./task-empty-state";
 import TasksTable from "./task-table";
 
 const Task: React.FC = () => {
-  const [, setSearchQuery] = useState("");
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [search, setSearchQuery] = useState("");
+
+  const debounceText = useDebounce(search, 1000);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -33,6 +36,7 @@ const Task: React.FC = () => {
               <Input
                 placeholder="Search keyword"
                 className="w-full pl-8 text-[#00000080]"
+                type="search"
                 onChange={(e) => {
                   handleSearch(e.target.value);
                 }}
@@ -40,22 +44,6 @@ const Task: React.FC = () => {
             </div>
           </div>
           <div className="flex justify-between space-x-2">
-            {/* <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<HiOutlineAdjustmentsVertical className="text-[#111] w-6 h-6" />}
-              className="border-black"
-            >
-              Filter
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<GoShare className="text-[#111] w-6 h-6" />}
-              className="border-black"
-            >
-              Export
-            </Button> */}
             <Button
               size="sm"
               leftIcon={<IoAdd className="text-white w-6 h-6" />}
@@ -68,7 +56,7 @@ const Task: React.FC = () => {
         {Array.isArray(tasksResponse?.data?.data?.data) && tasks.length === 0 ? (
           <TaskEmptyState />
         ) : (
-          <TasksTable />
+          <TasksTable search={debounceText} />
         )}
       </div>
 

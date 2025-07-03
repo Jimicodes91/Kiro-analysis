@@ -126,7 +126,7 @@ export const addProjectTaskSchema = z.object({
       "application/msword",
     ],
     maxFiles
-  ),
+  ).optional(),
 });
 
 export const editProjectTaskSchema = z.object({
@@ -195,20 +195,23 @@ export const uploadDocumentSchema = z.object({
     message: "Description is required",
   }),
   // is_visible_to_client: z.boolean().default(false),
-  attachment: optionalFileSchema(fileSize, [
-    // CSV files
-    "application/pdf",
-    "image/png",
-    "image/jpeg", // covers both .jpeg and .jpg
-    "application/msword",
-  ]),
+  attachment: fileListSchema(
+    fileSize,
+    [
+      // CSV files
+      "application/pdf",
+      "image/png",
+      "image/jpeg", // covers both .jpeg and .jpg
+      "application/msword",
+    ],
+    maxFiles
+  ),
 });
 
 export const addTeamSchema = z.object({
   user_id: z.string({
     message: "Document name is required",
   }),
-  is_visible_to_client: z.boolean().default(false),
 });
 
 export const addProjectEventSchema = z.object({

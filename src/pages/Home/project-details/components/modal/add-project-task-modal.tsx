@@ -311,7 +311,7 @@ const AddProjectTaskModal = ({
                   <FormLabel>Attachment</FormLabel>
                   <FormControl>
                     <DragNdrop
-                      id="file-attachment"
+                      id={field.name}
                       value={field.value}
                       onChange={field.onChange}
                     />

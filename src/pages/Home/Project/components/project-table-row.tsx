@@ -1,6 +1,7 @@
 // tablerow.tsx
+import PersonAvatar from "@/components/ui/person-avatar";
 import useDisclosure from "@/hooks/use-disclosure";
-import getInitials, { getFormattedText } from "@/lib/utils";
+import { getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { format } from "date-fns";
 import { Badge } from "../../../../components/ui/badge";
@@ -9,6 +10,9 @@ import ProjectModal from "./project-modal";
 
 const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  const clientList = project?.form_fields?.find((item) => item.slug === "project_client")
+    ?.value as { name: string; email: string }[];
   return (
     <>
       <TableRow
@@ -28,25 +32,8 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
         </TableCell>
         <TableCell>
           <div className="flex -space-x-2">
-            {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
-              <div
-                key={index}
-                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-              >
-                {getInitials(member)}
-              </div>
-            ))}
-          </div>
-        </TableCell>
-        <TableCell>
-          <div className="flex -space-x-2">
-            {["Johnbosco", "Segun", "Nicholas"]?.map((member, index) => (
-              <div
-                key={index}
-                className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F1F1F1] text-dark text-xs font-medium ring-2 ring-white"
-              >
-                {getInitials(member)}
-              </div>
+            {clientList?.map((item) => (
+              <PersonAvatar key={item.name} name={item.name} email={item.email} />
             ))}
           </div>
         </TableCell>

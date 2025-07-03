@@ -23,7 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 
-function AddUserModalForm({ onClose, isOpen }: ModalProps) {
+function AddPlanModal({ onClose, isOpen }: ModalProps) {
   const sendConsultantInvite = useSendConsultantInvite();
   const form = useForm({
     resolver: yupResolver(addUserSchema),
@@ -39,7 +39,7 @@ function AddUserModalForm({ onClose, isOpen }: ModalProps) {
       .catch(console.error);
   };
   return (
-    <Modal title="Add User" closeModal={onClose} isOpen={isOpen}>
+    <Modal title="Add Plan" closeModal={onClose} isOpen={isOpen}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
           <FormField
@@ -47,9 +47,35 @@ function AddUserModalForm({ onClose, isOpen }: ModalProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Plan name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Email" {...field} />
+                  <Input placeholder="Plan name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input placeholder="Duration" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Duration (days)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Duration" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -89,7 +115,7 @@ function AddUserModalForm({ onClose, isOpen }: ModalProps) {
           />
           <div className="pt-3">
             <Button type="submit" fullWidth isLoading={sendConsultantInvite.isPending}>
-              Add User
+              Add Plan
             </Button>
           </div>
         </form>
@@ -98,4 +124,4 @@ function AddUserModalForm({ onClose, isOpen }: ModalProps) {
   );
 }
 
-export default AddUserModalForm;
+export default AddPlanModal;

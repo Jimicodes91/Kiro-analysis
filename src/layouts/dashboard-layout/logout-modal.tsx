@@ -9,12 +9,9 @@ import {
   ModalProps,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { PAGES } from "@/lib/constants";
 import { logout } from "@/services/api.service";
-import { useNavigate } from "react-router-dom";
 
 function LogoutModal({ isOpen, onClose }: ModalProps) {
-  const navigate = useNavigate();
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogContent onEscapeKeyDown={onClose} className="bg-white p-3 !max-w-lg">
@@ -30,15 +27,7 @@ function LogoutModal({ isOpen, onClose }: ModalProps) {
             <Button size="sm" onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                logout().then(() => {
-                  navigate(PAGES.LOGIN_PAGE);
-                });
-              }}
-            >
+            <Button variant="outline" size="sm" onClick={() => logout()}>
               Log out
             </Button>
           </AlertDialogFooter>

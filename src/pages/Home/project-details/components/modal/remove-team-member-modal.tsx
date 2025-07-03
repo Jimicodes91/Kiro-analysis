@@ -30,7 +30,7 @@ const RemoveTeamMemberModal = ({
         <div className="p-3 space-y-4">
           <p className="text-gray-500 text-sm">
             Are you sure you want to remove{" "}
-            <span className="font-bold">
+            <span className="font-bold text-primary">
               {member?.creator?.name ?? member?.creator?.email}
             </span>
             , from this project? They will lose access to all associated tasks, files, and

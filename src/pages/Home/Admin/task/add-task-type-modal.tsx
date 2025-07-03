@@ -46,7 +46,7 @@ const AddTaskTypeModal = ({
         form.reset();
         onClose();
       })
-      .catch(console.log);
+      .catch(console.error);
   };
 
   return (

@@ -8,12 +8,12 @@ export interface TaskListResponse {
   data: Task[];
 }
 
-const useGetAllTasks = (projectId?: string) => {
-  const projectIdKey = projectId ?? "";
+const useGetAllTasks = (search?: string) => {
+  const searchKey = search ?? "";
   return useQueryActionHook<TaskListResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_ALL_TASKS(projectId),
-    queryKey: [QUERYKEYS.GET_ALL_TASKS, projectIdKey],
+    endpoint: ENDPOINTS.GET_ALL_TASKS(search),
+    queryKey: [QUERYKEYS.GET_ALL_TASKS, searchKey],
   });
 };
 

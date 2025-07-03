@@ -58,7 +58,7 @@ function CompaniesTableRow({ company }: { company: CompanyDetails }) {
               <DropdownMenuGroup>
                 <>
                   <DropdownMenuItem asChild onClick={onOpen}>
-                    <Link to={`/sysadmin/companies/${company?.id}`}>View Company</Link>
+                    <Link to={`/sysadmin/${company?.id}/companies`}>View Company</Link>
                   </DropdownMenuItem>
                 </>
               </DropdownMenuGroup>

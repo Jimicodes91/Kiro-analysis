@@ -27,6 +27,7 @@ export interface User {
   password_setup_token: unknown;
   login_count: number;
   password_setup_token_expires: unknown;
+  phone_number: string | null;
 }
 
 export interface LoginResponse {

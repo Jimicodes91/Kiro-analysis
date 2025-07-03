@@ -31,6 +31,8 @@ function EventCard({ event }: { event: EventDetails }) {
     "Nov",
     "Dec",
   ];
+  const startTime = event.start_datetime.split(",")[1] ?? "";
+  const endTime = event.end_datetime.split(",")[1] ?? "";
   return (
     <>
       <div className="px-5 py-3 rounded-lg border flex gap-x-4 justify-between border-brand-border bg-[#F8F8F8]">
@@ -40,10 +42,12 @@ function EventCard({ event }: { event: EventDetails }) {
             <Heading size="h1">{eventDate?.getDate()}</Heading>
           </div>
           <div>
-            <p className="text-sm">11:00am - 2:00pm</p>
+            <p className="text-sm">
+              {startTime} - {endTime}
+            </p>
             <p className="font-bold text-xl">{event?.name}</p>
-            <p className="text-gray-500 max-w-lg tex-xs">{event?.description}</p>
-            <div className="flex gap-2 items-center pt-1">
+            <p className="text-gray-500 max-w-lg text-xs italic">{event?.description}</p>
+            <div className="flex gap-2 items-center pt-1 text-sm">
               <MdGpsFixed />
               <p>{event?.venue}</p>
             </div>

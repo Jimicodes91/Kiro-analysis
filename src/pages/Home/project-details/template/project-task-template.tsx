@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
 import useDisclosure from "@/hooks/use-disclosure";
+import { getIsClient, getUserSession } from "@/services/api.service";
 import { AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
 import TaskCard from "../components/cards/task-card";
@@ -16,8 +17,10 @@ function ProjectTaskSection({
   mode?: "readonly" | "edit";
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const user = getUserSession();
 
-  const projectTasks = useGetProjectTasks(projectId);
+  const isClient = getIsClient();
+  const projectTasks = useGetProjectTasks(projectId, isClient ? user?.id : undefined);
 
   const renderBody = () => {
     if (projectTasks.isPending)

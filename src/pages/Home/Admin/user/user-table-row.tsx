@@ -5,7 +5,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import useToggleCompanyUserStatus from "@/hooks/company-admin/use-toggle-comppany-user-status";
 import { UserDetails } from "@/types/api.types";
 
-function UserTableRow({ user }: { user: UserDetails }) {
+function UserTableRow({ user, isEditable }: { user: UserDetails; isEditable?: boolean }) {
   const toggleUserStatus = useToggleCompanyUserStatus(user?.id ?? "");
   return (
     <>
@@ -14,38 +14,28 @@ function UserTableRow({ user }: { user: UserDetails }) {
         <TableCell>{user?.email}</TableCell>
 
         <TableCell>{user?.role}</TableCell>
-        <TableCell>{user?.currency}</TableCell>
 
         <TableCell>
           <Badge variant={user?.is_active ? "success" : "destructive"}>
             <span>{user?.is_active ? "Active" : "Inactive"}</span>
           </Badge>
         </TableCell>
-        <TableCell>
-          <div className="flex items-center">
-            <Switch
-              disabled={toggleUserStatus.isPending}
-              id="airplane-mode"
-              checked={Boolean(user?.is_active)}
-              onCheckedChange={() => toggleUserStatus.mutateAsync({})}
-            />
-            {toggleUserStatus.isPending && (
-              <Icons.spinner className="animate-spin h-4 w-4" />
-            )}
-          </div>
-        </TableCell>
+        {isEditable && (
+          <TableCell>
+            <div className="flex items-center">
+              <Switch
+                disabled={toggleUserStatus.isPending}
+                id="airplane-mode"
+                checked={Boolean(user?.is_active)}
+                onCheckedChange={() => toggleUserStatus.mutateAsync({})}
+              />
+              {toggleUserStatus.isPending && (
+                <Icons.spinner className="animate-spin h-4 w-4" />
+              )}
+            </div>
+          </TableCell>
+        )}
       </TableRow>
-      {/* <UpdateUserRoleModal
-        key={user?.role}
-        isOpen={isOpen}
-        onClose={onClose}
-        user={user}
-      />
-      <DeleteUserModal
-        isOpen={isDeleteUserOpen}
-        onClose={onDeleteUserClose}
-        user={user}
-      /> */}
     </>
   );
 }

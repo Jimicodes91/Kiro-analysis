@@ -45,7 +45,7 @@ const AddNoteTypeModal = ({
         form.reset();
         onClose();
       })
-      .catch(console.log);
+      .catch(console.error);
   };
 
   return (

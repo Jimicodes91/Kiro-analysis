@@ -7,15 +7,14 @@ export interface IFormFields {
   data: IFormField[];
 }
 
+export type FieldType = "text" | "select" | "date" | "number";
+
 export interface IFormField {
   id: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at?: string;
   form_id: string;
   company_id: string;
   name: string;
-  type: string;
+  type: FieldType;
   is_required: number;
   is_custom: number;
   is_multiple: 1 | 0;
@@ -25,7 +24,8 @@ export interface IFormField {
   default_value?: string;
   sort_order: number;
   slug: string;
-  api_locator: "journey-list" | "contact-list";
+  api_locator?: "journey-list" | "contact-list";
+  isCustom?: boolean;
 }
 
 const useGetProjectFormFields = () => {

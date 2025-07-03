@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../../components/ui/view-toggle";
 import JourneyFormModal from "./create-journey-form-modal";
-import FormCustomization from "./Form";
+import FormCustomizationTemplate from "./form-customization";
 import JourneyTable from "./journey-table";
 
 const JourneyTab: React.FC = () => {
@@ -49,7 +49,7 @@ const JourneyTab: React.FC = () => {
         <JourneyTable />
       ) : (
         <div className="bg-[#F4F4F4] py-4 rounded-[10px] border border-brand-border">
-          <FormCustomization />
+          <FormCustomizationTemplate />
         </div>
       )}
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>

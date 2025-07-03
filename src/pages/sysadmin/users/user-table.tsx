@@ -6,28 +6,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TablePagination } from "@/components/ui/table-pagination";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
-import useGetAllUsers from "@/hooks/admin/use-get-all-users";
-import PaginationContextProvider from "@/lib/context/pagination-context";
+import useGetAllSysAdmins from "@/hooks/admin/use-get-all-admins";
 import React from "react";
 import UserTableRow from "./user-table-row";
 
 const UsersTable = ({ search }: { search: string }) => {
-  const [pageProp, setPageProp] = React.useState({
+  const [pageProp] = React.useState({
     page: 1,
     pageSize: 10,
   });
-  const users = useGetAllUsers(pageProp.page, pageProp.pageSize, search);
+  const sysadmins = useGetAllSysAdmins(pageProp.page, pageProp.pageSize, search);
 
   const renderTableBody = () => {
-    if (users.isPending)
+    if (sysadmins.isPending)
       return <TableSkeletonRowLoader length={7} noOfRows={pageProp.pageSize} />;
 
-    if (users?.isError) return <EmptyTable message="Something went wrong" length={7} />;
+    if (sysadmins?.isError)
+      return <EmptyTable message="Something went wrong" length={7} />;
 
-    if (users?.value?.data?.data?.length === 0)
-      return <EmptyTable message="No user found" length={7} />;
+    if (sysadmins?.value?.data?.length === 0)
+      return <EmptyTable message="No sysadmin found" length={7} />;
 
     return (
       <TableBody className="text-xs">
@@ -35,7 +34,7 @@ const UsersTable = ({ search }: { search: string }) => {
           <TableCell className="border-0 h-3 py-0" colSpan={7}></TableCell>
         </TableRow>
         <>
-          {users?.value?.data?.data?.map((user) => (
+          {sysadmins?.value?.data?.map((user) => (
             <UserTableRow key={user.id} user={user} />
           ))}
         </>
@@ -59,13 +58,6 @@ const UsersTable = ({ search }: { search: string }) => {
           </TableHeader>
           {renderTableBody()}
         </Table>
-        <PaginationContextProvider
-          pageProp={pageProp}
-          setPageProp={setPageProp}
-          total={users.value?.data?.pagination?.total ?? 0}
-        >
-          <TablePagination />
-        </PaginationContextProvider>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import Toast from "@/components/Toast";
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import DragNdrop from "@/components/ui/file-upload";
@@ -42,17 +43,18 @@ const UploadDocumentModal = ({
 
   const onSubmit = async (data: z.infer<typeof uploadDocumentSchema>) => {
     const { attachment, ...validData } = data;
-    let base64File = "";
+    const documentFile = attachment[0];
+    let base64File: string | null = null;
 
-    if (attachment) {
-      try {
-        const base64String = await fileToBase64(attachment);
-        base64File = base64String;
-        // console.log(base64String); // Outputs a data URL (e.g., data:image/png;base64,...)
-      } catch (err) {
-        console.error("Error converting file:", err);
-      }
+    try {
+      base64File = await fileToBase64(documentFile);
+    } catch (err) {
+      console.error("Error converting file:", err);
+      base64File = null;
+      Toast.error("Invalid file format");
+      return;
     }
+
     uploadDocument
       .mutateAsync({
         ...validData,
@@ -143,8 +145,8 @@ const UploadDocumentModal = ({
                   <FormLabel>Attachment</FormLabel>
                   <FormControl>
                     <DragNdrop
-                      id="filesa-sa"
-                      // @ts-expect-error TODO: Fix this type error
+                      isMulti={false}
+                      id={field.name}
                       value={field.value}
                       onChange={field.onChange}
                     />

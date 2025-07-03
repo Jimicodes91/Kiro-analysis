@@ -7,6 +7,7 @@ const useUpdatePassword = () => {
     {
       currentPassword: string;
       newPassword: string;
+      userId: string;
     }
   >({
     method: "post",

@@ -11,11 +11,11 @@ import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-sk
 import useGetAllFinanceRecords from "@/hooks/finance/use-get-all-finance-records";
 import PaginationContextProvider from "@/lib/context/pagination-context";
 import { getUserSession } from "@/services/api.service";
-import { useState } from "react";
+import React from "react";
 import FinanceTableRow from "./finance-table-row";
 
 const FinanceTable = () => {
-  const [pageProp, setPageProp] = useState({
+  const [pageProp, setPageProp] = React.useState({
     page: 1,
     pageSize: 10,
   });
@@ -72,10 +72,11 @@ const FinanceTable = () => {
           {renderTable()}
         </Table>
 
+        {/* Pagination Controls */}
         <PaginationContextProvider
           pageProp={pageProp}
           setPageProp={setPageProp}
-          total={billingsResponse.value?.data?.pagination?.total ?? 0}
+          total={billingsResponse.data?.data?.data?.pagination?.total ?? 0}
         >
           <TablePagination />
         </PaginationContextProvider>

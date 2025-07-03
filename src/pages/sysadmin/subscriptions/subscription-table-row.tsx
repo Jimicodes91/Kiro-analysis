@@ -4,43 +4,37 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useToggleCompanyUserStatus from "@/hooks/company-admin/use-toggle-comppany-user-status";
-import useDisclosure from "@/hooks/use-disclosure";
-import { UserDetails } from "@/types/api.types";
+import { SubscriptionPlan } from "@/types/api.types";
 
-function SubscriptionTableRow({ user }: { user: UserDetails }) {
-  const { onOpen } = useDisclosure();
-  const {
-    //   isOpen: isDeleteUserOpen,
-    //   onClose: onDeleteUserClose,
-    onOpen: onDeleteUserOpen,
-  } = useDisclosure();
-  const toggleUserStatus = useToggleCompanyUserStatus(user?.id ?? "");
+function SubscriptionTableRow({ plan }: { plan: SubscriptionPlan }) {
+  const toggleUserStatus = useToggleCompanyUserStatus(plan?.id ?? "");
   return (
     <>
       <TableRow>
-        <TableCell>{user?.name}</TableCell>
-        <TableCell>{user?.email}</TableCell>
-
-        <TableCell>{user?.role}</TableCell>
+        <TableCell>{plan?.display_name}</TableCell>
+        <TableCell>
+          {plan?.currency} {plan?.price}
+        </TableCell>
 
         <TableCell>
-          <Badge variant={user?.is_active ? "success" : "destructive"}>
-            <span>{user?.is_active ? "Active" : "Inactive"}</span>
+          <Badge variant={plan?.is_active ? "success" : "destructive"}>
+            <span>{plan?.is_active ? "Active" : "Inactive"}</span>
           </Badge>
         </TableCell>
+        <TableCell>31 days</TableCell>
+
         <TableCell>
           <div className="flex items-center">
             <Switch
               disabled={toggleUserStatus.isPending}
               id="airplane-mode"
-              checked={Boolean(user?.is_active)}
+              checked={Boolean(plan?.is_active)}
               onCheckedChange={() => toggleUserStatus.mutateAsync({})}
             />
             {toggleUserStatus.isPending && (
@@ -57,28 +51,12 @@ function SubscriptionTableRow({ user }: { user: UserDetails }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-40" align="end" forceMount>
               <DropdownMenuGroup>
-                <>
-                  <DropdownMenuItem onClick={onOpen}>Edit User</DropdownMenuItem>
-                  <DropdownMenuItem onClick={onDeleteUserOpen}>
-                    Delete User
-                  </DropdownMenuItem>
-                </>
+                {/* <DropdownMenuItem onClick={onOpen}>Edit User</DropdownMenuItem> */}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </TableCell>
       </TableRow>
-      {/* <UpdateUserRoleModal
-        key={user?.role}
-        isOpen={isOpen}
-        onClose={onClose}
-        user={user}
-      />
-      <DeleteUserModal
-        isOpen={isDeleteUserOpen}
-        onClose={onDeleteUserClose}
-        user={user}
-      /> */}
     </>
   );
 }

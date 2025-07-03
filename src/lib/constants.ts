@@ -1,7 +1,7 @@
 import { IconProps, Icons } from "@/components/ui/icons";
 import { JSX } from "react";
 
-export type UserType = "ADMIN" | "SYSADMIN" | "CLIENT" | "CONSULTANT";
+export type UserType = "ADMIN" | "SUPER_ADMIN" | "CLIENT" | "CONSULTANT";
 
 export type DashboardLinkType = {
   title: string;
@@ -45,7 +45,13 @@ const universalRoutes = [
 ];
 
 export const topNavData: Record<UserType, DashboardLinkType[]> = {
-  CLIENT: [...universalRoutes],
+  CLIENT: [
+    {
+      title: "Projects",
+      icon: Icons.project,
+      path: "/projects",
+    },
+  ],
   CONSULTANT: [...universalRoutes],
   ADMIN: [
     ...universalRoutes,
@@ -55,17 +61,12 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       path: "/admin",
     },
   ],
-  SYSADMIN: [
+  SUPER_ADMIN: [
     {
       title: "Home",
       icon: Icons.dashboard,
-      path: "/sysadmin/home",
+      path: "/sysadmin",
       exact: true,
-    },
-    {
-      title: "Company",
-      icon: Icons.company,
-      path: "/sysadmin/company",
     },
     {
       title: "Users",
@@ -165,7 +166,7 @@ export const ENDPOINTS = {
   GET_INACTIVE_ORGANIZATIONS: "admin/inactive-organization",
   GET_ALL_USERS: `admin/all`,
   GET_ACTIVE_USERS: `admin/active-users`,
-  GET_ALL_ADMINS: `admin/all-admin`,
+  GET_ALL_SYSADMINS: `admin/all-sysadmins`,
 
   // Company Endpoints
   CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
@@ -215,10 +216,14 @@ export const ENDPOINTS = {
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
-  GET_ALL_PROJECTS: (projectTypeId?: string, status?: ProjectStatusDict | "all") =>
-    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
+  GET_ALL_PROJECTS: (
+    projectTypeId?: string,
+    status?: ProjectStatusDict | "all",
+    search?: string
+  ) =>
+    `projects${projectTypeId ? `?project_type_id=${projectTypeId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}${search ? `&search=${search}` : ""}`,
   GET_CLIENT_PROJECTS: (clientId?: string, status?: ProjectStatusDict | "all") =>
-    `projects${clientId ? `?client_id=${clientId}` : ""}${status ? `?status=${status}` : ""}`,
+    `projects${clientId ? `?client_id=${clientId}` : ""}${status && status !== "all" ? `&status=${status}` : ""}`,
   GET_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_DETAILS: (projectId: string) => `projects/${projectId}`,
   UPDATE_PROJECT_MILESTONE: (projectId: string) => `projects/${projectId}`,
@@ -267,10 +272,11 @@ export const ENDPOINTS = {
 
   // 5. Tasks
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
-  GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/tasks?project_id=${projectId}`,
+  GET_ALL_PROJECT_TASKS: (projectId: string, assigneeId?: string) =>
+    `projects/tasks?project_id=${projectId}${assigneeId ? `&assignee_id=${assigneeId}` : ""}`,
   // GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
-  GET_ALL_TASKS: (projectId?: string) =>
-    `projects/tasks${projectId ? `?project_id=${projectId}` : ""}`,
+  GET_ALL_TASKS: (search?: string) =>
+    `projects/tasks${search ? `?search=${search}` : ""}`,
   GET_TASK_DETAILS: (projectId: string, taskId: string) =>
     `projects/${projectId}/tasks/${taskId}`,
   UPDATE_TASK_DETAILS: (projectId: string, taskId: string) =>
@@ -369,7 +375,7 @@ export const QUERYKEYS = {
   GET_INACTIVE_ORGANIZATIONS: "GET_INACTIVE_ORGANIZATIONS",
   GET_ALL_USERS: "GET_ALL_USERS",
   GET_ACTIVE_USERS: "GET_ACTIVE_USERS",
-  GET_ALL_ADMINS: "GET_ALL_ADMINS",
+  GET_ALL_SYSADMINS: "GET_ALL_SYSADMINS",
 
   // Company Admin Endpoints
   GET_COMPANY_USERS: "GET_COMPANY_USERS",
@@ -461,6 +467,9 @@ export const PAGES = {
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
   PROJECT_CREATE_PAGE: "/projects/create",
+
+  // Sysadmin Page
+  SYSADMIN_HOME_PAGE: "/sysadmin",
 };
 
 export const industryList = [
