@@ -42,8 +42,7 @@ const contactSchema = yup.object().shape({
         name: yup.string().required(),
       })
     )
-    .min(1, "Assign this contact to at least one person")
-    .required("Assign this contact to at least one person"),
+    .optional(),
 });
 
 interface ContactModalProps {
@@ -96,7 +95,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
       email: data.email,
       phone: data.phone,
       company_id: session?.company_id ?? "",
-      assigned_to: data.assigned_to.map((user) => ({
+      assigned_to: data.assigned_to?.map((user) => ({
         id: user.id,
         name: user.name,
       })),
@@ -114,6 +113,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
       updateContact
         .mutateAsync({
           ...payload,
+          assigned_to: payload.assigned_to || [],
         })
         .then(() => {
           onClose();
@@ -224,9 +224,9 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                     />
 
                     {/* Display selected users as pills */}
-                    {mode === "view" && field.value?.length > 0 && (
+                    {mode === "view" && (field?.value?.length ?? 0) > 0 && (
                       <div className="flex flex-wrap gap-2 mt-2">
-                        {field.value.map((user) => (
+                        {(field?.value ?? []).map((user) => (
                           <div
                             key={user.id}
                             className="flex items-center bg-gray-200 rounded-full px-3 py-1"

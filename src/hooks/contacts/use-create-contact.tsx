@@ -11,7 +11,7 @@ export interface CreateContactRequest {
   phone: string;
   email: string;
   company_id: string;
-  assigned_to: AssignTo[];
+  assigned_to?: AssignTo[];
 }
 
 const useCreateContact = () => {
