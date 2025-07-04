@@ -131,7 +131,9 @@ function MarkAsPaidModal({
             name="amount_paid"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Amount paid</FormLabel>
+                <FormLabel>
+                  Amount paid <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
@@ -157,7 +159,9 @@ function MarkAsPaidModal({
             name="payment_proof"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Attach</FormLabel>
+                <FormLabel>
+                  Attach <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <DragNdrop
                     id="payment-proof-upload"

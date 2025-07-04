@@ -116,17 +116,30 @@ const PaymentHistoryTable = ({
               </TableHead>
             </TableRow>
           </TableHeader>
+
+          {/* Empty State */}
+          {payments?.length === 0 && (
+            <TableBody className="text-sm">
+              <TableRow className="border-b border-gray-100 hover:bg-gray-50 transition-colors last:border-b-0">
+                <TableCell colSpan={3} className="py-8 px-4 text-center text-gray-500">
+                  No payment history
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          )}
+
+          {/* Payment History Rows */}
           <TableBody>
-            {payments.map((payment: PaymentHistory) => (
+            {payments?.map((payment: PaymentHistory) => (
               <TableRow
                 key={payment.id}
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors last:border-b-0"
               >
                 <TableCell className="py-2 px-4 text-sm text-black font-medium max-w-[80px]">
-                  {format(payment.payment_date, "dd MMM yyyy")}
+                  {format(payment?.payment_date, "dd MMM yyyy")}
                 </TableCell>
                 <TableCell className="py-2 px-4 text-sm font-medium text-black max-w-[60px]">
-                  {formatCurrency(payment.amount_paid)}
+                  {formatCurrency(payment?.amount_paid)}
                 </TableCell>
                 <TableCell className="py-2 pl-4 text-sm text-black max-w-[60px]">
                   <Button
@@ -165,22 +178,30 @@ const Overview = ({
             <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-3">
               <h3 className="text-sm text-brand-fade">Total fee</h3>
               <p className="text-sm font-semibold">
-                {formatCurrency(billing?.total_project_cost)}
+                {billing?.total_project_cost
+                  ? formatCurrency(billing?.total_project_cost)
+                  : "N/A"}
               </p>
 
               <h3 className="text-sm text-brand-fade">Outstanding</h3>
               <p className="text-sm font-semibold">
-                {formatCurrency(billing?.outstanding_balance)}
+                {billing?.outstanding_balance
+                  ? formatCurrency(billing?.outstanding_balance)
+                  : "N/A"}
               </p>
 
               <h3 className="text-sm text-brand-fade">Last payment date</h3>
               <p className="text-sm font-semibold">
-                {format(billing?.lastPaymentDate, "dd MMM yyyy")}
+                {billing?.lastPaymentDate
+                  ? format(billing?.lastPaymentDate, "dd MMM yyyy")
+                  : "N/A"}
               </p>
 
               <h3 className="text-sm text-brand-fade">Next payment due date</h3>
               <p className="text-sm font-semibold">
-                {format(billing?.next_payment_due_date, "dd MMM yyyy")}
+                {billing?.next_payment_due_date
+                  ? format(billing?.next_payment_due_date, "dd MMM yyyy")
+                  : "N/A"}
               </p>
             </div>
           </div>

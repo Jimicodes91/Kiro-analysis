@@ -26,7 +26,7 @@ const ViewReceiptModal: React.FC<ViewReceiptModalProps & ModalProps> = ({
 
     try {
       // Fetch the file from the URL
-      const response = await fetch(payment.payment_proof_url);
+      const response = await fetch(payment?.payment_proof_url);
 
       if (!response.ok) {
         throw new Error(`Failed to fetch file: ${response.statusText}`);
@@ -36,8 +36,8 @@ const ViewReceiptModal: React.FC<ViewReceiptModalProps & ModalProps> = ({
       const blob = await response.blob();
 
       // Get file extension from URL or default to common image format
-      const urlParts = payment.payment_proof_url.split(".");
-      const extension = urlParts.length > 1 ? urlParts.pop() : "jpg";
+      const urlParts = payment?.payment_proof_url?.split(".");
+      const extension = urlParts?.length > 1 ? urlParts?.pop() : "jpg";
 
       // Create filename
       const filename = `payment_receipt_${payment.id}.${extension}`;
