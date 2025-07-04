@@ -28,5 +28,5 @@ export interface ContactFormValues {
   name: string;
   phone: string;
   email: string;
-  assigned_to: AssignTo[];
+  assigned_to?: AssignTo[];
 }
