@@ -61,7 +61,7 @@ const ProjectDetail = ({
 
           {/* <p className="mt-2 text-sm text-gray-500">32 days to completion</p> */}
           <p className="mt-2 text-sm text-gray-500">
-            Estimated {projectDetails?.timeline} to complete{" "}
+            Estimated {projectDetails?.project_timeline} to complete{" "}
             <span className="font-bold">{projectDetails?.milestone?.name}</span> phase
           </p>
         </div>

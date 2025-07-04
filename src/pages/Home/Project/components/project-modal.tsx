@@ -131,7 +131,7 @@ const ProjectDetail = ({ project }: { project: ProjectDetails }) => {
                 <h3 className="text-sm text-brand-fade">Timeline</h3>
               </div>
               <div>
-                <p className="text-sm">{project?.timeline}</p>
+                <p className="text-sm">{project?.project_timeline}</p>
               </div>
             </div>
             <div className="mb-3 flex items-center gap-3 lg:gap-11 md:gap-1">
@@ -168,7 +168,7 @@ const ProjectDetail = ({ project }: { project: ProjectDetails }) => {
           </div>
 
           <p className="text-brand-fade text-sm font-semibold">
-            {project?.timeline} to completion
+            {project?.project_timeline} to completion
           </p>
         </div>
       </div>

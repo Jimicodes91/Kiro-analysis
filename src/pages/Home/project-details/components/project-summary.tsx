@@ -44,7 +44,9 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
               </div>
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Timeline</h3>
-                <p className="text-sm text-gray-900">{projectDetails?.timeline}</p>
+                <p className="text-sm text-gray-900">
+                  {projectDetails?.project_timeline}
+                </p>
               </div>
             </div>
           </AccordionContent>
