@@ -22,8 +22,7 @@ import {
 import useGetCompanyContacts from "@/hooks/contacts/use-get-company-contact";
 import useCreateFinanceRecord from "@/hooks/finance/use-create-finance-record";
 import useUpdateFinanceRecord from "@/hooks/finance/use-update-finance-record";
-import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
-import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
+import useGetAllCompanyProjects from "@/hooks/project-modules/use-get-all-company-projects";
 import { cn, getSelectableDate } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { Billing } from "@/types/billing.types";
@@ -48,9 +47,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
   const createBilling = useCreateFinanceRecord();
   const updateBilling = useUpdateFinanceRecord(billingData?.id || "");
   const clientsResponse = useGetCompanyContacts();
-  const projectType = useGetAllProjectTypes();
-  const projectTypeId = projectType?.data?.data?.data[0]?.id;
-  const projectsResponse = useGetAllProjects(projectTypeId);
+  const projectsResponse = useGetAllCompanyProjects();
   const session = getUserSession();
 
   const clients = Array.isArray(clientsResponse?.data?.data?.data?.contacts)
@@ -61,11 +58,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
     ? projectsResponse.data.data.data
     : [];
 
-  const isLoading =
-    clientsResponse.isLoading ||
-    projectType.isLoading ||
-    (projectTypeId && projectsResponse.isLoading) ||
-    !session;
+  const isLoading = clientsResponse.isLoading || projectsResponse.isLoading || !session;
 
   const form = useForm<BillingSchemaType>({
     resolver: yupResolver(billingSchema),
@@ -75,9 +68,15 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
       total_project_cost: billingData?.total_project_cost
         ? parseFloat(billingData.total_project_cost)
         : undefined,
-      amount_paid: billingData?.amount_paid
-        ? parseFloat(billingData.amount_paid)
-        : undefined,
+      //    amount_paid: billingData?.amount_paid
+      // ? parseFloat(billingData.amount_paid)
+      // : undefined,
+      amount_paid:
+        mode === "create"
+          ? 0
+          : billingData?.amount_paid
+            ? parseFloat(billingData.amount_paid)
+            : 0,
       outstanding_balance: billingData?.outstanding_balance
         ? parseFloat(billingData.outstanding_balance)
         : undefined,
@@ -91,13 +90,37 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
   const totalAmount = form.watch("total_project_cost");
   const amountPaid = form.watch("amount_paid");
 
+  // useEffect(() => {
+  //   const shouldCalculate =
+  //     mode === "create" ||
+  //     (mode === "edit" && (dirtyFields.total_project_cost || dirtyFields.amount_paid));
+
+  //   if (shouldCalculate && totalAmount !== undefined && amountPaid !== undefined) {
+  //     const outstandingBalance = totalAmount - amountPaid;
+  //     form.setValue(
+  //       "outstanding_balance",
+  //       outstandingBalance >= 0 ? outstandingBalance : 0,
+  //       { shouldDirty: false } // Don't mark outstanding_balance as dirty
+  //     );
+  //   }
+  // }, [
+  //   totalAmount,
+  //   amountPaid,
+  //   form,
+  //   mode,
+  //   dirtyFields.total_project_cost,
+  //   dirtyFields.amount_paid,
+  // ]);
+
   useEffect(() => {
     const shouldCalculate =
       mode === "create" ||
       (mode === "edit" && (dirtyFields.total_project_cost || dirtyFields.amount_paid));
 
-    if (shouldCalculate && totalAmount !== undefined && amountPaid !== undefined) {
-      const outstandingBalance = totalAmount - amountPaid;
+    if (shouldCalculate && amountPaid !== undefined) {
+      // Treat undefined totalAmount as 0 for calculation
+      const totalAmountValue = totalAmount || 0;
+      const outstandingBalance = totalAmountValue - amountPaid;
       form.setValue(
         "outstanding_balance",
         outstandingBalance >= 0 ? outstandingBalance : 0,
@@ -212,7 +235,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                     >
                       <SelectTrigger
                         className="w-full"
-                        isLoading={projectType.isLoading || projectsResponse.isLoading}
+                        isLoading={projectsResponse.isLoading}
                       >
                         <SelectValue placeholder="Project title" />
                       </SelectTrigger>
@@ -271,17 +294,17 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                       <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
                       <Input
                         type="number"
-                        className="pl-7"
-                        // placeholder="0.00"
+                        className="pl-7 bg-[#EFEFEF]"
+                        placeholder="0.00"
                         value={field.value === undefined ? "" : field.value}
-                        onChange={(e) => {
-                          const value =
-                            e.target.value === ""
-                              ? undefined
-                              : parseFloat(e.target.value);
-                          field.onChange(isNaN(value as number) ? undefined : value);
-                        }}
-                        disabled={mode === "view"}
+                        // onChange={(e) => {
+                        //   const value =
+                        //     e.target.value === ""
+                        //       ? undefined
+                        //       : parseFloat(e.target.value);
+                        //   field.onChange(isNaN(value as number) ? undefined : value);
+                        // }}
+                        disabled={true}
                       />
                     </div>
                   </FormControl>
@@ -302,8 +325,8 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                       <Input
                         type="number"
                         className="pl-7 bg-[#EFEFEF]"
-                        placeholder="0.00"
-                        value={field.value === undefined ? "" : field.value}
+                        placeholder="0"
+                        value={field.value === undefined ? 0 : field.value}
                         disabled={true}
                       />
                     </div>

@@ -6,8 +6,8 @@ import useDebounce from "@/hooks/use-debounce";
 import useDisclosure from "@/hooks/use-disclosure";
 import React, { useState } from "react";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
+import AddTaskModal from "./add-task-modal";
 import TaskEmptyState from "./task-empty-state";
-import TaskModal from "./task-modal-form"; // Import the TaskModal component
 import TasksTable from "./task-table";
 
 const Task: React.FC = () => {
@@ -60,8 +60,7 @@ const Task: React.FC = () => {
         )}
       </div>
 
-      {/* Task Modal for creating new tasks */}
-      {isOpen && <TaskModal isOpen={isOpen} onClose={onClose} mode="create" />}
+      {isOpen && <AddTaskModal isOpen={isOpen} onClose={onClose} />}
     </>
   );
 };
