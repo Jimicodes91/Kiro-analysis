@@ -82,7 +82,9 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
 };
 
 export enum ProjectStatus {
+  NOT_STARTED = "not_started",
   IN_PROGRESS = "in_progress",
+  BLOCKED = "blocked",
   COMPLETED = "completed",
   DUE = "due",
   ON_TRACK = "on_track",
@@ -90,6 +92,13 @@ export enum ProjectStatus {
 }
 
 export type ProjectStatusDict = `${ProjectStatus}`;
+
+export const ProjectStatusOptions = Object.entries(ProjectStatus).map(
+  ([label, value]) => ({
+    label,
+    value,
+  })
+);
 
 export const projectStatusList: { text: string; value: ProjectStatusDict | "all" }[] = [
   {

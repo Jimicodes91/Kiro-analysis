@@ -23,7 +23,9 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
         <TableCell className="">{project.name}</TableCell>
         <TableCell>{project.form_data.client_organization}</TableCell>
         <TableCell>{format(project.start_date, "PPP")}</TableCell>
-        <TableCell>{format(project.end_date, "PPP")}</TableCell>
+        <TableCell>
+          {project?.end_date ? format(project?.end_date, "PPP") : "N/A"}
+        </TableCell>
         <TableCell>Nill</TableCell>
         <TableCell>
           <Badge size="sm" variant={project.status}>

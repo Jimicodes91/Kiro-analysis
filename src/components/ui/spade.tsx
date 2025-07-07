@@ -5,6 +5,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { PiSpinner } from "react-icons/pi";
 interface SpadeProps {
   text: string;
   isLast?: boolean;
@@ -14,7 +15,7 @@ interface SpadeProps {
   isLoading?: boolean;
 }
 
-function Spade({ text, isLast, isFirst, isActive, onClick }: SpadeProps) {
+function Spade({ text, isLast, isFirst, isActive, onClick, isLoading }: SpadeProps) {
   return (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
@@ -37,7 +38,7 @@ function Spade({ text, isLast, isFirst, isActive, onClick }: SpadeProps) {
                 }}
               ></div>
             )}
-            {text}
+            {isLoading ? <PiSpinner className="animate-spin" size={16} /> : text}
             {!isLast && (
               <div
                 className="w-[18px] h-[46px] absolute -top-0.5 -right-[15px] bg-transparent  flex items-center justify-center text-xl font-bold"

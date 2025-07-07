@@ -3,6 +3,7 @@ import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-
 import useGetProjectDetails from "@/hooks/project-modules/use-get-project-details";
 import useUpdateProjectMilestone from "@/hooks/project-modules/use-update-project-milestone";
 import { ProjectDetails } from "@/types/api.types";
+import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import ProjectInfoSection from "./sections/project-info-section";
@@ -15,11 +16,13 @@ const ProjectDetail = ({
   projectDetails: ProjectDetails;
   refetchProject: ReturnType<typeof useGetProjectDetails>["refetch"];
 }) => {
+  const [aText, setText] = useState<null | string>(null);
   const navigate = useNavigate();
   const journey = useGetProjectTypeDetails(projectDetails?.project_type_id);
   const updateProjectMilestone = useUpdateProjectMilestone(projectDetails.id);
 
   const updateMilestoneFxn = (milestoneId: string) => {
+    setText(milestoneId);
     updateProjectMilestone
       .mutateAsync({
         milestone_id: milestoneId,
@@ -52,7 +55,7 @@ const ProjectDetail = ({
                       updateMilestoneFxn(item.id);
                     }
                   }}
-                  isLoading={updateProjectMilestone.isPending}
+                  isLoading={updateProjectMilestone.isPending && aText === item.id}
                   key={item.id}
                 />
               ))}
@@ -61,7 +64,7 @@ const ProjectDetail = ({
 
           {/* <p className="mt-2 text-sm text-gray-500">32 days to completion</p> */}
           <p className="mt-2 text-sm text-gray-500">
-            Estimated {projectDetails?.timeline} to complete{" "}
+            Estimated {projectDetails?.project_timeline} to complete{" "}
             <span className="font-bold">{projectDetails?.milestone?.name}</span> phase
           </p>
         </div>
@@ -82,7 +85,7 @@ const ProjectDetail = ({
             className="flex items-center text-sm text-dark hover:text-[#191819B2] transition-colors"
           >
             <IoArrowBack className="mr-2" />
-            Back to Projects
+            Back to Projects jdjd
           </button>
         </div>
         <div className="flex justify-between items-center mb-4">
