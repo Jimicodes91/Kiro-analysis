@@ -93,13 +93,12 @@ export enum ProjectStatus {
 
 export type ProjectStatusDict = `${ProjectStatus}`;
 
-export const ProjectStatusOptions = Object.entries(ProjectStatus).map(([key, value]) => ({
-  label: key
-    .replace(/_/g, " ")
-    .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase()), // Optional: Format nicely
-  value,
-}));
+export const ProjectStatusOptions = Object.entries(ProjectStatus).map(
+  ([label, value]) => ({
+    label,
+    value,
+  })
+);
 
 export const projectStatusList: { text: string; value: ProjectStatusDict | "all" }[] = [
   {

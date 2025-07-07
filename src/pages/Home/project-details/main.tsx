@@ -82,7 +82,7 @@ const ProjectDetail = ({
             className="flex items-center text-sm text-dark hover:text-[#191819B2] transition-colors"
           >
             <IoArrowBack className="mr-2" />
-            Back to Projects
+            Back to Projects jdjd
           </button>
         </div>
         <div className="flex justify-between items-center mb-4">

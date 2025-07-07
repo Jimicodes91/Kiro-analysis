@@ -4,9 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import PersonAvatar from "@/components/ui/person-avatar";
-import { getFormattedText } from "@/lib/utils";
+import { ProjectStatusToggler } from "@/components/ui/project-status-toggle";
 import { ProjectDetails } from "@/types/api.types";
 
 export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDetails }) {
@@ -38,9 +37,10 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
 
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Status</h3>
-                <Badge variant={projectDetails?.status}>
-                  {getFormattedText(projectDetails?.status)}
-                </Badge>
+                <ProjectStatusToggler
+                  projectId={projectDetails.id}
+                  status={projectDetails?.status}
+                />
               </div>
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Timeline</h3>
