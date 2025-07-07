@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useMarkFinanceRecordAsPaid from "@/hooks/finance/use-mark-finance_record_as-paid";
-import { fileToBase64, formatCurrency } from "@/lib/utils";
+import { fileToBase64 } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -33,12 +33,11 @@ function MarkAsPaidModal({
   isOpen,
   onClose,
   billingId,
-  totalProjectCost,
   // currentAmountPaid,
 }: MarkAsPaidModalProps) {
   const markAsPaid = useMarkFinanceRecordAsPaid(billingId);
 
-  const totalCost = totalProjectCost ? parseFloat(totalProjectCost) : 0;
+  // const totalCost = totalProjectCost ? parseFloat(totalProjectCost) : 0;
 
   // Define mark as paid schema with dynamic validation
   const markAsPaidSchema = yup.object().shape({
@@ -54,25 +53,25 @@ function MarkAsPaidModal({
       })
       .required("Amount paid is required")
       .typeError("Amount paid must be a number")
-      .positive("Amount must be positive")
-      .test(
-        "equals-total-cost",
-        "Amount must equal total project cost",
-        function (value) {
-          if (!value) return this.createError({ message: "Amount paid is required" });
-          if (value < totalCost) {
-            return this.createError({
-              message: `Amount paid is less than total project cost ${formatCurrency(totalCost)}`,
-            });
-          }
-          if (value > totalCost) {
-            return this.createError({
-              message: `Amount paid is more than total project cost ${formatCurrency(totalCost)}`,
-            });
-          }
-          return true;
-        }
-      ),
+      .positive("Amount must be positive"),
+    // .test(
+    //   "equals-total-cost",
+    //   "Amount must equal total project cost",
+    //   function (value) {
+    //     if (!value) return this.createError({ message: "Amount paid is required" });
+    //     if (value < totalCost) {
+    //       return this.createError({
+    //         message: `Amount paid is less than total project cost ${formatCurrency(totalCost)}`,
+    //       });
+    //     }
+    //     if (value > totalCost) {
+    //       return this.createError({
+    //         message: `Amount paid is more than total project cost ${formatCurrency(totalCost)}`,
+    //       });
+    //     }
+    //     return true;
+    //   }
+    // ),
     payment_proof: yup
       .array()
       .of(
@@ -83,7 +82,7 @@ function MarkAsPaidModal({
             return value instanceof File;
           })
       )
-      .optional()
+      .required()
       .default([]),
   });
 
@@ -124,7 +123,7 @@ function MarkAsPaidModal({
   };
 
   return (
-    <Modal title="Mark as paid" closeModal={onClose} isOpen={isOpen}>
+    <Modal title="Make a payment" closeModal={onClose} isOpen={isOpen}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
           <FormField
@@ -132,7 +131,9 @@ function MarkAsPaidModal({
             name="amount_paid"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Amount paid</FormLabel>
+                <FormLabel>
+                  Amount paid <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
@@ -158,7 +159,9 @@ function MarkAsPaidModal({
             name="payment_proof"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Attach</FormLabel>
+                <FormLabel>
+                  Attach <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <DragNdrop
                     id="payment-proof-upload"

@@ -14,10 +14,12 @@ import { format } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import FinanceModal from "./finance-modal-form";
+import FinanceViewModal from "./finance-overview-modal";
 import MarkAsPaidModal from "./mark-as-paid-modal";
 
 function FinanceTableRow({ billing }: { billing: Billing }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isMarkAsPaidModalOpen, setIsMarkAsPaidModalOpen] = useState(false);
   const [currentMode, setCurrentMode] = useState<"create" | "view" | "edit">("view");
 
@@ -27,8 +29,7 @@ function FinanceTableRow({ billing }: { billing: Billing }) {
   };
 
   const handleViewClick = () => {
-    setCurrentMode("view");
-    setIsModalOpen(true);
+    setIsViewModalOpen(true);
   };
 
   const handleMarkAsPaidClick = () => {
@@ -39,7 +40,7 @@ function FinanceTableRow({ billing }: { billing: Billing }) {
     <>
       <TableRow>
         <TableCell>{billing?.client_name}</TableCell>
-        <TableCell className="truncate max-w-3">{billing?.project_title}</TableCell>
+        <TableCell className="">{billing?.project_title}</TableCell>
         <TableCell>{formatCurrency(billing?.total_project_cost)}</TableCell>
         <TableCell>{formatCurrency(billing?.amount_paid)}</TableCell>
         <TableCell>{formatCurrency(billing?.outstanding_balance)}</TableCell>
@@ -57,9 +58,9 @@ function FinanceTableRow({ billing }: { billing: Billing }) {
                 <DropdownMenuItem onClick={handleEditClick}>Edit</DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleMarkAsPaidClick}
-                  disabled={billing?.payment_status === "paid"}
+                  disabled={billing?.outstanding_balance === "0"}
                 >
-                  Mark as paid
+                  Make a payment
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -73,6 +74,16 @@ function FinanceTableRow({ billing }: { billing: Billing }) {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             mode={currentMode}
+            billingData={billing}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isViewModalOpen && (
+          <FinanceViewModal
+            isOpen={isViewModalOpen}
+            onClose={() => setIsViewModalOpen(false)}
             billingData={billing}
           />
         )}

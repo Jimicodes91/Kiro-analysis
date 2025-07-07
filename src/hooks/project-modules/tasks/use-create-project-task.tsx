@@ -24,6 +24,9 @@ const useCreateProjectTask = (projectId: string) => {
       queryClient.invalidateQueries({
         queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_ALL_TASKS],
+      });
     },
   });
 };

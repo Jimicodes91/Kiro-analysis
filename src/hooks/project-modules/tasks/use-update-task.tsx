@@ -25,6 +25,9 @@ const useUpdateTask = (projectId: string, taskId: string) => {
       queryClient.invalidateQueries({
         queryKey: [QUERYKEYS.GET_ALL_TASKS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS],
+      });
     },
   });
 };

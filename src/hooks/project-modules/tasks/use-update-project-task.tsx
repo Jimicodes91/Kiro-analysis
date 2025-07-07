@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 interface UpdateTaskRequest {
   name?: string;
   description?: string;
-  status?: "in_progress" | "completed" | "pending";
+  status?: string;
   start_date?: string;
   end_date?: string;
   attachments?: string[];
@@ -23,6 +23,9 @@ const useUpdateProjectTask = (projectId: string, taskId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_ALL_TASKS],
       });
     },
   });
