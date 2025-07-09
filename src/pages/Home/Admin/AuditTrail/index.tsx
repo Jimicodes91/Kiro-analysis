@@ -155,27 +155,29 @@ const AuditTrailTab: React.FC = () => {
 
           {/* Entries in this time group */}
           {entries.map((entry) => (
-            <div
-              key={entry.id}
-              className="flex items-start p-4 border bg-[#F8F8F8] mb-[14px] rounded-[6px] hover:bg-gray-50"
-            >
-              {/* User avatar/initials */}
-              <div className="w-12 h-12 rounded-full border-2 border-white bg-[#F1F1F1] flex items-center justify-center text-[20px] text-black font-medium mr-4">
-                {entry.userInitials}
-              </div>
+            <>
+              <div
+                key={entry.id}
+                className="flex items-start p-4 border bg-[#F8F8F8] mb-[14px] rounded-[6px] hover:bg-gray-50"
+              >
+                {/* User avatar/initials */}
+                <div className="w-12 h-12 rounded-full border-2 border-white bg-[#F1F1F1] flex items-center justify-center text-[20px] text-black font-medium mr-4">
+                  {entry.userInitials}
+                </div>
 
-              {/* Entry details */}
-              <div className="flex flex-col">
-                <span className="text-[#19181966] text-sm font-medium">
-                  {formatTime(entry.timestamp)}
-                </span>
-                <span className="text-sm text-brand-fade">
-                  <span className="font-medium text-[#191819]">{entry.userName}</span>{" "}
-                  {entry.action} a{" "}
-                  <span className="text-[#191819]">{entry.actionType}</span>
-                </span>
+                {/* Entry details */}
+                <div className="flex flex-col">
+                  <span className="text-[#19181966] text-sm font-medium">
+                    {formatTime(entry.timestamp)}
+                  </span>
+                  <span className="text-sm text-brand-fade">
+                    <span className="font-medium text-[#191819]">{entry.userName}</span>{" "}
+                    {entry.action} a{" "}
+                    <span className="text-[#191819]">{entry.actionType}</span>
+                  </span>
+                </div>
               </div>
-            </div>
+            </>
           ))}
         </div>
       ))}

@@ -44,6 +44,7 @@ export function ProjectStatusToggler({
       </Badge>
     );
   }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -59,13 +60,11 @@ export function ProjectStatusToggler({
         <DropdownMenuLabel className="pl-4">Project Status</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={position} onValueChange={updateProjectStatus}>
-          {ProjectStatusOptions?.filter((item) => item.value !== "completed").map(
-            (pStatus) => (
-              <DropdownMenuRadioItem value={pStatus.value} className="capitalize">
-                {getFormattedText(pStatus.value)}
-              </DropdownMenuRadioItem>
-            )
-          )}
+          {ProjectStatusOptions?.map((pStatus) => (
+            <DropdownMenuRadioItem value={pStatus.value} className="capitalize">
+              {getFormattedText(pStatus.value)}
+            </DropdownMenuRadioItem>
+          ))}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

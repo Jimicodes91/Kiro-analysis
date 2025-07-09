@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
+import AuditTrailTab from "./AuditTrail";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
 import JourneyTab from "./journey";
 import NoteTab from "./note";
+import SettingsTab from "./settings";
 import TaskTab from "./task";
 import UserTab from "./user";
 
@@ -24,7 +26,11 @@ const Admin: React.FC = () => {
     { text: "Event type", tab: "event" as const },
     { text: "Note type", tab: "note" as const },
     { text: "Task type", tab: "task" as const },
+    { text: "Audit trail", tab: "audit-trail" as const },
+    { text: "Account", tab: "account" as const },
+    { text: "Settings", tab: "settings" as const },
   ];
+
   const renderTabContent = () => {
     switch (selectedTab) {
       case "user":
@@ -61,6 +67,19 @@ const Admin: React.FC = () => {
         return (
           <div>
             <TaskTab />
+          </div>
+        );
+
+      case "audit-trail":
+        return (
+          <div>
+            <AuditTrailTab />
+          </div>
+        );
+      case "settings":
+        return (
+          <div>
+            <SettingsTab />
           </div>
         );
 
