@@ -24,7 +24,7 @@ function AttachmentCard({
           <p className="font-sm">{truncateMiddleWords(attachment?.media_url)}</p>
         </div>
         <div className="flex gap-1">
-          <a href={attachment?.media_url} download>
+          <a href={attachment?.media_url} download target="_blank">
             <Button variant="ghost" size="icon" asChild>
               <Upload className="h-5" />
             </Button>
