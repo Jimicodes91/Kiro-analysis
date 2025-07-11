@@ -24,9 +24,12 @@ function AttachmentCard({
           <p className="font-sm">{truncateMiddleWords(attachment?.media_url)}</p>
         </div>
         <div className="flex gap-1">
-          <Button variant="ghost" size="icon">
-            <Upload className="h-5" />
-          </Button>
+          <a href={attachment?.media_url} download>
+            <Button variant="ghost" size="icon" asChild>
+              <Upload className="h-5" />
+            </Button>
+          </a>
+
           <Separator orientation="vertical" />
           <Button variant="ghost" size="icon" onClick={onOpen}>
             <Trash className="h-5" />
