@@ -3,7 +3,7 @@ import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface EventRequest {
-  event_type_id: string;
+  event_type_id?: string;
   name: string;
   start_datetime: string;
   end_datetime: string;

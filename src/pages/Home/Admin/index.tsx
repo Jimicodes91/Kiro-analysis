@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import AuditTrailTab from "./AuditTrail";
+import AuditTrailTab from "./audit-trail";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
 import JourneyTab from "./journey";
@@ -96,7 +96,7 @@ const Admin: React.FC = () => {
           {tabsList.map((tab) => (
             <button
               key={tab.tab}
-              className={`px-6 py-3 relative border-0 outline-none text-[14px] text-black focus:outline-none transition-all duration-200 ${
+              className={`px-6 py-3 relative border-0 whitespace-nowrap outline-none text-[14px] text-black focus:outline-none transition-all duration-200 ${
                 selectedTab === tab.tab
                   ? "font-bold"
                   : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"

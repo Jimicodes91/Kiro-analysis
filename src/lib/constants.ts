@@ -159,6 +159,9 @@ export const ENDPOINTS = {
   // Home Endpoints
   GET_DASHBOARD_METRICS: "projects/metrics",
 
+  // Aduti Trail Endpoints
+  GET_ALL_AUDIT_TRAIL: (page = 1, limit = 20, action?: string) =>
+    `audit-trail/all?page=${page}&limit=${limit}${action ? `&action=${action}` : ""}`,
   // Admin Endpoints
   GET_DASHBOARD_DETAILS: "admin/dashboard",
   GET_ALL_COMPANIES: "admin/companies",
@@ -386,6 +389,7 @@ export const QUERYKEYS = {
   GET_ACTIVE_USERS: "GET_ACTIVE_USERS",
   GET_ALL_SYSADMINS: "GET_ALL_SYSADMINS",
 
+  GET_ALL_AUDIT_TRAIL: "GET_ALL_AUDIT_TRAIL",
   // Company Admin Endpoints
   GET_COMPANY_USERS: "GET_COMPANY_USERS",
 
