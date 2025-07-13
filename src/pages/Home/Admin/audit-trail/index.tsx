@@ -1,14 +1,13 @@
 import { TablePagination } from "@/components/ui/table-pagination";
 import useGetCompanyAuditTrail from "@/hooks/audit-trail/use-get-company-audit-trails";
 import PaginationContextProvider from "@/lib/context/pagination-context";
-import { Trail } from "@/types/api.types";
+import { groupEntriesByTimePeriod } from "@/lib/utils";
 import React from "react";
 import ActivityCard from "../../project-details/components/cards/activity-card";
 
 // Define types for our audit trail entries
 
 // Group header type
-type TimeGroup = "Today" | "Last 7 days" | "2 weeks ago" | string;
 
 const AuditTrailTab = () => {
   const [pageProp, setPageProp] = React.useState({
@@ -18,35 +17,6 @@ const AuditTrailTab = () => {
   const auditTrail = useGetCompanyAuditTrail(pageProp.page, pageProp.pageSize);
 
   // Function to group entries by time period
-  const groupEntriesByTimePeriod = (entries: Trail[]): Record<TimeGroup, Trail[]> => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const oneWeekAgo = new Date(today);
-    oneWeekAgo.setDate(today.getDate() - 7);
-    const twoWeeksAgo = new Date(today);
-    twoWeeksAgo.setDate(today.getDate() - 14);
-
-    return entries.reduce((groups: Record<TimeGroup, Trail[]>, entry) => {
-      let group: TimeGroup;
-      const entryDate = new Date(entry.created_at);
-
-      if (entryDate >= today) {
-        group = "Today";
-      } else if (entryDate >= oneWeekAgo) {
-        group = "Last 7 days";
-      } else if (entryDate >= twoWeeksAgo) {
-        group = "2 weeks ago";
-      } else {
-        group = "Older";
-      }
-
-      if (!groups[group]) {
-        groups[group] = [];
-      }
-      groups[group].push(entry);
-      return groups;
-    }, {});
-  };
 
   const groupedEntries = groupEntriesByTimePeriod(auditTrail?.value?.data?.trails || []);
 
@@ -54,10 +24,10 @@ const AuditTrailTab = () => {
     if (auditTrail?.status === "pending")
       return (
         <div className="space-y-2 page-fade-in">
-          {Array.from(Array(pageProp.pageSize)).map((i) => (
+          {Array.from(Array(pageProp.pageSize)).map((_, index) => (
             <div
               className="px-5 py-14  space-y-2 rounded-lg bg-slate-100 flex justify-between  animate-pulse"
-              key={i}
+              key={index}
             ></div>
           ))}
         </div>
