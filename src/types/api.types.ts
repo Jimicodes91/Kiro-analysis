@@ -298,6 +298,7 @@ export interface ProjectDetails {
   milestone?: ProjectTypeMilestone;
   client?: string;
   timeline: string;
+  milestone_status: string;
   project_timeline: string;
   form_fields: FormField[];
 }
