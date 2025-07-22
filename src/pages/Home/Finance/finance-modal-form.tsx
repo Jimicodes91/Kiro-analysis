@@ -68,9 +68,6 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
       total_project_cost: billingData?.total_project_cost
         ? parseFloat(billingData.total_project_cost)
         : undefined,
-      //    amount_paid: billingData?.amount_paid
-      // ? parseFloat(billingData.amount_paid)
-      // : undefined,
       amount_paid:
         mode === "create"
           ? 0
@@ -89,28 +86,6 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
 
   const totalAmount = form.watch("total_project_cost");
   const amountPaid = form.watch("amount_paid");
-
-  // useEffect(() => {
-  //   const shouldCalculate =
-  //     mode === "create" ||
-  //     (mode === "edit" && (dirtyFields.total_project_cost || dirtyFields.amount_paid));
-
-  //   if (shouldCalculate && totalAmount !== undefined && amountPaid !== undefined) {
-  //     const outstandingBalance = totalAmount - amountPaid;
-  //     form.setValue(
-  //       "outstanding_balance",
-  //       outstandingBalance >= 0 ? outstandingBalance : 0,
-  //       { shouldDirty: false } // Don't mark outstanding_balance as dirty
-  //     );
-  //   }
-  // }, [
-  //   totalAmount,
-  //   amountPaid,
-  //   form,
-  //   mode,
-  //   dirtyFields.total_project_cost,
-  //   dirtyFields.amount_paid,
-  // ]);
 
   useEffect(() => {
     const shouldCalculate =
@@ -282,36 +257,32 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="amount_paid"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Amount paid</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
-                      <Input
-                        type="number"
-                        className="pl-7 bg-[#EFEFEF]"
-                        placeholder="0.00"
-                        value={field.value === undefined ? "" : field.value}
-                        // onChange={(e) => {
-                        //   const value =
-                        //     e.target.value === ""
-                        //       ? undefined
-                        //       : parseFloat(e.target.value);
-                        //   field.onChange(isNaN(value as number) ? undefined : value);
-                        // }}
-                        disabled={true}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {mode === "edit" && (
+              <FormField
+                control={form.control}
+                name="amount_paid"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount paid</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2">
+                          $
+                        </span>
+                        <Input
+                          type="number"
+                          className="pl-7 bg-[#EFEFEF]"
+                          placeholder="0.00"
+                          value={field.value === undefined ? "" : field.value}
+                          disabled={true}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
