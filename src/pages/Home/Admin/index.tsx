@@ -6,7 +6,6 @@ import DocumentTab from "./Document";
 import EventTab from "./Event";
 import JourneyTab from "./journey";
 import NoteTab from "./note";
-import SettingsTab from "./settings";
 import TaskTab from "./task";
 import UserTab from "./user";
 
@@ -28,7 +27,7 @@ const Admin: React.FC = () => {
     { text: "Task type", tab: "task" as const },
     { text: "Audit trail", tab: "audit-trail" as const },
     { text: "Account", tab: "account" as const },
-    { text: "Settings", tab: "settings" as const },
+    // { text: "Settings", tab: "settings" as const },
   ];
 
   const renderTabContent = () => {
@@ -76,12 +75,12 @@ const Admin: React.FC = () => {
             <AuditTrailTab />
           </div>
         );
-      case "settings":
-        return (
-          <div>
-            <SettingsTab />
-          </div>
-        );
+      // case "settings":
+      //   return (
+      //     <div>
+      //       <SettingsTab />
+      //     </div>
+      //   );
 
       default:
         return;

@@ -40,6 +40,11 @@ export const getIsClient = () => {
   return user?.role === "CLIENT";
 };
 
+export const getIsAdmin = () => {
+  const user = getUserSession();
+  return user?.role === "ADMIN";
+};
+
 export function updateUserSession(updatedUser: Partial<LoginResponse["data"]["user"]>) {
   const session = getCookie("user_session");
   if (!session) {
