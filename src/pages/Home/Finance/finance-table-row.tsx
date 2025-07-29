@@ -97,6 +97,7 @@ function FinanceTableRow({ billing }: { billing: Billing }) {
             billingId={billing.id}
             currentAmountPaid={billing.amount_paid}
             totalProjectCost={billing?.total_project_cost}
+            outstandingBalance={billing?.outstanding_balance}
           />
         )}
       </AnimatePresence>
