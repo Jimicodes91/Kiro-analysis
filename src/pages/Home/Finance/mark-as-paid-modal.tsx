@@ -22,6 +22,7 @@ interface MarkAsPaidModalProps {
   billingId: string;
   currentAmountPaid?: string;
   totalProjectCost?: string;
+  outstandingBalance?: string;
 }
 
 interface MarkAsPaidFormValues {
@@ -33,11 +34,11 @@ function MarkAsPaidModal({
   isOpen,
   onClose,
   billingId,
-  // currentAmountPaid,
+  outstandingBalance,
 }: MarkAsPaidModalProps) {
   const markAsPaid = useMarkFinanceRecordAsPaid(billingId);
 
-  // const totalCost = totalProjectCost ? parseFloat(totalProjectCost) : 0;
+  const outstandingAmount = outstandingBalance ? parseFloat(outstandingBalance) : 0;
 
   // Define mark as paid schema with dynamic validation
   const markAsPaidSchema = yup.object().shape({
@@ -53,25 +54,15 @@ function MarkAsPaidModal({
       })
       .required("Amount paid is required")
       .typeError("Amount paid must be a number")
-      .positive("Amount must be positive"),
-    // .test(
-    //   "equals-total-cost",
-    //   "Amount must equal total project cost",
-    //   function (value) {
-    //     if (!value) return this.createError({ message: "Amount paid is required" });
-    //     if (value < totalCost) {
-    //       return this.createError({
-    //         message: `Amount paid is less than total project cost ${formatCurrency(totalCost)}`,
-    //       });
-    //     }
-    //     if (value > totalCost) {
-    //       return this.createError({
-    //         message: `Amount paid is more than total project cost ${formatCurrency(totalCost)}`,
-    //       });
-    //     }
-    //     return true;
-    //   }
-    // ),
+      .positive("Amount must be positive")
+      .test(
+        "not-exceed-outstanding",
+        `Amount cannot exceed outstanding balance of $${outstandingAmount.toFixed(2)}`,
+        function (value) {
+          if (!value) return true;
+          return value <= outstandingAmount;
+        }
+      ),
     payment_proof: yup
       .array()
       .of(
@@ -89,7 +80,6 @@ function MarkAsPaidModal({
   const form = useForm<MarkAsPaidFormValues>({
     resolver: yupResolver(markAsPaidSchema),
     defaultValues: {
-      // amount_paid: currentAmountPaid ? parseFloat(currentAmountPaid) : undefined,
       amount_paid: undefined,
       payment_proof: [],
     },
