@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
+import AuditTrailTab from "./audit-trail";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
 import JourneyTab from "./journey";
@@ -24,7 +25,11 @@ const Admin: React.FC = () => {
     { text: "Event type", tab: "event" as const },
     { text: "Note type", tab: "note" as const },
     { text: "Task type", tab: "task" as const },
+    { text: "Audit trail", tab: "audit-trail" as const },
+    { text: "Account", tab: "account" as const },
+    // { text: "Settings", tab: "settings" as const },
   ];
+
   const renderTabContent = () => {
     switch (selectedTab) {
       case "user":
@@ -64,6 +69,19 @@ const Admin: React.FC = () => {
           </div>
         );
 
+      case "audit-trail":
+        return (
+          <div>
+            <AuditTrailTab />
+          </div>
+        );
+      // case "settings":
+      //   return (
+      //     <div>
+      //       <SettingsTab />
+      //     </div>
+      //   );
+
       default:
         return;
     }
@@ -77,7 +95,7 @@ const Admin: React.FC = () => {
           {tabsList.map((tab) => (
             <button
               key={tab.tab}
-              className={`px-6 py-3 relative border-0 outline-none text-[14px] text-black focus:outline-none transition-all duration-200 ${
+              className={`px-6 py-3 relative border-0 whitespace-nowrap outline-none text-[14px] text-black focus:outline-none transition-all duration-200 ${
                 selectedTab === tab.tab
                   ? "font-bold"
                   : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"

@@ -1,5 +1,5 @@
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
-import { ProjectDetails } from "@/types/api.types";
+import { ProjectDetails, Trail } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
 import { format, formatISO, isToday, parseISO, startOfDay } from "date-fns";
 import { twMerge } from "tailwind-merge";
@@ -213,4 +213,38 @@ export const formatCurrency = (amount: string | number) => {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(numAmount);
+};
+
+type TimeGroup = "Today" | "Last 7 days" | "2 weeks ago" | string;
+
+export const groupEntriesByTimePeriod = (
+  entries: Trail[]
+): Record<TimeGroup, Trail[]> => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const oneWeekAgo = new Date(today);
+  oneWeekAgo.setDate(today.getDate() - 7);
+  const twoWeeksAgo = new Date(today);
+  twoWeeksAgo.setDate(today.getDate() - 14);
+
+  return entries.reduce((groups: Record<TimeGroup, Trail[]>, entry) => {
+    let group: TimeGroup;
+    const entryDate = new Date(entry.created_at);
+
+    if (entryDate >= today) {
+      group = "Today";
+    } else if (entryDate >= oneWeekAgo) {
+      group = "Last 7 days";
+    } else if (entryDate >= twoWeeksAgo) {
+      group = "2 weeks ago";
+    } else {
+      group = "Older";
+    }
+
+    if (!groups[group]) {
+      groups[group] = [];
+    }
+    groups[group].push(entry);
+    return groups;
+  }, {});
 };

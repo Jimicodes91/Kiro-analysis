@@ -73,6 +73,7 @@ export default {
           light: "#00000066",
         },
       },
+
       fontFamily: {
         body: ["42dot Sans", "sans-serif"],
       },

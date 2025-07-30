@@ -94,9 +94,11 @@ export const addProjectTaskSchema = z.object({
     .min(3, {
       message: "Task name is too short",
     }),
-  task_type_id: z.string({
-    message: "Task type is required",
-  }),
+  task_type_id: z
+    .string({
+      message: "Task type is required",
+    })
+    .optional(),
   status: z.enum(["in_progress", "completed", "pending"], {
     message: "Status is required",
   }),
@@ -133,9 +135,11 @@ export const editProjectTaskSchema = z.object({
   name: z.string({
     message: "Task name is required",
   }),
-  task_type_id: z.string({
-    message: "Task type is required",
-  }),
+  task_type_id: z
+    .string({
+      message: "Task type is required",
+    })
+    .optional(),
   status: z.enum(["in_progress", "completed", "pending"], {
     message: "Status is required",
   }),
@@ -168,9 +172,11 @@ export const requestDocumentSchema = z.object({
   name: z.string({
     message: "Document name is required",
   }),
-  document_type_id: z.string({
-    message: "Document type is required",
-  }),
+  document_type_id: z
+    .string({
+      message: "Document type is required",
+    })
+    .optional(),
   description: z.string({
     message: "Description is required",
   }),
@@ -188,9 +194,11 @@ export const uploadDocumentSchema = z.object({
   file_name: z.string({
     message: "Document name is required",
   }),
-  document_type_id: z.string({
-    message: "Document type is required",
-  }),
+  document_type_id: z
+    .string({
+      message: "Document type is required",
+    })
+    .optional(),
   description: z.string({
     message: "Description is required",
   }),
@@ -221,9 +229,11 @@ export const addProjectEventSchema = z.object({
   venue: z.string({
     message: "Venue is required",
   }),
-  event_type_id: z.string({
-    message: "Event type is required",
-  }),
+  event_type_id: z
+    .string({
+      message: "Event type is required",
+    })
+    .optional(),
   description: z.string({
     message: "Description is required",
   }),

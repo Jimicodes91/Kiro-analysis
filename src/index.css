@@ -228,6 +228,11 @@
   }
 }
 
+.page-fade-in {
+  @apply animate-in fade-in-0 duration-700 ease-in-out;
+}
+
+
 :root {
   font-family: "42dot Sans", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

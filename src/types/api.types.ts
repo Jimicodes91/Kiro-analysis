@@ -196,10 +196,12 @@ export interface Setting {
   deleted_at?: string;
   project_id: string;
   company_id: string;
-  client_can_view_task: number;
-  client_can_view_notes: number;
-  client_can_view_documents: number;
-  client_can_view_activity: number;
+  client_can_view_task: 0 | 1;
+  client_can_view_notes: 0 | 1;
+  client_can_view_documents: 0 | 1;
+  client_can_view_activity: 0 | 1;
+  client_can_view_event: 0 | 1;
+  client_can_view_project_members: 0 | 1;
 }
 
 export interface DocumentTypeDetails {
@@ -298,8 +300,25 @@ export interface ProjectDetails {
   milestone?: ProjectTypeMilestone;
   client?: string;
   timeline: string;
+  milestone_status: string;
   project_timeline: string;
   form_fields: FormField[];
+  setting: ProjectSettings;
+}
+
+export interface ProjectSettings {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: null;
+  project_id: string;
+  company_id: string;
+  client_can_view_task: 0 | 1;
+  client_can_view_notes: 0 | 1;
+  client_can_view_documents: 0 | 1;
+  client_can_view_activity: 0 | 1;
+  client_can_view_event: 0 | 1;
+  client_can_view_project_members: 0 | 1;
 }
 export interface FormField {
   id: string;

@@ -1,27 +1,33 @@
 import { TablePagination } from "@/components/ui/table-pagination";
-import useGetAuditTrail from "@/hooks/project-modules/activity-logs/use-get-audit-trail";
+import useGetCompanyAuditTrail from "@/hooks/audit-trail/use-get-company-audit-trails";
 import PaginationContextProvider from "@/lib/context/pagination-context";
 import { groupEntriesByTimePeriod } from "@/lib/utils";
 import React from "react";
-import ActivityCard from "../components/cards/activity-card";
+import ActivityCard from "../../project-details/components/cards/activity-card";
 
-function ActivitLogSection({ projectId }: { projectId: string }) {
+// Define types for our audit trail entries
+
+// Group header type
+
+const AuditTrailTab = () => {
   const [pageProp, setPageProp] = React.useState({
     page: 1,
     pageSize: 10,
   });
-  const auditTrail = useGetAuditTrail(projectId, pageProp.page, pageProp.pageSize);
+  const auditTrail = useGetCompanyAuditTrail(pageProp.page, pageProp.pageSize);
+
+  // Function to group entries by time period
 
   const groupedEntries = groupEntriesByTimePeriod(auditTrail?.value?.data?.trails || []);
 
   const renderBody = () => {
-    if (auditTrail.isPending)
+    if (auditTrail?.status === "pending")
       return (
-        <div className="space-y-2">
-          {Array.from(Array(pageProp.pageSize)).map((i) => (
+        <div className="space-y-2 page-fade-in">
+          {Array.from(Array(pageProp.pageSize)).map((_, index) => (
             <div
-              className="px-5 py-10 space-y-2 rounded-lg bg-gray-100 flex justify-between  animate-pulse"
-              key={i}
+              className="px-5 py-14  space-y-2 rounded-lg bg-slate-100 flex justify-between  animate-pulse"
+              key={index}
             ></div>
           ))}
         </div>
@@ -70,19 +76,20 @@ function ActivitLogSection({ projectId }: { projectId: string }) {
   };
 
   return (
-    <>
-      <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
-        <div>{renderBody()}</div>
-        <PaginationContextProvider
-          pageProp={pageProp}
-          setPageProp={setPageProp}
-          total={auditTrail.value?.data?.pagination?.total ?? 0}
-        >
-          <TablePagination />
-        </PaginationContextProvider>
-      </div>
-    </>
-  );
-}
+    <div className="flex flex-col w-full">
+      <h1 className="text-base font-semibold pt-2">Audit trail</h1>
 
-export default ActivitLogSection;
+      <div className="py-10">{renderBody()}</div>
+
+      <PaginationContextProvider
+        pageProp={pageProp}
+        setPageProp={setPageProp}
+        total={auditTrail.value?.data?.pagination?.total ?? 0}
+      >
+        <TablePagination />
+      </PaginationContextProvider>
+    </div>
+  );
+};
+
+export default AuditTrailTab;

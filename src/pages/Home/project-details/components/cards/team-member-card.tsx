@@ -21,13 +21,13 @@ export default function TeamMemberCard({ member, projectId }: TeamMemberCardProp
           <Avatar className="h-12 w-12">
             <AvatarImage src={"/"} alt="@shadcn" />
             <AvatarFallback className="bg-[#E4E6E7] text-xl text-primary">
-              {getInitials(member?.creator?.name ?? member?.creator?.email)}
+              {getInitials(member?.user?.name ?? member?.user?.email)}
             </AvatarFallback>
           </Avatar>
-          <p className="text-sm">{member?.creator?.name}</p>
+          <p className="text-sm">{member?.user?.name}</p>
         </div>
 
-        <p className="text-sm text-brand-fade p-0 m-0">{member?.creator?.email}</p>
+        <p className="text-sm text-brand-fade p-0 m-0">{member?.user?.email}</p>
         <Button size="icon" variant="ghost" onClick={onOpen}>
           <Trash2 />
         </Button>

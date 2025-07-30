@@ -1,7 +1,8 @@
-import { getIsClient } from "@/services/api.service";
+import { getIsAdmin, getIsClient } from "@/services/api.service";
 import { ProjectDetails } from "@/types/api.types";
 import { motion } from "framer-motion";
 import React from "react";
+import SettingsTab from "../../Admin/settings";
 import ActivitLogSection from "../template/project-activity-template";
 import ProjectDocumentSection from "../template/project-document-template";
 import ProjectEventSection from "../template/project-event-template";
@@ -16,11 +17,14 @@ type SubTabType =
   | "Document"
   | "Message"
   | "Event"
-  | "Project team";
+  | "Project team"
+  | "Settings"
+  | "";
 
 function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails }) {
   const [activeSubTab, setActiveSubTab] = React.useState<SubTabType>("Task");
   const isClient = getIsClient();
+  const isAdmin = getIsAdmin();
 
   const subTabs: SubTabType[] = [
     "Task",
@@ -29,6 +33,7 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
     "Document",
     "Event",
     "Project team",
+    isAdmin ? "Settings" : "",
   ];
 
   const renderSubTabContent = () => {
@@ -71,6 +76,13 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
         );
       case "Project team":
         return <ProjectTeamSection projectId={projectDetails?.id} />;
+      case "Settings":
+        return (
+          <div>
+            <SettingsTab projectId={projectDetails?.id} />
+          </div>
+        );
+
       default:
         return null;
     }
@@ -79,26 +91,28 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
   return (
     <div className="bg-white rounded-lg grid border border-brand-border relative">
       <div className="flex border-b border-gray-200 overflow-auto sticky top-[10px]">
-        {subTabs.map((tab) => (
-          <button
-            key={tab}
-            className={`px-6 py-3 relative whitespace-nowrap text-[14px] text-black focus:outline-none outline-none boder-0 transition-all duration-200 ${
-              activeSubTab === tab
-                ? "font-bold"
-                : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"
-            }`}
-            onClick={() => setActiveSubTab(tab)}
-          >
-            {tab}
-            {activeSubTab === tab ? (
-              <motion.div
-                className="absolute bottom-0 left-0 rounded-full h-0.5 w-full bg-primary"
-                layoutId={`underline-project-tabs`}
-                id="underline-project-tabs"
-              />
-            ) : null}
-          </button>
-        ))}
+        {subTabs
+          .filter((tab) => tab)
+          .map((tab) => (
+            <button
+              key={tab}
+              className={`px-6 py-3 relative whitespace-nowrap text-[14px] text-black focus:outline-none outline-none boder-0 transition-all duration-200 ${
+                activeSubTab === tab
+                  ? "font-bold"
+                  : "opacity-30 hover:opacity-40 hover:bg-gray-50 font-[500]"
+              }`}
+              onClick={() => setActiveSubTab(tab)}
+            >
+              {tab}
+              {activeSubTab === tab ? (
+                <motion.div
+                  className="absolute bottom-0 left-0 rounded-full h-0.5 w-full bg-primary"
+                  layoutId={`underline-project-tabs`}
+                  id="underline-project-tabs"
+                />
+              ) : null}
+            </button>
+          ))}
       </div>
       <div className="p-6">{renderSubTabContent()}</div>
     </div>

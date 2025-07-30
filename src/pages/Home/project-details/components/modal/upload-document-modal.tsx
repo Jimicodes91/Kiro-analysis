@@ -73,6 +73,7 @@ const UploadDocumentModal = ({
         title="Upload document"
         closeModal={onClose}
         isOpen={isOpen}
+        closeOnEsc={false}
         closeOnOverlayClick={false}
       >
         <Form {...form}>

@@ -3,7 +3,7 @@ import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
 import { useQueryClient } from "@tanstack/react-query";
 
 export interface UploadDocumentRequest {
-  document_type_id: string;
+  document_type_id?: string;
   file_name: string;
   description: string;
   attachment: string;

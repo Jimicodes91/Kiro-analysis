@@ -75,8 +75,8 @@ function ProjectTeamSection({ projectId }: { projectId: string }) {
           </div>
 
           {!isClient && (
-            <Button size="sm" leftIcon={<Plus />} onClick={onOpen}>
-              Add Team
+            <Button size="sm" leftIcon={<Plus />} onClick={onOpen} className="capitalize">
+              Add {activeTab} Team
             </Button>
           )}
         </div>

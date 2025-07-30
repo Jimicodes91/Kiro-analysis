@@ -87,6 +87,7 @@ const RequestDocumentModal = ({
         title="Request document"
         closeModal={onClose}
         isOpen={isOpen}
+        closeOnEsc={false}
         closeOnOverlayClick={false}
       >
         <Form {...form}>
