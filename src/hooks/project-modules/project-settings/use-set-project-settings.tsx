@@ -11,7 +11,7 @@ export interface ProjectSettings {
   client_can_view_project_members: boolean;
 }
 
-const useSetProjectSettings = (projectId: string) => {
+const useSetProjectSettings = (projectId?: string) => {
   const queryClient = useQueryClient();
   return useCustomMutation<object, Partial<ProjectSettings>>({
     method: "patch",

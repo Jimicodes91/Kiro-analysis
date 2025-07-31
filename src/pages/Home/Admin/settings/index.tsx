@@ -5,7 +5,7 @@ import useGetProjectSettings from "@/hooks/project-modules/project-settings/use-
 import useSetProjectSettings from "@/hooks/project-modules/project-settings/use-set-project-settings";
 import React from "react";
 
-const SettingsTab = ({ projectId }: { projectId: string }) => {
+const SettingsTab = ({ projectId }: { projectId?: string }) => {
   const projectSettings = useGetProjectSettings(projectId);
   const setProjectSettings = useSetProjectSettings(projectId);
   const [activeSetting, setActiveSetting] = React.useState<undefined | string>(undefined);

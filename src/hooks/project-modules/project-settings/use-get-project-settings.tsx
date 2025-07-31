@@ -8,11 +8,11 @@ export interface ProjectSettingsResponse {
   data: Setting;
 }
 
-const useGetProjectSettings = (projectId: string) => {
+const useGetProjectSettings = (projectId?: string) => {
   return useQueryActionHook<ProjectSettingsResponse>({
     method: "get",
     endpoint: ENDPOINTS.GET_PROJECT_SETTINGS(projectId),
-    queryKey: [QUERYKEYS.GET_PROJECT_SETTINGS, projectId],
+    queryKey: [QUERYKEYS.GET_PROJECT_SETTINGS, `${projectId}`],
   });
 };
 

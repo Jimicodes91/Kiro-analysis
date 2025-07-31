@@ -329,8 +329,10 @@ export const ENDPOINTS = {
     `projects/${projectId}/members/${memberId}`,
 
   // 8. Project Settings
-  SET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
-  GET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
+  SET_PROJECT_SETTINGS: (projectId?: string) =>
+    `settings/projects${projectId ? `/${projectId}` : ""}`,
+  GET_PROJECT_SETTINGS: (projectId?: string) =>
+    `settings/projects${projectId ? `/${projectId}` : ""}`,
 
   // 9. Document Types
   CREATE_DOCUMENT_TYPE: `metadata/type/documents`,
