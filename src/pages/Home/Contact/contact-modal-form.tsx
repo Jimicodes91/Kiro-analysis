@@ -1,5 +1,4 @@
 import Modal from "@/components/Modal";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,11 +9,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import MultiSelect from "@/components/ui/multi-select";
-import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useCreateContact from "@/hooks/contacts/use-create-contact";
 import useUpdateContact from "@/hooks/contacts/use-update-contact";
-import getInitials from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
 import { ContactFormValues } from "@/types/contact.types";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -34,15 +30,15 @@ const contactSchema = yup.object().shape({
     .test("is-valid-phone", "Invalid phone number", (value) => {
       return value ? isValidPhoneNumber(value) : false;
     }),
-  assigned_to: yup
-    .array()
-    .of(
-      yup.object().shape({
-        id: yup.string().required(),
-        name: yup.string().required(),
-      })
-    )
-    .optional(),
+  // assigned_to: yup
+  //   .array()
+  //   .of(
+  //     yup.object().shape({
+  //       id: yup.string().required(),
+  //       name: yup.string().required(),
+  //     })
+  //   )
+  //   .optional(),
 });
 
 interface ContactModalProps {
@@ -55,7 +51,7 @@ interface ContactModalProps {
 function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps) {
   // Get data from hooks
   const session = getUserSession();
-  const usersResponse = useGetCompanyUsers();
+  // const usersResponse = useGetCompanyUsers();
   const createContact = useCreateContact();
   const updateContact = useUpdateContact(contactData?.id || "");
 
@@ -79,13 +75,13 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
     }
   }, [contactData, form, mode]);
 
-  const users = Array.isArray(usersResponse?.value?.data) ? usersResponse.value.data : [];
+  // const users = Array.isArray(usersResponse?.value?.data) ? usersResponse.value.data : [];
 
   // Convert users to MultiSelect options format
-  const userOptions = users.map((user) => ({
-    value: user.id,
-    label: user.name || user.email,
-  }));
+  // const userOptions = users.map((user) => ({
+  //   value: user.id,
+  //   label: user.name || user.email,
+  // }));
 
   const onSubmit = async (data: ContactFormValues) => {
     // Prepare the payload with consistent structure
@@ -198,7 +194,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
             )}
           />
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="assigned_to"
             render={({ field, fieldState }) => (
@@ -223,7 +219,6 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                       error={fieldState.error?.message}
                     />
 
-                    {/* Display selected users as pills */}
                     {mode === "view" && (field?.value?.length ?? 0) > 0 && (
                       <div className="flex flex-wrap gap-2 mt-2">
                         {(field?.value ?? []).map((user) => (
@@ -245,7 +240,7 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
           {mode !== "view" && (
             <div className="pt-3">
               <Button

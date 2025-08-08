@@ -107,7 +107,7 @@ function MilestoneTable({
                         size="sm"
                         className="px-0 hover:bg-transparent"
                       >
-                        Add stage jdsj
+                        Add stage
                       </Button>
 
                       <Separator className="w-fit" />
