@@ -14,7 +14,7 @@ export const taskFormSchema = yup.object({
     .string()
     .required("Task name is required")
     .min(3, "Task name must be at least 3 characters"),
-  task_type_id: yup.string().required("Task type is required"),
+  task_type_id: yup.string().optional(),
   project_type_id: yup.string().required("Pipeline is required"),
   project_id: yup.string().required("Project is required"),
   status: yup

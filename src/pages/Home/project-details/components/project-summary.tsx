@@ -1,3 +1,4 @@
+import { InlineEditable } from "@/components/EditableInput";
 import {
   Accordion,
   AccordionContent,
@@ -28,11 +29,14 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
                   ))}
                 </div>
               </div>
-              <div>
+              <div className="space-y-1">
                 <h3 className="text-sm text-brand-fade font-[500]">Company</h3>
-                <p className="text-sm text-gray-900">
-                  {projectDetails?.form_data?.client_organization}
-                </p>
+                <InlineEditable
+                  value={projectDetails?.form_data?.client_organization}
+                  onChange={() => {
+                    console.log("test");
+                  }}
+                />
               </div>
 
               <div>
@@ -63,11 +67,14 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
                   {clientList?.map((client) => client.name)}
                 </p>
               </div>
-              <div>
+              <div className="space-y-1">
                 <h3 className="text-sm text-brand-fade font-[500]">Project Type</h3>
-                <p className="text-sm text-gray-900">
-                  {projectDetails?.project_type?.name}
-                </p>
+                <InlineEditable
+                  value={projectDetails?.project_type?.name}
+                  onChange={() => {
+                    console.log("test");
+                  }}
+                />
               </div>
 
               <div>

@@ -21,13 +21,16 @@ const ProjectDetail = ({
   const journey = useGetProjectTypeDetails(projectDetails?.project_type_id);
   const updateProjectMilestone = useUpdateProjectMilestone(projectDetails.id);
 
-  const updateMilestoneFxn = (milestoneId: string) => {
+  const updateMilestoneFxn = (milestoneId: string, isLast?: boolean) => {
     setText(milestoneId);
     updateProjectMilestone
       .mutateAsync({
         milestone_id: milestoneId,
       })
-      .then(() => refetchProject())
+      .then(() => {
+        refetchProject();
+        console.log(isLast ? "Last milestone updated" : "Milestone updated");
+      })
       .catch(console.error);
   };
 
@@ -52,7 +55,7 @@ const ProjectDetail = ({
                   isLast={index === arr.length - 1}
                   onClick={() => {
                     if (item.id !== projectDetails?.milestone_id) {
-                      updateMilestoneFxn(item.id);
+                      updateMilestoneFxn(item.id, index === arr.length - 1);
                     }
                   }}
                   isLoading={updateProjectMilestone.isPending && aText === item.id}
