@@ -300,3 +300,34 @@ body .rsw-ce ol {
 body .rsw-ce:focus {
   outline: 1px solid transparent;
 }
+
+body .stdropdown-container {
+  border-radius: 100px !important;
+  height: 48px;
+}
+
+body .stdropdown-container .stsearch-box input {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem;
+  border: 0px;
+  padding-top: 8px;
+  outline: none;
+  font-family: "42dot Sans", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+}
+
+body .stdropdown-container .stdropdown-menu .stdropdown-item {
+  font-size: 0.875rem !important;
+  color: #000000ee !important;
+  font-family: "42dot Sans", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+
+}
+
+body .stdropdown-container .stdropdown-menu .stdropdown-item.selected {
+  background-color: #f0f0f0 !important;
+  color: #000000ee !important;
+}
+
+body .stdropdown-container .stdropdown-menu .stdropdown-item span {
+  margin-right: 6px;
+  margin-left: 6px;
+}

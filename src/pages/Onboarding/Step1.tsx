@@ -16,16 +16,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useCreateCompany from "@/hooks/company/use-create-company";
-import {
-  companySizeList,
-  COUNTRY_STATES,
-  countryList,
-  CountryStatesMap,
-  industryList,
-} from "@/lib/constants";
+import { companySizeList, industryList } from "@/lib/constants";
 import { getUserSession, updateUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 import { companyDetailsSchema } from "../../utils/validation-schema/onboarding";
@@ -34,7 +29,6 @@ import { useOnboarding } from "./onboarding-context";
 const Step1 = () => {
   const { onNext, updateCompanyDetails, companyData } = useOnboarding();
   const session = getUserSession();
-  const [states, setStates] = useState<{ value: string; label: string }[]>([]);
   const createCompany = useCreateCompany(session?.id ?? "");
 
   const form = useForm({
@@ -45,15 +39,7 @@ const Step1 = () => {
 
   // Watch country to dynamically update states
   const watchCountry = form.watch("country");
-
-  useEffect(() => {
-    // Type-safe way to check and set states
-    if (watchCountry && Object.keys(COUNTRY_STATES).includes(watchCountry)) {
-      setStates(COUNTRY_STATES[watchCountry as keyof CountryStatesMap]);
-    } else {
-      setStates([]);
-    }
-  }, [watchCountry]);
+  const watchState = form.watch("state");
 
   // Ensure Redux state is loaded into form
   useEffect(() => {
@@ -62,7 +48,12 @@ const Step1 = () => {
 
   const onSubmit = async (data: InferType<typeof companyDetailsSchema>) => {
     createCompany
-      .mutateAsync(data)
+      .mutateAsync({
+        ...data,
+        country: data.country?.name || "",
+        state: data.state?.name || "",
+        city: data.city?.name || "",
+      })
       .then((response) => {
         const res = response?.data?.data;
         const updateFields = {
@@ -163,24 +154,21 @@ const Step1 = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Country</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="h-12 w-full">
-                          <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                            <SelectValue
-                              placeholder={
-                                <p className="text-brand-placeholder">Country</p>
-                              }
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {countryList.map((item) => (
-                            <SelectItem key={item.value} value={item.value}>
-                              {item.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormControl className="h-12 w-full">
+                        <CountrySelect
+                          containerClassName="focus-visible:outline-none focus-visible:ring-1! focus-visible:ring-ring! shadow-sm"
+                          inputClassName="flex h-20! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm  transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:focus:border-black disabled:focus:bg-white disabled:opacity-50 md:text-sm"
+                          onChange={(_country) => {
+                            field.onChange(_country);
+                            // @ts-expect-error TODO
+                            form.setValue("state", "");
+                            // @ts-expect-error TODO
+                            form.setValue("city", "");
+                          }}
+                          placeHolder="Select Country"
+                        />
+                      </FormControl>
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -199,58 +187,75 @@ const Step1 = () => {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>City</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="h-12 bg-black w-full">
-                          <SelectTrigger
-                            disabled={states.length === 0}
-                            className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm"
-                          >
-                            <SelectValue
-                              placeholder={
-                                <p className="text-brand-placeholder">
-                                  {states.length === 0
-                                    ? "Select Country First"
-                                    : "Select City"}
-                                </p>
-                              }
-                            />
-                          </SelectTrigger>
+              <div className="flex  gap-4">
+                {watchCountry?.hasStates && (
+                  <FormField
+                    control={form.control}
+                    name="state"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>State</FormLabel>
+                        <FormControl className="h-12 w-full">
+                          <StateSelect
+                            disabled={!watchCountry?.id}
+                            countryid={watchCountry?.id || 161}
+                            containerClassName="focus-visible:outline-none focus-visible:ring-1! focus-visible:ring-ring! shadow-sm"
+                            inputClassName="flex h-20! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm  transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:focus:border-black disabled:focus:bg-white disabled:opacity-50 md:text-sm"
+                            onChange={(_state) => {
+                              field.onChange(_state);
+                              // @ts-expect-error TODO
+                              form.setValue("city", "");
+                            }}
+                            placeHolder="Select State"
+                          />
                         </FormControl>
-                        <SelectContent>
-                          {states.map((item) => (
-                            <SelectItem key={item.value} value={item.value}>
-                              {item.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="postal_code"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Postal Code</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Postal Code" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+                {watchState?.hasCities && (
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>City</FormLabel>
+                        <FormControl className="h-12 w-full">
+                          <CitySelect
+                            countryid={watchCountry?.id || 161}
+                            stateid={watchState?.id}
+                            disabled={!watchState?.id}
+                            containerClassName="focus-visible:outline-none focus-visible:ring-1! focus-visible:ring-ring! shadow-sm"
+                            inputClassName="flex h-20! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm  transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:focus:border-black disabled:focus:bg-white disabled:opacity-50 md:text-sm"
+                            onChange={(_city) => field.onChange(_city)}
+                            onTextChange={(_txt) => console.log(_txt)}
+                            placeHolder="Select City"
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
+              <FormField
+                control={form.control}
+                name="postal_code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Postal Code</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Postal Code" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-end py-4 pr-1">
               <Button
                 type="submit"
                 className="z-[99]"

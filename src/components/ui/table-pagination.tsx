@@ -16,11 +16,16 @@ export function TablePagination() {
   return (
     <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
       <div className="text-xs text-gray-500">
-        Showing page {currentPageNumber} of {totalPages} • Total {total} contacts
+        <span className="hidden md:inline-block">
+          Showing page {currentPageNumber} of {totalPages} • Total {total} contacts
+        </span>
+        <span className="inline-block md:hidden">
+          {currentPageNumber} / {totalPages}
+        </span>
       </div>
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
-          <span className="text-xs">Rows per page:</span>
+          <span className="hidden md:inline-block text-xs">Rows per page:</span>
           <Select
             value={`${pageSize}`}
             onValueChange={(value) => {
@@ -46,7 +51,7 @@ export function TablePagination() {
           size="sm"
           onClick={onPrev}
           disabled={currentPageNumber === 1}
-          className="text-xs"
+          className="text-xs px-3 py-2 h-auto"
         >
           Previous
         </Button>
@@ -55,7 +60,7 @@ export function TablePagination() {
           size="sm"
           onClick={onNext}
           disabled={currentPageNumber === totalPages || totalPages === 0}
-          className="text-xs"
+          className="text-xs px-3 py-2 h-auto"
         >
           Next
         </Button>

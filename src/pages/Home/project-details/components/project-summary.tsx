@@ -7,9 +7,11 @@ import {
 } from "@/components/ui/accordion";
 import PersonAvatar from "@/components/ui/person-avatar";
 import { ProjectStatusToggler } from "@/components/ui/project-status-toggle";
+import useUpdateProject from "@/hooks/project-modules/use-update-project";
 import { ProjectDetails } from "@/types/api.types";
 
 export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDetails }) {
+  const updateProject = useUpdateProject(projectDetails?.id);
   const clientList = projectDetails?.form_fields?.find(
     (item) => item.slug === "project_client"
   )?.value as { name: string; email: string }[];
@@ -33,8 +35,31 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
                 <h3 className="text-sm text-brand-fade font-[500]">Company</h3>
                 <InlineEditable
                   value={projectDetails?.form_data?.client_organization}
-                  onChange={() => {
-                    console.log("test");
+                  onChange={(text) => {
+                    updateProject
+                      .mutateAsync({
+                        form_data: {
+                          client_organization: text,
+                        },
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  }}
+                />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm text-brand-fade font-[500]">Project Name</h3>
+                <InlineEditable
+                  value={projectDetails?.form_data?.project_name}
+                  onChange={(text) => {
+                    updateProject
+                      .mutateAsync({
+                        name: text,
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
                   }}
                 />
               </div>
