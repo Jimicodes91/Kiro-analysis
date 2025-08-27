@@ -59,6 +59,13 @@ export function convertDatesToYMD(obj: Record<string, Given>): Record<string, Gi
       continue;
     }
 
+    if (key === "nationality" || key === "resident_country") {
+      // If the value is a number, convert it to a number.
+      // @ts-expect-error dddgh
+      result[key] = +value?.name;
+      continue;
+    }
+
     if (Array.isArray(value)) {
       const idList = value?.map((item) => item.value);
       // @ts-expect-error dddd

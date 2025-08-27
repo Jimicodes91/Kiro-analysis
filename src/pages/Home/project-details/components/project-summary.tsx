@@ -39,9 +39,8 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
                   onChange={(text) => {
                     updateProject
                       .mutateAsync({
-                        form_data: {
-                          client_organization: text,
-                        },
+                        ...projectDetails?.form_data,
+                        client_organization: text,
                       })
                       .catch((err) => {
                         console.log(err);
@@ -56,7 +55,8 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
                   onChange={(text) => {
                     updateProject
                       .mutateAsync({
-                        name: text,
+                        ...projectDetails?.form_data,
+                        project_name: text,
                       })
                       .catch((err) => {
                         console.log(err);

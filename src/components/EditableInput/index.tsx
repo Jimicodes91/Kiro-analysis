@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
+import { Check, Pen, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface InlineEditableProps {
@@ -48,10 +48,11 @@ export function InlineEditable({
         ) : (
           <div
             key={value}
-            className="pl-0.5 py-1 text-sm text-gray-900 rounded-sm w-full hover:bg-muted cursor-pointer"
+            className="pl-0.5 py-1 text-sm flex text-gray-900 rounded-sm w-full hover:bg-muted cursor-pointer"
             onClick={() => setIsEditing(true)}
           >
             {draftValue || <span className="text-muted-foreground">{placeholder}</span>}
+            {isTextArea && <Pen className="ml-2 size-3 text-brand-fade" />}
           </div>
         )
       ) : (

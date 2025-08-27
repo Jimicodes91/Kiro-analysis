@@ -21,27 +21,27 @@ const ProjectInfoSection = ({ projectDetails }: { projectDetails: ProjectDetails
       <div className="bg-[#F8F8F8] p-3 rounded-lg border">
         <h3 className="text-xs mb-1">Description</h3>
         <p className="text-xs text-[#191819B2]"></p>
-        <InlineEditable
-          isTextArea
-          isLoading={updateProject?.isPending}
-          value={
-            projectDetails?.form_data?.description
-              ? projectDetails?.form_data?.description
-              : "--"
-          }
-          onChange={(text) => {
-            updateProject
-              .mutateAsync({
-                form_data: {
+        <div>
+          <InlineEditable
+            isTextArea
+            isLoading={updateProject?.isPending}
+            value={
+              projectDetails?.form_data?.description
+                ? projectDetails?.form_data?.description
+                : "--"
+            }
+            onChange={(text) => {
+              updateProject
+                .mutateAsync({
                   ...projectDetails?.form_data,
                   description: text,
-                },
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }}
-        />
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+          />
+        </div>
       </div>
       <div className="">
         <ProjectSummary projectDetails={projectDetails} />

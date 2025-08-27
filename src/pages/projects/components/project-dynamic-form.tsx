@@ -21,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useMemo } from "react";
+import { CountrySelect } from "react-country-state-city";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as z from "zod";
@@ -69,6 +70,32 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
             .required()
         )
         .refine((val) => (val && val.length === 0 ? false : true), {
+          message: "Client is required",
+        });
+    } else if (field.slug === "nationality" || field.slug === "resident_country") {
+      validator = z
+        .object({
+          id: z.number(),
+          name: z.string(),
+          iso3: z.string(),
+          iso2: z.string(),
+          numeric_code: z.string(),
+          phone_code: z.string(),
+          capital: z.string(),
+          currency: z.string(),
+          currency_name: z.string(),
+          currency_symbol: z.string(),
+          tld: z.string(),
+          native: z.string(),
+          region: z.string(),
+          subregion: z.string(),
+          latitude: z.string(),
+          longitude: z.string(),
+          emoji: z.string(),
+          hasStates: z.boolean(),
+        })
+        .required()
+        .refine((val) => val, {
           message: "Client is required",
         });
     } else {
@@ -187,6 +214,16 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                   {...fieldProps}
                                 />
                               </FormControl>
+                            ) : field.slug === "nationality" ||
+                              field.slug === "resident_country" ? (
+                              <CountrySelect
+                                containerClassName="focus-visible:outline-none focus-visible:ring-1! focus-visible:ring-ring! shadow-sm"
+                                inputClassName="flex h-20! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm  transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:focus:border-black disabled:focus:bg-white disabled:opacity-50 md:text-sm"
+                                onChange={(_country) => {
+                                  fieldProps.onChange(_country);
+                                }}
+                                placeHolder="Select Country"
+                              />
                             ) : (
                               <FormControl>
                                 <Input
