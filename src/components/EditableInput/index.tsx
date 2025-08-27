@@ -48,11 +48,11 @@ export function InlineEditable({
         ) : (
           <div
             key={value}
-            className="pl-0.5 py-1 text-sm flex text-gray-900 rounded-sm w-full hover:bg-muted cursor-pointer"
+            className="pl-0.5 py-1 group/edit text-sm flex items-center text-gray-900 rounded-sm w-full hover:bg-muted cursor-pointer"
             onClick={() => setIsEditing(true)}
           >
             {draftValue || <span className="text-muted-foreground">{placeholder}</span>}
-            {isTextArea && <Pen className="ml-2 size-3 text-brand-fade" />}
+            <Pen className="ml-3 size-3 group-hover/edit:text-gray-700 text-transparent" />
           </div>
         )
       ) : (
