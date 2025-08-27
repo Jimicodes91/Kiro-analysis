@@ -47,11 +47,12 @@ const Step1 = () => {
   }, [companyData, form]);
 
   const onSubmit = async (data: InferType<typeof companyDetailsSchema>) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { state, ...others } = data;
     createCompany
       .mutateAsync({
-        ...data,
+        ...others,
         country: data.country?.name || "",
-        state: data.state?.name || "",
         city: data.city?.name || "",
       })
       .then((response) => {

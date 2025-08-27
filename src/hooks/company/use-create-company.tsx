@@ -6,7 +6,6 @@ type CompanyDetails = {
   industry_type: string;
   size: string;
   country: string;
-  state: string;
   city: string;
   address: string;
   postal_code: string;
