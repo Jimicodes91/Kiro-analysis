@@ -34,6 +34,7 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
               <div className="space-y-1">
                 <h3 className="text-sm text-brand-fade font-[500]">Company</h3>
                 <InlineEditable
+                  isLoading={updateProject?.isPending}
                   value={projectDetails?.form_data?.client_organization}
                   onChange={(text) => {
                     updateProject
@@ -94,12 +95,9 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
               </div>
               <div className="space-y-1">
                 <h3 className="text-sm text-brand-fade font-[500]">Project Type</h3>
-                <InlineEditable
-                  value={projectDetails?.project_type?.name}
-                  onChange={() => {
-                    console.log("test");
-                  }}
-                />
+                <p className="text-sm text-gray-900">
+                  {projectDetails?.project_type?.name}
+                </p>
               </div>
 
               <div>

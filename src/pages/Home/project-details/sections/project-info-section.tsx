@@ -1,9 +1,12 @@
 import { InlineEditable } from "@/components/EditableInput";
 import Heading from "@/components/ui/heading";
+import useUpdateProject from "@/hooks/project-modules/use-update-project";
 import { ProjectDetails } from "@/types/api.types";
 import { ProjectSummary } from "../components/project-summary";
 
 const ProjectInfoSection = ({ projectDetails }: { projectDetails: ProjectDetails }) => {
+  const updateProject = useUpdateProject(projectDetails?.id);
+
   return (
     <div className="mb-8 p-4 space-y-4 rounded-lg border">
       <div className="flex flex-col gap-1">
@@ -19,13 +22,24 @@ const ProjectInfoSection = ({ projectDetails }: { projectDetails: ProjectDetails
         <h3 className="text-xs mb-1">Description</h3>
         <p className="text-xs text-[#191819B2]"></p>
         <InlineEditable
+          isTextArea
+          isLoading={updateProject?.isPending}
           value={
             projectDetails?.form_data?.description
               ? projectDetails?.form_data?.description
-              : "No description added"
+              : "--"
           }
-          onChange={() => {
-            console.log("test");
+          onChange={(text) => {
+            updateProject
+              .mutateAsync({
+                form_data: {
+                  ...projectDetails?.form_data,
+                  description: text,
+                },
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           }}
         />
       </div>

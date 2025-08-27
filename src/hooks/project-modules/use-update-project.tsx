@@ -8,7 +8,7 @@ const useUpdateProject = (projectId: string) => {
   return useCustomMutation<Record<string, string>>({
     method: "patch",
     endpoint: ENDPOINTS.UPDATE_PROJECT_DETAILS(projectId),
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERYKEYS.GET_PROJECT_DETAILS, projectId],
       });

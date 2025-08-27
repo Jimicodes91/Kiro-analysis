@@ -44,5 +44,5 @@ export const taskFormSchema = yup.object({
       if (!files) return true;
       return files.length <= MAX_FILES;
     })
-    .required("Attachment is required"),
+    .optional(),
 });

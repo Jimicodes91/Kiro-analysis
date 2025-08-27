@@ -8,17 +8,21 @@ interface InlineEditableProps {
   value: string | number;
   onChange: (newValue: string) => void;
   placeholder?: string;
+  isTextArea?: boolean;
+  isLoading?: boolean;
 }
 
 export function InlineEditable({
   value,
   onChange,
   placeholder = "Enter value",
+  isTextArea,
+  isLoading = false,
 }: InlineEditableProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [draftValue, setDraftValue] = useState(String(value));
-  const inputRef = useRef<HTMLInputElement>(null);
-
+  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+  const Comp = isTextArea ? "textarea" : "input";
   // Focus input automatically when entering edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -39,19 +43,24 @@ export function InlineEditable({
   return (
     <div className="flex items-center gap-2 relative w-full">
       {!isEditing ? (
-        <div
-          className="pl-0.5 py-1 text-sm text-gray-900 rounded-sm w-full hover:bg-muted cursor-pointer"
-          onClick={() => setIsEditing(true)}
-        >
-          {value || <span className="text-muted-foreground">{placeholder}</span>}
-        </div>
+        isLoading ? (
+          <div className="pl-0.5 py-1 min-h-7 text-sm text-gray-900 rounded-sm w-full hover:bg-muted cursor-pointer animate-pulse bg-gray-300"></div>
+        ) : (
+          <div
+            key={value}
+            className="pl-0.5 py-1 text-sm text-gray-900 rounded-sm w-full hover:bg-muted cursor-pointer"
+            onClick={() => setIsEditing(true)}
+          >
+            {draftValue || <span className="text-muted-foreground">{placeholder}</span>}
+          </div>
+        )
       ) : (
         <div className="flex items-center flex-col gap-2 w-full px-1">
-          <input
+          <Comp
+            // @ts-expect-error TODO
             ref={inputRef}
             value={draftValue}
             onChange={(e) => setDraftValue(e.target.value)}
-            onBlur={() => setIsEditing(false)}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSave();
               if (e.key === "Escape") handleCancel();
@@ -65,7 +74,7 @@ export function InlineEditable({
               className="bg-gray-100 size-6 shadow-sm rounded-none"
               onClick={handleSave}
             >
-              <Check className="w-4 h-4 text-green-600" />
+              <Check className="w-4 h-4 text-black" />
             </Button>
             <Button
               size="icon"
@@ -73,7 +82,7 @@ export function InlineEditable({
               className="bg-gray-100 size-6 shadow-sm rounded-none"
               onClick={handleCancel}
             >
-              <X className="w-4 h-4 text-red-600" />
+              <X className="w-4 h-4 text-black" />
             </Button>
           </div>
         </div>

@@ -18,6 +18,7 @@ import Contact from "@/pages/Home/Contact";
 import Task from "@/pages/Home/Task";
 import NotFound from "@/pages/Notfound";
 import ProfilePage from "@/pages/profile";
+import EditOrganizationDetails from "@/pages/profile/templates/org-details";
 import EditProfileDetails from "@/pages/profile/templates/profile-details";
 import ProfileSecurityTemplate from "@/pages/profile/templates/security";
 import SysAdminCompanyPage from "@/pages/sysadmin/company";
@@ -79,13 +80,19 @@ export const HomeRoutes = {
           path: "",
           element: <EditProfileDetails />,
         },
-        // {
-        //   path: "notification",
-        //   element: <NotificationSection />,
-        // },
         {
           path: "security",
           element: <ProfileSecurityTemplate />,
+        },
+        {
+          path: "organization",
+          element: <ProtectedRoute allowedRoles={["ADMIN"]} />,
+          children: [
+            {
+              path: "",
+              element: <EditOrganizationDetails />,
+            },
+          ],
         },
       ],
     },

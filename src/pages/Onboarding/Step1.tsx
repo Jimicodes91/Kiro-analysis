@@ -64,7 +64,7 @@ const Step1 = () => {
         updateCompanyDetails(data);
         onNext();
       })
-      .catch(console.log);
+      .catch(console.error);
   };
 
   return (

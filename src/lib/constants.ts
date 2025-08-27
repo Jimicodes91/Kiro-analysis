@@ -182,6 +182,7 @@ export const ENDPOINTS = {
 
   // Company Endpoints
   CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
+  UPDATE_COMPANY: (companyId: string) => `company/${companyId}`,
 
   // Company Admin Endpoints
   GET_COMPANY_USERS: (companyId: string, page?: number, pageSize?: number) =>
