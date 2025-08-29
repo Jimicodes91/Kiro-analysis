@@ -64,3 +64,7 @@ export const addPlanSchema = yup.object().shape({
   duration: yup.string().required("Duration is required"),
   price: yup.string().required("Duration is required"),
 });
+
+export const editProjectPipelineSchema = yup.object().shape({
+  name: yup.string().required("Journey name is required"),
+});

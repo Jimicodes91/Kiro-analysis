@@ -1,10 +1,19 @@
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useDisclosure from "@/hooks/use-disclosure";
 import { cn } from "@/lib/utils";
 import { AnimatePresence } from "framer-motion";
 import { IoIosArrowDown } from "react-icons/io";
+import EditJourneyFormModal from "./edit-jorney-modal";
 import MilestoneTable from "./milestone-table";
 
 function JourneyTableRow({
@@ -15,6 +24,11 @@ function JourneyTableRow({
   index: number;
 }) {
   const { isOpen, onToggle } = useDisclosure();
+  const {
+    isOpen: isEditJourneyOpen,
+    onOpen: onEditJourneyOpen,
+    onClose: onEditJourneyClose,
+  } = useDisclosure();
   const bg = index % 2 === 0 ? "bg-white" : "bg-[#F8F8F8]";
 
   return (
@@ -29,14 +43,44 @@ function JourneyTableRow({
       >
         <TableCell>{projectType?.name}</TableCell>
         <TableCell>{projectType?.progress_metrics?.days_to_completion}</TableCell>
+        <TableCell>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Icons.more />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40" align="end" forceMount>
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    onEditJourneyOpen();
+                  }}
+                >
+                  Edit Milestone
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
         <TableCell className="w-4 pr-8">
           <Button variant="ghost" size="icon">
-            <IoIosArrowDown />
+            <IoIosArrowDown className={cn(isOpen ? "rotate-180" : "")} />
           </Button>
         </TableCell>
       </TableRow>
       <AnimatePresence initial={false}>
         {isOpen && <MilestoneTable isOpen={isOpen} projectType={projectType} bg={bg} />}
+      </AnimatePresence>
+      <AnimatePresence initial={false}>
+        {isEditJourneyOpen && (
+          <EditJourneyFormModal
+            onClose={onEditJourneyClose}
+            isOpen={isEditJourneyOpen}
+            projectType={projectType}
+          />
+        )}
       </AnimatePresence>
     </>
   );

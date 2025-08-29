@@ -49,7 +49,7 @@ export function ProjectStatusToggler({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex items-center gap-2 group">
+        <div className="flex items-center gap-2 group/edit">
           <Badge
             className="w-fit cursor-pointer"
             variant={status}
@@ -57,7 +57,7 @@ export function ProjectStatusToggler({
           >
             {getFormattedText(position)}
           </Badge>
-          <Pen className="ml-2 h-4 w-4 text-brand-fade" />
+          <Pen className="ml-2 size-3 group-hover/edit:text-gray-700 text-transparent" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

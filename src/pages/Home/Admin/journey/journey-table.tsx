@@ -46,6 +46,7 @@ const JourneyTable = () => {
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
               <TableHead>Journey</TableHead>
               <TableHead>Duration (days)</TableHead>
+              <TableHead>Action</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>

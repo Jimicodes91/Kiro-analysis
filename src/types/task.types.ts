@@ -83,6 +83,12 @@ export interface Task {
   task_type: TaskType;
   pipeline: Pipeline;
   company: Company;
+  project: {
+    id: string;
+    name: string;
+    client_organization: string;
+    clients: Client[];
+  };
 }
 export interface TaskFormData {
   id?: string;
@@ -97,4 +103,20 @@ export interface TaskFormData {
   assignees: string[];
   attachments: string[];
   is_visible_to_client: boolean;
+}
+
+export interface Client {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  email: string;
+  phone: string;
+  company_id: string;
+  assigned_to: AssignedTo[];
+}
+
+export interface AssignedTo {
+  id: string;
+  name: string;
 }

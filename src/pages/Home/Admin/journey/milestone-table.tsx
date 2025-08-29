@@ -69,7 +69,7 @@ function MilestoneTable({
       >
         <motion.td
           className="p-2"
-          colSpan={3}
+          colSpan={4}
           initial="collapsed"
           animate="open"
           exit="collapsed"
