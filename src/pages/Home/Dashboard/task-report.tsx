@@ -2,24 +2,26 @@ import React from "react";
 import { SectionHeader } from "./components/section-header";
 
 interface TaskReportProps {
-  totalTasks: number;
   completedTasks: number;
   inProgressTasks: number;
   overdueTasks: number;
+  pendingTasks: number;
   onViewMore?: () => void;
 }
 
 const TaskReport: React.FC<TaskReportProps> = ({
-  totalTasks,
   completedTasks,
   inProgressTasks,
   overdueTasks,
+  pendingTasks,
   onViewMore,
 }) => {
+  const totalTasks = completedTasks + inProgressTasks + overdueTasks + pendingTasks;
   // Calculate percentages for the donut chart
   const completedPercentage = (completedTasks / totalTasks) * 100;
   const inProgressPercentage = (inProgressTasks / totalTasks) * 100;
   const overduePercentage = (overdueTasks / totalTasks) * 100;
+  const pendingPercentage = (pendingTasks / totalTasks) * 100;
 
   // Calculating stroke-dasharray and stroke-dashoffset for the SVG circle
   const circleRadius = 60;
@@ -91,6 +93,19 @@ const TaskReport: React.FC<TaskReportProps> = ({
             strokeLinecap="round"
           />
 
+          <circle
+            cx="80"
+            cy="80"
+            r={circleRadius}
+            fill="none"
+            stroke="#ffcc00"
+            strokeWidth="20"
+            strokeDasharray={circumference}
+            strokeDashoffset={circumference - (pendingPercentage / 100) * circumference}
+            transform={`rotate(${((completedPercentage + inProgressPercentage + overduePercentage) / 100) * 360 - 90} 80 80)`}
+            strokeLinecap="round"
+          />
+
           {/* Center text */}
           <text
             x="80"
@@ -113,11 +128,18 @@ const TaskReport: React.FC<TaskReportProps> = ({
         </svg>
 
         {/* Task count indicators */}
-        <div className="flex justify-between w-full mt-6">
+        <div className="flex gap-1 flex-wrap justify-between w-full mt-6">
           <div className="text-center">
             <div className="text-lg font-medium">{completedTasks}</div>
             <div className="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">
               Completed
+            </div>
+          </div>
+
+          <div className="text-center">
+            <div className="text-lg font-medium">{pendingTasks}</div>
+            <div className="px-3 py-1 bg-[#F1E6D4] text-[#B78026] text-xs rounded-full">
+              Pending
             </div>
           </div>
 

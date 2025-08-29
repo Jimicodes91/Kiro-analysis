@@ -25,14 +25,15 @@ const UsersTable = ({
     pageSize: 10,
   });
   const users = useGetCompanyUsers(pageProp.page, pageProp.pageSize, givenCompanyId);
-
+  const colSpan = isEditable ? 5 : 4;
   const renderTableBody = () => {
-    if (users.isPending) return <TableSkeletonRowLoader length={7} />;
+    if (users.isPending) return <TableSkeletonRowLoader length={colSpan} />;
 
-    if (users?.isError) return <EmptyTable message="Something went wrong" length={7} />;
+    if (users?.isError)
+      return <EmptyTable message="Something went wrong" length={colSpan} />;
 
     if (users?.value?.data?.length === 0)
-      return <EmptyTable message="No user found" length={7} />;
+      return <EmptyTable message="No user found" length={colSpan} />;
 
     return (
       <TableBody className="text-xs">

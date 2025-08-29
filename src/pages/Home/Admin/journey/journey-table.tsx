@@ -13,18 +13,18 @@ import JourneyTableRow from "./journey-table-row";
 const JourneyTable = () => {
   const projectTypes = useGetAllProjectTypes();
   const renderTableBody = () => {
-    if (projectTypes.isPending) return <TableSkeletonRowLoader length={3} />;
+    if (projectTypes.isPending) return <TableSkeletonRowLoader length={4} />;
 
     if (projectTypes?.isError)
-      return <EmptyTable message="Something went wrong" length={3} />;
+      return <EmptyTable message="Something went wrong" length={4} />;
 
     if (projectTypes?.value?.data?.length === 0)
-      return <EmptyTable message="No pipline found" length={3} />;
+      return <EmptyTable message="No pipline found" length={4} />;
 
     return (
       <TableBody>
         <TableRow className="border-0 outline-none !bg-transparent">
-          <TableCell className="border-0 h-3 py-0" colSpan={3}></TableCell>
+          <TableCell className="border-0 h-3 py-0" colSpan={4}></TableCell>
         </TableRow>
         <>
           {projectTypes?.value?.data?.map((projectType, index) => (

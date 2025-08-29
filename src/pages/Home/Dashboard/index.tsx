@@ -73,10 +73,11 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="md:col-span-1 flex flex-col h-full">
             <TaskReport
-              totalTasks={taskReportData.totalTasks}
+              // totalTasks={taskReportData.totalTasks}
               completedTasks={taskReportData.completedTasks}
               inProgressTasks={taskReportData.inProgressTasks}
               overdueTasks={taskReportData.overdueTasks}
+              pendingTasks={taskReportData.pendingTasks ?? 0}
               onViewMore={handleViewMoreTasks}
             />
           </div>

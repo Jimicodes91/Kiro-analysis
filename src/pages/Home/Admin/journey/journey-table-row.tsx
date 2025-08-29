@@ -58,7 +58,7 @@ function JourneyTableRow({
                     onEditJourneyOpen();
                   }}
                 >
-                  Edit Milestone
+                  Edit Journey
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>

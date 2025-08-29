@@ -573,6 +573,7 @@ interface TaskReport {
   completed: number;
   in_progress: number;
   overdue: number;
+  pending: number;
 }
 
 export interface DashboardData {
