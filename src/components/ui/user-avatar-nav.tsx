@@ -48,7 +48,7 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to="/profile-setting">Profile Settings</Link>
+          <Link to="/profile-settings">Profile Settings</Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator className="bg-[#0000001A]" />

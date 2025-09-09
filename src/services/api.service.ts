@@ -9,7 +9,11 @@ export async function logout(redirect = true) {
   deleteCookie("user_session_token");
   deleteCookie("user_session");
 
-  if (typeof window !== "undefined" && redirect) {
+  if (
+    typeof window !== "undefined" &&
+    redirect &&
+    window.location.pathname !== PAGES.LOGIN_PAGE
+  ) {
     const currentUrl = window.location.pathname;
     const loginUrl = `${PAGES.LOGIN_PAGE}?callback=${encodeURIComponent(currentUrl)}`;
     window.location.href = loginUrl;

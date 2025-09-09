@@ -1,11 +1,12 @@
 import { IconProps, Icons } from "@/components/ui/icons";
+import { CircleCheckBig, Files, Icon, Plane } from "lucide-react";
 import { JSX } from "react";
 
 export type UserType = "ADMIN" | "SUPER_ADMIN" | "CLIENT" | "CONSULTANT";
 
 export type DashboardLinkType = {
   title: string;
-  icon: (props: IconProps) => JSX.Element;
+  icon: typeof Icon | ((props: IconProps) => JSX.Element);
   path: string;
   exact?: boolean;
 };
@@ -32,11 +33,7 @@ const universalRoutes = [
     icon: Icons.task,
     path: "/task",
   },
-  // {
-  //   title: "Event",
-  //   icon: Icons.event,
-  //   path: "/event",
-  // },
+
   {
     title: "Finance",
     icon: Icons.coins,
@@ -47,9 +44,25 @@ const universalRoutes = [
 export const topNavData: Record<UserType, DashboardLinkType[]> = {
   CLIENT: [
     {
-      title: "Projects",
-      icon: Icons.project,
-      path: "/projects",
+      title: "Home",
+      icon: Icons.dashboard,
+      path: "/home",
+      exact: true,
+    },
+    {
+      title: "Journey",
+      icon: Plane,
+      path: "/journey",
+    },
+    {
+      title: "Task",
+      icon: CircleCheckBig,
+      path: "/tasks",
+    },
+    {
+      title: "Documents",
+      icon: Files,
+      path: "/documents",
     },
   ],
   CONSULTANT: [...universalRoutes],

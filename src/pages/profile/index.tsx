@@ -3,30 +3,29 @@ import { Icons } from "@/components/ui/icons";
 import AccountNav from "@/layouts/dashboard-layout/account-nav";
 import { getIsAdmin } from "@/services/api.service";
 import { Lock } from "lucide-react";
-import { Outlet } from "react-router-dom";
 
 const links = [
   {
     title: "Profile",
     icon: Icons.user,
-    path: "/profile-setting",
+    path: "/profile-settings",
     exact: true,
   },
   {
     title: "Security",
     icon: () => <Lock />,
-    path: "/profile-setting/security",
+    path: "/profile-settings/security",
   },
 ];
 
-function ProfilePageWrapper() {
+function ProfilePageLayout({ children }: { children?: React.ReactNode }) {
   const isAdmin = getIsAdmin();
   const adminLinks = [
     ...links,
     {
       title: "Organization",
       icon: () => <Icons.company />,
-      path: "/profile-setting/organization",
+      path: "/profile-settings/organization",
     },
   ];
   return (
@@ -48,13 +47,11 @@ function ProfilePageWrapper() {
               </Button>
             </div> */}
           </div>
-          <div className="p-5 rounded-lg border min-h-[500px]">
-            <Outlet />
-          </div>
+          <div className="p-5 rounded-lg border min-h-[500px]">{children}</div>
         </div>
       </div>
     </div>
   );
 }
 
-export default ProfilePageWrapper;
+export default ProfilePageLayout;

@@ -1,4 +1,11 @@
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import Heading from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -16,12 +23,16 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import ProjectContextProvider from "@/pages/Home/Project/context/project-context";
 import { getUserSession } from "@/services/api.service";
 import { getCookie, setCookie } from "cookies-next";
-import { PanelLeft } from "lucide-react";
+import { ChevronDown, PanelLeft } from "lucide-react";
 import React from "react";
 import LogoutModal from "./logout-modal";
 import Sidebar from "./sidebar";
 
-export default function AccountLayout({ children }: { children?: React.ReactNode }) {
+export default function ClientAccountLayout({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
 
@@ -46,7 +57,7 @@ export default function AccountLayout({ children }: { children?: React.ReactNode
     <div className="h-auto flex">
       {!isMobile && <Sidebar isCollapsed={isCollapsed} />}
 
-      <div className="w-full flex-1 relative transition-all duration-300 ease-in">
+      <div className="w-full flex-1 relative transition-all duration-300 ease-in bg-[#F5F5F5]">
         <div className="px-6 flex border-b bg-white sticky top-0 z-20 items-center justify-between h-[70px]">
           <div className="flex gap-2 items-center">
             <Button onClick={toggleSidebar} size="icon" variant="ghost">
@@ -55,9 +66,32 @@ export default function AccountLayout({ children }: { children?: React.ReactNode
             {company?.isPending ? (
               <div className="h-8 min-w-[200px] bg-slate-300 animate-pulse"></div>
             ) : (
-              <Heading size="h3" className="capitalize">
-                {company?.value?.data?.name}
-              </Heading>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Heading size="h3" className="capitalize flex items-center gap-2">
+                    {company?.value?.data?.name}
+                    <ChevronDown className="inline-block size-6 text-primary" />
+                  </Heading>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-48 rounded-lg"
+                  side={"bottom"}
+                  sideOffset={16}
+                  alignOffset={-10}
+                  align={"start"}
+                >
+                  <DropdownMenuItem>
+                    <span>View Project</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Share Project</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <span>Delete Project</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
           <div className="flex gap-3 ring-pri-60 items-center">
@@ -71,7 +105,7 @@ export default function AccountLayout({ children }: { children?: React.ReactNode
           </div>
         </div>
         <Separator className="sticky z-20 h-0 top-[70px]" />
-        <div className="min-h-[calc(100vh-70px)] flex-1">
+        <div className="min-h-[calc(100vh-90px)] flex-1">
           <ProjectContextProvider>{children}</ProjectContextProvider>
         </div>
       </div>
