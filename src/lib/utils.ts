@@ -1,7 +1,7 @@
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { ProjectDetails, Trail } from "@/types/api.types";
 import { clsx, type ClassValue } from "clsx";
-import { format, formatISO, isToday, parseISO, startOfDay } from "date-fns";
+import { addDays, format, formatISO, isToday, parseISO, startOfDay } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export const formatDate = (isoDate: string): string => {
@@ -254,4 +254,14 @@ export const groupEntriesByTimePeriod = (
     groups[group].push(entry);
     return groups;
   }, {});
+};
+
+export const addDaysUtil = (rawDate = "", days = 0) => {
+  // Add 5 days
+  const newDate = addDays(new Date(rawDate ?? ""), days ?? 0);
+
+  // Format result
+  const formatted = format(newDate, "MMM d, yyyy");
+
+  return formatted;
 };

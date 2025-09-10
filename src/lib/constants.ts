@@ -29,7 +29,7 @@ const universalRoutes = [
     path: "/contact",
   },
   {
-    title: "Task",
+    title: "Tasks",
     icon: Icons.task,
     path: "/task",
   },
@@ -55,7 +55,7 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       path: "/journey",
     },
     {
-      title: "Task",
+      title: "Tasks",
       icon: CircleCheckBig,
       path: "/tasks",
     },

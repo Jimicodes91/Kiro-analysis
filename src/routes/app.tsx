@@ -13,6 +13,7 @@ import AccountLayout from "@/layouts/dashboard-layout/lol";
 import Home from "../pages/Home";
 
 import ClientAccountLayout from "@/layouts/dashboard-layout/client-layout";
+import ClientDocumentManagement from "@/pages/client/documents";
 import ClientHomePage from "@/pages/client/home";
 import ClientProjectJourney from "@/pages/client/journey";
 import ClientTaskManagement from "@/pages/client/tasks";
@@ -50,6 +51,12 @@ export const appRoutes: AppRoute[] = [
   {
     path: "/tasks",
     element: <ClientTaskManagement />,
+    roles: ["CLIENT"],
+    layout: ClientAccountLayout,
+  },
+  {
+    path: "/documents",
+    element: <ClientDocumentManagement />,
     roles: ["CLIENT"],
     layout: ClientAccountLayout,
   },

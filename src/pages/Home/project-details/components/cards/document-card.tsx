@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import AttachmentCard from "./attachment";
 
 export default function DocumentCard({ document }: { document: IDocument }) {
+  console.log(document, "document");
   return (
     <div className="bg-[#F8F8F8] rounded-lg border border-brand-border">
       <Accordion collapsible type="single" className="w-full" defaultValue="item-1">

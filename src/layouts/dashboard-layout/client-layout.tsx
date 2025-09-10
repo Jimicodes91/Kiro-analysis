@@ -1,12 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Heading from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
@@ -20,19 +12,16 @@ import { UserNav } from "@/components/ui/user-avatar-nav";
 import useGetCompanyDetails from "@/hooks/admin/use-get-company";
 import useDisclosure from "@/hooks/use-disclosure";
 import { useIsMobile } from "@/hooks/use-mobile";
-import ProjectContextProvider from "@/pages/Home/Project/context/project-context";
+import ClientProjectContextProvider from "@/pages/Home/Project/context/client-project-context";
 import { getUserSession } from "@/services/api.service";
 import { getCookie, setCookie } from "cookies-next";
-import { ChevronDown, PanelLeft } from "lucide-react";
+import { PanelLeft } from "lucide-react";
 import React from "react";
 import LogoutModal from "./logout-modal";
+import ProjectToggle from "./project-toggle";
 import Sidebar from "./sidebar";
 
-export default function ClientAccountLayout({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
+export function LayoutWithoutContext({ children }: { children?: React.ReactNode }) {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
 
@@ -66,48 +55,15 @@ export default function ClientAccountLayout({
             {company?.isPending ? (
               <div className="h-8 min-w-[200px] bg-slate-300 animate-pulse"></div>
             ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Heading size="h3" className="capitalize flex items-center gap-2">
-                    {company?.value?.data?.name}
-                    <ChevronDown className="inline-block size-6 text-primary" />
-                  </Heading>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-48 rounded-lg"
-                  side={"bottom"}
-                  sideOffset={16}
-                  alignOffset={-10}
-                  align={"start"}
-                >
-                  <DropdownMenuItem>
-                    <span>View Project</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Share Project</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <span>Delete Project</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <ProjectToggle />
             )}
           </div>
           <div className="flex gap-3 ring-pri-60 items-center">
-            {/* <Button size="icon" variant="outline" type="button">
-              <VscBell className="text-[#111] w-6 h-6" />
-              <span className="absolute -top-1 -right-1 bg-primary text-white rounded-full w-4 h-4 flex justify-center items-center text-xs">
-                3
-              </span>
-            </Button> */}
             <UserNav onOpen={onOpen} />
           </div>
         </div>
         <Separator className="sticky z-20 h-0 top-[70px]" />
-        <div className="min-h-[calc(100vh-90px)] flex-1">
-          <ProjectContextProvider>{children}</ProjectContextProvider>
-        </div>
+        <div className="min-h-[calc(100vh-90px)] flex-1">{children}</div>
       </div>
       <Sheet open={openMobile} onOpenChange={setOpenMobile}>
         <SheetContent side="left-small">
@@ -120,5 +76,13 @@ export default function ClientAccountLayout({
       </Sheet>
       <LogoutModal isOpen={isOpen} onClose={onClose} />
     </div>
+  );
+}
+
+export default function ClientAccountLayout(props: { children?: React.ReactNode }) {
+  return (
+    <ClientProjectContextProvider>
+      <LayoutWithoutContext {...props} />
+    </ClientProjectContextProvider>
   );
 }

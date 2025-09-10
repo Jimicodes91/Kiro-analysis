@@ -9,7 +9,13 @@ import DocumentCard from "../components/cards/document-card";
 import RequestDocumentModal from "../components/modal/request-document-modal";
 import UploadDocumentModal from "../components/modal/upload-document-modal";
 
-function ProjectDocumentSection({ projectId }: { projectId: string }) {
+function ProjectDocumentSection({
+  projectId,
+  isClient,
+}: {
+  projectId: string;
+  isClient?: boolean;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeTab, setActiveTab] = React.useState("Official");
   const projectDocs = useGetAllProjectDocuments(projectId);
@@ -73,14 +79,16 @@ function ProjectDocumentSection({ projectId }: { projectId: string }) {
             />
           </div>
 
-          <div className="flex gap-3 items-center">
-            <Button size="sm" variant="outline" onClick={onOpen}>
-              Request
-            </Button>
-            <Button size="sm" leftIcon={<Upload />} onClick={onUploadOpen}>
-              Upload
-            </Button>
-          </div>
+          {!isClient && (
+            <div className="flex gap-3 items-center">
+              <Button size="sm" variant="outline" onClick={onOpen}>
+                Request
+              </Button>
+              <Button size="sm" leftIcon={<Upload />} onClick={onUploadOpen}>
+                Upload
+              </Button>
+            </div>
+          )}
         </div>
 
         <div>{renderBody()}</div>

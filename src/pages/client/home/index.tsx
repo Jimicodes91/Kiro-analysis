@@ -4,6 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { addDaysUtil, getFormattedText } from "@/lib/utils";
+import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
+import { getUserSession } from "@/services/api.service";
+import { format } from "date-fns";
 import {
   Calendar,
   CircleCheckBig,
@@ -13,12 +17,15 @@ import {
 } from "lucide-react";
 
 export default function ClientHomePage() {
+  const user = getUserSession();
+  const { activeProject } = useClientProjectContext();
+
   return (
     <div className="space-y-6 mx-3 sm:mx-6 my-4 page-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold">Welcome Lola</h1>
+          <h1 className="text-2xl font-bold">Welcome {user?.name}</h1>
           <p className="text-muted-foreground">Here&apos;s your project overview.</p>
         </div>
         <Button size="sm" className="flex items-center gap-2 px-3">
@@ -31,19 +38,27 @@ export default function ClientHomePage() {
       <Card>
         <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <CardTitle>E-commerce Platform Redesign</CardTitle>
-            <p className="text-sm text-muted-foreground">Nov 2, 2023 - July 15, 2025</p>
+            <CardTitle>{activeProject?.name}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {format(new Date(activeProject?.start_date ?? ""), "MMM d, yyyy")} -{" "}
+              {addDaysUtil(
+                activeProject?.start_date,
+                +(activeProject?.project_timeline?.[0] ?? 0) as unknown as number
+              )}
+            </p>
           </div>
-          <Badge variant="secondary" className="bg-amber-100 text-amber-700">
-            In progress
+          <Badge variant={activeProject?.status} className="w-fit">
+            {getFormattedText(activeProject?.status)}
           </Badge>
         </CardHeader>
         <CardContent>
           <div className="p-4 space-y-2 bg-[#FBFBFB] border border-[#0000000A] rounded-lg">
             <div className="flex items-center justify-between">
               <p className="text-sm">
-                Development Phase 1{" "}
-                <span className="text-muted-foreground">(32 days left)</span>
+                {activeProject?.milestone?.name}{" "}
+                <span className="text-muted-foreground">
+                  (duration {activeProject?.milestone?.duration} days)
+                </span>
               </p>
               <p className="text-sm mt-1 text-right font-medium">40%</p>
             </div>
@@ -85,7 +100,7 @@ export default function ClientHomePage() {
       </div>
 
       {/* Tasks & Milestones */}
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         {/* Recent Tasks */}
         <Card>
           <CardHeader className="-space-y-0">
@@ -161,7 +176,7 @@ function TaskItem({
   status: "Completed" | "In progress";
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border p-3 bg-[#F3F3F3] border-[#0000001A]">
+    <div className="flex items-center flex-wrap gap-2 justify-between rounded-lg border p-3 bg-[#F3F3F3] border-[#0000001A]">
       <div className="space-y-2">
         <p className="font-medium text-sm">{title}</p>
         <p className="text-xs text-muted-foreground">{due}</p>
@@ -190,7 +205,7 @@ function MilestoneItem({
   status: "Completed" | "In progress";
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border p-3 bg-[#F3F3F3] border-[#0000001A]">
+    <div className="flex items-center flex-wrap gap-2 justify-between rounded-lg border p-3 bg-[#F3F3F3] border-[#0000001A]">
       <div className="space-y-2">
         <p className="font-medium text-sm">{title}</p>
         <p className="text-xs text-muted-foreground flex items-center gap-1">

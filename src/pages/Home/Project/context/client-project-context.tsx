@@ -1,9 +1,14 @@
+import Loader from "@/components/ui/loader";
+import useGetClientProjects from "@/hooks/project-modules/use-get-client-projects";
+import { LayoutWithoutContext } from "@/layouts/dashboard-layout/client-layout";
+import { getUserSession } from "@/services/api.service";
+import { ProjectDetails } from "@/types/api.types";
 import { getCookie, setCookie } from "cookies-next";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface ClientProjectContextInterface {
-  changeActiveProjectType: (projectType: string) => void;
-  activeProjectType: string | undefined;
+  changeActiveProject: (project: ProjectDetails) => void;
+  activeProject: ProjectDetails | undefined;
   search: string;
   handleSearch: (s: string) => void;
 }
@@ -12,38 +17,82 @@ const ClientProjectContext = React.createContext<ClientProjectContextInterface>(
   {} as ClientProjectContextInterface
 );
 
+const STOREDCOOKIEKEY = "client_active_project";
+
 const ClientProjectContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const storeActiveProjectType = getCookie("active_project");
-  const [activeProjectType, setActiveProjectType] = React.useState<string | undefined>(
-    storeActiveProjectType as string
+  const storeActiveProject = getCookie(STOREDCOOKIEKEY);
+  const [activeProject, setActiveProject] = React.useState<ProjectDetails | undefined>(
+    () => {
+      if (storeActiveProject) {
+        try {
+          return typeof storeActiveProject === "string"
+            ? JSON.parse(storeActiveProject)
+            : undefined;
+        } catch {
+          return undefined;
+        }
+      }
+      return undefined;
+    }
   );
 
   const [search, setSearch] = React.useState("");
 
-  const changeActiveProjectType = (projectType: string) => {
-    setActiveProjectType(projectType);
-    setCookie("active_project", projectType);
+  const changeActiveProject = (project: ProjectDetails) => {
+    setActiveProject(project);
+    setCookie(STOREDCOOKIEKEY, JSON.stringify(project));
   };
 
   const handleSearch = (query: string) => {
     setSearch(query);
   };
 
-  return (
-    <ClientProjectContext.Provider
-      value={{
-        activeProjectType,
-        changeActiveProjectType,
-        search,
-        handleSearch,
-      }}
-    >
-      {children}
-    </ClientProjectContext.Provider>
-  );
+  const user = getUserSession();
+
+  const allProjects = useGetClientProjects(user?.id ?? "");
+
+  useEffect(() => {
+    if (allProjects?.value?.data?.length && !activeProject) {
+      setActiveProject(allProjects?.value?.data?.[0]);
+      console.log("Set cookie");
+      setCookie(STOREDCOOKIEKEY, allProjects?.value?.data?.[0], {
+        httpOnly: true,
+        path: "/",
+        maxAge: 60 * 60 * 24, // 24 hours
+        sameSite: "strict", // Prevent cross-site scripting attacks
+      });
+    }
+  }, [allProjects?.value, activeProject]);
+
+  if (allProjects.isLoading && !activeProject) {
+    return (
+      <LayoutWithoutContext>
+        <div className="flex items-center justify-center min-h-[calc(100vh-70px)] ">
+          <Loader />
+        </div>
+      </LayoutWithoutContext>
+    );
+  }
+
+  if (activeProject) {
+    return (
+      <ClientProjectContext.Provider
+        value={{
+          activeProject,
+          changeActiveProject,
+          search,
+          handleSearch,
+        }}
+      >
+        {children}
+      </ClientProjectContext.Provider>
+    );
+  }
+
+  return null;
 };
 
-export const useProjectContext = () => {
+export const useClientProjectContext = () => {
   const context = React.useContext(ClientProjectContext);
 
   if (context === null) {
