@@ -497,6 +497,7 @@ export const PAGES = {
   ONBOARDING_PAGE: "/onboarding",
   PROJECT_CREATE_PAGE: "/projects/create",
 
+  HOME_PAGE: "/home",
   // Sysadmin Page
   SYSADMIN_HOME_PAGE: "/sysadmin",
 };

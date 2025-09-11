@@ -224,6 +224,22 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                 }}
                                 placeHolder="Select Country"
                               />
+                            ) : field.slug === "project_value" ? (
+                              <FormControl>
+                                <div className="relative">
+                                  <span className="absolute left-3 top-1/2 -translate-y-1/2">
+                                    $
+                                  </span>
+                                  <Input
+                                    type="number"
+                                    className="pl-7"
+                                    placeholder={`Enter ${field.name}`}
+                                    min={0}
+                                    step={10}
+                                    {...fieldProps}
+                                  />
+                                </div>
+                              </FormControl>
                             ) : (
                               <FormControl>
                                 <Input
