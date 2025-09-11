@@ -9,11 +9,9 @@ import {
 } from "@/components/ui/sheet";
 import { SIDEBAR_COOKIE_NAME } from "@/components/ui/sidebar";
 import { UserNav } from "@/components/ui/user-avatar-nav";
-import useGetCompanyDetails from "@/hooks/admin/use-get-company";
 import useDisclosure from "@/hooks/use-disclosure";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ClientProjectContextProvider from "@/pages/Home/Project/context/client-project-context";
-import { getUserSession } from "@/services/api.service";
 import { getCookie, setCookie } from "cookies-next";
 import { PanelLeft } from "lucide-react";
 import React from "react";
@@ -26,8 +24,7 @@ export function LayoutWithoutContext({ children }: { children?: React.ReactNode 
   const [openMobile, setOpenMobile] = React.useState(false);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const user = getUserSession();
-  const company = useGetCompanyDetails(user?.company_id ?? "");
+
   const isSiderbarOpen = getCookie(SIDEBAR_COOKIE_NAME);
   const [isCollapsed, setCollapsed] = React.useState(
     isSiderbarOpen ? Boolean(+isSiderbarOpen) : false
@@ -52,11 +49,8 @@ export function LayoutWithoutContext({ children }: { children?: React.ReactNode 
             <Button onClick={toggleSidebar} size="icon" variant="ghost">
               <PanelLeft className="w-5 h-5 text-primary" />
             </Button>
-            {company?.isPending ? (
-              <div className="h-8 min-w-[200px] bg-slate-300 animate-pulse"></div>
-            ) : (
-              <ProjectToggle />
-            )}
+
+            <ProjectToggle />
           </div>
           <div className="flex gap-3 ring-pri-60 items-center">
             <UserNav onOpen={onOpen} />

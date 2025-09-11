@@ -3,11 +3,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import ViewToggle from "@/components/ui/view-toggle";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, Circle, CircleDot, MoveDown, MoveRight } from "lucide-react";
 import { useState } from "react";
+import ProjectDurationBar from "../home/components/project-duration-bar";
 
 export default function ClientProjectJourney() {
   const [view, setView] = useState<string>("list");
@@ -64,16 +64,7 @@ export default function ClientProjectJourney() {
       {/* Progress Section */}
       <Card>
         <CardContent className="p-4">
-          <div className="p-4 space-y-2 bg-[#FBFBFB] border border-[#0000000A] rounded-lg">
-            <div className="flex items-center justify-between">
-              <p className="text-sm">
-                Development Phase 1{" "}
-                <span className="text-muted-foreground">(32 days left)</span>
-              </p>
-              <p className="text-sm mt-1 text-right font-medium">40%</p>
-            </div>
-            <Progress value={40} className="h-2" />
-          </div>
+          <ProjectDurationBar />
         </CardContent>
       </Card>
 

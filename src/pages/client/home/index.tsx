@@ -3,7 +3,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { addDaysUtil, getFormattedText } from "@/lib/utils";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { getUserSession } from "@/services/api.service";
@@ -15,13 +14,14 @@ import {
   LocateFixedIcon,
   Settings,
 } from "lucide-react";
+import ProjectDurationBar from "./components/project-duration-bar";
 
 export default function ClientHomePage() {
   const user = getUserSession();
   const { activeProject } = useClientProjectContext();
 
   return (
-    <div className="space-y-6 mx-3 sm:mx-6 my-4 page-fade-in">
+    <div className="space-y-6 mx-3 sm:mx-6 py-4 page-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
@@ -52,19 +52,7 @@ export default function ClientHomePage() {
           </Badge>
         </CardHeader>
         <CardContent>
-          <div className="p-4 space-y-2 bg-[#FBFBFB] border border-[#0000000A] rounded-lg">
-            <div className="flex items-center justify-between">
-              <p className="text-sm">
-                {activeProject?.milestone?.name}{" "}
-                <span className="text-muted-foreground">
-                  (duration {activeProject?.milestone?.duration} days)
-                </span>
-              </p>
-              <p className="text-sm mt-1 text-right font-medium">40%</p>
-            </div>
-
-            <Progress value={40} className="h-2" />
-          </div>
+          <ProjectDurationBar />
         </CardContent>
       </Card>
 

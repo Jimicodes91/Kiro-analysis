@@ -1,7 +1,7 @@
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { getUserSession } from "@/services/api.service";
-import ClientTaskCard from "./components/client-tast-card";
+import ClientTaskCard from "./components/client-test-card";
 
 export default function ClientTaskManagement() {
   const { activeProject } = useClientProjectContext();
@@ -15,7 +15,7 @@ export default function ClientTaskManagement() {
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div
-              className="px-5 py-10 space-y-2 h-[180px] border rounded-lg bg-slate-200 flex justify-between  animate-pulse"
+              className="px-5 py-10 space-y-2 h-[150px] border rounded-lg bg-slate-200 flex justify-between  animate-pulse"
               key={i}
             ></div>
           ))}

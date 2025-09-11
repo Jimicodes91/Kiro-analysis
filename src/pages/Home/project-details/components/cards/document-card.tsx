@@ -9,7 +9,13 @@ import { IDocument } from "@/types/api.types";
 import { format } from "date-fns";
 import AttachmentCard from "./attachment";
 
-export default function DocumentCard({ document }: { document: IDocument }) {
+export default function DocumentCard({
+  document,
+  isClientView = false,
+}: {
+  document: IDocument;
+  isClientView?: boolean;
+}) {
   console.log(document, "document");
   return (
     <div className="bg-[#F8F8F8] rounded-lg border border-brand-border">
@@ -38,6 +44,7 @@ export default function DocumentCard({ document }: { document: IDocument }) {
                       projectId={document.project_id}
                       attachment={item}
                       key={item.id}
+                      isClientView={isClientView}
                     />
                   ))}
                   {document?.attachments?.length === 0 && (

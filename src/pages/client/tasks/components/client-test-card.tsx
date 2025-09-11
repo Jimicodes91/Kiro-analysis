@@ -29,6 +29,7 @@ function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: str
                   projectId={projectId}
                   attachment={attachment}
                   key={attachment.id}
+                  isClientView
                 />
               ))
             //

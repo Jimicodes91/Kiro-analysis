@@ -58,7 +58,7 @@ function ProjectDocumentSection({
     return (
       <div className="space-y-2">
         {projectDocs?.value?.data?.map((document) => (
-          <DocumentCard key={document.id} document={document} />
+          <DocumentCard key={document.id} document={document} isClientView={isClient} />
         ))}
       </div>
     );
