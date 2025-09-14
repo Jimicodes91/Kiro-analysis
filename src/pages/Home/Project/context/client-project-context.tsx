@@ -53,7 +53,7 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
   const { pathname } = useLocation();
 
   const allProjects = useGetClientProjects(user?.id ?? "");
-
+  console.log(allProjects?.value?.data?.length, pathname);
   useEffect(() => {
     if (allProjects?.value?.data?.length && !activeProject) {
       setActiveProject(allProjects?.value?.data?.[0]);
@@ -87,6 +87,13 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
     );
   }
 
+  if (
+    allProjects?.value?.data?.length === 0 &&
+    pathname.startsWith("/profile-settings")
+  ) {
+    return <>{children}</>;
+  }
+
   if (activeProject) {
     return (
       <ClientProjectContext.Provider
@@ -101,19 +108,7 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
       </ClientProjectContext.Provider>
     );
   }
-
-  return (
-    <ClientProjectContext.Provider
-      value={{
-        activeProject,
-        changeActiveProject,
-        search,
-        handleSearch,
-      }}
-    >
-      {children}
-    </ClientProjectContext.Provider>
-  );
+  return null;
 };
 
 export const useClientProjectContext = () => {
