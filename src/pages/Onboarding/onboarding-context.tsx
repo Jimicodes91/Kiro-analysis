@@ -28,7 +28,6 @@ const OnboardingContextProvider = ({ children }: OnboardingPropsInterface) => {
   const [stage, setStage] = React.useState(1);
   const [companyData, setCompanyData] = React.useState<CompanyDetails>({
     address: "",
-    // @ts-expect-error TODO
     city: "",
     // @ts-expect-error TODO
     country: "",
