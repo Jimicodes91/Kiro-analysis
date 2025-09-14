@@ -1,3 +1,4 @@
+import Heading from "@/components/ui/heading";
 import Loader from "@/components/ui/loader";
 import useGetClientProjects from "@/hooks/project-modules/use-get-client-projects";
 import { LayoutWithoutContext } from "@/layouts/dashboard-layout/client-layout";
@@ -69,6 +70,16 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
       <LayoutWithoutContext>
         <div className="flex items-center justify-center min-h-[calc(100vh-70px)] ">
           <Loader />
+        </div>
+      </LayoutWithoutContext>
+    );
+  }
+
+  if (allProjects?.value?.data?.length === 0) {
+    return (
+      <LayoutWithoutContext>
+        <div className="flex items-center justify-center min-h-[calc(100vh-70px)] ">
+          <Heading>No project allocated to this user</Heading>
         </div>
       </LayoutWithoutContext>
     );
