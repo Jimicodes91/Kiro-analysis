@@ -77,7 +77,7 @@ export const useDashboardData = () => {
         count: data.project_report.completed,
       },
       {
-        title: "Inprogress",
+        title: "In progress",
         count: data.project_report.in_progress,
       },
     ];
