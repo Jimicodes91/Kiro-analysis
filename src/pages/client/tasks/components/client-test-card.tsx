@@ -17,7 +17,7 @@ function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: str
             {format(new Date(task?.end_date ?? ""), "MMM d, yyyy")}
           </span>
           <span className="px-2 py-1 text-xs rounded bg-white font-medium text-gray-700">
-            Assigned by: {task?.assignees?.map((member) => member?.name).join(", ")}
+            Assigned to: {task?.assignees?.map((member) => member?.name).join(", ")}
           </span>
         </div>
 

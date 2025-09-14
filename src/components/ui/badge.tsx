@@ -14,7 +14,8 @@ const badgeVariants = cva(
         secondary:
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive: "border-transparent bg-[#FB002B]/10 text-[#FB002B]",
-        blocked: "border-transparent bg-[#FB002B]/10 text-[#FB002B]",
+        blocked:
+          "border-transparent bg-[#FB002B]/10 text-[#FB002B] border border-[#9C20210F]",
         outline: "text-foreground",
         success: "border-transparent bg-[#00AA3B1A] text-[#00AA3B]",
         on_track: "border-transparent bg-[#00AA3B1A] text-[#00AA3B]",
@@ -27,11 +28,11 @@ const badgeVariants = cva(
         late: "border-transparent text-[#FF3B30] bg-[#F7EEE2]",
         not_started: "border-transparent bg-blue-100 text-blue-600",
         // pending: "border-transparent bg-blue-100 text-blue-600",
-        pending: "border-transparent bg-[#F1E6D4] text-[#B78026] py-1",
-        in_progress: "border-transparent bg-[#F1E6D4] text-[#B78026] py-1",
+        pending: "border-[#B7802611] bg-[#F1E6D4] text-[#B78026] py-1",
+        in_progress: "border-[#B7802611] bg-[#F1E6D4] text-[#B78026] py-1",
       },
       size: {
-        md: "px-4 py-2",
+        md: "px-3 py-[6px]",
         sm: "px-2 py-1",
       },
     },

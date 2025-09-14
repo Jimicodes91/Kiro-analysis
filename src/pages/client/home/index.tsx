@@ -3,22 +3,22 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import useGetAllProjectDocuments from "@/hooks/project-modules/documents/use-get-all-documents";
 import { addDaysUtil, getFormattedText } from "@/lib/utils";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { getUserSession } from "@/services/api.service";
 import { format } from "date-fns";
-import {
-  Calendar,
-  CircleCheckBig,
-  FolderOpen,
-  LocateFixedIcon,
-  Settings,
-} from "lucide-react";
+import { FolderOpen, Settings } from "lucide-react";
+import MilestoneMetricCard from "./components/milestone-metric-card";
 import ProjectDurationBar from "./components/project-duration-bar";
+import RecentTaskCard from "./components/recent-tasks-card";
+import TaskMetricCard from "./components/task-metrics-card";
+import UpcomingMilestones from "./components/upcoming-milestones";
 
 export default function ClientHomePage() {
   const user = getUserSession();
   const { activeProject } = useClientProjectContext();
+  const projectDocs = useGetAllProjectDocuments(activeProject?.id ?? "");
 
   return (
     <div className="space-y-6 mx-3 sm:mx-6 py-4 page-fade-in">
@@ -58,30 +58,20 @@ export default function ClientHomePage() {
 
       {/* Stats Row */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
-          <CardContent className="flex items-center gap-4 p-6">
-            <CircleCheckBig className="size-9 text-black" />
-            <div className="space-y-1">
-              <p className="text-[#191819]">Tasks</p>
-              <p className="text-2xl font-bold">5/10</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="flex items-center gap-4 p-6">
-            <LocateFixedIcon className="size-9 text-black" />
-            <div className="space-y-1">
-              <p className="text-[#191819]">Milestones</p>
-              <p className="text-2xl font-bold">3/5</p>
-            </div>
-          </CardContent>
-        </Card>
+        <TaskMetricCard />
+        <MilestoneMetricCard />
         <Card>
           <CardContent className="flex items-center gap-4 p-6">
             <FolderOpen className="size-9 text-black" />
             <div className="space-y-1">
               <p className="text-muted-foreground">Documents</p>
-              <p className="text-2xl font-bold">12</p>
+              <p className="text-2xl font-bold">
+                {projectDocs?.isPending ? (
+                  <div className="h-8 w-[40px] bg-slate-300 animate-pulse"></div>
+                ) : (
+                  projectDocs?.value?.data?.length
+                )}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -90,127 +80,10 @@ export default function ClientHomePage() {
       {/* Tasks & Milestones */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Recent Tasks */}
-        <Card>
-          <CardHeader className="-space-y-0">
-            <CardTitle className="text-lg flex gap-2 items-center">
-              <CircleCheckBig className="h-5 w-5 text-black" />
-              Recent Task
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Your current and upcoming task
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <TaskItem
-              title="Review project requirements"
-              due="Due 2024-06-28"
-              status="Completed"
-            />
-            <TaskItem
-              title="Submit financial documents"
-              due="Due 2024-07-02"
-              status="In progress"
-            />
-            <TaskItem
-              title="Approve design mockups"
-              due="Due 2024-07-05"
-              status="In progress"
-            />
-          </CardContent>
-        </Card>
-
+        <RecentTaskCard />
+        <UpcomingMilestones />
         {/* Upcoming Milestones */}
-        <Card>
-          <CardHeader className="space-y-0">
-            <CardTitle className="text-lg flex gap-2 items-center">
-              <LocateFixedIcon className="h-5 w-5 text-black" />
-              Upcoming Milestones
-            </CardTitle>
-
-            <p className="text-sm text-muted-foreground">
-              Key project milestones and deadlines
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <MilestoneItem
-              title="Development Phase 1"
-              info="Started: Nov 2, 2023 • Due: July 15, 2025"
-              status="In progress"
-            />
-            <MilestoneItem
-              title="Design Phase Completion"
-              info="Completed: Nov 2, 2023"
-              status="Completed"
-            />
-            <MilestoneItem
-              title="Project Kickoff"
-              info="Completed: Nov 2, 2023"
-              status="Completed"
-            />
-          </CardContent>
-        </Card>
       </div>
-    </div>
-  );
-}
-
-function TaskItem({
-  title,
-  due,
-  status,
-}: {
-  title: string;
-  due: string;
-  status: "Completed" | "In progress";
-}) {
-  return (
-    <div className="flex items-center flex-wrap gap-2 justify-between rounded-lg border p-3 bg-[#F3F3F3] border-[#0000001A]">
-      <div className="space-y-2">
-        <p className="font-medium text-sm">{title}</p>
-        <p className="text-xs text-muted-foreground">{due}</p>
-      </div>
-      <Badge
-        variant={status === "Completed" ? "success" : "secondary"}
-        className={
-          status === "Completed"
-            ? "bg-emerald-100 text-emerald-700"
-            : "bg-amber-100 text-amber-700"
-        }
-      >
-        {status}
-      </Badge>
-    </div>
-  );
-}
-
-function MilestoneItem({
-  title,
-  info,
-  status,
-}: {
-  title: string;
-  info: string;
-  status: "Completed" | "In progress";
-}) {
-  return (
-    <div className="flex items-center flex-wrap gap-2 justify-between rounded-lg border p-3 bg-[#F3F3F3] border-[#0000001A]">
-      <div className="space-y-2">
-        <p className="font-medium text-sm">{title}</p>
-        <p className="text-xs text-muted-foreground flex items-center gap-1">
-          <Calendar className="size-4 text-[#191919B2]" />
-          {info}
-        </p>
-      </div>
-      <Badge
-        variant={status === "Completed" ? "success" : "secondary"}
-        className={
-          status === "Completed"
-            ? "bg-emerald-100 text-emerald-700"
-            : "bg-amber-100 text-amber-700"
-        }
-      >
-        {status}
-      </Badge>
     </div>
   );
 }

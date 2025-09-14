@@ -1,9 +1,12 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { getUserSession } from "@/services/api.service";
-import ClientTaskCard from "./components/client-test-card";
+import { format } from "date-fns";
+import { CircleCheckBig } from "lucide-react";
+import TaskItem from "./task-item";
 
-export default function ClientTaskManagement() {
+function RecentTaskCard() {
   const { activeProject } = useClientProjectContext();
   const user = getUserSession();
 
@@ -15,7 +18,7 @@ export default function ClientTaskManagement() {
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div
-              className="px-5 py-10 space-y-2 h-[150px] border rounded-lg bg-slate-200 flex justify-between  animate-pulse"
+              className="flex items-center flex-wrap gap-2 justify-between rounded-lg border p-3 bg-slate-100 border-[#0000001A] h-[70px]"
               key={i}
             ></div>
           ))}
@@ -40,39 +43,33 @@ export default function ClientTaskManagement() {
 
     return (
       <div className="space-y-3">
-        {projectTasks?.value?.data?.map((task) => (
-          <ClientTaskCard
-            key={task.id}
-            task={task}
-            projectId={activeProject?.id as string}
-          />
-        ))}
+        {projectTasks?.value?.data?.map(
+          (task, index) =>
+            index <= 3 && (
+              <TaskItem
+                key={task.id}
+                title={task.name}
+                status={task.status}
+                due={format(new Date(task?.end_date ?? ""), "MMM d, yyyy")}
+              />
+            )
+        )}
       </div>
     );
   };
 
   return (
-    <div className="p-6 space-y-4 bg-gray-50 page-fade-in">
-      <div className="space-y-1 mb-10">
-        <h1 className="text-2xl font-semibold flex items-center gap-2">
-          Task Management
-          {projectTasks?.isPending ? (
-            <div className="h-6 w-[40px] bg-slate-300 animate-pulse"></div>
-          ) : (
-            <span className="text-lg font-medium">
-              ({projectTasks?.value?.data?.length})
-            </span>
-          )}
-        </h1>
-        <p className="text-[#19181980] text-sm">
-          Manage your assigned tasks and track progress
-        </p>
-      </div>
-
-      {/* Review project requirements document */}
-      <div className="bg-white space-y-7 p-4 rounded-xl">
-        <div>{renderBody()}</div>
-      </div>
-    </div>
+    <Card>
+      <CardHeader className="-space-y-0">
+        <CardTitle className="text-lg flex gap-2 items-center">
+          <CircleCheckBig className="h-5 w-5 text-black" />
+          Recent Task
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">Your current and upcoming task</p>
+      </CardHeader>
+      <CardContent className="space-y-3">{renderBody()}</CardContent>
+    </Card>
   );
 }
+
+export default RecentTaskCard;
