@@ -235,7 +235,6 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                     className="pl-7"
                                     placeholder={`Enter ${field.name}`}
                                     min={0}
-                                    step={10}
                                     {...fieldProps}
                                   />
                                 </div>

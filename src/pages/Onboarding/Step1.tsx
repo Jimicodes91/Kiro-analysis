@@ -20,7 +20,7 @@ import { companySizeList, industryList } from "@/lib/constants";
 import { getUserSession, updateUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
-import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
+import { CountrySelect, StateSelect } from "react-country-state-city";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 import { companyDetailsSchema } from "../../utils/validation-schema/onboarding";
@@ -53,7 +53,7 @@ const Step1 = () => {
       .mutateAsync({
         ...others,
         country: data.country?.name || "",
-        city: data.city?.name || "",
+        city: data.city,
       })
       .then((response) => {
         const res = response?.data?.data;
@@ -163,7 +163,6 @@ const Step1 = () => {
                             field.onChange(_country);
                             // @ts-expect-error TODO
                             form.setValue("state", "");
-                            // @ts-expect-error TODO
                             form.setValue("city", "");
                           }}
                           placeHolder="Select Country"
@@ -204,7 +203,6 @@ const Step1 = () => {
                             inputClassName="flex h-20! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm  transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:focus:border-black disabled:focus:bg-white disabled:opacity-50 md:text-sm"
                             onChange={(_state) => {
                               field.onChange(_state);
-                              // @ts-expect-error TODO
                               form.setValue("city", "");
                             }}
                             placeHolder="Select State"
@@ -216,26 +214,16 @@ const Step1 = () => {
                     )}
                   />
                 )}
-                {watchState?.hasCities && (
+                {watchState && (
                   <FormField
                     control={form.control}
                     name="city"
                     render={({ field }) => (
-                      <FormItem className="w-full">
+                      <FormItem>
                         <FormLabel>City</FormLabel>
-                        <FormControl className="h-12 w-full">
-                          <CitySelect
-                            countryid={watchCountry?.id || 161}
-                            stateid={watchState?.id}
-                            disabled={!watchState?.id}
-                            containerClassName="focus-visible:outline-none focus-visible:ring-1! focus-visible:ring-ring! shadow-sm"
-                            inputClassName="flex h-20! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm  transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:focus:border-black disabled:focus:bg-white disabled:opacity-50 md:text-sm"
-                            onChange={(_city) => field.onChange(_city)}
-                            onTextChange={(_txt) => console.log(_txt)}
-                            placeHolder="Select City"
-                          />
+                        <FormControl>
+                          <Input placeholder="Company name" {...field} />
                         </FormControl>
-
                         <FormMessage />
                       </FormItem>
                     )}

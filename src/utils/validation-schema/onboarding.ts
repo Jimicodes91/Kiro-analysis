@@ -40,20 +40,7 @@ export const companyDetailsSchema = yup.object().shape({
       then: (schema) => schema.typeError("State is required"),
       otherwise: (schema) => schema.notRequired(),
     }),
-  city: yup
-    .object()
-    .shape({
-      id: yup.number().required("City ID is required"),
-      latitude: yup.string().required("City latitude is required"),
-      longitude: yup.string().required("City longitude is required"),
-      name: yup.string().required("City name is required"),
-    })
-    .when("state.hasCities", {
-      is: true,
-      then: (schema) => schema.typeError("City is required"),
-      otherwise: (schema) => schema.notRequired(),
-    })
-    .typeError("City is required"),
+  city: yup.string().required("City is required"),
   address: yup.string().required("Company address is required"),
   postal_code: yup.string().required("Postal code is required"),
 });
