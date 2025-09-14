@@ -6,6 +6,7 @@ import { getUserSession } from "@/services/api.service";
 import { ProjectDetails } from "@/types/api.types";
 import { getCookie, setCookie } from "cookies-next";
 import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 interface ClientProjectContextInterface {
   changeActiveProject: (project: ProjectDetails) => void;
@@ -49,6 +50,7 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
   };
 
   const user = getUserSession();
+  const { pathname } = useLocation();
 
   const allProjects = useGetClientProjects(user?.id ?? "");
 
@@ -75,7 +77,7 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
     );
   }
 
-  if (allProjects?.value?.data?.length === 0) {
+  if (allProjects?.value?.data?.length === 0 && !pathname.includes("profile-settings")) {
     return (
       <LayoutWithoutContext>
         <div className="flex items-center justify-center min-h-[calc(100vh-70px)] ">
@@ -100,7 +102,18 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
     );
   }
 
-  return null;
+  return (
+    <ClientProjectContext.Provider
+      value={{
+        activeProject,
+        changeActiveProject,
+        search,
+        handleSearch,
+      }}
+    >
+      {children}
+    </ClientProjectContext.Provider>
+  );
 };
 
 export const useClientProjectContext = () => {
