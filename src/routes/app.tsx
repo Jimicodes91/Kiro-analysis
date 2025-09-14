@@ -60,6 +60,20 @@ export const appRoutes: AppRoute[] = [
     roles: ["CLIENT"],
     layout: ClientAccountLayout,
   },
+  //   Profile routes
+  {
+    path: "/profile-settings",
+    element: <EditProfileDetails />,
+    roles: ["CLIENT"],
+    layout: [ProfilePageLayout, ClientAccountLayout],
+  },
+  {
+    path: "/profile-settings/security",
+    element: <ProfileSecurityTemplate />,
+    roles: ["CLIENT"],
+    layout: [ProfilePageLayout, ClientAccountLayout],
+  },
+
   {
     path: "/home",
     element: <Home />,

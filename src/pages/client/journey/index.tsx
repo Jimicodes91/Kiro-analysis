@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ViewToggle from "@/components/ui/view-toggle";
 import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
-import { milestones } from "@/lib/constants";
+
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { useState } from "react";
 import ProjectDurationBar from "../home/components/project-duration-bar";
@@ -12,6 +12,7 @@ export default function ClientProjectJourney() {
   const [view, setView] = useState<string>("list");
   const { activeProject } = useClientProjectContext();
   const journey = useGetProjectTypeDetails(activeProject?.project_type_id ?? "");
+  const journeyLength = journey?.value?.data?.milestones?.length || 1;
 
   const currentMilestoneIndex =
     journey?.value?.data?.milestones?.findIndex(
@@ -79,7 +80,7 @@ export default function ClientProjectJourney() {
         <CardHeader className="flex flex-col gap-5">
           <CardTitle className="text-xl">
             Milestones Timelines{" "}
-            <span className="font-light text-lg">({milestones.length})</span>
+            <span className="font-light text-lg">({journeyLength})</span>
           </CardTitle>
           <div className="flex items-center justify-between gap-2">
             <ViewToggle

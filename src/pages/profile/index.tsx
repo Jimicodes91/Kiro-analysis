@@ -30,7 +30,7 @@ function ProfilePageLayout({ children }: { children?: React.ReactNode }) {
   ];
   return (
     <div>
-      <div className="p-6 animate-in fade-in-0 duration-700 ease-in-out space-y-6">
+      <div className="p-6 animate-in fade-in-0 duration-700 ease-in-out space-y-6 bg-white min-h-[calc(100vh-70px)]">
         <Heading size="h4">Profile settings</Heading>
 
         <div className="grid gap-4 grid-cols-[200px_1fr]">
