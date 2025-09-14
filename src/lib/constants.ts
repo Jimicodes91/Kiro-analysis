@@ -564,3 +564,42 @@ export const COUNTRY_STATES: CountryStatesMap = {
     { value: "alberta", label: "Alberta" },
   ],
 };
+
+export const milestones = [
+  {
+    title: "Project kickoff",
+    description: "Initial project planning and requirement gathering conversations.",
+    status: "Completed",
+    date: "Jan 01, 2025 - Jan 07, 2025",
+  },
+  {
+    title: "Product design",
+    description: "UI/UX design and wireframes finalized by product design team.",
+    status: "Completed",
+    date: "Jan 07, 2025 - Mar 11, 2025",
+  },
+  {
+    title: "Development phase 1",
+    description: "Core product functionality implemented by backend engineering team.",
+    status: "In progress",
+    date: "Feb 10, 2025 - Jul 12, 2025",
+  },
+  {
+    title: "User testing",
+    description: "Beta testing sessions with QA team and selected beta testers.",
+    status: "Not started",
+    date: "Nov 05, 2025 - Dec 12, 2025",
+  },
+  {
+    title: "Development phase 3",
+    description: "Core user interface implemented by frontend engineering team.",
+    status: "Not started",
+    date: "Sep 23, 2025 - Nov 02, 2025",
+  },
+  {
+    title: "Development phase 2",
+    description: "Core user interface implemented by frontend engineering team.",
+    status: "Not started",
+    date: "Mar 12, 2025 - Sep 22, 2025",
+  },
+];

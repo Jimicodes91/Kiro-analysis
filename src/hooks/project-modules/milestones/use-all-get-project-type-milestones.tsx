@@ -18,6 +18,7 @@ export interface ProjectTypeMilestone {
   is_system: number;
   projects: string[];
   status: string;
+  description?: string;
 }
 
 const useGetAllProjectTypeMilestones = (projectTypeId: string) => {
