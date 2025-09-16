@@ -4,17 +4,19 @@ import { CustomMethod, SecureRequestProps } from "@/types/api.types";
 import axios from "axios";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
+const authRoutes = [
+  PAGES.LOGIN_PAGE,
+  PAGES.REGISTER_PAGE,
+  PAGES.FORGOT_PASSWORD_PAGE,
+  PAGES.RESET_PASSWORD_PAGE,
+];
 export async function logout(redirect = true) {
   // Destroy the session
   deleteCookie("user_session_token");
   deleteCookie("user_session");
 
-  if (
-    typeof window !== "undefined" &&
-    redirect &&
-    window.location.pathname !== PAGES.LOGIN_PAGE
-  ) {
-    if (window.location.pathname === PAGES.REGISTER_PAGE) {
+  if (typeof window !== "undefined" && redirect) {
+    if (authRoutes.includes(window.location.pathname)) {
       return;
     }
     const currentUrl = window.location.pathname;
