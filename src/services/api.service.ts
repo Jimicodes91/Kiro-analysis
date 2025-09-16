@@ -12,9 +12,11 @@ export async function logout(redirect = true) {
   if (
     typeof window !== "undefined" &&
     redirect &&
-    (window.location.pathname !== PAGES.LOGIN_PAGE ||
-      window.location.pathname !== PAGES.REGISTER_PAGE)
+    window.location.pathname !== PAGES.LOGIN_PAGE
   ) {
+    if (window.location.pathname === PAGES.REGISTER_PAGE) {
+      return;
+    }
     const currentUrl = window.location.pathname;
     const loginUrl = `${PAGES.LOGIN_PAGE}?callback=${encodeURIComponent(currentUrl)}`;
     window.location.href = loginUrl;
