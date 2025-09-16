@@ -14,6 +14,7 @@ const useGetProjectMembers = (projectId: string, memberType?: ProjectMemberType)
     method: "get",
     endpoint: `${ENDPOINTS.GET_PROJECT_MEMBERS(projectId)}${memberType ? `?member_type=${memberType}` : ""}`,
     queryKey: [QUERYKEYS.GET_PROJECT_MEMBERS, projectId, `${memberType}`],
+    enabled: !!projectId,
   });
 };
 

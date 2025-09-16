@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
+import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
 import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
@@ -51,8 +51,7 @@ const AddProjectTaskModal = ({
 } & ModalProps) => {
   const createTask = useCreateProjectTask(projectId);
   const taskTypes = useGetAllTaskTypes();
-
-  const users = useGetCompanyUsers();
+  const projectMembers = useGetProjectMembers(projectId);
 
   const form = useForm<z.infer<typeof addProjectTaskSchema>>({
     resolver: zodResolver(addProjectTaskSchema),
@@ -285,14 +284,14 @@ const AddProjectTaskModal = ({
                   <FormLabel>Assignee</FormLabel>
                   <CustomMultiSelect
                     options={
-                      users?.value
-                        ? users?.value?.data?.map((item) => ({
-                            label: item.name ?? item.email,
-                            value: item.id,
+                      projectMembers?.value
+                        ? projectMembers?.value?.data?.map((item) => ({
+                            label: item.user?.name ?? item.user?.email,
+                            value: item.user_id,
                           }))
                         : []
                     }
-                    isLoading={users.isPending}
+                    isLoading={projectMembers.isPending}
                     onChange={field.onChange}
                     value={field.value}
                     placeholder="Select Assignee"

@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
+import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
@@ -46,12 +46,12 @@ type TaskFormData = yup.InferType<typeof taskFormSchema>;
 const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
   const taskTypes = useGetAllTaskTypes();
   const projectTypes = useGetAllProjectTypes();
-  const users = useGetCompanyUsers();
 
   const form = useForm<TaskFormData>({
     resolver: yupResolver(taskFormSchema),
   });
-
+  const projectId = form.watch("project_id") ?? [];
+  const projectMembers = useGetProjectMembers(projectId);
   // Watch project_type_id to fetch related projects
   const selectedProjectTypeId = form.watch("project_type_id");
   const projects = useGetAllProjects(selectedProjectTypeId);
@@ -382,10 +382,10 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
                   <FormControl>
                     <MultiSelect
                       options={
-                        users?.value
-                          ? users?.value?.data?.map((item) => ({
-                              label: item.name ?? item.email,
-                              value: item.id,
+                        projectMembers?.value
+                          ? projectMembers?.value?.data?.map((item) => ({
+                              label: item.user?.name ?? item.user?.email,
+                              value: item.user_id,
                             }))
                           : []
                       }
@@ -396,7 +396,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
                       }}
                       placeholder="Select Assignee"
                       //   error={fieldState.error?.message}
-                      disabled={users.isPending}
+                      disabled={projectMembers.isPending}
                     />
                   </FormControl>
                   <FormMessage />
