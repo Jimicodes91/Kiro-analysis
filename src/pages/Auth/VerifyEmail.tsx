@@ -55,7 +55,7 @@ const VerifyEmail = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <div className="p-6 text-center max-w-sm w-full">{renderBody()}</div>
+      <div className="p-6 text-center max-w-md w-full">{renderBody()}</div>
     </div>
   );
 };

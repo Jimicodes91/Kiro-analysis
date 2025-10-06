@@ -222,7 +222,7 @@ const Step1 = () => {
                       <FormItem>
                         <FormLabel>City</FormLabel>
                         <FormControl>
-                          <Input placeholder="Company name" {...field} />
+                          <Input placeholder="City" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

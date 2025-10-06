@@ -9,7 +9,11 @@ const authRoutes = [
   PAGES.REGISTER_PAGE,
   PAGES.FORGOT_PASSWORD_PAGE,
   PAGES.RESET_PASSWORD_PAGE,
+  PAGES.VERIFY_EMAIL_PAGE,
+  PAGES.VERIFY_ACCOUNT_PAGE,
+  PAGES.COMPLETE_INVITE_PAGE,
 ];
+
 export async function logout(redirect = true) {
   // Destroy the session
   deleteCookie("user_session_token");

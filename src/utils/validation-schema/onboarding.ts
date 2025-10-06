@@ -1,9 +1,9 @@
 import * as yup from "yup";
 
 export const companyDetailsSchema = yup.object().shape({
-  name: yup.string().required("Company name is required"),
-  industry_type: yup.string().required("Industry type is required"),
-  size: yup.string().required("Company size is required"),
+  name: yup.string().required("Company name is required").trim(),
+  industry_type: yup.string().required("Industry type is required").trim(),
+  size: yup.string().required("Company size is required").trim(),
   country: yup
     .object()
     .shape({
@@ -40,16 +40,16 @@ export const companyDetailsSchema = yup.object().shape({
       then: (schema) => schema.typeError("State is required"),
       otherwise: (schema) => schema.notRequired(),
     }),
-  city: yup.string().required("City is required"),
-  address: yup.string().required("Company address is required"),
-  postal_code: yup.string().required("Postal code is required"),
+  city: yup.string().required("City is required").trim(),
+  address: yup.string().required("Company address is required").trim(),
+  postal_code: yup.string().required("Postal code is required").trim(),
 });
 
 export const inviteTeamSchema = yup.object().shape({
   teamMembers: yup.array().of(
     yup.object().shape({
-      email: yup.string().email("Invalid email").required("Email is required"),
-      role: yup.string().required("Role is required"),
+      email: yup.string().email("Invalid email").required("Email is required").trim(),
+      role: yup.string().required("Role is required").trim(),
     })
   ),
 });

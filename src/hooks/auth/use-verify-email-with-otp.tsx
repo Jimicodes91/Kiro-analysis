@@ -1,18 +1,16 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
 import { ENDPOINTS } from "@/lib/constants";
 
-const useCompleteRegistration = () => {
+const useVerifyEmailWithOtp = () => {
   return useCustomMutation<
     Record<string, string>,
     {
-      token: string;
-      password: string;
-      name: string;
+      otp: string;
     }
   >({
     method: "post",
-    endpoint: ENDPOINTS.COMPLETE_REGISTRATION,
+    endpoint: ENDPOINTS.VERIFY_EMAIL_WITH_OTP,
   });
 };
 
-export default useCompleteRegistration;
+export default useVerifyEmailWithOtp;

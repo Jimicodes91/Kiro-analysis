@@ -159,6 +159,7 @@ export const ENDPOINTS = {
   // Auth Endpoint
   ADMIN_SIGNUP: "auth/admin-signup",
   VERIFY_EMAIL: (token: string) => `auth/verify?token=${token}`,
+  VERIFY_EMAIL_WITH_OTP: "auth/verify",
   RESEND_VERIFICATION_EMAIL: "auth/resend-verification",
   FORGOT_PASSWORD: "auth/forgot-password",
   RESET_PASSWORD: "auth/reset-password",
@@ -492,6 +493,10 @@ export const PAGES = {
   REGISTER_PAGE: "/register",
   FORGOT_PASSWORD_PAGE: "/forgot-password",
   RESET_PASSWORD_PAGE: "/reset-password",
+  VERIFY_EMAIL_PAGE: "/verify-email",
+  VERIFY_ACCOUNT_PAGE: "/verify-account",
+  COMPLETE_INVITE_PAGE: "/complete-invite",
+
   ADMIN_PAGE: "/admin",
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",

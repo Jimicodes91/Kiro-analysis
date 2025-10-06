@@ -8,6 +8,7 @@ import ResetPassword from "../pages/Auth/ResetPassword";
 import SignUp from "../pages/Auth/SignUp";
 import VerifyEmail from "../pages/Auth/VerifyEmail";
 
+import VerifyAccountEmail from "@/pages/Auth/VerifyAccountEmail";
 import Onboarding from "../pages/Onboarding/index";
 
 export const AuthRoutes: RouteObject[] = [
@@ -23,6 +24,7 @@ export const AuthRoutes: RouteObject[] = [
           { path: "complete-invite", element: <CompleteInvite /> },
           { path: "forgot-password", element: <ForgotPassword /> },
           { path: "reset-password", element: <ResetPassword /> },
+          { path: "verify-email", element: <VerifyAccountEmail /> },
         ],
       },
     ],

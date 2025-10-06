@@ -25,9 +25,7 @@ const CompleteInvite: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { isOpen, onToggle } = useDisclosure();
   const { isOpen: isPasswordOpen, onToggle: onToggleShow } = useDisclosure();
-  const role = searchParams.get("role");
-  const companyId = searchParams.get("companyId");
-  const email = searchParams.get("email");
+  const token = searchParams.get("token");
   const completeRegistration = useCompleteRegistration();
   const navigate = useNavigate();
 
@@ -38,9 +36,7 @@ const CompleteInvite: React.FC = () => {
   const onSubmit = async (data: InferType<typeof completeInviteSchema>) => {
     completeRegistration
       .mutateAsync({
-        companyId: companyId ?? "",
-        email: email ?? "",
-        role: role ?? "",
+        token: token ?? "",
         name: data.name,
         password: data.newPassword,
       })
