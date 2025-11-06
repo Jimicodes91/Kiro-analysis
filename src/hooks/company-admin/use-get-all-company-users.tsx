@@ -1,6 +1,5 @@
 import useQueryActionHook from "@/hooks/use-queryaction";
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
-import { getUserSession } from "@/services/api.service";
 import { UserDetails } from "@/types/api.types";
 
 export interface IUserList {
@@ -24,16 +23,10 @@ const useGetAllCompanyUsers = (
   pageSize?: number,
   givenCompanyId?: string
 ) => {
-  const session = getUserSession();
-  const companyId = session?.company_id ?? "";
-
   return useQueryActionHook<IUserList>({
     method: "get",
-    endpoint: ENDPOINTS.GET_ALL_COMPANY_USERS(
-      givenCompanyId ?? companyId,
-      page,
-      pageSize
-    ),
+    endpoint: ENDPOINTS.GET_ALL_COMPANY_USERS(givenCompanyId ?? "", page, pageSize),
+    enabled: !!givenCompanyId,
     queryKey: [
       QUERYKEYS.GET_ALL_COMPANY_USERS,
       `${page}`,

@@ -49,8 +49,8 @@ const OrgProjectContextProvider = ({ children }: { children: React.ReactNode }) 
     switchOrg
       .mutateAsync({ companyId })
       .then(() => {
-        setSelectedCompanyId(companyId);
         setCookie("selected_company_id", companyId);
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);

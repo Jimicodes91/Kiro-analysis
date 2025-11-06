@@ -9,6 +9,7 @@ import {
 import { TablePagination } from "@/components/ui/table-pagination";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
 import useGetAllCompanyUsers from "@/hooks/company-admin/use-get-all-company-users";
+import useGetUser from "@/hooks/user/use-get-user";
 import PaginationContextProvider from "@/lib/context/pagination-context";
 import React from "react";
 import UserTableRow from "./user-table-row";
@@ -24,7 +25,12 @@ const UsersTable = ({
     page: 1,
     pageSize: 10,
   });
-  const users = useGetAllCompanyUsers(pageProp.page, pageProp.pageSize, givenCompanyId);
+  const userData = useGetUser();
+  const users = useGetAllCompanyUsers(
+    pageProp.page,
+    pageProp.pageSize,
+    givenCompanyId ?? userData?.value?.data?.company_id ?? ""
+  );
   const colSpan = isEditable ? 5 : 4;
 
   const renderTableBody = () => {
