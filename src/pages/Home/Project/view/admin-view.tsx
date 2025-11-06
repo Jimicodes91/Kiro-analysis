@@ -14,16 +14,16 @@ import ProjectEmptyState from "@/pages/projects/components/project-empty-state";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../../components/ui/view-toggle";
+import { useOrgProjectContext } from "../context/org-project-context";
 import BoardLoadingWrapper from "../templates/loading-wrapper";
 import ActiveProjectTypeProjectWrapperOnAdminView from "../templates/selected-project-wrapper-admin";
 import ProjectTable from "./../components/project-table";
-import { useProjectContext } from "./../context/project-context";
 
 const NonClientProjectView = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const viewMode = searchParams.get("viewMode") || "board";
   const { activeProjectType, changeActiveProjectType, changeStatus, status, search } =
-    useProjectContext();
+    useOrgProjectContext();
   const debounceSearch = useDebounce(search, 1000);
 
   const allProjects = useGetAllProjects(activeProjectType, status, debounceSearch);

@@ -28,6 +28,15 @@ export interface User {
   login_count: number;
   password_setup_token_expires: unknown;
   phone_number: string | null;
+  companies: LoginCompany[];
+}
+
+export interface LoginCompany {
+  id: string;
+  name: string;
+  role: string;
+  joined_at: string;
+  is_active: number;
 }
 
 export interface LoginResponse {

@@ -51,7 +51,6 @@ interface ContactModalProps {
 function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps) {
   // Get data from hooks
   const session = getUserSession();
-  // const usersResponse = useGetCompanyUsers();
   const createContact = useCreateContact();
   const updateContact = useUpdateContact(contactData?.id || "");
 

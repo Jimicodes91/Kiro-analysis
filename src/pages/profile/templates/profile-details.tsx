@@ -10,7 +10,7 @@ import {
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import useUpdateProfile from "@/hooks/user/use-update-profile";
-import { getUserSession, updateUserSession } from "@/services/api.service";
+import { updateUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -20,6 +20,7 @@ import PhoneInputWithCountrySelect, {
 import * as yup from "yup";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useGetUser from "@/hooks/user/use-get-user";
 import { User } from "lucide-react";
 
 const editProfileSchema = yup.object().shape({
@@ -35,16 +36,16 @@ const editProfileSchema = yup.object().shape({
 });
 
 const EditProfileDetails: React.FC = () => {
-  const user = getUserSession();
-  const updateProfile = useUpdateProfile(user?.id ?? "");
+  const userData = useGetUser();
+  const updateProfile = useUpdateProfile(userData?.value?.data?.id ?? "");
 
   const form = useForm({
     resolver: yupResolver(editProfileSchema),
     mode: "onChange",
     defaultValues: {
-      name: user?.name || "",
-      email: user?.email || "",
-      phone: user?.phone_number || "",
+      name: userData?.value?.data?.name || "",
+      email: userData?.value?.data?.email || "",
+      phone: userData?.value?.data?.phone_number || "",
     },
   });
 
@@ -54,12 +55,12 @@ const EditProfileDetails: React.FC = () => {
     updateProfile
       .mutateAsync({
         name: data.name,
-        phone_number: data.phone || user?.phone_number || "",
+        phone_number: data.phone || userData?.value?.data?.phone_number || "",
       })
       .then(() => {
         updateUserSession({
           name: data.name,
-          phone_number: data.phone || user?.phone_number || "",
+          phone_number: data.phone || userData?.value?.data?.phone_number || "",
         });
       })
       .catch(console.error);
@@ -77,8 +78,8 @@ const EditProfileDetails: React.FC = () => {
           </Avatar>
         </div>
         <div>
-          <Heading size="h6">{user?.name}</Heading>
-          <p className="text-xs">{user?.email}</p>
+          <Heading size="h6">{userData?.value?.data?.name}</Heading>
+          <p className="text-xs">{userData?.value?.data?.email}</p>
         </div>
       </div>
       <Form {...form}>

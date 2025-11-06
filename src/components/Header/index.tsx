@@ -1,5 +1,5 @@
 import useGetCompanyDetails from "@/hooks/admin/use-get-company";
-import { getUserSession } from "@/services/api.service";
+import useGetUser from "@/hooks/user/use-get-user";
 import React from "react";
 import { FaIndustry } from "react-icons/fa";
 import { VscBell } from "react-icons/vsc";
@@ -7,8 +7,8 @@ import Heading from "../ui/heading";
 import { UserNav } from "../ui/user-avatar-nav";
 
 const DashBoardHeader: React.FC = () => {
-  const user = getUserSession();
-  const company = useGetCompanyDetails(user?.company_id ?? "");
+  const userData = useGetUser();
+  const company = useGetCompanyDetails(userData?.value?.data?.company_id ?? "");
 
   return (
     <div className="flex w-full md:flex justify-between md:items-center mb-3 border-b border-brand-border p-3 ">

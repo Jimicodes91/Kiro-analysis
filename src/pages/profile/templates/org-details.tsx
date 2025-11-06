@@ -1,12 +1,12 @@
 import Loader from "@/components/ui/loader";
 import useGetCompanyDetails from "@/hooks/admin/use-get-company";
-import { getUserSession } from "@/services/api.service";
+import useGetUser from "@/hooks/user/use-get-user";
 import React from "react";
 import EditOrganizationDetailsMain from "./org-details-main";
 
 const EditOrganizationDetails: React.FC = () => {
-  const user = getUserSession();
-  const company = useGetCompanyDetails(user?.company_id ?? "");
+  const userData = useGetUser();
+  const company = useGetCompanyDetails(userData?.value?.data?.company_id ?? "");
 
   const renderForm = () => {
     if (company.isLoading) return <Loader />;

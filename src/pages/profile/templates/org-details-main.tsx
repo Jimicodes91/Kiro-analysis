@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/select";
 import { CompanyDetails } from "@/hooks/admin/use-get-company";
 import useUpdateCompanyDetails from "@/hooks/company/use-update-company";
+import useGetUser from "@/hooks/user/use-get-user";
 import { companySizeList, industryList } from "@/lib/constants";
-import { getUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -31,8 +31,10 @@ export const companyDetailsSchema = yup.object().shape({
 });
 
 const EditOrganizationDetailsMain = ({ company }: { company: CompanyDetails }) => {
-  const user = getUserSession();
-  const updateCompanyDetails = useUpdateCompanyDetails(user?.company_id ?? "");
+  const userData = useGetUser();
+  const updateCompanyDetails = useUpdateCompanyDetails(
+    userData?.value?.data?.company_id ?? ""
+  );
 
   const form = useForm({
     resolver: yupResolver(companyDetailsSchema),

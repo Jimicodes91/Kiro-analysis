@@ -53,11 +53,9 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
   const { pathname } = useLocation();
 
   const allProjects = useGetClientProjects(user?.id ?? "");
-  console.log(allProjects?.value?.data?.length, pathname);
   useEffect(() => {
     if (allProjects?.value?.data?.length && !activeProject) {
       setActiveProject(allProjects?.value?.data?.[0]);
-      console.log("Set cookie");
       setCookie(STOREDCOOKIEKEY, allProjects?.value?.data?.[0], {
         httpOnly: true,
         path: "/",

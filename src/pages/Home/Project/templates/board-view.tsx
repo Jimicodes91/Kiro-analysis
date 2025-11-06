@@ -5,7 +5,7 @@ import {
   updateProjectMilestoneById,
   updateProjectsIndex,
 } from "@/lib/utils";
-import { useProjectContext } from "@/pages/Home/Project/context/project-context";
+import { useOrgProjectContext } from "@/pages/Home/Project/context/org-project-context";
 import { ProjectDetails } from "@/types/api.types";
 import { DragDropContext } from "@hello-pangea/dnd";
 import React, { useEffect } from "react";
@@ -24,7 +24,7 @@ const initialState = {
 
 const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading }) => {
   const [milestoneProjects, setMilestoneProjects] = React.useState(projects);
-  const { activeProjectType } = useProjectContext();
+  const { activeProjectType } = useOrgProjectContext();
   const [updateData, setUpdateData] = React.useState(initialState);
 
   const updateProjectMilestone = useUpdateProjectMilestone(updateData.projectId);

@@ -4,9 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useGetAllProjectDocuments from "@/hooks/project-modules/documents/use-get-all-documents";
+import useGetUser from "@/hooks/user/use-get-user";
 import { addDaysUtil, getFormattedText } from "@/lib/utils";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
-import { getUserSession } from "@/services/api.service";
 import { format } from "date-fns";
 import { FolderOpen, Settings } from "lucide-react";
 import MilestoneMetricCard from "./components/milestone-metric-card";
@@ -16,7 +16,7 @@ import TaskMetricCard from "./components/task-metrics-card";
 import UpcomingMilestones from "./components/upcoming-milestones";
 
 export default function ClientHomePage() {
-  const user = getUserSession();
+  const userData = useGetUser();
   const { activeProject } = useClientProjectContext();
   const projectDocs = useGetAllProjectDocuments(activeProject?.id ?? "");
 
@@ -25,7 +25,7 @@ export default function ClientHomePage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold">Welcome {user?.name}</h1>
+          <h1 className="text-2xl font-bold">Welcome {userData?.value?.data?.name}</h1>
           <p className="text-muted-foreground">Here&apos;s your project overview.</p>
         </div>
         <Button size="sm" className="flex items-center gap-2 px-3">

@@ -1,9 +1,14 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import useDisclosure from "@/hooks/use-disclosure";
 import AttachmentCard from "@/pages/Home/project-details/components/cards/attachment";
+import UploadDocumentModal from "@/pages/Home/project-details/components/modal/upload-document-modal";
 import { TaskDetails } from "@/types/api.types";
 import { format } from "date-fns";
+import { AnimatePresence } from "framer-motion";
 
 function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: string }) {
+  const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <Card className="bg-[#F3F3F3] border border-[#0000001A] shadow-none">
       <CardContent className="p-5 space-y-3">
@@ -35,9 +40,9 @@ function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: str
             //
           )}
         </div>
-        {/* <Button variant="outline" size="sm">
-              <span>Upload document</span>
-            </Button> */}
+        <Button variant="outline" size="sm" onClick={onOpen}>
+          <span>Upload document</span>
+        </Button>
 
         {/* <div className="space-x-4">
           <a href="https://www.content.com" className="text-blue-600 underline">
@@ -47,6 +52,15 @@ function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: str
             www.material.com
           </a>
         </div> */}
+        <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+          {isOpen && (
+            <UploadDocumentModal
+              isOpen={isOpen}
+              projectId={task.project_id}
+              onClose={onClose}
+            />
+          )}
+        </AnimatePresence>
       </CardContent>
     </Card>
   );

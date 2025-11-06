@@ -12,9 +12,11 @@ import UploadDocumentModal from "../components/modal/upload-document-modal";
 function ProjectDocumentSection({
   projectId,
   isClient,
+  isUploadable = false,
 }: {
   projectId: string;
   isClient?: boolean;
+  isUploadable?: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeTab, setActiveTab] = React.useState("Official");
@@ -88,6 +90,11 @@ function ProjectDocumentSection({
                 Upload
               </Button>
             </div>
+          )}
+          {isUploadable && (
+            <Button size="sm" leftIcon={<Upload />} onClick={onUploadOpen}>
+              Upload
+            </Button>
           )}
         </div>
 

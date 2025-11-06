@@ -27,7 +27,11 @@ export default function ClientDocumentManagement() {
 
       {/* Review project requirements document */}
       <div className="bg-white space-y-7 p-4 rounded-xl">
-        <ProjectDocumentSection projectId={activeProject?.id as string} isClient />
+        <ProjectDocumentSection
+          projectId={activeProject?.id as string}
+          isClient
+          isUploadable
+        />
       </div>
     </div>
   );

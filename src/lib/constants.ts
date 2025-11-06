@@ -156,6 +156,7 @@ export const taskStatuses: { label: string; value: string }[] = [
 ];
 
 export const ENDPOINTS = {
+  SWITCH_ORG: "auth/switch-organization",
   // Auth Endpoint
   ADMIN_SIGNUP: "auth/admin-signup",
   VERIFY_EMAIL: (token: string) => `auth/verify?token=${token}`,
@@ -193,12 +194,15 @@ export const ENDPOINTS = {
   GET_ALL_USERS: `admin/all`,
   GET_ACTIVE_USERS: `admin/active-users`,
   GET_ALL_SYSADMINS: `admin/all-sysadmins`,
+  RESEND_INVITE: `auth/resend-invite`,
 
   // Company Endpoints
   CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
   UPDATE_COMPANY: (companyId: string) => `company/${companyId}`,
 
   // Company Admin Endpoints
+  GET_ALL_COMPANY_USERS: (companyId: string, page?: number, pageSize?: number) =>
+    `auth/companies/${companyId}/users${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
   GET_COMPANY_USERS: (companyId: string, page?: number, pageSize?: number) =>
     `admin/companies/${companyId}/users${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
   UPDATE_COMPANY_USER_STATUS: (companyId: string) => `admin/users/${companyId}/status`,
@@ -409,6 +413,7 @@ export const QUERYKEYS = {
   GET_ALL_AUDIT_TRAIL: "GET_ALL_AUDIT_TRAIL",
   // Company Admin Endpoints
   GET_COMPANY_USERS: "GET_COMPANY_USERS",
+  GET_ALL_COMPANY_USERS: "GET_ALL_COMPANY_USERS",
 
   // User Query keys
   GET_USER: "GET_USER",
