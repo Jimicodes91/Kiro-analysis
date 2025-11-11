@@ -13,21 +13,29 @@ import useDisclosure from "@/hooks/use-disclosure";
 import { cn } from "@/lib/utils";
 import { AnimatePresence } from "framer-motion";
 import { IoIosArrowDown } from "react-icons/io";
+import DeleteJourneyModal from "./delete-journey-modal";
 import EditJourneyFormModal from "./edit-jorney-modal";
 import MilestoneTable from "./milestone-table";
 
 function JourneyTableRow({
   projectType,
   index,
+  refetch,
 }: {
   projectType: ProjectType;
   index: number;
+  refetch?: () => void;
 }) {
   const { isOpen, onToggle } = useDisclosure();
   const {
     isOpen: isEditJourneyOpen,
     onOpen: onEditJourneyOpen,
     onClose: onEditJourneyClose,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteJourneyOpen,
+    onOpen: onDeleteJourneyOpen,
+    onClose: onDeleteJourneyClose,
   } = useDisclosure();
   const bg = index % 2 === 0 ? "bg-white" : "bg-[#F8F8F8]";
 
@@ -60,6 +68,14 @@ function JourneyTableRow({
                 >
                   Edit Journey
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    onDeleteJourneyOpen();
+                  }}
+                >
+                  Delete Journey
+                </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -79,6 +95,24 @@ function JourneyTableRow({
             onClose={onEditJourneyClose}
             isOpen={isEditJourneyOpen}
             projectType={projectType}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false}>
+        {isDeleteJourneyOpen && (
+          <DeleteJourneyModal
+            onClose={onDeleteJourneyClose}
+            isOpen={isDeleteJourneyOpen}
+            projectType={projectType}
+            onSuccess={() => {
+              refetch?.();
+            }}
+            onViewMilestones={() => {
+              // Expand the milestones table when "View Milestones" is clicked
+              if (!isOpen) {
+                onToggle();
+              }
+            }}
           />
         )}
       </AnimatePresence>

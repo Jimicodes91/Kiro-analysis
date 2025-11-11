@@ -265,6 +265,7 @@ export const ENDPOINTS = {
   UPDATE_PROJECT_TYPE_DETAILS: (projectTypeId: string) =>
     `projects/types/${projectTypeId}`,
   CREATE_PROJECT_TYPE: "projects/types",
+  DELETE_PROJECT_TYPE: (projectTypeId: string) => `projects/types/${projectTypeId}`,
 
   // 2. Milestones
   CREATE_MILESTONE: "projects/types/milestones",
@@ -274,6 +275,10 @@ export const ENDPOINTS = {
     `projects/types/${projectTypeId}/milestones/${milestoneId}`,
   UPDATE_MILESTONE_DETAILS: (milestoneId: string) =>
     `projects/types/milestones/${milestoneId}`,
+  DELETE_MILESTONE: (projectTypeId: string, milestoneId: string) =>
+    `projects/types/${projectTypeId}/milestones/${milestoneId}`,
+  REORDER_MILESTONES: (projectTypeId: string) =>
+    `projects/types/${projectTypeId}/milestones/reorder`,
 
   // 3. Events
   CREATE_EVENT: (projectId: string) => `projects/${projectId}/events`,

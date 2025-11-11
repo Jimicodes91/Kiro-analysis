@@ -45,6 +45,7 @@ function MilestoneTable({
               milestone={milestone}
               key={milestone.id}
               refetch={getMilestones.refetch}
+              projectTypeId={projectType.id}
             />
           ))}
         </TableBody>

@@ -12,16 +12,25 @@ import useGetAllProjectTypeMilestones, {
   ProjectTypeMilestone,
 } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import useDisclosure from "@/hooks/use-disclosure";
+import { AnimatePresence } from "framer-motion";
+import DeleteMilestoneModal from "./delete-milestone-modal";
 import MilestoneForm from "./milestone-form";
 
 function MilestoneTableRow({
   milestone,
   refetch,
+  projectTypeId,
 }: {
   milestone: ProjectTypeMilestone;
   refetch: ReturnType<typeof useGetAllProjectTypeMilestones>["refetch"];
+  projectTypeId: string;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isDeleteMilestoneOpen,
+    onOpen: onDeleteMilestoneOpen,
+    onClose: onDeleteMilestoneClose,
+  } = useDisclosure();
 
   return (
     <>
@@ -31,7 +40,7 @@ function MilestoneTableRow({
           milestone={milestone}
           refetch={refetch}
           key={milestone.updated_at}
-          projectTypeId=""
+          projectTypeId={projectTypeId}
         />
       ) : (
         <TableRow className="">
@@ -48,6 +57,9 @@ function MilestoneTableRow({
                 <DropdownMenuGroup>
                   <>
                     <DropdownMenuItem onClick={onOpen}>Edit Milestone</DropdownMenuItem>
+                    <DropdownMenuItem onClick={onDeleteMilestoneOpen}>
+                      Delete Milestone
+                    </DropdownMenuItem>
                   </>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
@@ -55,6 +67,19 @@ function MilestoneTableRow({
           </TableCell>
         </TableRow>
       )}
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {isDeleteMilestoneOpen && (
+          <DeleteMilestoneModal
+            isOpen={isDeleteMilestoneOpen}
+            onClose={onDeleteMilestoneClose}
+            milestone={milestone}
+            projectTypeId={projectTypeId}
+            onSuccess={() => {
+              refetch();
+            }}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

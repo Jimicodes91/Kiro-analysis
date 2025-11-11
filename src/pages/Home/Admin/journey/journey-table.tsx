@@ -32,6 +32,7 @@ const JourneyTable = () => {
               key={projectType.id}
               projectType={projectType}
               index={index}
+              refetch={projectTypes.refetch}
             />
           ))}
         </>

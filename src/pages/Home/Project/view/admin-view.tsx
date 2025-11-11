@@ -40,10 +40,12 @@ const NonClientProjectView = () => {
         (item) => item.id === activeProjectType
       )?.id;
       const activeTypeId = projectTypes?.value?.data?.[0]?.id;
-      changeActiveProjectType(isPresence ? activeProjectType! : activeTypeId ?? "");
+      if (changeActiveProjectType) {
+        changeActiveProjectType(isPresence ? activeProjectType! : activeTypeId ?? "");
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectTypes.isSuccess, projectTypes?.value]);
+  }, [projectTypes.isSuccess, projectTypes?.value, changeActiveProjectType]);
 
   if (projectTypes.isPending && !projectTypes.value) {
     return (
