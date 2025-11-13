@@ -45,6 +45,7 @@ const DeleteMilestoneModal = ({
   //     hasProjects,
   //     selectedMilestoneId,
   //   });
+
   const closeModal = () => {
     onClose();
     setSelectedMilestoneId("");
@@ -59,7 +60,9 @@ const DeleteMilestoneModal = ({
     // If not, we'll need to create a separate API call to move projects
 
     deleteMilestone
-      .mutateAsync({})
+      .mutateAsync({
+        target_milestone_id: selectedMilestoneId,
+      })
       .then(() => {
         onSuccess?.();
         closeModal();
