@@ -78,7 +78,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Journey</FormLabel>
+                <FormLabel isRequired>Journey</FormLabel>
                 <FormControl>
                   <Input placeholder="journey name" {...field} />
                 </FormControl>
@@ -94,7 +94,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
                   name={`stages.${index}.name`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Stage name</FormLabel>
+                      <FormLabel isRequired>Stage name</FormLabel>
                       <FormControl>
                         <Input placeholder="Stage name" {...field} />
                       </FormControl>
@@ -109,7 +109,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
                   name={`stages.${index}.duration`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Duration (days)</FormLabel>
+                      <FormLabel isRequired>Duration (days)</FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="Duration" {...field} />
                       </FormControl>

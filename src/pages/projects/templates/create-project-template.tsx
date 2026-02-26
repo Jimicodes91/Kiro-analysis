@@ -17,7 +17,12 @@ function CreateProjectTemplate() {
       projectFormFields?.value &&
       projectFormFields?.value?.data
     ) {
-      return <CreateProjectDynamicForm fields={projectFormFields?.value?.data} />;
+      return (
+        <CreateProjectDynamicForm
+          key={projectFormFields.status}
+          fields={projectFormFields?.value?.data}
+        />
+      );
     }
     return <p>Some thing went wrong</p>;
   };
@@ -39,7 +44,10 @@ function CreateProjectTemplate() {
           </p>
           <Heading size="h3">Add Project</Heading>
         </div>
-        <div className="w-full bg-brand-gray grid place-items-center p-6">
+        <div
+          className="w-full bg-brand-gray grid place-items-center p-6"
+          key={projectFormFields.status}
+        >
           {renderForm()}
         </div>
       </div>

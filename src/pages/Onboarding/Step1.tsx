@@ -60,6 +60,15 @@ const Step1 = () => {
         const updateFields = {
           company_name: res?.name,
           company_id: res?.id,
+          companies: [
+            {
+              id: res?.id,
+              name: res?.name,
+              role: "ADMIN",
+              joined_at: res?.created_at,
+              is_active: 1,
+            },
+          ],
         };
         updateUserSession(updateFields);
         updateCompanyDetails(data);
@@ -81,7 +90,7 @@ const Step1 = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Company name</FormLabel>
+                      <FormLabel isRequired>Company name</FormLabel>
                       <FormControl>
                         <Input placeholder="Company name" {...field} />
                       </FormControl>
@@ -94,7 +103,7 @@ const Step1 = () => {
                   name="industry_type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Industry type</FormLabel>
+                      <FormLabel isRequired>Industry type</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl className="h-12 w-full">
                           <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
@@ -126,7 +135,7 @@ const Step1 = () => {
                   name="size"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Company size</FormLabel>
+                      <FormLabel isRequired>Company size</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl className="h-12 w-full">
                           <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
@@ -154,7 +163,7 @@ const Step1 = () => {
                   name="country"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Country</FormLabel>
+                      <FormLabel isRequired>Country</FormLabel>
                       <FormControl className="h-12 w-full">
                         <CountrySelect
                           containerClassName="focus-visible:outline-none focus-visible:ring-1! focus-visible:ring-ring! shadow-sm"
@@ -164,6 +173,22 @@ const Step1 = () => {
                             // @ts-expect-error TODO
                             form.setValue("state", "");
                             form.setValue("city", "");
+                          }}
+                          onTextChange={(e) => {
+                            if (!e.target.value) {
+                              form.resetField("country");
+                              form.resetField("state");
+                              form.resetField("city");
+                              form.clearErrors("country");
+                              form.clearErrors("state");
+                              form.clearErrors("city");
+                            }
+                          }}
+                          value="Nigeria"
+                          onBlur={() => {
+                            if (field.value) {
+                              form.setValue("country", field.value);
+                            }
                           }}
                           placeHolder="Select Country"
                         />
@@ -179,7 +204,7 @@ const Step1 = () => {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Company Address</FormLabel>
+                    <FormLabel isRequired>Company Address</FormLabel>
                     <FormControl>
                       <Input placeholder="Company Address" {...field} />
                     </FormControl>
@@ -194,7 +219,7 @@ const Step1 = () => {
                     name="state"
                     render={({ field }) => (
                       <FormItem className="w-full">
-                        <FormLabel>State</FormLabel>
+                        <FormLabel isRequired>State</FormLabel>
                         <FormControl className="h-12 w-full">
                           <StateSelect
                             disabled={!watchCountry?.id}
@@ -204,6 +229,14 @@ const Step1 = () => {
                             onChange={(_state) => {
                               field.onChange(_state);
                               form.setValue("city", "");
+                            }}
+                            onTextChange={(e) => {
+                              if (!e.target.value) {
+                                form.resetField("state");
+                                form.resetField("city");
+                                form.clearErrors("state");
+                                form.clearErrors("city");
+                              }
                             }}
                             placeHolder="Select State"
                           />
@@ -220,7 +253,7 @@ const Step1 = () => {
                     name="city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>City</FormLabel>
+                        <FormLabel isRequired>City</FormLabel>
                         <FormControl>
                           <Input placeholder="City" {...field} />
                         </FormControl>
@@ -235,7 +268,7 @@ const Step1 = () => {
                 name="postal_code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Postal Code</FormLabel>
+                    <FormLabel isRequired>Postal Code</FormLabel>
                     <FormControl>
                       <Input placeholder="Postal Code" {...field} />
                     </FormControl>

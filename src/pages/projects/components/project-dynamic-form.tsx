@@ -32,49 +32,43 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
   const createProject = useCreateProject();
   const { changeActiveProjectType } = useOrgProjectContext();
 
-  const fieldSchema = fields.reduce((acc, field) => {
+  const validFields = useMemo(() => fields?.filter((field) => field?.slug), [fields]);
+
+  const fieldSchema = validFields?.reduce((acc, field) => {
     const key = field.slug;
-    let validator:
-      | z.ZodString
-      | z.ZodNumber
-      | z.ZodDate
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      | z.ZodArray<any>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      | z.ZodEffects<any> = z.string({
-      message: `${field.name} is required`,
-    }); // Explicitly declare the type
+    let validator: z.ZodTypeAny;
 
     if (field.type === "number") {
-      validator = z.coerce.number({
+      const numValidator = z.coerce.number({
         message: "Please input a number",
       });
-      if (field.is_required)
-        validator = validator.min(1, `${field.name} must be at least 1`);
+      validator = field.is_required
+        ? numValidator.min(1, `${field.name} must be at least 1`)
+        : numValidator.optional();
     } else if (field.type === "date") {
-      validator = z.coerce.string();
       if (field.is_required) {
-        validator = z.coerce.date();
-        if (field.slug === "end_date") {
-          validator = validator.min(new Date(), `${field.name} must be a valid date`);
-        }
+        const dateValidator = z.coerce.date();
+        validator =
+          field.slug === "end_date"
+            ? dateValidator.min(new Date(), `${field.name} must be a valid date`)
+            : dateValidator;
+      } else {
+        validator = z.coerce.string().optional();
       }
     } else if (field.slug === "project_client") {
-      validator = z
-        .array(
-          z
-            .object({
-              label: z.string(),
-              value: z.string(),
-            })
-            .required()
-        )
-        .refine((val) => (val && val.length === 0 ? false : true), {
-          message: "Client is required",
-        });
+      const arrayValidator = z.array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+        }),
+        { invalid_type_error: "Client is required" }
+      );
+      validator = field.is_required
+        ? arrayValidator.min(1, "Client is required")
+        : arrayValidator.optional();
     } else if (field.slug === "nationality" || field.slug === "resident_country") {
-      validator = z
-        .object({
+      const objectValidator = z.object(
+        {
           id: z.number(),
           name: z.string(),
           iso3: z.string(),
@@ -93,13 +87,15 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
           longitude: z.string(),
           emoji: z.string(),
           hasStates: z.boolean(),
-        })
-        .required()
-        .refine((val) => val, {
-          message: "Client is required",
-        });
+        },
+        { invalid_type_error: `${field.name} is required` }
+      );
+      validator = field.is_required ? objectValidator : objectValidator.optional();
     } else {
-      if (field.is_required) validator = validator.min(1, `${field.name} is required`);
+      const strValidator = z.string({ message: `${field.name} is required` });
+      validator = field.is_required
+        ? strValidator.min(1, `${field.name} is required`)
+        : strValidator.optional();
     }
 
     return { ...acc, [key]: validator };
@@ -110,8 +106,17 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: useMemo(
-      () => fields.reduce((acc, field) => ({ ...acc, [field.slug]: "" }), {}),
-      [fields]
+      () =>
+        validFields.reduce((acc, field) => {
+          let defaultValue: unknown = "";
+          if (field.slug === "project_client") {
+            defaultValue = [];
+          } else if (field.slug === "nationality" || field.slug === "resident_country") {
+            defaultValue = undefined;
+          }
+          return { ...acc, [field.slug]: defaultValue };
+        }, {}),
+      [validFields]
     ),
   });
 
@@ -134,7 +139,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-3 py-3 space-y-4">
-              {fields
+              {validFields
                 .sort((a, b) => a.sort_order - b.sort_order)
                 .map((field) => {
                   const isRequired = Boolean(field.is_required);
@@ -146,12 +151,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                       name={field.slug}
                       render={({ field: fieldProps }) => (
                         <FormItem className="flex flex-col w-full">
-                          <FormLabel>
-                            {field.name}{" "}
-                            {isRequired && (
-                              <span className="text-red-600 font-bold">*</span>
-                            )}
-                          </FormLabel>
+                          <FormLabel isRequired={isRequired}>{field.name} </FormLabel>
                           <>
                             {field.type === "select" ? (
                               <SelectComponent

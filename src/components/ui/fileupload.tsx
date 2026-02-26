@@ -186,7 +186,7 @@ const FileUpload: FC<FileUploadProps> = ({
               className="flex items-center justify-between p-3 border border-black rounded-[6px]"
             >
               <div className="flex items-center space-x-3">
-                <Icons.document />
+                <Icons.document className="size-5" />
 
                 <div className="truncate">
                   <p className="text-sm font-medium truncate">{file.name}</p>
@@ -201,7 +201,7 @@ const FileUpload: FC<FileUploadProps> = ({
                   }}
                   className="p-1 text-gray-500 hover:text-red-500 transition-colors"
                 >
-                  <Icons.trash className="h-4 w-4" />
+                  <Icons.trash className="size-5" />
                 </button>
               )}
             </div>

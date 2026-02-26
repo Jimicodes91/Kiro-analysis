@@ -19,6 +19,7 @@ export default function OrgToggle() {
   const selectedCompanyName = userData?.companies?.find(
     (company) => company.id === selectedCompanyId
   )?.name;
+
   return (
     <>
       <DropdownMenu>
@@ -27,7 +28,11 @@ export default function OrgToggle() {
             <div className="h-8 min-w-[200px] bg-slate-300 animate-pulse"></div>
           ) : (
             <Heading size="h3" className="capitalize flex items-center gap-2">
-              {selectedCompanyId ? selectedCompanyName : "Select Organization"}{" "}
+              {selectedCompanyId
+                ? selectedCompanyName
+                  ? selectedCompanyName
+                  : "Select Organization"
+                : "Select Organization"}{" "}
               <ChevronDown className="inline-block size-6 text-primary" />
             </Heading>
           )}

@@ -71,7 +71,7 @@ const CompleteInvite: React.FC = () => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel isRequired>Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Type name" {...field} />
                 </FormControl>
@@ -84,7 +84,7 @@ const CompleteInvite: React.FC = () => {
             name="newPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel isRequired>Password</FormLabel>
                 <FormControl>
                   <div className="relative w-full">
                     <Input
@@ -104,7 +104,7 @@ const CompleteInvite: React.FC = () => {
             name="confirmNewPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+                <FormLabel isRequired>Confirm Password</FormLabel>
                 <FormControl>
                   <div className="relative w-full">
                     <Input

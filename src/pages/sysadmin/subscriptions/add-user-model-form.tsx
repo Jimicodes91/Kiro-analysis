@@ -47,7 +47,7 @@ function AddPlanModal({ onClose, isOpen }: ModalProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Plan name</FormLabel>
+                <FormLabel isRequired>Plan name</FormLabel>
                 <FormControl>
                   <Input placeholder="Plan name" {...field} />
                 </FormControl>
@@ -60,7 +60,7 @@ function AddPlanModal({ onClose, isOpen }: ModalProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel isRequired>Price</FormLabel>
                 <FormControl>
                   <Input placeholder="Duration" {...field} />
                 </FormControl>
@@ -73,7 +73,7 @@ function AddPlanModal({ onClose, isOpen }: ModalProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Duration (days)</FormLabel>
+                <FormLabel isRequired>Duration (days)</FormLabel>
                 <FormControl>
                   <Input placeholder="Duration" {...field} />
                 </FormControl>
@@ -86,7 +86,7 @@ function AddPlanModal({ onClose, isOpen }: ModalProps) {
             name="role"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Role</FormLabel>
+                <FormLabel isRequired>Role</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl className="h-11">
                     <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm w-full">

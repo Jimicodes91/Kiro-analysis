@@ -56,7 +56,7 @@ function EditJourneyFormModal({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Journey</FormLabel>
+                <FormLabel isRequired>Journey</FormLabel>
                 <FormControl>
                   <Input placeholder="journey name" {...field} />
                 </FormControl>

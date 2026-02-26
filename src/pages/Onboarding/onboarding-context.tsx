@@ -36,7 +36,6 @@ const OnboardingContextProvider = ({ children }: OnboardingPropsInterface) => {
     industry_type: "",
     name: "",
     postal_code: "",
-    size: "",
   });
 
   const onNext = () => {

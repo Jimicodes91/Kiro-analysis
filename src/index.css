@@ -331,3 +331,11 @@ body .stdropdown-container .stdropdown-menu .stdropdown-item span {
   margin-right: 6px;
   margin-left: 6px;
 }
+
+.required::after {
+  content: "*";
+  color: #ed6969;
+  font-size: 14px;
+  margin-left: -2px;
+  /* Optional: makes the asterisk red */
+}

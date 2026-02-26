@@ -111,13 +111,15 @@ export const addProjectTaskSchema = z.object({
   end_date: z.date({
     message: "End date is required",
   }),
-  is_visible_to_client: z.boolean().default(false),
-  assignees: z.array(
-    z.object({
-      label: z.string(),
-      value: z.string(),
-    })
-  ),
+  is_visible_to_client: z.boolean().default(true),
+  assignees: z
+    .array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    )
+    .optional(),
   attachment: fileListSchema(
     fileSize,
     [

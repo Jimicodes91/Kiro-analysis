@@ -109,7 +109,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Task name</FormLabel>
+                <FormLabel isRequired>Task name</FormLabel>
                 <FormControl>
                   <Input placeholder="Task name" {...field} value={field.value ?? ""} />
                 </FormControl>
@@ -155,7 +155,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
             name="project_type_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Pipeline</FormLabel>
+                <FormLabel isRequired>Pipeline</FormLabel>
                 <Select
                   onValueChange={(value) => {
                     field.onChange(value);
@@ -194,7 +194,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
             name="project_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Project</FormLabel>
+                <FormLabel isRequired>Project</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -245,7 +245,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel isRequired>Description</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Description" {...field} />
                 </FormControl>
@@ -260,7 +260,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
               name="start_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
-                  <FormLabel>Start date</FormLabel>
+                  <FormLabel isRequired>Start date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -301,7 +301,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
               name="end_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
-                  <FormLabel>End date</FormLabel>
+                  <FormLabel isRequired>End date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -345,7 +345,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
             name="status"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Status</FormLabel>
+                <FormLabel isRequired>Status</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl className="h-12 w-full">
                     <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
@@ -378,7 +378,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
 
               return (
                 <FormItem>
-                  <FormLabel>Assignee</FormLabel>
+                  <FormLabel isRequired>Assignee</FormLabel>
                   <FormControl>
                     <MultiSelect
                       options={

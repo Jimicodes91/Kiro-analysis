@@ -529,12 +529,11 @@ export const industryList = [
 ];
 
 export const companySizeList = [
-  { value: "1-10", label: "1-10 Employees" },
-  { value: "11-50", label: "11-50 Employees" },
-  { value: "51-100", label: "51-100 Employees" },
-  { value: "101-250", label: "101-250 Employees" },
-  { value: "251-500", label: "251-500 Employees" },
-  { value: "500+", label: "500+ Employees" },
+  { value: "startup", label: "Startup" },
+  { value: "small", label: "Small" },
+  { value: "medium", label: "Medium" },
+  { value: "large", label: "Large" },
+  { value: "enterprise", label: "Enterprise" },
 ];
 
 export const countryList = [

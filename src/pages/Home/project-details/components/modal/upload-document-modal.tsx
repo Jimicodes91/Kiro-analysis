@@ -117,7 +117,7 @@ const UploadDocumentModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel isRequired>Description</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Description" {...field} />
                   </FormControl>
@@ -130,7 +130,7 @@ const UploadDocumentModal = ({
               name="file_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>File name</FormLabel>
+                  <FormLabel isRequired>File name</FormLabel>
                   <FormControl>
                     <Input placeholder="Document name" {...field} />
                   </FormControl>
@@ -143,7 +143,7 @@ const UploadDocumentModal = ({
               name={"attachment"}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Attachment</FormLabel>
+                  <FormLabel isRequired>Attachment</FormLabel>
                   <FormControl>
                     <DragNdrop
                       isMulti={false}
