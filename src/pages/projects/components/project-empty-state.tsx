@@ -1,15 +1,9 @@
-import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import { PAGES } from "@/lib/constants";
 import { IoSearchOutline } from "react-icons/io5";
-import { LuPlus } from "react-icons/lu";
-import { useNavigate } from "react-router-dom";
 import ProjectEmptyStateCard from "./project-empty-state-card";
 
 function ProjectEmptyState() {
-  const navigate = useNavigate();
-
   return (
     <div>
       <div className="p-6 min-h-[calc(100vh-70px)] flex flex-col space-y-5 animate-in fade-in-0 duration-700 ease-in-out">
@@ -20,14 +14,6 @@ function ProjectEmptyState() {
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3" />
               <Input placeholder="Search keyword" className="w-full pl-8" />
             </div>
-          </div>
-          <div className="">
-            <Button
-              onClick={() => navigate(PAGES.PROJECT_CREATE_PAGE)}
-              leftIcon={<LuPlus fontSize={10} />}
-            >
-              Add project
-            </Button>
           </div>
         </div>
         <ProjectEmptyStateCard hasPipeline={false} />

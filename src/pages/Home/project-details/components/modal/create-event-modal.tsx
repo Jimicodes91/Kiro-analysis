@@ -85,7 +85,7 @@ const CreateEventModal = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Event title</FormLabel>
+                  <FormLabel isRequired>Event title</FormLabel>
                   <FormControl>
                     <Input placeholder="Event title" {...field} />
                   </FormControl>
@@ -129,7 +129,7 @@ const CreateEventModal = ({
               name="venue"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Venue</FormLabel>
+                  <FormLabel isRequired>Venue</FormLabel>
                   <FormControl>
                     <Input placeholder="Venue" {...field} />
                   </FormControl>
@@ -142,7 +142,7 @@ const CreateEventModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel isRequired>Description</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Description" {...field} />
                   </FormControl>
@@ -155,7 +155,7 @@ const CreateEventModal = ({
               name="start_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel isRequired>Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -196,7 +196,7 @@ const CreateEventModal = ({
                 name="from"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>From</FormLabel>
+                    <FormLabel isRequired>From</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Time"
@@ -214,7 +214,7 @@ const CreateEventModal = ({
                 name="to"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>To</FormLabel>
+                    <FormLabel isRequired>To</FormLabel>
                     <FormControl className="w-full">
                       <Input placeholder="Event title" type="time" {...field} />
                     </FormControl>

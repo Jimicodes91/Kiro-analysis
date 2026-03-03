@@ -1,7 +1,6 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Checkbox } from "@/components/ui/checkbox";
 import DragNdrop from "@/components/ui/file-upload";
 import {
   Form,
@@ -22,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
+import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
 import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
@@ -51,8 +50,7 @@ const AddProjectTaskModal = ({
 } & ModalProps) => {
   const createTask = useCreateProjectTask(projectId);
   const taskTypes = useGetAllTaskTypes();
-
-  const users = useGetCompanyUsers();
+  const projectMembers = useGetProjectMembers(projectId);
 
   const form = useForm<z.infer<typeof addProjectTaskSchema>>({
     resolver: zodResolver(addProjectTaskSchema),
@@ -85,6 +83,7 @@ const AddProjectTaskModal = ({
       end_date: getUTCISODateFormat(end_date),
       assignees: assigneesIds,
       attachments: base64FileList.filter(Boolean), // Remove nulls
+      is_visible_to_client: true,
     };
 
     try {
@@ -115,7 +114,7 @@ const AddProjectTaskModal = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Task name</FormLabel>
+                  <FormLabel isRequired>Task name</FormLabel>
                   <FormControl>
                     <Input placeholder="Task name" {...field} value={field.value ?? ""} />
                   </FormControl>
@@ -159,7 +158,7 @@ const AddProjectTaskModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel isRequired>Description</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Description" {...field} />
                   </FormControl>
@@ -173,7 +172,7 @@ const AddProjectTaskModal = ({
                 name="start_date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col w-full">
-                    <FormLabel>Start date</FormLabel>
+                    <FormLabel isRequired>Start date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -213,7 +212,7 @@ const AddProjectTaskModal = ({
                 name="end_date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col w-full">
-                    <FormLabel>End date</FormLabel>
+                    <FormLabel isRequired>End date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -254,7 +253,7 @@ const AddProjectTaskModal = ({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel isRequired>Status</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl className="h-12 w-full">
                       <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
@@ -285,14 +284,14 @@ const AddProjectTaskModal = ({
                   <FormLabel>Assignee</FormLabel>
                   <CustomMultiSelect
                     options={
-                      users?.value
-                        ? users?.value?.data?.map((item) => ({
-                            label: item.name ?? item.email,
-                            value: item.id,
+                      projectMembers?.value
+                        ? projectMembers?.value?.data?.map((item) => ({
+                            label: item.user?.name ?? item.user?.email,
+                            value: item.user_id,
                           }))
                         : []
                     }
-                    isLoading={users.isPending}
+                    isLoading={projectMembers.isPending}
                     onChange={field.onChange}
                     value={field.value}
                     placeholder="Select Assignee"
@@ -321,20 +320,6 @@ const AddProjectTaskModal = ({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="is_visible_to_client"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <FormLabel className="font-normal text-brand-fade">
-                    Make visible to client
-                  </FormLabel>
-                </FormItem>
-              )}
-            />
             <Button type="submit" isLoading={createTask.isPending}>
               Save and continue
             </Button>

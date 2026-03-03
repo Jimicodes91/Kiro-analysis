@@ -16,11 +16,12 @@ import { IFormField } from "@/hooks/project-modules/project-forms/use-get-projec
 import useCreateProject from "@/hooks/project-modules/use-create-project";
 import { PAGES } from "@/lib/constants";
 import { cn, convertDatesToYMD, getSelectableDate } from "@/lib/utils";
-import { useProjectContext } from "@/pages/Home/Project/context/project-context";
+import { useOrgProjectContext } from "@/pages/Home/Project/context/org-project-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useMemo } from "react";
+import { CountrySelect } from "react-country-state-city";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as z from "zod";
@@ -29,50 +30,72 @@ import SelectComponent from "./lol";
 export default function CreateProjectDynamicForm({ fields }: { fields: IFormField[] }) {
   const navigate = useNavigate();
   const createProject = useCreateProject();
-  const { changeActiveProjectType } = useProjectContext();
+  const { changeActiveProjectType } = useOrgProjectContext();
 
-  const fieldSchema = fields.reduce((acc, field) => {
+  const validFields = useMemo(() => fields?.filter((field) => field?.slug), [fields]);
+
+  const fieldSchema = validFields?.reduce((acc, field) => {
     const key = field.slug;
-    let validator:
-      | z.ZodString
-      | z.ZodNumber
-      | z.ZodDate
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      | z.ZodArray<any>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      | z.ZodEffects<any> = z.string({
-      message: `${field.name} is required`,
-    }); // Explicitly declare the type
+    let validator: z.ZodTypeAny;
 
     if (field.type === "number") {
-      validator = z.coerce.number({
+      const numValidator = z.coerce.number({
         message: "Please input a number",
       });
-      if (field.is_required)
-        validator = validator.min(1, `${field.name} must be at least 1`);
+      validator = field.is_required
+        ? numValidator.min(1, `${field.name} must be at least 1`)
+        : numValidator.optional();
     } else if (field.type === "date") {
-      validator = z.coerce.string();
       if (field.is_required) {
-        validator = z.coerce.date();
-        if (field.slug === "end_date") {
-          validator = validator.min(new Date(), `${field.name} must be a valid date`);
-        }
+        const dateValidator = z.coerce.date();
+        validator =
+          field.slug === "end_date"
+            ? dateValidator.min(new Date(), `${field.name} must be a valid date`)
+            : dateValidator;
+      } else {
+        validator = z.coerce.string().optional();
       }
     } else if (field.slug === "project_client") {
-      validator = z
-        .array(
-          z
-            .object({
-              label: z.string(),
-              value: z.string(),
-            })
-            .required()
-        )
-        .refine((val) => (val && val.length === 0 ? false : true), {
-          message: "Client is required",
-        });
+      const arrayValidator = z.array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+        }),
+        { invalid_type_error: "Client is required" }
+      );
+      validator = field.is_required
+        ? arrayValidator.min(1, "Client is required")
+        : arrayValidator.optional();
+    } else if (field.slug === "nationality" || field.slug === "resident_country") {
+      const objectValidator = z.object(
+        {
+          id: z.number(),
+          name: z.string(),
+          iso3: z.string(),
+          iso2: z.string(),
+          numeric_code: z.string(),
+          phone_code: z.string(),
+          capital: z.string(),
+          currency: z.string(),
+          currency_name: z.string(),
+          currency_symbol: z.string(),
+          tld: z.string(),
+          native: z.string(),
+          region: z.string(),
+          subregion: z.string(),
+          latitude: z.string(),
+          longitude: z.string(),
+          emoji: z.string(),
+          hasStates: z.boolean(),
+        },
+        { invalid_type_error: `${field.name} is required` }
+      );
+      validator = field.is_required ? objectValidator : objectValidator.optional();
     } else {
-      if (field.is_required) validator = validator.min(1, `${field.name} is required`);
+      const strValidator = z.string({ message: `${field.name} is required` });
+      validator = field.is_required
+        ? strValidator.min(1, `${field.name} is required`)
+        : strValidator.optional();
     }
 
     return { ...acc, [key]: validator };
@@ -83,8 +106,17 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: useMemo(
-      () => fields.reduce((acc, field) => ({ ...acc, [field.slug]: "" }), {}),
-      [fields]
+      () =>
+        validFields.reduce((acc, field) => {
+          let defaultValue: unknown = "";
+          if (field.slug === "project_client") {
+            defaultValue = [];
+          } else if (field.slug === "nationality" || field.slug === "resident_country") {
+            defaultValue = undefined;
+          }
+          return { ...acc, [field.slug]: defaultValue };
+        }, {}),
+      [validFields]
     ),
   });
 
@@ -107,7 +139,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-3 py-3 space-y-4">
-              {fields
+              {validFields
                 .sort((a, b) => a.sort_order - b.sort_order)
                 .map((field) => {
                   const isRequired = Boolean(field.is_required);
@@ -119,12 +151,7 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                       name={field.slug}
                       render={({ field: fieldProps }) => (
                         <FormItem className="flex flex-col w-full">
-                          <FormLabel>
-                            {field.name}{" "}
-                            {isRequired && (
-                              <span className="text-red-600 font-bold">*</span>
-                            )}
-                          </FormLabel>
+                          <FormLabel isRequired={isRequired}>{field.name} </FormLabel>
                           <>
                             {field.type === "select" ? (
                               <SelectComponent
@@ -186,6 +213,31 @@ export default function CreateProjectDynamicForm({ fields }: { fields: IFormFiel
                                   placeholder={`Enter ${field.name}`}
                                   {...fieldProps}
                                 />
+                              </FormControl>
+                            ) : field.slug === "nationality" ||
+                              field.slug === "resident_country" ? (
+                              <CountrySelect
+                                containerClassName="focus-visible:outline-none focus-visible:ring-1! focus-visible:ring-ring! shadow-sm"
+                                inputClassName="flex h-20! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm  transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:focus:border-black disabled:focus:bg-white disabled:opacity-50 md:text-sm"
+                                onChange={(_country) => {
+                                  fieldProps.onChange(_country);
+                                }}
+                                placeHolder="Select Country"
+                              />
+                            ) : field.slug === "project_value" ? (
+                              <FormControl>
+                                <div className="relative">
+                                  <span className="absolute left-3 top-1/2 -translate-y-1/2">
+                                    $
+                                  </span>
+                                  <Input
+                                    type="number"
+                                    className="pl-7"
+                                    placeholder={`Enter ${field.name}`}
+                                    min={0}
+                                    {...fieldProps}
+                                  />
+                                </div>
                               </FormControl>
                             ) : (
                               <FormControl>

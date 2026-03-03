@@ -1,8 +1,8 @@
 import * as yup from "yup";
 
 export const billingSchema = yup.object().shape({
-  client_name: yup.string().required("Client name is required"),
-  project_title: yup.string().required("Project title is required"),
+  client_name: yup.string().required("Client name is required").trim(),
+  project_title: yup.string().required("Project title is required").trim(),
   total_project_cost: yup
     .number()
     .nullable()
@@ -40,5 +40,8 @@ export const billingSchema = yup.object().shape({
     .required("Outstanding balance is required")
     .min(0, "Balance cannot be negative")
     .typeError("Outstanding balance must be a number"),
-  next_payment_due_date: yup.string().required("Next payment due date is required"),
+  next_payment_due_date: yup
+    .string()
+    .required("Next payment due date is required")
+    .trim(),
 });

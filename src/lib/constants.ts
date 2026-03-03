@@ -1,11 +1,12 @@
 import { IconProps, Icons } from "@/components/ui/icons";
+import { CircleCheckBig, Files, Icon, Plane } from "lucide-react";
 import { JSX } from "react";
 
 export type UserType = "ADMIN" | "SUPER_ADMIN" | "CLIENT" | "CONSULTANT";
 
 export type DashboardLinkType = {
   title: string;
-  icon: (props: IconProps) => JSX.Element;
+  icon: typeof Icon | ((props: IconProps) => JSX.Element);
   path: string;
   exact?: boolean;
 };
@@ -28,15 +29,11 @@ const universalRoutes = [
     path: "/contact",
   },
   {
-    title: "Task",
+    title: "Tasks",
     icon: Icons.task,
     path: "/task",
   },
-  // {
-  //   title: "Event",
-  //   icon: Icons.event,
-  //   path: "/event",
-  // },
+
   {
     title: "Finance",
     icon: Icons.coins,
@@ -47,9 +44,25 @@ const universalRoutes = [
 export const topNavData: Record<UserType, DashboardLinkType[]> = {
   CLIENT: [
     {
-      title: "Projects",
-      icon: Icons.project,
-      path: "/projects",
+      title: "Home",
+      icon: Icons.dashboard,
+      path: "/home",
+      exact: true,
+    },
+    {
+      title: "Journey",
+      icon: Plane,
+      path: "/journey",
+    },
+    {
+      title: "Tasks",
+      icon: CircleCheckBig,
+      path: "/tasks",
+    },
+    {
+      title: "Documents",
+      icon: Files,
+      path: "/documents",
     },
   ],
   CONSULTANT: [...universalRoutes],
@@ -143,9 +156,11 @@ export const taskStatuses: { label: string; value: string }[] = [
 ];
 
 export const ENDPOINTS = {
+  SWITCH_ORG: "auth/switch-organization",
   // Auth Endpoint
   ADMIN_SIGNUP: "auth/admin-signup",
   VERIFY_EMAIL: (token: string) => `auth/verify?token=${token}`,
+  VERIFY_EMAIL_WITH_OTP: "auth/verify",
   RESEND_VERIFICATION_EMAIL: "auth/resend-verification",
   FORGOT_PASSWORD: "auth/forgot-password",
   RESET_PASSWORD: "auth/reset-password",
@@ -179,11 +194,15 @@ export const ENDPOINTS = {
   GET_ALL_USERS: `admin/all`,
   GET_ACTIVE_USERS: `admin/active-users`,
   GET_ALL_SYSADMINS: `admin/all-sysadmins`,
+  RESEND_INVITE: `auth/resend-invite`,
 
   // Company Endpoints
   CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
+  UPDATE_COMPANY: (companyId: string) => `company/${companyId}`,
 
   // Company Admin Endpoints
+  GET_ALL_COMPANY_USERS: (companyId: string, page?: number, pageSize?: number) =>
+    `auth/companies/${companyId}/users${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
   GET_COMPANY_USERS: (companyId: string, page?: number, pageSize?: number) =>
     `admin/companies/${companyId}/users${page ? `?page=${page}` : ""}${pageSize ? `&pageSize=${pageSize}` : ""}`,
   UPDATE_COMPANY_USER_STATUS: (companyId: string) => `admin/users/${companyId}/status`,
@@ -246,6 +265,7 @@ export const ENDPOINTS = {
   UPDATE_PROJECT_TYPE_DETAILS: (projectTypeId: string) =>
     `projects/types/${projectTypeId}`,
   CREATE_PROJECT_TYPE: "projects/types",
+  DELETE_PROJECT_TYPE: (projectTypeId: string) => `projects/types/${projectTypeId}`,
 
   // 2. Milestones
   CREATE_MILESTONE: "projects/types/milestones",
@@ -255,6 +275,10 @@ export const ENDPOINTS = {
     `projects/types/${projectTypeId}/milestones/${milestoneId}`,
   UPDATE_MILESTONE_DETAILS: (milestoneId: string) =>
     `projects/types/milestones/${milestoneId}`,
+  DELETE_MILESTONE: (projectTypeId: string, milestoneId: string) =>
+    `projects/types/${projectTypeId}/milestones/${milestoneId}`,
+  REORDER_MILESTONES: (projectTypeId: string) =>
+    `projects/types/${projectTypeId}/milestones/reorder`,
 
   // 3. Events
   CREATE_EVENT: (projectId: string) => `projects/${projectId}/events`,
@@ -329,8 +353,10 @@ export const ENDPOINTS = {
     `projects/${projectId}/members/${memberId}`,
 
   // 8. Project Settings
-  SET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
-  GET_PROJECT_SETTINGS: (projectId: string) => `settings/projects/${projectId}`,
+  SET_PROJECT_SETTINGS: (projectId?: string) =>
+    `settings/projects${projectId ? `/${projectId}` : ""}`,
+  GET_PROJECT_SETTINGS: (projectId?: string) =>
+    `settings/projects${projectId ? `/${projectId}` : ""}`,
 
   // 9. Document Types
   CREATE_DOCUMENT_TYPE: `metadata/type/documents`,
@@ -392,6 +418,7 @@ export const QUERYKEYS = {
   GET_ALL_AUDIT_TRAIL: "GET_ALL_AUDIT_TRAIL",
   // Company Admin Endpoints
   GET_COMPANY_USERS: "GET_COMPANY_USERS",
+  GET_ALL_COMPANY_USERS: "GET_ALL_COMPANY_USERS",
 
   // User Query keys
   GET_USER: "GET_USER",
@@ -476,11 +503,16 @@ export const PAGES = {
   REGISTER_PAGE: "/register",
   FORGOT_PASSWORD_PAGE: "/forgot-password",
   RESET_PASSWORD_PAGE: "/reset-password",
+  VERIFY_EMAIL_PAGE: "/verify-email",
+  VERIFY_ACCOUNT_PAGE: "/verify-account",
+  COMPLETE_INVITE_PAGE: "/complete-invite",
+
   ADMIN_PAGE: "/admin",
   PROJECT_PAGE: "/projects",
   ONBOARDING_PAGE: "/onboarding",
   PROJECT_CREATE_PAGE: "/projects/create",
 
+  HOME_PAGE: "/home",
   // Sysadmin Page
   SYSADMIN_HOME_PAGE: "/sysadmin",
 };
@@ -497,12 +529,11 @@ export const industryList = [
 ];
 
 export const companySizeList = [
-  { value: "1-10", label: "1-10 Employees" },
-  { value: "11-50", label: "11-50 Employees" },
-  { value: "51-100", label: "51-100 Employees" },
-  { value: "101-250", label: "101-250 Employees" },
-  { value: "251-500", label: "251-500 Employees" },
-  { value: "500+", label: "500+ Employees" },
+  { value: "startup", label: "Startup" },
+  { value: "small", label: "Small" },
+  { value: "medium", label: "Medium" },
+  { value: "large", label: "Large" },
+  { value: "enterprise", label: "Enterprise" },
 ];
 
 export const countryList = [

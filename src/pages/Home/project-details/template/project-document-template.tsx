@@ -9,7 +9,15 @@ import DocumentCard from "../components/cards/document-card";
 import RequestDocumentModal from "../components/modal/request-document-modal";
 import UploadDocumentModal from "../components/modal/upload-document-modal";
 
-function ProjectDocumentSection({ projectId }: { projectId: string }) {
+function ProjectDocumentSection({
+  projectId,
+  isClient,
+  isUploadable = false,
+}: {
+  projectId: string;
+  isClient?: boolean;
+  isUploadable?: boolean;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeTab, setActiveTab] = React.useState("Official");
   const projectDocs = useGetAllProjectDocuments(projectId);
@@ -52,7 +60,7 @@ function ProjectDocumentSection({ projectId }: { projectId: string }) {
     return (
       <div className="space-y-2">
         {projectDocs?.value?.data?.map((document) => (
-          <DocumentCard key={document.id} document={document} />
+          <DocumentCard key={document.id} document={document} isClientView={isClient} />
         ))}
       </div>
     );
@@ -73,14 +81,21 @@ function ProjectDocumentSection({ projectId }: { projectId: string }) {
             />
           </div>
 
-          <div className="flex gap-3 items-center">
-            <Button size="sm" variant="outline" onClick={onOpen}>
-              Request
-            </Button>
+          {!isClient && (
+            <div className="flex gap-3 items-center">
+              <Button size="sm" variant="outline" onClick={onOpen}>
+                Request
+              </Button>
+              <Button size="sm" leftIcon={<Upload />} onClick={onUploadOpen}>
+                Upload
+              </Button>
+            </div>
+          )}
+          {isUploadable && (
             <Button size="sm" leftIcon={<Upload />} onClick={onUploadOpen}>
               Upload
             </Button>
-          </div>
+          )}
         </div>
 
         <div>{renderBody()}</div>

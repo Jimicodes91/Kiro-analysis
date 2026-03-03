@@ -12,7 +12,7 @@ export interface CreateTaskRequest {
   is_visible_to_client: boolean;
   task_type_id?: string;
   project_type_id: string;
-  assignees: string[];
+  assignees?: string[];
 }
 
 const useCreateProjectTask = (projectId: string) => {

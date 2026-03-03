@@ -15,18 +15,22 @@ function ProjectEmptyStateCard({ hasPipeline = true }: { hasPipeline?: boolean }
           </div>
           <Heading size="h3">No project to show yet</Heading>
           {hasPipeline ? (
-            <div>
+            <div className="space-y-4">
               <p className="text-brand-text text-sm">
                 You&apos;ve got a blank state. Add project to get started
               </p>
+              <Button size="default" onClick={() => navigate(PAGES.PROJECT_CREATE_PAGE)}>
+                Add project
+              </Button>
             </div>
           ) : (
             <div className="space-y-4">
               <p className="text-brand-text text-sm">
-                You&apos;ve got a blank state. Create pipeline to get started
+                You&apos;ve got a blank state. Create pipeline before you can add a
+                project
               </p>
               <Button
-                size="sm"
+                size="default"
                 onClick={() =>
                   navigate(PAGES.ADMIN_PAGE + "?selectedTab=journey&isCreateMode=1")
                 }

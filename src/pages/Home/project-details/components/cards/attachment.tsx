@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import useDisclosure from "@/hooks/use-disclosure";
 import { truncateMiddleWords } from "@/lib/utils";
@@ -10,9 +10,11 @@ import DeleteDocumentAttachmentModal from "../modal/delete-document-attachment";
 function AttachmentCard({
   attachment,
   projectId,
+  isClientView = false,
 }: {
   attachment: Attachment;
   projectId: string;
+  isClientView?: boolean;
 }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -21,19 +23,28 @@ function AttachmentCard({
       <div className="p-4 border border-brand-border bg-white rounded-lg flex justify-between">
         <div className="flex gap-2 items-center">
           <File className="h-5" />
-          <p className="font-sm">{truncateMiddleWords(attachment?.media_url)}</p>
+          <p className="font-xs text-gray-600">
+            {truncateMiddleWords(attachment?.media_url)}
+          </p>
         </div>
         <div className="flex gap-1">
-          <a href={attachment?.media_url} download target="_blank">
-            <Button variant="ghost" size="icon" asChild>
-              <Upload className="h-5" />
-            </Button>
+          <a
+            className={buttonVariants({ variant: "ghost", size: "icon" })}
+            href={attachment?.media_url}
+            download
+            target="_blank"
+          >
+            <Upload className="h-5" />
           </a>
 
-          <Separator orientation="vertical" />
-          <Button variant="ghost" size="icon" onClick={onOpen}>
-            <Trash className="h-5" />
-          </Button>
+          {!isClientView && (
+            <>
+              <Separator orientation="vertical" />
+              <Button variant="ghost" size="icon" onClick={onOpen}>
+                <Trash className="h-5" />
+              </Button>
+            </>
+          )}
         </div>
       </div>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>

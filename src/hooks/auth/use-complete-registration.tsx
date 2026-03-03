@@ -5,11 +5,9 @@ const useCompleteRegistration = () => {
   return useCustomMutation<
     Record<string, string>,
     {
-      email: string;
-      role: string;
+      token: string;
       password: string;
       name: string;
-      companyId: string;
     }
   >({
     method: "post",

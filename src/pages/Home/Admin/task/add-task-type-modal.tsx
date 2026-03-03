@@ -62,7 +62,7 @@ const AddTaskTypeModal = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type name</FormLabel>
+                  <FormLabel isRequired>Type name</FormLabel>
                   <FormControl>
                     <Input placeholder="Type name" {...field} />
                   </FormControl>
@@ -75,7 +75,7 @@ const AddTaskTypeModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel isRequired>Description</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Description" {...field} />
                   </FormControl>

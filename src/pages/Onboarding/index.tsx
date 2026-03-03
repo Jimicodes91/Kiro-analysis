@@ -35,7 +35,7 @@ const Onboarding = () => {
 
       {/* Main Onboarding Content */}
       <div className="w-full py-2 md:py-10 flex-1 flex justify-center">
-        <div className="max-w-4xl w-full">
+        <div className="max-w-4xl w-full relative">
           {/* Progress Bar */}
           {/* <div className="z-10 bg-white sticky top-0"> */}
           <ProgressBar currentStep={stage} totalSteps={totalSteps} />

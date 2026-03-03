@@ -2,14 +2,7 @@ export type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {
   dashboard: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      width="24"
-      height="24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -39,14 +32,7 @@ export const Icons = {
   ),
 
   checkbox: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      width="24"
-      height="24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -58,14 +44,7 @@ export const Icons = {
   ),
 
   project: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      width={24}
-      height={24}
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -103,14 +82,7 @@ export const Icons = {
   ),
 
   settings: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      width="24"
-      height="24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" {...props}>
       <g
         stroke="currentColor"
         strokeLinecap="round"
@@ -130,14 +102,7 @@ export const Icons = {
   ),
 
   logout: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="none"
-      width="20"
-      height="20"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -149,14 +114,7 @@ export const Icons = {
   ),
 
   menu: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 12"
-      fill="none"
-      width="16"
-      height="12"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 12" fill="none" {...props}>
       <path
         fill="currentColor"
         fillRule="evenodd"
@@ -167,14 +125,7 @@ export const Icons = {
   ),
 
   bell: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 18"
-      fill="none"
-      width="16"
-      height="18"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 18" fill="none" {...props}>
       <path
         fill="currentColor"
         d="M14.875 12.654c-.617-.714-1.77-1.787-1.77-5.304 0-2.67-1.74-4.81-4.084-5.334V1.3C9.02.693 8.564.2 8 .2c-.564 0-1.02.493-1.02 1.1v.716C4.633 2.541 2.894 4.68 2.894 7.35c0 3.517-1.153 4.59-1.77 5.304a1.12 1.12 0 0 0-.275.746c.004.564.414 1.1 1.025 1.1h12.25c.61 0 1.022-.536 1.025-1.1a1.12 1.12 0 0 0-.275-.746Zm-11.87.196c.678-.961 1.418-2.555 1.422-5.48l-.002-.02c0-2.126 1.6-3.85 3.575-3.85s3.575 1.724 3.575 3.85l-.002.02c.004 2.925.744 4.519 1.421 5.48H3.006ZM8 17.8c1.127 0 2.042-.985 2.042-2.2H5.958c0 1.215.915 2.2 2.042 2.2Z"
@@ -182,14 +133,7 @@ export const Icons = {
     </svg>
   ),
   more: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="none"
-      width="20"
-      height="20"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -200,14 +144,7 @@ export const Icons = {
     </svg>
   ),
   arrow: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="none"
-      width="20"
-      height="20"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -218,14 +155,7 @@ export const Icons = {
     </svg>
   ),
   right_arrow: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="none"
-      width="20"
-      height="20"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -236,14 +166,7 @@ export const Icons = {
     </svg>
   ),
   caret: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="none"
-      width="20"
-      height="20"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -254,14 +177,7 @@ export const Icons = {
     </svg>
   ),
   chevron: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 17"
-      fill="none"
-      width="16"
-      height="17"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 17" fill="none" {...props}>
       <path
         fill="currentColor"
         d="M4.273 11.167h7.454a.667.667 0 0 0 .466-1.14l-3.72-3.72a.666.666 0 0 0-.946 0l-3.72 3.72a.667.667 0 0 0 .466 1.14Z"
@@ -269,14 +185,7 @@ export const Icons = {
     </svg>
   ),
   file: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 18 18"
-      fill="none"
-      width="18"
-      height="18"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" fill="none" {...props}>
       <g clipPath="url(#a)">
         <path
           fill="currentColor"
@@ -291,14 +200,7 @@ export const Icons = {
     </svg>
   ),
   download: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 16"
-      fill="none"
-      width="16"
-      height="16"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" {...props}>
       <g fill="currentColor" clipPath="url(#a)">
         <path d="M6.585 12.081a2 2 0 0 0 2.829.001l2.141-2.141A.667.667 0 0 0 10.613 9l-1.95 1.951L8.666.667a.667.667 0 0 0-1.334 0l-.006 10.272L5.387 9a.667.667 0 1 0-.942.943l2.14 2.138Z" />
         <path d="M15.333 10.666a.667.667 0 0 0-.666.667V14a.667.667 0 0 1-.667.666H2A.667.667 0 0 1 1.333 14v-2.667a.667.667 0 1 0-1.333 0V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2.667a.667.667 0 0 0-.667-.667Z" />
@@ -311,14 +213,7 @@ export const Icons = {
     </svg>
   ),
   check: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 16"
-      fill="none"
-      width="16"
-      height="16"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -363,8 +258,6 @@ export const Icons = {
   spinner: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -377,14 +270,7 @@ export const Icons = {
     </svg>
   ),
   loader: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 56 56"
-      width="56"
-      height="56"
-      fill="none"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" fill="none" {...props}>
       <path
         stroke="#D4DDD6"
         strokeLinecap="round"
@@ -419,14 +305,7 @@ export const Icons = {
     </svg>
   ),
   client: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="36"
-      height="36"
-      viewBox="0 0 36 36"
-      fill="none"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none" {...props}>
       <path
         d="M18 25.3125C21.1066 25.3125 23.625 22.7941 23.625 19.6875C23.625 16.5809 21.1066 14.0625 18 14.0625C14.8934 14.0625 12.375 16.5809 12.375 19.6875C12.375 22.7941 14.8934 25.3125 18 25.3125Z"
         stroke="black"
@@ -472,14 +351,7 @@ export const Icons = {
     </svg>
   ),
   task: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="36"
-      height="36"
-      viewBox="0 0 36 36"
-      fill="none"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none" {...props}>
       <path
         d="M22.4297 16.4531L16.4297 22.4531L13.4297 19.4531"
         stroke="black"
@@ -504,14 +376,7 @@ export const Icons = {
     </svg>
   ),
   document: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="27"
-      height="27"
-      viewBox="0 0 27 27"
-      fill="none"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27" fill="none" {...props}>
       <path
         d="M21.0938 23.625H5.90625C5.68247 23.625 5.46786 23.5361 5.30963 23.3779C5.15139 23.2196 5.0625 23.005 5.0625 22.7812V4.21875C5.0625 3.99497 5.15139 3.78036 5.30963 3.62213C5.46786 3.46389 5.68247 3.375 5.90625 3.375H16.0312L21.9375 9.28125V22.7812C21.9375 23.005 21.8486 23.2196 21.6904 23.3779C21.5321 23.5361 21.3175 23.625 21.0938 23.625Z"
         stroke="black"
@@ -529,14 +394,7 @@ export const Icons = {
     </svg>
   ),
   trash: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="17"
-      height="17"
-      viewBox="0 0 17 17"
-      fill="none"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" fill="none" {...props}>
       <path
         d="M14.3438 3.71875H2.65625"
         stroke="black"

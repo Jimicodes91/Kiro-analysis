@@ -34,7 +34,7 @@ function AccountNav({
         className={cn("group flex flex-col py-2 w-full duration-300 ease-in-out")}
       >
         <TooltipProvider delayDuration={0}>
-          <nav className={cn("grid gap-2 w-full", className)}>
+          <nav className={cn("grid gap-3 w-full", className)}>
             {links.map((link, index) => (
               <Tooltip key={index} disableHoverableContent={!isCollapsed}>
                 <TooltipTrigger asChild>
@@ -43,12 +43,14 @@ function AccountNav({
                     className={cn(
                       buttonVariants({
                         variant: "ghost",
+                        className: "[&_svg]:size-6",
                       }),
                       !isActive(link) ? "text-[#425563]" : "font-bold",
                       "justify-start h-[20px] py-5 rounded-none w-full relative text-[0.9rem] min-w-full hover:bg-secondary"
                     )}
                   >
-                    <link.icon className="h-10 w-10 text-lg font-bold" />
+                    {/* @ts-expect-error fix */}
+                    <link.icon className="text-lg font-bold" />
                     <AnimatePresence
                       initial={false}
                       mode="wait"
@@ -78,7 +80,7 @@ function AccountNav({
                   <TooltipContent
                     sideOffset={4}
                     side="right"
-                    className="text-white text-sm p-2 bg-primary border"
+                    className="text-white text-xs py-1 px-3 bg-primary border"
                     arrowPadding={100}
                   >
                     <p>{link.title}</p>

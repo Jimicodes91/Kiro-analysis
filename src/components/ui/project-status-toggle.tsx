@@ -13,6 +13,7 @@ import useUpdateProject from "@/hooks/project-modules/use-update-project";
 import { ProjectStatus, ProjectStatusOptions } from "@/lib/constants";
 import { getFormattedText } from "@/lib/utils";
 import { getIsClient } from "@/services/api.service";
+import { Pen } from "lucide-react";
 import { Badge } from "./badge";
 
 export function ProjectStatusToggler({
@@ -48,13 +49,16 @@ export function ProjectStatusToggler({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Badge
-          className="w-fit cursor-pointer"
-          variant={status}
-          isLoading={updateProject.isPending}
-        >
-          {getFormattedText(position)}
-        </Badge>
+        <div className="flex items-center gap-2 group/edit">
+          <Badge
+            className="w-fit cursor-pointer"
+            variant={status}
+            isLoading={updateProject.isPending}
+          >
+            {getFormattedText(position)}
+          </Badge>
+          <Pen className="ml-2 size-3 group-hover/edit:text-gray-700 text-transparent" />
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel className="pl-4">Project Status</DropdownMenuLabel>

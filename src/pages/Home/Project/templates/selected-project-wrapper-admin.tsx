@@ -14,7 +14,7 @@ import React from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { LuPlus } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
-import { useProjectContext } from "../context/project-context";
+import { useOrgProjectContext } from "../context/org-project-context";
 
 const ActiveProjectTypeProjectWrapperOnAdminView = ({
   children,
@@ -26,7 +26,7 @@ const ActiveProjectTypeProjectWrapperOnAdminView = ({
   const projectTypes = useGetAllProjectTypes();
 
   const { changeActiveProjectType, activeProjectType, search, handleSearch } =
-    useProjectContext();
+    useOrgProjectContext();
 
   return (
     <div>

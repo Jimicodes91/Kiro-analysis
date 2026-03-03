@@ -45,6 +45,7 @@ function MilestoneTable({
               milestone={milestone}
               key={milestone.id}
               refetch={getMilestones.refetch}
+              projectTypeId={projectType.id}
             />
           ))}
         </TableBody>
@@ -69,7 +70,7 @@ function MilestoneTable({
       >
         <motion.td
           className="p-2"
-          colSpan={3}
+          colSpan={4}
           initial="collapsed"
           animate="open"
           exit="collapsed"
@@ -107,7 +108,7 @@ function MilestoneTable({
                         size="sm"
                         className="px-0 hover:bg-transparent"
                       >
-                        Add stage jdsj
+                        Add stage
                       </Button>
 
                       <Separator className="w-fit" />

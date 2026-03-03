@@ -74,7 +74,7 @@ const AddTeamModal = ({
               name="user_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel isRequired>Name</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl className="h-12 w-full">
                       <SelectTrigger

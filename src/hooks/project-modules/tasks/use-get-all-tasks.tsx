@@ -14,6 +14,8 @@ const useGetAllTasks = (search?: string) => {
     method: "get",
     endpoint: ENDPOINTS.GET_ALL_TASKS(search),
     queryKey: [QUERYKEYS.GET_ALL_TASKS, searchKey],
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 };
 

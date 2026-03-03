@@ -9,13 +9,13 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import useGetUser from "@/hooks/user/use-get-user";
 import getInitials, { truncateMiddleWords } from "@/lib/utils";
-import { getUserSession } from "@/services/api.service";
 import { User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function UserNav({ onOpen }: { onOpen?: () => void }) {
-  const user = getUserSession();
+  const userData = useGetUser();
 
   return (
     <DropdownMenu>
@@ -24,7 +24,9 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
           <Avatar className="h-8 w-8">
             <AvatarImage src={"/"} alt="@shadcn" />
             <AvatarFallback className="bg-[#E4E6E7] text-primary">
-              {getInitials(user?.name ? user?.name : user?.email)}
+              {getInitials(
+                userData?.value?.data?.name ?? userData?.value?.data?.email ?? ""
+              )}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -41,14 +43,16 @@ export function UserNav({ onOpen }: { onOpen?: () => void }) {
               <User />
             </AvatarFallback>
           </Avatar>
-          <p>{truncateMiddleWords(user?.name ?? "", 8, 8)}</p>
+          <p>{truncateMiddleWords(userData?.value?.data?.name ?? "", 8, 8)}</p>
           <DropdownMenuLabel className="font-normal">
-            <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {userData?.value?.data?.email}
+            </p>
           </DropdownMenuLabel>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to="/profile-setting">Profile Settings</Link>
+          <Link to="/profile-settings">Profile Settings</Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator className="bg-[#0000001A]" />

@@ -169,7 +169,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
               name="client_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Client name</FormLabel>
+                  <FormLabel isRequired>Client name</FormLabel>
                   <FormControl>
                     <Select
                       value={field.value}
@@ -201,7 +201,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
               name="project_title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Project title</FormLabel>
+                  <FormLabel isRequired>Project title</FormLabel>
                   <FormControl>
                     <Select
                       value={field.value}
@@ -233,7 +233,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
               name="total_project_cost"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Total project cost</FormLabel>
+                  <FormLabel isRequired>Total project cost</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
@@ -263,7 +263,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
                 name="amount_paid"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Amount paid</FormLabel>
+                    <FormLabel isRequired>Amount paid</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2">
@@ -289,7 +289,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
               name="outstanding_balance"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Outstanding balance</FormLabel>
+                  <FormLabel isRequired>Outstanding balance</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
@@ -312,7 +312,7 @@ function FinanceModal({ isOpen, onClose, mode, billingData }: FinanceModalProps)
               name="next_payment_due_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
-                  <FormLabel>Next payment due date</FormLabel>
+                  <FormLabel isRequired>Next payment due date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>

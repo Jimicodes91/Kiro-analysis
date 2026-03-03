@@ -36,7 +36,7 @@ export default function Sidebar({ isCollapsed }: { isCollapsed: boolean }) {
             "flex h-[100px] items-center transition-all duration-300 ease-in px-4"
           )}
         >
-          <Link to="/">
+          <Link to="/projects">
             <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
               {isCollapsed ? (
                 <motion.img

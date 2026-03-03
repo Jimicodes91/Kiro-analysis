@@ -46,7 +46,7 @@ const TasksTable = ({ search }: { search: string }) => {
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
               <TableHead>Task name</TableHead>
-              {/* <TableHead>Client name</TableHead> */}
+              <TableHead>Project title</TableHead>
               <TableHead>Company</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Status</TableHead>

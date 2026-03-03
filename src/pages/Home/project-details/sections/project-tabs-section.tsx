@@ -1,8 +1,7 @@
-import { getIsAdmin, getIsClient } from "@/services/api.service";
+import { getIsClient } from "@/services/api.service";
 import { ProjectDetails } from "@/types/api.types";
 import { motion } from "framer-motion";
 import React from "react";
-import SettingsTab from "../../Admin/settings";
 import ActivitLogSection from "../template/project-activity-template";
 import ProjectDocumentSection from "../template/project-document-template";
 import ProjectEventSection from "../template/project-event-template";
@@ -18,13 +17,11 @@ type SubTabType =
   | "Message"
   | "Event"
   | "Project team"
-  | "Settings"
   | "";
 
 function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails }) {
   const [activeSubTab, setActiveSubTab] = React.useState<SubTabType>("Task");
   const isClient = getIsClient();
-  const isAdmin = getIsAdmin();
 
   const subTabs: SubTabType[] = [
     "Task",
@@ -33,7 +30,6 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
     "Document",
     "Event",
     "Project team",
-    isAdmin ? "Settings" : "",
   ];
 
   const renderSubTabContent = () => {
@@ -76,12 +72,12 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
         );
       case "Project team":
         return <ProjectTeamSection projectId={projectDetails?.id} />;
-      case "Settings":
-        return (
-          <div>
-            <SettingsTab projectId={projectDetails?.id} />
-          </div>
-        );
+      // case "Settings":
+      //   return (
+      //     <div>
+      //       <SettingsTab projectId={projectDetails?.id} />
+      //     </div>
+      //   );
 
       default:
         return null;

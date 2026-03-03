@@ -388,6 +388,7 @@ export interface UserDetails {
   password_setup_token?: string;
   login_count: number;
   password_setup_token_expires?: string;
+  status: "ACTIVE" | "INACTIVE" | "DISABLED";
 }
 export interface ContactDetails {
   id: string;
@@ -573,6 +574,7 @@ interface TaskReport {
   completed: number;
   in_progress: number;
   overdue: number;
+  pending: number;
 }
 
 export interface DashboardData {

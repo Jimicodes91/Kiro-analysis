@@ -72,7 +72,7 @@ const Sidebar: React.FC = () => {
                   </p>
                 </div>
                 {/* Image at Bottom Right */}
-                <div className="absolute bottom-0 right-0">
+                <div className="absolute bottom-0 left-0 z-0">
                   <img
                     src={OnBoardingGroup}
                     alt="Group Illustration"

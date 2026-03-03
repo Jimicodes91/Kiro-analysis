@@ -46,7 +46,7 @@ function SubscriptionTableRow({ plan }: { plan: SubscriptionPlan }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Icons.more />
+                <Icons.more className="size-5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-40" align="end" forceMount>

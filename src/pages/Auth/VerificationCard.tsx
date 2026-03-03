@@ -4,7 +4,7 @@ import { MainButton } from "../../components/Form/button";
 
 interface VerificationCardProps {
   title: string;
-  description?: string;
+  description?: React.ReactNode;
   email?: string;
   buttonText?: string;
   onButtonClick?: () => void;

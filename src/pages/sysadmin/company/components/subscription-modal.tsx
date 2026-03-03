@@ -55,7 +55,7 @@ function SuscriptionModal({ onClose, isOpen }: ModalProps) {
             name="plan_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Subscription plan</FormLabel>
+                <FormLabel isRequired>Subscription plan</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl className="h-11">
                     <SelectTrigger
@@ -86,7 +86,7 @@ function SuscriptionModal({ onClose, isOpen }: ModalProps) {
             name="seats"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Period</FormLabel>
+                <FormLabel isRequired>Period</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl className="h-11">
                     <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm w-full">
@@ -117,7 +117,7 @@ function SuscriptionModal({ onClose, isOpen }: ModalProps) {
               name="start_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
-                  <FormLabel>Start date</FormLabel>
+                  <FormLabel isRequired>Start date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -157,7 +157,7 @@ function SuscriptionModal({ onClose, isOpen }: ModalProps) {
               name="end_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
-                  <FormLabel>End date</FormLabel>
+                  <FormLabel isRequired>End date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>

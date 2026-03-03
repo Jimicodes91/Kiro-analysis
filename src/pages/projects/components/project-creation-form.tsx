@@ -132,7 +132,7 @@ export default function CreateProjectForm() {
                 name="project_client"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Project client</FormLabel>
+                    <FormLabel isRequired>Project client</FormLabel>
                     <FormControl>
                       <Input placeholder="Project client" {...field} />
                     </FormControl>

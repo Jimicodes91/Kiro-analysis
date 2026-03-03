@@ -1,8 +1,7 @@
 import useAdminSignup from "@/hooks/auth/use-admin-signup";
-import useResendVerificationEmail from "@/hooks/auth/use-resend-verification-email";
 import { PAGES } from "@/lib/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { InferType } from "yup";
@@ -14,7 +13,6 @@ import VerificationCard from "./VerificationCard";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
-  const resendVerificationEmail = useResendVerificationEmail();
   const adminSignup = useAdminSignup();
   const {
     register,
@@ -25,23 +23,30 @@ const SignUp: React.FC = () => {
     resolver: yupResolver(signupSchema),
   });
 
+  useEffect(() => {
+    if (adminSignup.isSuccess && adminSignup.data)
+      setTimeout(
+        () => navigate(`${PAGES.VERIFY_EMAIL_PAGE}?email=${watch("email")}`),
+        2000
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminSignup, navigate]);
+
   const onSubmit = async (data: InferType<typeof signupSchema>) => {
     adminSignup.mutateAsync(data).catch(console.error);
-  };
-
-  const resendVerification = async () => {
-    resendVerificationEmail.mutateAsync({ email: watch("email") }).catch(console.error);
   };
 
   if (adminSignup.isSuccess && adminSignup.data) {
     return (
       <VerificationCard
         title="Email verification"
-        email={watch("email")}
-        buttonText="Back to login"
-        onResend={() => resendVerification()}
-        showResend={true}
-        onButtonClick={() => navigate(PAGES.LOGIN_PAGE)}
+        description={
+          <>
+            We've sent a 4-digit code to <br />
+            <span className="text-black">{watch("email")}</span> to continue
+          </>
+        }
+        noButton
       />
     );
   }

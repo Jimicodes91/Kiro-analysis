@@ -15,7 +15,7 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ options, activeTab, setActiveTa
         <motion.button
           initial={false}
           key={option.value}
-          className={`my-1 py-2 min-w-[110px] relative cursor-pointer px-4 transition-colors duration-300 font-medium text-sm bg-transparent  ${
+          className={`my-1 py-1.5 min-w-[110px] relative cursor-pointer px-4 transition-colors duration-300 font-medium text-sm bg-transparent  ${
             option.value === activeTab ? "text-white" : "text-primary"
           }`}
           onClick={() => setActiveTab(option.value)}

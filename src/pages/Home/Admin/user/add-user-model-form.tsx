@@ -17,7 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useSendConsultantInvite from "@/hooks/auth/use-send-consultant-invite";
+import { QUERYKEYS } from "@/lib/constants";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { InferType } from "yup";
 import Modal from "../../../../components/Modal";
@@ -25,6 +27,7 @@ import { addUserSchema } from "../../../../utils/validation-schema/admin";
 
 function AddUserModalForm({ onClose, isOpen }: ModalProps) {
   const sendConsultantInvite = useSendConsultantInvite();
+  const queryClient = useQueryClient();
   const form = useForm({
     resolver: yupResolver(addUserSchema),
   });
@@ -33,8 +36,14 @@ function AddUserModalForm({ onClose, isOpen }: ModalProps) {
     sendConsultantInvite
       .mutateAsync(data)
       .then(() => {
-        onClose();
-        form.reset();
+        queryClient
+          .invalidateQueries({
+            queryKey: [QUERYKEYS.GET_ALL_COMPANY_USERS],
+          })
+          .then(() => {
+            onClose();
+            form.reset();
+          });
       })
       .catch(console.error);
   };
@@ -47,7 +56,7 @@ function AddUserModalForm({ onClose, isOpen }: ModalProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel isRequired>Email</FormLabel>
                 <FormControl>
                   <Input placeholder="Email" {...field} />
                 </FormControl>
@@ -60,7 +69,7 @@ function AddUserModalForm({ onClose, isOpen }: ModalProps) {
             name="role"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Role</FormLabel>
+                <FormLabel isRequired>Role</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl className="h-11">
                     <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm w-full">

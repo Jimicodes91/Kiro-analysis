@@ -14,7 +14,7 @@ import { getUserSession } from "@/services/api.service";
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { ClientProjectCard } from "../../project-details/components/client-project-card";
-import { useProjectContext } from "../context/project-context";
+import { useOrgProjectContext } from "../context/org-project-context";
 
 const ClientProjectView = () => {
   const [, setSearchQuery] = useState("");
@@ -22,7 +22,7 @@ const ClientProjectView = () => {
     setSearchQuery(query);
   };
 
-  const { changeStatus, status } = useProjectContext();
+  const { changeStatus, status } = useOrgProjectContext();
   const user = getUserSession();
   const allProjects = useGetClientProjects(user?.id ?? "", status);
 

@@ -7,25 +7,25 @@ import { BeatLoader } from "react-spinners";
 import { Icons } from "./icons";
 
 const buttonVariants = cva(
-  "inline-flex items-center relative justify-center transition-all text-md transition-all duration-300 rounded-lg gap-2 whitespace-nowrap rounded-full text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center relative justify-center transition-all text-md transition-all duration-300 rounded-lg gap-2 whitespace-nowrap rounded-full text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:pointer-events-none  [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-white border-primary focus:ring-primary focus:ring-2 focus:ring-offset-1",
+          "bg-primary text-white border-primary focus:ring-primary focus:ring-2 focus:ring-offset-1 [&_svg]:size-4",
         destructive:
-          "border-destructive border bg-transparent text-destructive shadow-sm hover:bg-destructive/80 hover:text-white focus-visible:ring-destructive focus:ring-destructive focus:ring-2 focus:ring-offset-1",
+          "border-destructive border bg-transparent text-destructive shadow-sm hover:bg-destructive/80 hover:text-white focus-visible:ring-destructive focus:ring-destructive focus:ring-2 focus:ring-offset-1 [&_svg]:size-4",
         outline:
-          "border border-[#00000099] bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-[#00000099] bg-background shadow-sm hover:bg-accent hover:text-accent-foreground [&_svg]:size-4",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 [&_svg]:size-4",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary underline-offset-4 hover:underline [&_svg]:size-4",
       },
       size: {
-        default: "h-10 px-6 py-6",
-        sm: "h-10 rounded-full px-6 py-4 text-[0.8rem]",
-        lg: "h-10 rounded-md px-8",
+        default: "h-10 px-4 py-4",
+        sm: "h-8 rounded-full px-4 py-3 text-[0.8rem]",
+        lg: "h-10 rounded-md px-6",
         icon: "h-9 w-9",
       },
       fullWidth: {

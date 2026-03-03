@@ -55,7 +55,7 @@ const ProfileSecurityTemplate: React.FC = () => {
             name="oldPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Old Password</FormLabel>
+                <FormLabel isRequired>Old Password</FormLabel>
                 <FormControl>
                   <div className="relative w-full">
                     <Input
@@ -78,7 +78,7 @@ const ProfileSecurityTemplate: React.FC = () => {
             name="newPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>New Password</FormLabel>
+                <FormLabel isRequired>New Password</FormLabel>
                 <FormControl>
                   <div className="relative w-full">
                     <Input
@@ -98,7 +98,7 @@ const ProfileSecurityTemplate: React.FC = () => {
             name="confirmNewPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+                <FormLabel isRequired>Confirm Password</FormLabel>
                 <FormControl>
                   <div className="relative w-full">
                     <Input

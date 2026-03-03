@@ -13,6 +13,7 @@ interface TransformedDashboardData {
     completedTasks: number;
     inProgressTasks: number;
     overdueTasks: number;
+    pendingTasks: number;
   };
   mostRecentProjectsData: Array<{
     id: string;
@@ -53,6 +54,7 @@ export const useDashboardData = () => {
           completedTasks: 0,
           inProgressTasks: 0,
           overdueTasks: 0,
+          pendingTasks: 0,
         },
         mostRecentProjectsData: [],
         topClientData: [],
@@ -75,7 +77,7 @@ export const useDashboardData = () => {
         count: data.project_report.completed,
       },
       {
-        title: "Inprogress",
+        title: "In progress",
         count: data.project_report.in_progress,
       },
     ];
@@ -85,6 +87,7 @@ export const useDashboardData = () => {
       completedTasks: data.task_report.completed,
       inProgressTasks: data.task_report.in_progress,
       overdueTasks: data.task_report.overdue,
+      pendingTasks: data.task_report.pending,
     };
 
     const mostRecentProjectsData = data.recent_projects.map((project) => ({

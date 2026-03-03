@@ -10,14 +10,19 @@ import CreateProjectDynamicForm from "../components/project-dynamic-form";
 function CreateProjectTemplate() {
   const projectFormFields = useGetProjectFormFields();
   const renderForm = () => {
-    if (projectFormFields.isLoading) return <Loader />;
+    if (projectFormFields.isLoading && !projectFormFields?.value?.data) return <Loader />;
 
     if (
       !projectFormFields.isLoading &&
       projectFormFields?.value &&
       projectFormFields?.value?.data
     ) {
-      return <CreateProjectDynamicForm fields={projectFormFields?.value?.data} />;
+      return (
+        <CreateProjectDynamicForm
+          key={projectFormFields.status}
+          fields={projectFormFields?.value?.data}
+        />
+      );
     }
     return <p>Some thing went wrong</p>;
   };
@@ -39,7 +44,10 @@ function CreateProjectTemplate() {
           </p>
           <Heading size="h3">Add Project</Heading>
         </div>
-        <div className="w-full bg-brand-gray grid place-items-center p-6">
+        <div
+          className="w-full bg-brand-gray grid place-items-center p-6"
+          key={projectFormFields.status}
+        >
           {renderForm()}
         </div>
       </div>
