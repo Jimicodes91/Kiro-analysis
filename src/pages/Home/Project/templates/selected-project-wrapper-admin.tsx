@@ -2,11 +2,11 @@ import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { PAGES } from "@/lib/constants";
@@ -30,11 +30,11 @@ const ActiveProjectTypeProjectWrapperOnAdminView = ({
 
   return (
     <div>
-      <div className="p-6 animate-in fade-in-0 duration-700 ease-in-out">
-        <div className="flex gap-4 items-stretch md:items-center justify-between flex-col md:flex-row">
-          <div className="flex items-center gap-4">
+      <div className="p-3 sm:p-4 md:p-6 animate-in fade-in-0 duration-700 ease-in-out">
+        <div className="flex gap-3 md:gap-4 items-stretch md:items-center justify-between flex-col md:flex-row">
+          <div className="flex items-center gap-3 sm:gap-4 w-full md:w-auto">
             <Heading size="h3">Project</Heading>
-            <div className="relative w-full min-w-[300px]">
+            <div className="relative flex-1 md:flex-initial md:min-w-[300px]">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3" />
               <Input
                 placeholder="Search keyword"

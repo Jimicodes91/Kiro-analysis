@@ -13,18 +13,29 @@ export const taskFormSchema = yup.object({
   name: yup
     .string()
     .required("Task name is required")
-    .min(3, "Task name must be at least 3 characters"),
+    .min(3, "Task name must be at least 3 characters")
+    .max(255, "Task name must be 255 characters or less"),
   task_type_id: yup.string().optional(),
   project_type_id: yup.string().required("Pipeline is required"),
   project_id: yup.string().required("Project is required"),
   status: yup
     .string()
-    // .oneOf(["in_progress", "pending", "completed"], "Invalid status")
+    .oneOf(["pending", "completed"], "Status must be either pending or completed")
     .required("Status is required"),
-  description: yup.string().required("Description is required"),
-  start_date: yup.date().required("Start date is required"),
-  end_date: yup.date().required("End date is required"),
-  is_visible_to_client: yup.boolean().default(false),
+  description: yup
+    .string()
+    .max(5000, "Description must be 5000 characters or less")
+    .optional(),
+  due_date: yup.date().required("Due date is required"),
+  visibility: yup
+    .string()
+    .oneOf(["inhouse", "client_facing"], "Visibility must be either inhouse or client_facing")
+    .required("Visibility is required"),
+  document_url: yup
+    .string()
+    .max(500, "Document URL must be 500 characters or less")
+    .optional(),
+  is_visible_to_client: yup.boolean().default(false), // Deprecated, use visibility
   assignees: yup
     .array()
     .of(yup.string().required())

@@ -78,7 +78,12 @@ export interface Task {
   start_date: string;
   end_date: string;
   is_visible_to_client: number;
+  task_category: TaskCategory;
+  required_information?: string[];
+  additional_info?: string[];
   assignees: Assignee[];
+  client_assignees?: ClientAssignee[];
+  client_responses?: ClientResponse[];
   document: Document[];
   task_type: TaskType;
   pipeline: Pipeline;
@@ -89,6 +94,73 @@ export interface Task {
     client_organization: string;
     clients: Client[];
   };
+}
+
+export enum TaskCategory {
+  INTERNAL = "internal",
+  EXTERNAL = "external",
+}
+
+export interface ClientAssignee {
+  id: string;
+  task_id: string;
+  client_id: string;
+  project_id: string;
+  company_id: string;
+  client?: {
+    id: string;
+    name: string;
+    email: string;
+    organization?: string;
+  };
+}
+
+export interface ClientResponse {
+  id: string;
+  task_id: string;
+  client_id: string;
+  required_item: string;
+  file_url: string | null;
+  is_completed: boolean;
+  comment: string | null;
+  client?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+export interface InternalTaskFormData {
+  name?: string;
+  description?: string;
+  status?: string;
+  start_date: string;
+  end_date: string;
+  assignees: string[];
+  attachments?: string[];
+  task_type_id?: string;
+  project_type_id: string;
+  task_category: TaskCategory.INTERNAL;
+  additional_info?: string[];
+}
+
+export interface ExternalTaskFormData {
+  name: string;
+  description?: string;
+  end_date: string;
+  client_ids: string[];
+  required_information: string[];
+  task_type_id?: string;
+  project_type_id: string;
+  task_category: TaskCategory.EXTERNAL;
+}
+
+export interface AvailableAssignee {
+  id: string;
+  name: string;
+  email: string;
+  role?: string;
+  organization?: string;
 }
 export interface TaskFormData {
   id?: string;

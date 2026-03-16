@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="mx-6 my-2">
+      <div className="mx-3 sm:mx-4 md:mx-6 my-2">
         <DashboardHeader />
         <div className="min-h-[calc(100vh-70px)] flex items-center">
           <Loader />
@@ -48,7 +48,7 @@ const Dashboard: React.FC = () => {
 
   if (error) {
     return (
-      <div className="mx-6 my-2">
+      <div className="mx-3 sm:mx-4 md:mx-6 my-2">
         <DashboardHeader />
         <div className="flex items-center justify-center h-64">
           <div className="text-red-500">
@@ -61,7 +61,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <div className="mx-6 my-2">
+      <div className="mx-3 sm:mx-4 md:mx-6 my-2">
         <DashboardHeader />
         <div className="bg-white rounded-[6px] border border-[#0000001A] px-4 pt-2">
           <ProjectReport cards={projectCards} onViewMore={handleViewMoreProjectReport} />

@@ -4,15 +4,16 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export interface CreateTaskRequest {
   name: string;
-  description: string;
+  description?: string; // Optional
   status: string;
-  start_date: string;
-  end_date: string;
+  due_date: string; // Renamed from end_date
   attachments: string[];
-  is_visible_to_client: boolean;
-  task_type_id: string;
+  visibility: 'inhouse' | 'client_facing'; // New field
+  document_url?: string; // For upload task types
+  is_visible_to_client?: boolean; // Deprecated, use visibility
+  task_type_id?: string;
   project_type_id: string;
-  assignees: string[];
+  assignees?: string[];
 }
 
 const useCreateTask = (projectId: string) => {

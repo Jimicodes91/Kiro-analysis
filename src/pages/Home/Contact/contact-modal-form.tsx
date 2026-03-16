@@ -1,14 +1,16 @@
 import Modal from "@/components/Modal";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import useCreateContact from "@/hooks/contacts/use-create-contact";
 import useUpdateContact from "@/hooks/contacts/use-update-contact";
 import { getUserSession } from "@/services/api.service";
@@ -18,6 +20,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { toast } from "sonner";
 import * as yup from "yup";
 
 // Define contact schema
@@ -30,15 +33,10 @@ const contactSchema = yup.object().shape({
     .test("is-valid-phone", "Invalid phone number", (value) => {
       return value ? isValidPhoneNumber(value) : false;
     }),
-  // assigned_to: yup
-  //   .array()
-  //   .of(
-  //     yup.object().shape({
-  //       id: yup.string().required(),
-  //       name: yup.string().required(),
-  //     })
-  //   )
-  //   .optional(),
+  organization: yup.string().optional(),
+  address: yup.string().optional(),
+  send_invite_immediately: yup.boolean().optional(),
+  invite_message: yup.string().optional(),
 });
 
 interface ContactModalProps {
@@ -60,12 +58,17 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
       name: "",
       email: "",
       phone: "",
+      organization: "",
+      address: "",
       assigned_to: [],
+      send_invite_immediately: false,
+      invite_message: "",
     },
     mode: "onChange",
   });
 
   const { isDirty } = form.formState;
+  const sendInviteImmediately = form.watch("send_invite_immediately");
 
   // Load data for edit or view mode
   useEffect(() => {
@@ -74,36 +77,43 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
     }
   }, [contactData, form, mode]);
 
-  // const users = Array.isArray(usersResponse?.value?.data) ? usersResponse.value.data : [];
-
-  // Convert users to MultiSelect options format
-  // const userOptions = users.map((user) => ({
-  //   value: user.id,
-  //   label: user.name || user.email,
-  // }));
-
   const onSubmit = async (data: ContactFormValues) => {
-    // Prepare the payload with consistent structure
-
     const payload = {
       name: data.name,
       email: data.email,
       phone: data.phone,
+      organization: data.organization,
+      address: data.address,
       company_id: session?.company_id ?? "",
+      workspace_id: session?.workspace_id ?? "",
       assigned_to: data.assigned_to?.map((user) => ({
         id: user.id,
         name: user.name,
       })),
+      send_invite_immediately: data.send_invite_immediately,
+      invite_message: data.invite_message,
     };
 
     if (mode === "create") {
       createContact
         .mutateAsync(payload)
-        .then(() => {
+        .then((response) => {
+          // Check if invite was sent or requires approval
+          if (response.invite) {
+            if (response.invite.requires_approval) {
+              toast.success("Contact created! Invite request sent to admins for approval.");
+            } else {
+              toast.success("Contact created and invitation sent successfully!");
+            }
+          } else {
+            toast.success("Contact created successfully!");
+          }
           onClose();
           form.reset();
         })
-        .catch(console.error);
+        .catch((error) => {
+          toast.error(error.message || "Failed to create contact");
+        });
     } else if (mode === "edit") {
       updateContact
         .mutateAsync({
@@ -111,9 +121,12 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
           assigned_to: payload.assigned_to || [],
         })
         .then(() => {
+          toast.success("Contact updated successfully!");
           onClose();
         })
-        .catch(console.error);
+        .catch((error) => {
+          toast.error(error.message || "Failed to update contact");
+        });
     }
   };
 
@@ -193,53 +206,89 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
             )}
           />
 
-          {/* <FormField
+          <FormField
             control={form.control}
-            name="assigned_to"
-            render={({ field, fieldState }) => (
+            name="organization"
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>Assign to</FormLabel>
+                <FormLabel>Organization (Optional)</FormLabel>
                 <FormControl>
-                  <div>
-                    <MultiSelect
-                      options={userOptions}
-                      defaultSelected={field.value?.map((user) => user.id) || []}
-                      onChange={(selectedIds) => {
-                        const selectedUsers = users
-                          .filter((user) => selectedIds.includes(user.id))
-                          .map((user) => ({
-                            id: user.id,
-                            name: user.name || user.email,
-                          }));
-                        field.onChange(selectedUsers);
-                      }}
-                      placeholder="Assign to"
-                      disabled={mode === "view"}
-                      error={fieldState.error?.message}
-                    />
-
-                    {mode === "view" && (field?.value?.length ?? 0) > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {(field?.value ?? []).map((user) => (
-                          <div
-                            key={user.id}
-                            className="flex items-center bg-gray-200 rounded-full px-3 py-1"
-                          >
-                            <Avatar className="h-6 w-6 mr-2">
-                              <AvatarFallback className="text-xs">
-                                {getInitials(user.name)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="text-sm">{user.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  <Input
+                    placeholder="Organization"
+                    {...field}
+                    disabled={mode === "view"}
+                  />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
+
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address (Optional)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Address"
+                    {...field}
+                    disabled={mode === "view"}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {mode === "create" && (
+            <>
+              <FormField
+                control={form.control}
+                name="send_invite_immediately"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>
+                        Send invitation immediately
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Invite this contact to join the platform as a client
+                      </p>
+                    </div>
+                  </FormItem>
+                )}
+              />
+
+              {sendInviteImmediately && (
+                <FormField
+                  control={form.control}
+                  name="invite_message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Custom invitation message (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Add a personal message to the invitation..."
+                          {...field}
+                          rows={3}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+            </>
+          )}
+
           {mode !== "view" && (
             <div className="pt-3">
               <Button

@@ -1,6 +1,7 @@
 import AuthLayout from "@/layouts/auth-layout";
 import OnboardingContextProvider from "@/pages/Onboarding/onboarding-context";
 import { RouteObject } from "react-router-dom";
+import AcceptInvite from "../pages/Auth/AcceptInvite";
 import CompleteInvite from "../pages/Auth/CompleteInvite";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import Login from "../pages/Auth/Login";
@@ -22,6 +23,7 @@ export const AuthRoutes: RouteObject[] = [
         children: [
           { path: "register", element: <SignUp /> },
           { path: "complete-invite", element: <CompleteInvite /> },
+          { path: "accept-invite", element: <AcceptInvite /> },
           { path: "forgot-password", element: <ForgotPassword /> },
           { path: "reset-password", element: <ResetPassword /> },
           { path: "verify-email", element: <VerifyAccountEmail /> },
@@ -39,8 +41,4 @@ export const AuthRoutes: RouteObject[] = [
       </OnboardingContextProvider>
     ),
   },
-  // {
-  //   path: "*",
-  //   element: <NotFound fullScreen />,
-  // },
 ];

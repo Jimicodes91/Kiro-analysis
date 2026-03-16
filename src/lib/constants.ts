@@ -24,18 +24,17 @@ const universalRoutes = [
     path: "/projects",
   },
   {
+    title: "Tasks",
+    icon: Icons.task,
+    path: "/task",
+  },
+  {
     title: "Contact",
     icon: Icons.client,
     path: "/contact",
   },
   {
-    title: "Tasks",
-    icon: Icons.task,
-    path: "/task",
-  },
-
-  {
-    title: "Finance",
+    title: "Billing",
     icon: Icons.coins,
     path: "/finance",
   },
@@ -67,11 +66,36 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
   ],
   CONSULTANT: [...universalRoutes],
   ADMIN: [
-    ...universalRoutes,
+    {
+      title: "Home",
+      icon: Icons.dashboard,
+      path: "/home",
+      exact: true,
+    },
+    {
+      title: "Projects",
+      icon: Icons.project,
+      path: "/projects",
+    },
     {
       title: "Admin",
       icon: Icons.admin,
       path: "/admin",
+    },
+    {
+      title: "Tasks",
+      icon: Icons.task,
+      path: "/task",
+    },
+    {
+      title: "Contact",
+      icon: Icons.client,
+      path: "/contact",
+    },
+    {
+      title: "Billing",
+      icon: Icons.coins,
+      path: "/finance",
     },
   ],
   SUPER_ADMIN: [
@@ -158,6 +182,7 @@ export const taskStatuses: { label: string; value: string }[] = [
 export const ENDPOINTS = {
   SWITCH_ORG: "auth/switch-organization",
   // Auth Endpoint
+  WORKSPACE_SIGNUP: "auth/signup",
   ADMIN_SIGNUP: "auth/admin-signup",
   VERIFY_EMAIL: (token: string) => `auth/verify?token=${token}`,
   VERIFY_EMAIL_WITH_OTP: "auth/verify",
@@ -217,6 +242,11 @@ export const ENDPOINTS = {
   GET_COMPANY_CONTACTS: "contacts/company",
   SEARCH_COMPANY_CONTACTS: "contacts/search",
   UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
+  SEND_CONTACT_INVITE: (contactId: string) => `contacts/${contactId}/send-invite`,
+  GET_PENDING_INVITES: "contacts/invites/pending",
+  APPROVE_INVITE: (inviteId: string) => `contacts/invites/${inviteId}/approve`,
+  REJECT_INVITE: (inviteId: string) => `contacts/invites/${inviteId}/reject`,
+  ACCEPT_CONTACT_INVITE: "contacts/accept-invite",
 
   // Finance Endpoints
   CREATE_FINANCE_RECORD: "org-finance",
@@ -247,6 +277,7 @@ export const ENDPOINTS = {
   */
   // 0. Project Module Collection
   CREATE_PROJECT: "projects",
+  CREATE_SIMPLIFIED_PROJECT: "projects", // Uses same endpoint as CREATE_PROJECT
   GET_ALL_PROJECTS: (
     projectTypeId?: string,
     status?: ProjectStatusDict | "all",
@@ -321,6 +352,10 @@ export const ENDPOINTS = {
     `projects/${projectId}/tasks/${taskId}`,
   DELETE_TASK_ATTACHMENT: (projectId: string, taskId: string, attachmentId: string) =>
     `projects/${projectId}/tasks/${taskId}/attachments/${attachmentId}`,
+  GET_AVAILABLE_ASSIGNEES: (projectId: string, category: string) =>
+    `projects/${projectId}/available-assignees?category=${category}`,
+  UPDATE_CLIENT_TASK_RESPONSE: (taskId: string) =>
+    `projects/tasks/${taskId}/client-response`,
 
   // 6. Documents
   UPLOAD_DOCUMENT: (projectId: string) => `projects/${projectId}/documents`,
@@ -461,6 +496,7 @@ export const QUERYKEYS = {
   GET_ALL_PROJECT_TASKS: "GET_ALL_PROJECT_TASKS",
   GET_ALL_TASKS: "GET_ALL_TASKS",
   GET_TASK_DETAILS: "GET_TASK_DETAILS",
+  GET_AVAILABLE_ASSIGNEES: "GET_AVAILABLE_ASSIGNEES",
 
   // 6. Documents Query keys
   GET_ALL_PROJECT_DOCUMENTS: "GET_ALL_PROJECT_DOCUMENTS",

@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
@@ -37,7 +37,7 @@ const NotificationSection: React.FC = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex gap-4 w-full items-end"
+            className="flex flex-col sm:flex-row gap-4 w-full items-stretch sm:items-end"
           >
             <div className="w-full">
               <FormField
@@ -65,7 +65,7 @@ const NotificationSection: React.FC = () => {
       </div>
 
       <Separator />
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <Heading size="h5">Notification Preference</Heading>
           <p className="text-sm text-[#00000066] max-w-[250px]">

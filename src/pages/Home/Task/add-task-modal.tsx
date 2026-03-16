@@ -4,22 +4,22 @@ import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import DragNdrop from "@/components/ui/file-upload";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import MultiSelect from "@/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
@@ -254,7 +254,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
             )}
           />
 
-          <div className="flex gap-4 justify-between">
+          <div className="flex flex-col sm:flex-row gap-4 justify-between">
             <FormField
               control={form.control}
               name="start_date"

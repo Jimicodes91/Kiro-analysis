@@ -5,6 +5,7 @@ import { setCookie } from "cookies-next";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { InferType } from "yup";
 import { Logo } from "../../assets";
 import { MainButton } from "../../components/Form/button";
@@ -29,29 +30,35 @@ const Login: React.FC = () => {
         password: data.password,
       })
       .then((response) => {
-        // Store tokens in local storage
-        setCookie("user_session_token", response.data.data.token);
-        setCookie("user_session", JSON.stringify(response.data.data.user));
-
-        if (response.data.data.user.company_id) {
-          const userRole = response.data.data.user.role;
-
-          const isSysAdmin = userRole === "SUPER_ADMIN";
-
-          if (userRole === "CLIENT") {
-            console.log("User is a client");
-            navigate(PAGES.HOME_PAGE);
-            return;
-          }
-
-          if (isSysAdmin) {
-            navigate(PAGES.SYSADMIN_HOME_PAGE);
-          } else {
-            navigate(PAGES.PROJECT_PAGE);
-          }
-        } else {
-          navigate(PAGES.ONBOARDING_PAGE);
+        // Normalize role to uppercase before storing
+        const user = response.data.data.user;
+        if (user.role) {
+          user.role = user.role.toUpperCase() as any;
         }
+
+        // Store tokens in cookies with normalized role
+        setCookie("user_session_token", response.data.data.token);
+        setCookie("user_session", JSON.stringify(user));
+
+        toast.success("Login successful!");
+
+        const userRole = user.role;
+
+        // Handle different user roles and do full page reload to update routes
+        if (userRole === "SUPER_ADMIN") {
+          window.location.href = PAGES.SYSADMIN_HOME_PAGE;
+        } else if (userRole === "CLIENT") {
+          window.location.href = PAGES.HOME_PAGE;
+        } else if (userRole === "ADMIN" || userRole === "CONSULTANT") {
+          window.location.href = PAGES.PROJECT_PAGE;
+        } else {
+          // Default to home page
+          window.location.href = PAGES.HOME_PAGE;
+        }
+      })
+      .catch((error) => {
+        const errorMessage = error?.response?.data?.message || "Login failed";
+        toast.error(errorMessage);
       });
   };
 

@@ -2,7 +2,7 @@ import useGetCompanyDetails from "@/hooks/admin/use-get-company";
 import useGetUser from "@/hooks/user/use-get-user";
 import React from "react";
 import { FaIndustry } from "react-icons/fa";
-import { VscBell } from "react-icons/vsc";
+import NotificationBell from "../Notifications/NotificationBell";
 import Heading from "../ui/heading";
 import { UserNav } from "../ui/user-avatar-nav";
 
@@ -25,16 +25,7 @@ const DashBoardHeader: React.FC = () => {
         </div>
 
         <div className="flex-[1]   flex justify-end items-center center">
-          <button
-            className="mr-5 cursor-pointer relative border-2 border-brand-border p-2 rounded-full
-            "
-            type="button"
-          >
-            <VscBell className="text-[#111] w-6 h-6" />
-            <span className="absolute -top-1 -right-1 bg-primary text-white rounded-full w-4 h-4 flex justify-center items-center text-xs">
-              3
-            </span>
-          </button>
+          <NotificationBell />
           <UserNav />
 
           <div className="z-50  flex items-center ml-3">{/* <MobileSideNav /> */}</div>

@@ -1,5 +1,21 @@
 import * as yup from "yup";
 
+export const workspaceSignupSchema = yup.object().shape({
+  name: yup.string().required("Name is required").trim(),
+  email: yup.string().email("Invalid email").required("Email is required").trim(),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .trim(),
+  confirmPassword: yup
+    .string()
+    .required("Confirm Password is required")
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .trim(),
+  workspace_name: yup.string().required("Workspace name is required").trim(),
+});
+
 export const signupSchema = yup.object().shape({
   name: yup.string().required("Name is required").trim(),
   email: yup.string().email("Invalid email").required("Email is required").trim(),

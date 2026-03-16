@@ -93,25 +93,37 @@ export const addProjectTaskSchema = z.object({
     })
     .min(3, {
       message: "Task name is too short",
+    })
+    .max(255, {
+      message: "Task name must be 255 characters or less",
     }),
   task_type_id: z
     .string({
       message: "Task type is required",
     })
     .optional(),
-  status: z.enum(["in_progress", "completed", "pending"], {
-    message: "Status is required",
+  status: z.enum(["completed", "pending"], {
+    message: "Status must be either pending or completed",
   }),
-  description: z.string({
-    message: "Description is required",
+  description: z
+    .string()
+    .max(5000, {
+      message: "Description must be 5000 characters or less",
+    })
+    .optional(),
+  due_date: z.date({
+    message: "Due date is required",
   }),
-  start_date: z.date({
-    message: "Start date is required",
+  visibility: z.enum(["inhouse", "client_facing"], {
+    message: "Visibility must be either inhouse or client_facing",
   }),
-  end_date: z.date({
-    message: "End date is required",
-  }),
-  is_visible_to_client: z.boolean().default(true),
+  document_url: z
+    .string()
+    .max(500, {
+      message: "Document URL must be 500 characters or less",
+    })
+    .optional(),
+  is_visible_to_client: z.boolean().default(true), // Deprecated, use visibility
   assignees: z
     .array(
       z.object({
@@ -119,7 +131,9 @@ export const addProjectTaskSchema = z.object({
         value: z.string(),
       })
     )
-    .optional(),
+    .min(1, {
+      message: "At least one assignee is required",
+    }),
   attachment: fileListSchema(
     fileSize,
     [
@@ -134,27 +148,40 @@ export const addProjectTaskSchema = z.object({
 });
 
 export const editProjectTaskSchema = z.object({
-  name: z.string({
-    message: "Task name is required",
-  }),
+  name: z
+    .string({
+      message: "Task name is required",
+    })
+    .max(255, {
+      message: "Task name must be 255 characters or less",
+    }),
   task_type_id: z
     .string({
       message: "Task type is required",
     })
     .optional(),
-  status: z.enum(["in_progress", "completed", "pending"], {
-    message: "Status is required",
+  status: z.enum(["completed", "pending"], {
+    message: "Status must be either pending or completed",
   }),
-  description: z.string({
-    message: "Description is required",
+  description: z
+    .string()
+    .max(5000, {
+      message: "Description must be 5000 characters or less",
+    })
+    .optional(),
+  due_date: z.date({
+    message: "Due date is required",
   }),
-  start_date: z.date({
-    message: "Start date is required",
+  visibility: z.enum(["inhouse", "client_facing"], {
+    message: "Visibility must be either inhouse or client_facing",
   }),
-  end_date: z.date({
-    message: "End date is required",
-  }),
-  is_visible_to_client: z.boolean().default(false),
+  document_url: z
+    .string()
+    .max(500, {
+      message: "Document URL must be 500 characters or less",
+    })
+    .optional(),
+  is_visible_to_client: z.boolean().default(false), // Deprecated, use visibility
   assignees: z.array(
     z.object({
       label: z.string(),

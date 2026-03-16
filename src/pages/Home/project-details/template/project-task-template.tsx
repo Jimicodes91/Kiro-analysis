@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
-import useDisclosure from "@/hooks/use-disclosure";
 import { getIsClient, getUserSession } from "@/services/api.service";
-import { AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import TaskCard from "../components/cards/task-card";
-import AddProjectTaskModal from "../components/modal/add-project-task-modal";
 
 function ProjectTaskSection({
   projectId,
@@ -16,11 +14,15 @@ function ProjectTaskSection({
   projectTypeId: string;
   mode?: "readonly" | "edit";
 }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
   const user = getUserSession();
 
   const isClient = getIsClient();
   const projectTasks = useGetProjectTasks(projectId, isClient ? user?.id : undefined);
+
+  const handleAddTask = () => {
+    navigate(`/task/new?projectId=${projectId}&from=project:${projectId}`);
+  };
 
   const renderBody = () => {
     if (projectTasks.isPending)
@@ -59,28 +61,16 @@ function ProjectTaskSection({
   };
 
   return (
-    <>
-      <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
-        {mode === "edit" && (
-          <div className="flex justify-end gap-3 items-center">
-            <Button size="sm" leftIcon={<Plus />} onClick={onOpen}>
-              Add Task
-            </Button>
-          </div>
-        )}
-        <div>{renderBody()}</div>
-      </div>
-      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {isOpen && (
-          <AddProjectTaskModal
-            isOpen={isOpen}
-            projectTypeId={projectTypeId}
-            projectId={projectId}
-            onClose={onClose}
-          />
-        )}
-      </AnimatePresence>
-    </>
+    <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
+      {mode === "edit" && (
+        <div className="flex justify-end gap-3 items-center">
+          <Button size="sm" leftIcon={<Plus />} onClick={handleAddTask}>
+            Add Task
+          </Button>
+        </div>
+      )}
+      <div>{renderBody()}</div>
+    </div>
   );
 }
 

@@ -3,15 +3,14 @@ import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import useDebounce from "@/hooks/use-debounce";
-import useDisclosure from "@/hooks/use-disclosure";
 import React, { useState } from "react";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
-import AddTaskModal from "./add-task-modal";
+import { useNavigate } from "react-router-dom";
 import TaskEmptyState from "./task-empty-state";
 import TasksTable from "./task-table";
 
 const Task: React.FC = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const navigate = useNavigate();
   const [search, setSearchQuery] = useState("");
 
   const debounceText = useDebounce(search, 1000);
@@ -27,11 +26,11 @@ const Task: React.FC = () => {
 
   return (
     <>
-      <div className="mx-6 my-2">
-        <div className="flex justify-between items-center my-4">
-          <div className="flex items-center gap-4">
+      <div className="mx-3 sm:mx-4 md:mx-6 my-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 my-4">
+          <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
             <Heading size="h3">Task</Heading>
-            <div className="relative w-full min-w-[300px] bg-[#F3F3F3] rounded-full">
+            <div className="relative flex-1 sm:flex-initial sm:min-w-[200px] md:min-w-[300px] bg-[#F3F3F3] rounded-full">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3 text-[#808080]" />
               <Input
                 placeholder="Search keyword"
@@ -47,7 +46,7 @@ const Task: React.FC = () => {
             <Button
               size="sm"
               leftIcon={<IoAdd className="text-white w-6 h-6" />}
-              onClick={onOpen}
+              onClick={() => navigate("/task/new")}
             >
               Add task
             </Button>
@@ -59,8 +58,6 @@ const Task: React.FC = () => {
           <TasksTable search={debounceText} />
         )}
       </div>
-
-      {isOpen && <AddTaskModal isOpen={isOpen} onClose={onClose} />}
     </>
   );
 };

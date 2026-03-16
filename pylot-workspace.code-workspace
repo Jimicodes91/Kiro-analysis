@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "name": "Frontend (Pylott-Web-App)",
+      "path": "/Users/jimi/PycharmProjects/Pylott-Web-App"
+    },
+    {
+      "name": "Backend (Pylott-Backend)",
+      "path": "/Users/jimi/PycharmProjects/Pylott-Backend"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.git": false
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true
+    }
+  }
+}

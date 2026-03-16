@@ -1,10 +1,10 @@
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
@@ -18,21 +18,21 @@ const TasksTable = ({ search }: { search: string }) => {
 
   const renderTable = () => {
     if (tasksResponse.isPending) {
-      return <TableSkeletonRowLoader length={6} />;
+      return <TableSkeletonRowLoader length={7} />;
     }
 
     if (tasksResponse?.isError) {
-      return <EmptyTable message="Something went wrong" length={6} />;
+      return <EmptyTable message="Something went wrong" length={7} />;
     }
 
     if (tasks.length === 0) {
-      return <EmptyTable message="No tasks found" length={6} />;
+      return <EmptyTable message="No tasks found" length={7} />;
     }
 
     return (
       <TableBody className="text-xs">
         <TableRow className="border-0 outline-none !bg-transparent">
-          <TableCell className="border-0 h-3 py-0" colSpan={6}></TableCell>
+          <TableCell className="border-0 h-3 py-0" colSpan={7}></TableCell>
         </TableRow>
         {tasks?.map((task) => <TaskTableRow key={task.id} task={task} />)}
       </TableBody>
@@ -46,6 +46,7 @@ const TasksTable = ({ search }: { search: string }) => {
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
               <TableHead>Task name</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead>Project title</TableHead>
               <TableHead>Company</TableHead>
               <TableHead>Due Date</TableHead>

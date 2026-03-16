@@ -3,22 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import DragNdrop from "@/components/ui/file-upload";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import CustomMultiSelect from "@/components/ui/multi-lol";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useGetProjectMembers from "@/hooks/project-modules/project-members/use-get-project-members";
@@ -34,9 +34,13 @@ import { z } from "zod";
 import Modal from "../../../../../components/Modal";
 
 const statuses = [
-  { value: "in_progress" as const, label: "In Progress" },
   { value: "pending" as const, label: "Pending" },
   { value: "completed" as const, label: "Completed" },
+];
+
+const visibilityOptions = [
+  { value: "inhouse" as const, label: "In-house" },
+  { value: "client_facing" as const, label: "Client Facing" },
 ];
 
 const AddProjectTaskModal = ({
@@ -57,7 +61,7 @@ const AddProjectTaskModal = ({
   });
 
   const onSubmit = async (data: z.infer<typeof addProjectTaskSchema>) => {
-    const { assignees, end_date, start_date, attachment, ...validData } = data;
+    const { assignees, due_date, attachment, ...validData } = data;
 
     // Ensure attachment is an array before processing
     const attachments = Array.isArray(attachment) ? attachment : [];
@@ -79,11 +83,9 @@ const AddProjectTaskModal = ({
     const payload = {
       ...validData,
       project_type_id: projectTypeId,
-      start_date: getUTCISODateFormat(start_date),
-      end_date: getUTCISODateFormat(end_date),
+      due_date: getUTCISODateFormat(due_date),
       assignees: assigneesIds,
       attachments: base64FileList.filter(Boolean), // Remove nulls
-      is_visible_to_client: true,
     };
 
     try {
@@ -158,95 +160,83 @@ const AddProjectTaskModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel isRequired>Description</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Description" {...field} />
+                    <Textarea placeholder="Description (optional)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <div className="flex gap-4 justify-between">
-              <FormField
-                control={form.control}
-                name="start_date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel isRequired>Start date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "text-sm h-12 font-normal rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4",
-                              !field.value && "text-muted-foreground"
-                            )}
-                            slotClassName="justify-start"
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span className="text-brand-placeholder">Start date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={getSelectableDate}
-                          initialFocus
+            <FormField
+              control={form.control}
+              name="due_date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full">
+                  <FormLabel isRequired>Due date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "text-sm h-12 font-normal rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4",
+                            !field.value && "text-muted-foreground"
+                          )}
+                          slotClassName="justify-start"
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span className="text-brand-placeholder">Due date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={getSelectableDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="visibility"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel isRequired>Visibility</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl className="h-12 w-full">
+                      <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
+                        <SelectValue
+                          placeholder={
+                            <p className="text-brand-placeholder">Select visibility</p>
+                          }
                         />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="end_date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel isRequired>End date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "font-normal h-12 rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span className="text-brand-placeholder">End date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date < new Date(form.watch("start_date"))}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {visibilityOptions?.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}

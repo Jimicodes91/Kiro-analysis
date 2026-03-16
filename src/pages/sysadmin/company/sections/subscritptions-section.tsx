@@ -35,7 +35,7 @@ const SysAdminCompanySubscriptionPage: React.FC = () => {
     );
   };
   return (
-    <div className="p-8 h-full space-y-6 flex flex-col min-h-[calc(100vh-70px)] max-w-[1400px]">
+    <div className="p-3 sm:p-4 md:p-8 h-full space-y-6 flex flex-col min-h-[calc(100vh-70px)] max-w-[1400px]">
       <div>
         <div className="mb-1">
           <button
@@ -49,7 +49,7 @@ const SysAdminCompanySubscriptionPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white grid grid-cols-3 flex-1 gap-x-5 lg:gap-x-10 flex-wrap">
+      <div className="bg-white grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 flex-1 gap-5 lg:gap-x-10 flex-wrap">
         {renderBody()}
       </div>
     </div>

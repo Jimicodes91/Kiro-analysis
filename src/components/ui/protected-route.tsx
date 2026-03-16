@@ -14,7 +14,7 @@ interface ProtectedProps {
 export default function ProtectedRoute({ element, roles, layout }: ProtectedProps) {
   const user = getUserSession();
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to={PAGES.LOGIN_PAGE} replace />;
 
   if (!roles.includes(user.role)) {
     return <Navigate to="/404" replace />;

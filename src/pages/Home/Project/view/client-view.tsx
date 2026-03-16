@@ -1,11 +1,11 @@
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import useGetClientProjects from "@/hooks/project-modules/use-get-client-projects";
 import { projectStatusList } from "@/lib/constants";
@@ -35,7 +35,7 @@ const ClientProjectView = () => {
               className="p-5 min-h-[123px] rounded-lg border-brand-border border animate-pulse flex justify-between items-center"
               key={i}
             >
-              <div className="space-y-2 min-w-[300px]">
+              <div className="space-y-2 w-full max-w-[300px]">
                 <div className="h-8 w-full max-w-[200px] bg-slate-200 rounded-md"></div>
                 <div className="h-8 w-full max-w-[150px] bg-slate-200 rounded-md"></div>
                 <div className="h-8 w-full max-w-[100px] bg-slate-200 rounded-full"></div>
@@ -71,11 +71,11 @@ const ClientProjectView = () => {
 
   return (
     <div>
-      <div className="p-6 animate-in fade-in-0 duration-700 ease-in-out">
-        <div className="flex gap-4 items-stretch md:items-center justify-between flex-col md:flex-row">
-          <div className="flex items-center gap-4">
+      <div className="p-3 sm:p-4 md:p-6 animate-in fade-in-0 duration-700 ease-in-out">
+        <div className="flex gap-3 md:gap-4 items-stretch md:items-center justify-between flex-col md:flex-row">
+          <div className="flex items-center gap-3 sm:gap-4 w-full md:w-auto">
             <Heading size="h3">Project</Heading>
-            <div className="relative w-full min-w-[300px]">
+            <div className="relative flex-1 md:flex-initial md:min-w-[300px]">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3" />
               <Input
                 placeholder="Search keyword"

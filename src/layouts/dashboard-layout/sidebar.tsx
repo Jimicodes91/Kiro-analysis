@@ -20,10 +20,10 @@ export default function Sidebar({ isCollapsed }: { isCollapsed: boolean }) {
       className={cn(
         parentStyle,
         isCollapsed
-          ? "w-[64px] hidden lg:flex"
+          ? "w-[64px] hidden md:flex"
           : isMobile
             ? "w-full"
-            : "w-[200px] hidden lg:flex"
+            : "w-[200px] hidden md:flex"
       )}
       layout
       initial={{ opacity: 0 }}

@@ -41,11 +41,17 @@ export async function getSessionToken() {
 export function getUserSession() {
   const session = getCookie("user_session");
   if (!session) {
-    logout();
-    return;
+    return undefined;
   }
 
-  return JSON.parse(session as string) as LoginResponse["data"]["user"];
+  const user = JSON.parse(session as string) as LoginResponse["data"]["user"];
+  
+  // Normalize role to uppercase to match frontend route expectations
+  if (user.role) {
+    user.role = user.role.toUpperCase() as UserType;
+  }
+  
+  return user;
 }
 
 export const getIsClient = () => {

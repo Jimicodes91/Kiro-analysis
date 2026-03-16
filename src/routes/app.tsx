@@ -17,9 +17,15 @@ import ClientDocumentManagement from "@/pages/client/documents";
 import ClientHomePage from "@/pages/client/home";
 import ClientProjectJourney from "@/pages/client/journey";
 import ClientTaskManagement from "@/pages/client/tasks";
+import ClientTaskDetailPage from "@/pages/client/tasks/client-task-detail-page";
+import PendingInvites from "@/pages/Home/Admin/pending-invites";
 import Contact from "@/pages/Home/Contact";
+import NotificationsPage from "@/pages/Home/Notifications";
 import ProjectDetailsPageWrapper from "@/pages/Home/project-details";
 import Task from "@/pages/Home/Task";
+import ExternalTaskForm from "@/pages/Home/Task/external-task-form";
+import InternalTaskForm from "@/pages/Home/Task/internal-task-form";
+import TaskTypeSelectorPage from "@/pages/Home/Task/task-type-selector";
 import NotFound from "@/pages/Notfound";
 import ProfilePageLayout from "@/pages/profile";
 import EditOrganizationDetails from "@/pages/profile/templates/org-details";
@@ -51,6 +57,12 @@ export const appRoutes: AppRoute[] = [
   {
     path: "/tasks",
     element: <ClientTaskManagement />,
+    roles: ["CLIENT"],
+    layout: ClientAccountLayout,
+  },
+  {
+    path: "/tasks/:projectId/:taskId",
+    element: <ClientTaskDetailPage />,
     roles: ["CLIENT"],
     layout: ClientAccountLayout,
   },
@@ -89,6 +101,24 @@ export const appRoutes: AppRoute[] = [
   {
     path: "/task",
     element: <Task />,
+    roles: ["ADMIN", "CONSULTANT"],
+    layout: AccountLayout,
+  },
+  {
+    path: "/task/new",
+    element: <TaskTypeSelectorPage />,
+    roles: ["ADMIN", "CONSULTANT"],
+    layout: AccountLayout,
+  },
+  {
+    path: "/task/new/internal",
+    element: <InternalTaskForm />,
+    roles: ["ADMIN", "CONSULTANT"],
+    layout: AccountLayout,
+  },
+  {
+    path: "/task/new/external",
+    element: <ExternalTaskForm />,
     roles: ["ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
@@ -151,6 +181,18 @@ export const appRoutes: AppRoute[] = [
     path: "/admin",
     element: <Admin />,
     roles: ["ADMIN"],
+    layout: AccountLayout,
+  },
+  {
+    path: "/admin/pending-invites",
+    element: <PendingInvites />,
+    roles: ["ADMIN", "SUPER_ADMIN"],
+    layout: AccountLayout,
+  },
+  {
+    path: "/notifications",
+    element: <NotificationsPage />,
+    roles: ["ADMIN", "CONSULTANT", "SUPER_ADMIN", "CLIENT"],
     layout: AccountLayout,
   },
 

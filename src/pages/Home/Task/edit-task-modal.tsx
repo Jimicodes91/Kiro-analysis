@@ -5,23 +5,23 @@ import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import DragNdrop from "@/components/ui/file-upload";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Loader from "@/components/ui/loader";
 import MultiSelect from "@/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,11 +32,11 @@ import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-proje
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { taskStatuses } from "@/lib/constants";
 import getInitials, {
-  cn,
-  fileToBase64,
-  getSelectableDate,
-  getUTCISODateFormat,
-  truncateMiddleWords,
+    cn,
+    fileToBase64,
+    getSelectableDate,
+    getUTCISODateFormat,
+    truncateMiddleWords,
 } from "@/lib/utils";
 import { Task } from "@/types/task.types";
 import { taskFormSchema } from "@/utils/validation-schema/task";
@@ -346,7 +346,7 @@ const ViewEditTaskModal = ({
               )}
             />
 
-            <div className="flex gap-4 justify-between">
+            <div className="flex flex-col sm:flex-row gap-4 justify-between">
               <FormField
                 control={form.control}
                 name="start_date"

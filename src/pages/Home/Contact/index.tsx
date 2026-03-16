@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/use-debounce";
 import { AnimatePresence } from "framer-motion";
 import React, {
-  // useEffect,
-  useState,
+    // useEffect,
+    useState,
 } from "react";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
 import ContactModal from "./contact-modal-form";
@@ -26,11 +26,11 @@ const Contact: React.FC = () => {
 
   return (
     <>
-      <div className="p-6 space-y-6">
-        <div className="flex justify-between items-center ">
-          <div className="flex items-center gap-4">
+      <div className="p-3 sm:p-4 md:p-6 space-y-4 md:space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
             <Heading size="h3">Contact</Heading>
-            <div className="relative w-full min-w-[300px] bg-[#F3F3F3] rounded-full">
+            <div className="relative flex-1 sm:flex-initial sm:min-w-[200px] md:min-w-[300px] bg-[#F3F3F3] rounded-full">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3 text-[#808080]" />
               <Input
                 placeholder="Search keyword"

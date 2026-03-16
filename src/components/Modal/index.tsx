@@ -96,7 +96,7 @@ const Modal = ({
         exit={{ opacity: 1 }}
       />
       <motion.div
-        className="bg-white rounded-lg p-4 z-50 w-full max-w-md max-h-full mx-[20px] flex flex-col scroll-smooth"
+        className="bg-white rounded-lg p-2 sm:p-4 z-50 w-full max-w-[calc(100vw-24px)] sm:max-w-md max-h-full mx-2 sm:mx-[20px] flex flex-col scroll-smooth"
         // @ts-expect-error kddkjd
         variants={dropIn}
         initial="hidden"

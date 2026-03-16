@@ -1,9 +1,9 @@
 import Toast from "@/components/Toast";
 import { secureRequest } from "@/services/api.service";
 import {
-  PylottResponseType,
-  ResponseErrorType,
-  SecureRequestProps,
+    PylottResponseType,
+    ResponseErrorType,
+    SecureRequestProps,
 } from "@/types/api.types";
 import { MutationFunction, UseMutationOptions, useMutation } from "@tanstack/react-query";
 
@@ -13,7 +13,8 @@ type MutatationParam = Partial<UseMutationOptions> &
 function getMutationAction<P, T>(mutationData: Partial<SecureRequestProps>) {
   const { endpoint, method, headers, extraConfig = {} } = mutationData;
 
-  const url = (import.meta.env.VITE_API_BASE_URL as string) + endpoint;
+  const baseUrl = import.meta.env.VITE_API_BASE_URL as string;
+  const url = `${baseUrl}/${endpoint}`;
 
   return {
     mutationFn: (body: Record<string, unknown>) =>

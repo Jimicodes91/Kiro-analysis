@@ -1,26 +1,24 @@
 import { Button } from "@/components/ui/button";
-import useDisclosure from "@/hooks/use-disclosure";
-import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { IoAdd } from "react-icons/io5";
-import AddTaskTypeModal from "./add-task-type-modal";
+import { useNavigate } from "react-router-dom";
 import TaskTypeTable from "./task-type-table";
 
 const TaskTab: React.FC = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const navigate = useNavigate();
   return (
     <>
       <div className="flex justify-between items-center my-2">
         <h1 className="text-[16px] font-[600]">Task type </h1>
-        <Button onClick={onOpen} size="sm" leftIcon={<IoAdd className="text-white" />}>
-          Add task type
+        <Button
+          onClick={() => navigate("/task/new?from=admin")}
+          size="sm"
+          leftIcon={<IoAdd className="text-white" />}
+        >
+          Create Task
         </Button>
       </div>
       <TaskTypeTable />
-      {/* Modal to add task type */}
-      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {isOpen && <AddTaskTypeModal isOpen={isOpen} onClose={onClose} />}
-      </AnimatePresence>
     </>
   );
 };

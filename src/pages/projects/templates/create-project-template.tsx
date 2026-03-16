@@ -1,35 +1,24 @@
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
-import Loader from "@/components/ui/loader";
-import useGetProjectFormFields from "@/hooks/project-modules/project-forms/use-get-project-form-fields";
 import { PAGES } from "@/lib/constants";
-import { Link } from "react-router-dom";
-import CreateProjectDynamicForm from "../components/project-dynamic-form";
+import SimplifiedProjectForm from "@/pages/Home/Project/components/simplified-project-form";
+import { Link, useNavigate } from "react-router-dom";
 
 function CreateProjectTemplate() {
-  const projectFormFields = useGetProjectFormFields();
-  const renderForm = () => {
-    if (projectFormFields.isLoading && !projectFormFields?.value?.data) return <Loader />;
+  const navigate = useNavigate();
 
-    if (
-      !projectFormFields.isLoading &&
-      projectFormFields?.value &&
-      projectFormFields?.value?.data
-    ) {
-      return (
-        <CreateProjectDynamicForm
-          key={projectFormFields.status}
-          fields={projectFormFields?.value?.data}
-        />
-      );
-    }
-    return <p>Some thing went wrong</p>;
+  const handleSuccess = () => {
+    navigate(PAGES.PROJECT_PAGE);
+  };
+
+  const handleCancel = () => {
+    navigate(PAGES.PROJECT_PAGE);
   };
 
   return (
     <div>
-      <div className="space-y-3 p-6">
+      <div className="space-y-3 p-3 sm:p-4 md:p-6">
         <div>
           <p>
             <Link to={PAGES.PROJECT_PAGE}>
@@ -44,11 +33,13 @@ function CreateProjectTemplate() {
           </p>
           <Heading size="h3">Add Project</Heading>
         </div>
-        <div
-          className="w-full bg-brand-gray grid place-items-center p-6"
-          key={projectFormFields.status}
-        >
-          {renderForm()}
+        <div className="w-full bg-brand-gray p-3 sm:p-4 md:p-6">
+          <div className="max-w-2xl mx-auto bg-white rounded-lg p-3 sm:p-4 md:p-6">
+            <SimplifiedProjectForm
+              onSuccess={handleSuccess}
+              onCancel={handleCancel}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -1,10 +1,10 @@
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table";
 import { TablePagination } from "@/components/ui/table-pagination";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
@@ -29,21 +29,21 @@ const ContactsTable = ({ search }: { search: string }) => {
 
   const renderTable = () => {
     if (contactsResponse.isPending) {
-      return <TableSkeletonRowLoader length={8} noOfRows={pageProp.pageSize} />;
+      return <TableSkeletonRowLoader length={9} noOfRows={pageProp.pageSize} />;
     }
 
     if (contactsResponse?.isError) {
-      return <EmptyTable message="Something went wrong" length={8} />;
+      return <EmptyTable message="Something went wrong" length={9} />;
     }
 
     if (contacts.length === 0) {
-      return <EmptyTable message="No contacts found" length={8} />;
+      return <EmptyTable message="No contacts found" length={9} />;
     }
 
     return (
       <TableBody className="text-xs">
         <TableRow className="border-0 outline-none !bg-transparent">
-          <TableCell className="border-0 h-3 py-0" colSpan={8}></TableCell>
+          <TableCell className="border-0 h-3 py-0" colSpan={9}></TableCell>
         </TableRow>
         {contacts?.map((contact) => (
           <ContactTableRow key={contact.id} contact={contact} />
@@ -61,6 +61,7 @@ const ContactsTable = ({ search }: { search: string }) => {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Phone number</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>No of project</TableHead>
               <TableHead>Active project</TableHead>
               <TableHead>Closed project</TableHead>

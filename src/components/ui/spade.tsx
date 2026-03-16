@@ -1,11 +1,12 @@
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { PiSpinner } from "react-icons/pi";
+
 interface SpadeProps {
   text: string;
   isLast?: boolean;
@@ -23,30 +24,43 @@ function Spade({ text, isLast, isFirst, isActive, onClick, isLoading }: SpadePro
           <div
             onClick={onClick}
             className={cn(
-              "flex items-center w-full capitalize min-w-10 text-center justify-center font-medium pl-4 pr-7 text-xs py-2.5 relative cursor-pointer transition-colors whitespace-nowrap",
-              isFirst && "rounded-l-full",
-              isLast && "rounded-r-full",
-              isActive ? "bg-primary text-white" : "bg-[#092327]/5 text-[#00000080]"
+              "relative flex items-center justify-center flex-1 min-w-0 capitalize text-center font-medium text-xs py-2.5 cursor-pointer transition-colors select-none",
+              isFirst ? "rounded-l-full pl-4 pr-5" : "pl-5 pr-5",
+              isLast ? "rounded-r-full pr-4" : "",
+              isActive ? "bg-primary text-white" : "bg-[#E8EAEB] text-[#00000066]"
             )}
           >
+            {/* Left arrow notch (white separator) */}
             {!isFirst && (
-              <div
-                className="w-[18px] h-[46px] absolute -top-0.5 -left-3 bg-white flex items-center justify-center text-xl font-bold"
-                style={{
-                  clipPath:
-                    "polygon(0% 0%, 57% 0%, 100% 50%, 57% 100%, 0% 100%, 43% 50%)",
-                }}
-              ></div>
+              <svg
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[1px] z-10"
+                width="12"
+                height="36"
+                viewBox="0 0 12 36"
+                fill="none"
+              >
+                <path d="M0 0L12 18L0 36" fill="white" />
+              </svg>
             )}
-            {isLoading ? <PiSpinner className="animate-spin" size={16} /> : text}
+
+            <span className="truncate">
+              {isLoading ? <PiSpinner className="animate-spin mx-auto" size={16} /> : text}
+            </span>
+
+            {/* Right arrow pointer */}
             {!isLast && (
-              <div
-                className="w-[18px] h-[46px] absolute -top-0.5 -right-[15px] bg-transparent  flex items-center justify-center text-xl font-bold"
-                style={{
-                  clipPath:
-                    "polygon(0% 0%, 50% 0%, 100% 50%, 50% 100%, 0% 100%, 50% 50%)",
-                }}
-              ></div>
+              <svg
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[11px] z-10"
+                width="12"
+                height="36"
+                viewBox="0 0 12 36"
+                fill="none"
+              >
+                <path
+                  d="M0 0L12 18L0 36"
+                  fill={isActive ? "hsl(var(--primary))" : "#E8EAEB"}
+                />
+              </svg>
             )}
           </div>
         </TooltipTrigger>
@@ -56,7 +70,7 @@ function Spade({ text, isLast, isFirst, isActive, onClick, isLoading }: SpadePro
           arrowPadding={100}
         >
           <p>
-            Progress this project to <span className="font-bold">{text}</span> phase
+            Progress to <span className="font-bold">{text}</span> phase
           </p>
         </TooltipContent>
       </Tooltip>

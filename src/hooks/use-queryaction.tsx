@@ -1,8 +1,8 @@
 import { secureRequest } from "@/services/api.service";
 import {
-  PylottResponseType,
-  ResponseErrorType,
-  SecureRequestProps,
+    PylottResponseType,
+    ResponseErrorType,
+    SecureRequestProps,
 } from "@/types/api.types";
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 
@@ -14,7 +14,8 @@ type ActionParams<T> = Partial<SecureRequestProps> &
 export function getQueryAction<T>(payload: ActionParams<T>) {
   const { endpoint, method, body, headers } = payload;
 
-  const url = (import.meta.env.VITE_API_BASE_URL as string) + endpoint;
+  const baseUrl = import.meta.env.VITE_API_BASE_URL as string;
+  const url = `${baseUrl}/${endpoint}`;
 
   return {
     queryFn: () => {
