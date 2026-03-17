@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { setCookie } from "cookies-next";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { InferType } from "yup";
 import { Logo } from "../../assets";
@@ -13,7 +13,6 @@ import { FormInput } from "../../components/Form/input";
 import { workspaceSignupSchema } from "../../utils/validation-schema/auth";
 
 const SignUp: React.FC = () => {
-  const navigate = useNavigate();
   const workspaceSignup = useWorkspaceSignup();
   const {
     register,
@@ -38,8 +37,13 @@ const SignUp: React.FC = () => {
 
         toast.success("Workspace created successfully!");
         
-        // Redirect to dashboard
-        navigate(PAGES.PROJECT_PAGE);
+        // Redirect based on role — SUPER_ADMIN goes to sysadmin home, others to projects
+        const userRole = response.data.data.user?.role?.toUpperCase();
+        if (userRole === "SUPER_ADMIN") {
+          window.location.href = PAGES.HOME_PAGE;
+        } else {
+          window.location.href = PAGES.PROJECT_PAGE;
+        }
       })
       .catch((error) => {
         toast.error(error?.response?.data?.message || "Failed to create workspace");
