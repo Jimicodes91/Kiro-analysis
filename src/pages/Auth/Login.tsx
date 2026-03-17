@@ -45,12 +45,10 @@ const Login: React.FC = () => {
         const userRole = user.role;
 
         // Handle different user roles and do full page reload to update routes
-        if (userRole === "SUPER_ADMIN") {
-          window.location.href = PAGES.SYSADMIN_HOME_PAGE;
+        if (userRole === "SUPER_ADMIN" || userRole === "ADMIN" || userRole === "CONSULTANT") {
+          window.location.href = PAGES.PROJECT_PAGE;
         } else if (userRole === "CLIENT") {
           window.location.href = PAGES.HOME_PAGE;
-        } else if (userRole === "ADMIN" || userRole === "CONSULTANT") {
-          window.location.href = PAGES.PROJECT_PAGE;
         } else {
           // Default to home page
           window.location.href = PAGES.HOME_PAGE;

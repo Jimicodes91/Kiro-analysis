@@ -1,8 +1,6 @@
-import { PAGES } from "@/lib/constants";
 import { getUserSession } from "@/services/api.service";
 import { companyDetailsSchema } from "@/utils/validation-schema/onboarding";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { InferType } from "yup";
 
 type CompanyDetails = InferType<typeof companyDetailsSchema>;
@@ -24,7 +22,6 @@ const OnboardingCtx = React.createContext<OnboardingContextInterface>(
 
 const OnboardingContextProvider = ({ children }: OnboardingPropsInterface) => {
   const user = getUserSession();
-  const navigate = useNavigate();
   const [stage, setStage] = React.useState(1);
   const [companyData, setCompanyData] = React.useState<CompanyDetails>({
     address: "",
@@ -56,12 +53,11 @@ const OnboardingContextProvider = ({ children }: OnboardingPropsInterface) => {
   };
 
   useEffect(() => {
-    if (user?.company_id && !companyData.address) {
-      navigate(PAGES.PROJECT_PAGE, {
-        replace: true,
-      });
+    // If user already has a company (e.g. workspace signup), skip Step 1 and go to Step 2 (invite team)
+    if (user?.company_id && stage === 1 && !companyData.address) {
+      setStage(2);
     }
-  }, [navigate, user, companyData]);
+  }, [user, stage, companyData]);
 
   return (
     <OnboardingCtx.Provider

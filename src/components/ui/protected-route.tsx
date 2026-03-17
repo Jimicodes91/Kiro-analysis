@@ -1,3 +1,4 @@
+import { PAGES } from "@/lib/constants";
 import { getUserSession } from "@/services/api.service";
 
 // ProtectedRoute.tsx
