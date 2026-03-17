@@ -19,6 +19,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ErrorBoundary>
         <App />
         <ToastContainer
           transition={slideInOutAnimation}
@@ -32,6 +33,7 @@ createRoot(document.getElementById("root")!).render(
           autoClose={4000}
         />
         <ReactQueryDevtools />
+        </ErrorBoundary>
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>
