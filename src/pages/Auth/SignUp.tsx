@@ -37,8 +37,8 @@ const SignUp: React.FC = () => {
 
         toast.success("Workspace created successfully!");
         
-        // Redirect to projects page
-        window.location.href = PAGES.PROJECT_PAGE;
+        // Redirect to onboarding (invite team step)
+        window.location.href = PAGES.ONBOARDING_PAGE;
       })
       .catch((error) => {
         toast.error(error?.response?.data?.message || "Failed to create workspace");
