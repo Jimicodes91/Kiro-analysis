@@ -37,13 +37,8 @@ const SignUp: React.FC = () => {
 
         toast.success("Workspace created successfully!");
         
-        // Redirect based on role — SUPER_ADMIN goes to sysadmin home, others to projects
-        const userRole = response.data.data.user?.role?.toUpperCase();
-        if (userRole === "SUPER_ADMIN") {
-          window.location.href = PAGES.HOME_PAGE;
-        } else {
-          window.location.href = PAGES.PROJECT_PAGE;
-        }
+        // Redirect to projects page
+        window.location.href = PAGES.PROJECT_PAGE;
       })
       .catch((error) => {
         toast.error(error?.response?.data?.message || "Failed to create workspace");

@@ -34,7 +34,6 @@ import ProfileSecurityTemplate from "@/pages/profile/templates/security";
 import CreateProjectTemplate from "@/pages/projects/templates/create-project-template";
 import SysAdminCompanyPage from "@/pages/sysadmin/company";
 import SysAdminCompanySubscriptionPage from "@/pages/sysadmin/company/sections/subscritptions-section";
-import SysAdminHomePage from "@/pages/sysadmin/home";
 import SysAdminSubscriptionPage from "@/pages/sysadmin/subscriptions";
 import SysAdminUsersPage from "@/pages/sysadmin/users";
 import Admin from "../pages/Home/Admin";
@@ -89,51 +88,46 @@ export const appRoutes: AppRoute[] = [
   {
     path: "/home",
     element: <Home />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/contact",
     element: <Contact />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/task",
     element: <Task />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/task/new",
     element: <TaskTypeSelectorPage />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/task/new/internal",
     element: <InternalTaskForm />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/task/new/external",
     element: <ExternalTaskForm />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
 
+  // SUPER_ADMIN-only management routes
   {
     path: "/users",
     element: <SysAdminUsersPage />,
     roles: ["SUPER_ADMIN"],
     layout: AccountLayout,
-  },
-  {
-    path: "/home",
-    element: <SysAdminHomePage />,
-    layout: AccountLayout,
-    roles: ["SUPER_ADMIN"],
   },
   {
     path: "/subscription",
@@ -156,31 +150,31 @@ export const appRoutes: AppRoute[] = [
   {
     path: "/finance",
     element: <Finance />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/projects",
     element: <Project />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/projects/create",
     element: <CreateProjectTemplate />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/projects/:id",
     element: <ProjectDetailsPageWrapper />,
-    roles: ["ADMIN", "CONSULTANT"],
+    roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },
   {
     path: "/admin",
     element: <Admin />,
-    roles: ["ADMIN"],
+    roles: ["SUPER_ADMIN", "ADMIN"],
     layout: AccountLayout,
   },
   {
@@ -213,7 +207,7 @@ export const appRoutes: AppRoute[] = [
     path: "/profile-settings/organization",
     element: <EditOrganizationDetails />,
 
-    roles: ["ADMIN"],
+    roles: ["SUPER_ADMIN", "ADMIN"],
     layout: [ProfilePageLayout, AccountLayout],
   },
   {

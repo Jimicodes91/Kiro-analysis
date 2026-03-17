@@ -102,18 +102,33 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
     {
       title: "Home",
       icon: Icons.dashboard,
-      path: "/sysadmin",
+      path: "/home",
       exact: true,
     },
     {
-      title: "Users",
-      icon: Icons.user,
-      path: "/sysadmin/users",
+      title: "Projects",
+      icon: Icons.project,
+      path: "/projects",
     },
     {
-      title: "Subscription",
-      icon: Icons.subscription,
-      path: "/sysadmin/subscription",
+      title: "Admin",
+      icon: Icons.admin,
+      path: "/admin",
+    },
+    {
+      title: "Tasks",
+      icon: Icons.task,
+      path: "/task",
+    },
+    {
+      title: "Contact",
+      icon: Icons.client,
+      path: "/contact",
+    },
+    {
+      title: "Billing",
+      icon: Icons.coins,
+      path: "/finance",
     },
   ],
 };
