@@ -1,5 +1,6 @@
 import useAuthLogin from "@/hooks/auth/use-auth-login";
 import { PAGES } from "@/lib/constants";
+import { getUserSession } from "@/services/api.service";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { setCookie } from "cookies-next";
 import React from "react";
@@ -15,6 +16,20 @@ import { loginSchema } from "../../utils/validation-schema/auth";
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const authLogin = useAuthLogin();
+
+  // If user is already logged in, redirect based on role
+  const existingUser = getUserSession();
+  React.useEffect(() => {
+    if (existingUser) {
+      const role = existingUser.role;
+      if (role === "SUPER_ADMIN" || role === "ADMIN" || role === "CONSULTANT") {
+        navigate(PAGES.PROJECT_PAGE, { replace: true });
+      } else if (role === "CLIENT") {
+        navigate(PAGES.HOME_PAGE, { replace: true });
+      }
+    }
+  }, [existingUser, navigate]);
+
   const {
     register,
     handleSubmit,
@@ -44,15 +59,9 @@ const Login: React.FC = () => {
 
         const userRole = user.role;
 
-        // Handle different user roles and do full page reload to update routes
-        if (userRole === "SUPER_ADMIN" || userRole === "ADMIN" || userRole === "CONSULTANT") {
-          window.location.href = PAGES.PROJECT_PAGE;
-        } else if (userRole === "CLIENT") {
-          window.location.href = PAGES.HOME_PAGE;
-        } else {
-          // Default to home page
-          window.location.href = PAGES.HOME_PAGE;
-        }
+        // Navigate to root first (Render serves index.html for /), 
+        // then the app will redirect based on role
+        window.location.href = "/";
       })
       .catch((error) => {
         const errorMessage = error?.response?.data?.message || "Login failed";
