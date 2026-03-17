@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { cssTransition, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import App from "./App.tsx";
+import { ErrorBoundary } from "./components/ui/error-boundary";
 import "./index.css";
 
 const slideInOutAnimation = cssTransition({
@@ -19,6 +20,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ErrorBoundary>
         <App />
         <ToastContainer
           transition={slideInOutAnimation}
@@ -32,6 +34,7 @@ createRoot(document.getElementById("root")!).render(
           autoClose={4000}
         />
         <ReactQueryDevtools />
+        </ErrorBoundary>
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>

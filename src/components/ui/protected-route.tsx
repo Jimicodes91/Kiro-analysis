@@ -34,5 +34,5 @@ export default function ProtectedRoute({ element, roles, layout }: ProtectedProp
     }
   }
 
-  return wrapped;
+  return <>{wrapped}</>;
 }
