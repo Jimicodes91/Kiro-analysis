@@ -103,3 +103,43 @@ export const changePasswordSchema = yup.object().shape({
     .oneOf([yup.ref("newPassword")], "Passwords must match")
     .trim(),
 });
+
+// Multi-step signup wizard schemas
+export const credentialsSchema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Email is required").trim(),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[A-Z]/, "Must contain an uppercase letter")
+    .matches(/\d/, "Must contain a number")
+    .matches(/[!@#$%^&*]/, "Must contain a special character")
+    .trim(),
+  confirmPassword: yup
+    .string()
+    .required("Confirm password is required")
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .trim(),
+});
+
+export const otpSchema = yup.object().shape({
+  otp: yup
+    .string()
+    .required("OTP is required")
+    .matches(/^\d{6}$/, "OTP must be 6 digits")
+    .trim(),
+});
+
+export const profileCompanySchema = yup.object().shape({
+  name: yup.string().required("Full name is required").trim(),
+  workspace_name: yup.string().required("Company name is required").trim(),
+  industry_type: yup.string().required("Industry type is required").trim(),
+  size: yup
+    .string()
+    .required("Company size is required")
+    .oneOf(["startup", "small", "medium", "large", "enterprise"])
+    .trim(),
+  country: yup.object().typeError("Country is required"),
+  address: yup.string().required("Company address is required").trim(),
+  city: yup.string().required("City is required").trim(),
+});

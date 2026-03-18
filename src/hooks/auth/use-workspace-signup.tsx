@@ -22,18 +22,23 @@ export interface WorkspaceSignupResponse {
   };
 }
 
+export interface WorkspaceSignupRequest {
+  signup_token: string;
+  password: string;
+  name: string;
+  workspace_name: string;
+  industry_type: string;
+  size: string;
+  country: string;
+  address: string;
+  city: string;
+}
+
 const useWorkspaceSignup = () => {
-  return useCustomMutation<
-    WorkspaceSignupResponse,
-    {
-      email: string;
-      password: string;
-      name: string;
-      workspace_name: string;
-    }
-  >({
+  return useCustomMutation<WorkspaceSignupResponse, WorkspaceSignupRequest>({
     method: "post",
     endpoint: ENDPOINTS.WORKSPACE_SIGNUP,
+    showSuccessToast: false,
   });
 };
 

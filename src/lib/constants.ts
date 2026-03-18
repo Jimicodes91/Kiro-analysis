@@ -198,6 +198,8 @@ export const ENDPOINTS = {
   SWITCH_ORG: "auth/switch-organization",
   // Auth Endpoint
   WORKSPACE_SIGNUP: "auth/signup",
+  SEND_SIGNUP_OTP: "auth/send-otp",
+  VERIFY_SIGNUP_OTP: "auth/verify-otp",
   ADMIN_SIGNUP: "auth/admin-signup",
   VERIFY_EMAIL: (token: string) => `auth/verify?token=${token}`,
   VERIFY_EMAIL_WITH_OTP: "auth/verify",
