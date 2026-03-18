@@ -148,7 +148,7 @@ const VerifyOtpStep: React.FC<{
   const onSubmit = async (data: InferType<typeof otpSchema>) => {
     try {
       const response = await verifyOtp.mutateAsync({ email, otp: data.otp });
-      onSuccess(response.data.signup_token);
+      onSuccess(response.data.data.signup_token);
     } catch {
       // Errors (invalid/expired OTP) shown via useCustomMutation default toast
     }
