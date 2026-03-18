@@ -13,6 +13,12 @@ import { MainButton } from "../../components/Form/button";
 import { FormInput } from "../../components/Form/input";
 import { loginSchema } from "../../utils/validation-schema/auth";
 
+/** Return the post-login landing path for a given role */
+function landingPath(role: string): string {
+  if (role === "CLIENT") return PAGES.HOME_PAGE;
+  return PAGES.HOME_PAGE; // ADMIN, SUPER_ADMIN, CONSULTANT all land on /home (dashboard)
+}
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const authLogin = useAuthLogin();
@@ -21,12 +27,7 @@ const Login: React.FC = () => {
   const existingUser = getUserSession();
   React.useEffect(() => {
     if (existingUser) {
-      const role = existingUser.role;
-      if (role === "SUPER_ADMIN" || role === "ADMIN" || role === "CONSULTANT") {
-        navigate(PAGES.PROJECT_PAGE, { replace: true });
-      } else if (role === "CLIENT") {
-        navigate(PAGES.HOME_PAGE, { replace: true });
-      }
+      navigate(landingPath(existingUser.role), { replace: true });
     }
   }, [existingUser, navigate]);
 
@@ -57,10 +58,9 @@ const Login: React.FC = () => {
 
         toast.success("Login successful!");
 
-        const userRole = user.role;
-
-        // Navigate to root first (Render serves index.html for /), 
-        // then the app will redirect based on role
+        // Full page reload to / — Render serves index.html for root.
+        // The Login component's useEffect will then client-side navigate
+        // to the correct landing page based on role.
         window.location.href = "/";
       })
       .catch((error) => {
