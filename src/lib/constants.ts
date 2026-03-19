@@ -309,6 +309,7 @@ export const ENDPOINTS = {
 
   // 1. Project Types
   GET_ALL_PROJECT_TYPES: "projects/types",
+  GET_JOURNEY_TEMPLATES: "projects/types/templates",
   GET_PROJECT_TYPE_DETAILS: (projectTypeId: string) => `projects/types/${projectTypeId}`,
   UPDATE_PROJECT_TYPE_DETAILS: (projectTypeId: string) =>
     `projects/types/${projectTypeId}`,
@@ -492,6 +493,7 @@ export const QUERYKEYS = {
 
   // 1. Project Types Query keys
   GET_ALL_PROJECT_TYPES: "GET_ALL_PROJECT_TYPES",
+  GET_JOURNEY_TEMPLATES: "GET_JOURNEY_TEMPLATES",
   GET_PROJECT_TYPE_DETAILS: "GET_PROJECT_TYPE_DETAILS",
 
   // 2. Milestones Query keys
