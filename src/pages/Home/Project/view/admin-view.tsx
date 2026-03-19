@@ -11,7 +11,7 @@ import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import useDebounce from "@/hooks/use-debounce";
 import { projectStatusList } from "@/lib/constants";
 import ProjectEmptyState from "@/pages/projects/components/project-empty-state";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import ViewToggle from "../../../../components/ui/view-toggle";
 import { useOrgProjectContext } from "../context/org-project-context";
@@ -28,12 +28,15 @@ const NonClientProjectView = () => {
 
   const projectTypes = useGetAllProjectTypes();
 
-  // Gate the projects query: only fire once project types are loaded and the
-  // active type is confirmed to exist. Prevents stale cookie 500s.
-  const typesReady = projectTypes.isSuccess && (projectTypes?.value?.data?.length ?? 0) > 0;
-  const safeProjectType = typesReady
-    ? (projectTypes?.value?.data?.find((t) => t.id === activeProjectType)?.id ?? projectTypes?.value?.data?.[0]?.id)
-    : undefined;
+  // Derive a safe project type ID: only resolve to a real ID once project types
+  // have loaded AND the active type exists in the list. Otherwise undefined,
+  // which keeps the projects query disabled (enabled: Boolean(projectTypeId)).
+  const safeProjectType = useMemo(() => {
+    if (!projectTypes.isSuccess) return undefined;
+    const types = projectTypes?.value?.data ?? [];
+    if (types.length === 0) return undefined;
+    return types.find((t) => t.id === activeProjectType)?.id ?? types[0]?.id;
+  }, [projectTypes.isSuccess, projectTypes?.value?.data, activeProjectType]);
 
   const allProjects = useGetAllProjects(safeProjectType, status, debounceSearch);
 
