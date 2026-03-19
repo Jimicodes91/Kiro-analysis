@@ -26,6 +26,8 @@ const NonClientProjectView = () => {
     useOrgProjectContext();
   const debounceSearch = useDebounce(search, 1000);
 
+  const projectTypes = useGetAllProjectTypes();
+
   // Only pass activeProjectType to the projects query after project types have loaded
   // and validated the active type. This prevents stale cookie values from triggering 500s.
   const validatedProjectType = projectTypes.isSuccess
@@ -33,7 +35,6 @@ const NonClientProjectView = () => {
     : undefined;
 
   const allProjects = useGetAllProjects(validatedProjectType, status, debounceSearch);
-  const projectTypes = useGetAllProjectTypes();
 
   const handleTabChange = (value: string) => {
     searchParams.set("viewMode", value?.toLowerCase());
