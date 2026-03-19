@@ -1,10 +1,10 @@
 import Loader from "@/components/ui/loader";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
@@ -36,10 +36,16 @@ const NonClientProjectView = () => {
 
   useEffect(() => {
     if (projectTypes.isSuccess && projectTypes.value) {
-      const isPresence = projectTypes?.value?.data?.find(
+      const types = projectTypes?.value?.data ?? [];
+      if (types.length === 0) {
+        // No journeys exist — clear any stale cookie
+        if (changeActiveProjectType) changeActiveProjectType("");
+        return;
+      }
+      const isPresence = types.find(
         (item) => item.id === activeProjectType
       )?.id;
-      const activeTypeId = projectTypes?.value?.data?.[0]?.id;
+      const activeTypeId = types[0]?.id;
       if (changeActiveProjectType) {
         changeActiveProjectType(isPresence ? activeProjectType! : activeTypeId ?? "");
       }
