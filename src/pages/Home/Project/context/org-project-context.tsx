@@ -33,9 +33,9 @@ const OrgProjectContextProvider = ({ children }: { children: React.ReactNode }) 
     }
   }, [userData?.value?.data?.company_id, selectedCompanyId]);
 
-  const storeActiveProjectType = getCookie("active_project");
+  const storeActiveProjectType = getCookie("active_project") as string | undefined;
   const [activeProjectType, setActiveProjectType] = React.useState<string | undefined>(
-    storeActiveProjectType as string
+    storeActiveProjectType || undefined
   );
   const [status, setStatus] = React.useState<ProjectStatusDict | "all">("all");
   const [search, setSearch] = React.useState("");
