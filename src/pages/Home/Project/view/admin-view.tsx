@@ -28,13 +28,14 @@ const NonClientProjectView = () => {
 
   const projectTypes = useGetAllProjectTypes();
 
-  // Only pass activeProjectType to the projects query after project types have loaded
-  // and validated the active type. This prevents stale cookie values from triggering 500s.
-  const validatedProjectType = projectTypes.isSuccess
-    ? projectTypes?.value?.data?.find((t) => t.id === activeProjectType)?.id
+  // Gate the projects query: only fire once project types are loaded and the
+  // active type is confirmed to exist. Prevents stale cookie 500s.
+  const typesReady = projectTypes.isSuccess && (projectTypes?.value?.data?.length ?? 0) > 0;
+  const safeProjectType = typesReady
+    ? (projectTypes?.value?.data?.find((t) => t.id === activeProjectType)?.id ?? projectTypes?.value?.data?.[0]?.id)
     : undefined;
 
-  const allProjects = useGetAllProjects(validatedProjectType, status, debounceSearch);
+  const allProjects = useGetAllProjects(safeProjectType, status, debounceSearch);
 
   const handleTabChange = (value: string) => {
     searchParams.set("viewMode", value?.toLowerCase());
