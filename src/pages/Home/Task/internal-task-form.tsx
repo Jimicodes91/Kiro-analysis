@@ -109,6 +109,7 @@ const InternalTaskForm = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const initialProjectId = searchParams.get("projectId") ?? "";
+  const initialProjectTypeId = searchParams.get("projectTypeId") ?? "";
   const from = searchParams.get("from") ?? "";
   const getReturnPath = () => {
     if (from === "admin") return "/admin?selectedTab=task";
@@ -116,13 +117,16 @@ const InternalTaskForm = () => {
     return "/task";
   };
   const cancelPath = getReturnPath();
-  const backPath = from ? `/task/new?from=${from}${initialProjectId ? `&projectId=${initialProjectId}` : ""}` : "/task/new";
+  const backPath = from ? `/task/new?from=${from}${initialProjectId ? `&projectId=${initialProjectId}` : ""}${initialProjectTypeId ? `&projectTypeId=${initialProjectTypeId}` : ""}` : "/task/new";
   const [additionalInfo, setAdditionalInfo] = useState<string[]>([]);
   const [infoInput, setInfoInput] = useState("");
   const projectTypes = useGetAllProjectTypes();
   const form = useForm<InternalFormData>({
     resolver: yupResolver(internalTaskSchema),
-    defaultValues: { project_id: initialProjectId || undefined },
+    defaultValues: {
+      project_id: initialProjectId || undefined,
+      project_type_id: initialProjectTypeId || undefined,
+    },
   });
   const selectedProjectTypeId = form.watch("project_type_id");
   const projects = useGetAllProjects(selectedProjectTypeId);
@@ -170,7 +174,7 @@ const InternalTaskForm = () => {
             )} />
             <FormField control={form.control} name="project_type_id" render={({ field }) => (
               <FormItem><FormLabel isRequired>Pipeline</FormLabel>
-                <Select onValueChange={(value: string) => { field.onChange(value); form.setValue("project_id", ""); }} defaultValue={field.value}>
+                <Select onValueChange={(value: string) => { field.onChange(value); form.setValue("project_id", ""); }} value={field.value}>
                   <FormControl className="h-12 w-full">
                     <SelectTrigger isLoading={projectTypes.isLoading} className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
                       <SelectValue placeholder={<p className="text-brand-placeholder">Select Pipeline</p>} />
@@ -181,7 +185,7 @@ const InternalTaskForm = () => {
             )} />
             <FormField control={form.control} name="project_id" render={({ field }) => (
               <FormItem><FormLabel isRequired>Project</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!selectedProjectTypeId}>
+                <Select onValueChange={field.onChange} value={field.value} disabled={!selectedProjectTypeId}>
                   <FormControl className="h-12 w-full">
                     <SelectTrigger isLoading={projects.isLoading} className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
                       <SelectValue placeholder={<p className="text-brand-placeholder">{selectedProjectTypeId ? "Select Project" : "Select Pipeline first"}</p>} />

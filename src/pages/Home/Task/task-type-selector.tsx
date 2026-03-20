@@ -25,6 +25,7 @@ const TaskTypeSelectorPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get("projectId") ?? "";
+  const projectTypeId = searchParams.get("projectTypeId") ?? "";
   const from = searchParams.get("from") ?? "";
 
   const getReturnPath = () => {
@@ -41,6 +42,7 @@ const TaskTypeSelectorPage = () => {
       : "/task/new/external";
     const params = new URLSearchParams();
     if (projectId) params.set("projectId", projectId);
+    if (projectTypeId) params.set("projectTypeId", projectTypeId);
     if (from) params.set("from", from);
     const qs = params.toString();
     navigate(`${base}${qs ? `?${qs}` : ""}`);
