@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import {
     Select,
@@ -26,13 +27,13 @@ const ActiveProjectTypeProjectWrapperOnAdminView = ({
     useOrgProjectContext();
 
   return (
-    <div className="p-4 sm:p-5 md:p-6 animate-in fade-in-0 duration-500 ease-in-out">
+    <div className="p-3 sm:p-4 md:p-6 animate-in fade-in-0 duration-500 ease-in-out">
       {/* Page header */}
       <div className="flex gap-3 md:gap-4 items-stretch md:items-center justify-between flex-col md:flex-row">
         <div className="flex items-center gap-3 sm:gap-4 w-full md:w-auto">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight whitespace-nowrap">
+          <Heading size="h3" className="whitespace-nowrap">
             Projects
-          </h1>
+          </Heading>
           <div className="relative flex-1 md:flex-initial md:min-w-[280px] lg:min-w-[320px]">
             <IoSearchOutline className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 h-4 w-4" />
             <Input

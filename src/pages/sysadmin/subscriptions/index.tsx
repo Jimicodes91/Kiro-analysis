@@ -11,7 +11,7 @@ const SysAdminSubscriptionPage: React.FC = () => {
   const { onClose, isOpen, onOpen } = useDisclosure();
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-4 md:p-6">
       <div className="flex justify-between items-center my-2">
         <div className="flex items-center gap-4">
           <Heading size="h3">Subscription</Heading>

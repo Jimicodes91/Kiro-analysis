@@ -1,3 +1,4 @@
+import Heading from "@/components/ui/heading";
 import Spade from "@/components/ui/spade";
 import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
 import useGetProjectDetails from "@/hooks/project-modules/use-get-project-details";
@@ -88,7 +89,7 @@ const ProjectDetail = ({
           </button>
         </div>
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-semibold text-[#191819] ">Project detail</h1>
+          <Heading size="h3">Project detail</Heading>
         </div>
       </div>
 

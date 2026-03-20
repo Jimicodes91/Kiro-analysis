@@ -90,7 +90,7 @@ const Admin: React.FC = () => {
 
   return (
     <div className="p-3 sm:p-4 md:p-6">
-      <h1 className="text-xl md:text-2xl font-[600] mb-4 md:mb-6">Admin</h1>
+      <Heading size="h3" className="mb-4 md:mb-6">Admin</Heading>
       <div className="bg-white rounded-[6px] overflow-hidden border-[1.5px] border-brand-border">
         <div className="flex border-b border-gray-200 overflow-x-auto">
           {tabsList.map((tab) => (

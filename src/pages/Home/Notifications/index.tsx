@@ -54,11 +54,11 @@ const NotificationsPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-4xl">
+    <div className="p-3 sm:p-4 md:p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <Heading size="h1">Notifications</Heading>
+          <Heading size="h3">Notifications</Heading>
           {unreadCount > 0 && (
             <p className="text-sm text-gray-600 mt-1">
               You have {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}

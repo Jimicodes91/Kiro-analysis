@@ -20,7 +20,7 @@ const SysAdminUsersPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-3 sm:p-4 md:p-6 space-y-5">
       <div className="flex justify-between items-center my-2">
         <div className="flex items-center gap-4">
           <Heading size="h3">User</Heading>

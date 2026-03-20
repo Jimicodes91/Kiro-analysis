@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Heading from "@/components/ui/heading";
 import useGetAllProjectDocuments from "@/hooks/project-modules/documents/use-get-all-documents";
 import useGetUser from "@/hooks/user/use-get-user";
 import { addDaysUtil, getFormattedText } from "@/lib/utils";
@@ -21,11 +22,11 @@ export default function ClientHomePage() {
   const projectDocs = useGetAllProjectDocuments(activeProject?.id ?? "");
 
   return (
-    <div className="space-y-6 mx-3 sm:mx-6 py-4 page-fade-in">
+    <div className="space-y-6 p-3 sm:p-4 md:p-6 page-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold">Welcome {userData?.value?.data?.name}</h1>
+          <Heading size="h3">Welcome {userData?.value?.data?.name}</Heading>
           <p className="text-muted-foreground">Here&apos;s your project overview.</p>
         </div>
         <Button size="sm" className="flex items-center gap-2 px-3">

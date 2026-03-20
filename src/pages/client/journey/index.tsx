@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Heading from "@/components/ui/heading";
 import ViewToggle from "@/components/ui/view-toggle";
 import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
 
@@ -59,10 +60,10 @@ export default function ClientProjectJourney() {
   };
 
   return (
-    <div className="space-y-6 mx-3 sm:mx-6 my-4 page-fade-in">
+    <div className="space-y-6 p-3 sm:p-4 md:p-6 page-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Project Journey</h1>
+        <Heading size="h3">Project Journey</Heading>
         <p className="text-muted-foreground">
           Track your project&apos;s milestones and progress
         </p>

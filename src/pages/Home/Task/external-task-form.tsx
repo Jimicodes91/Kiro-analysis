@@ -151,7 +151,7 @@ const ExternalTaskForm = () => {
   };
 
   return (
-    <div className="mx-3 sm:mx-4 md:mx-6 my-2">
+    <div className="p-3 sm:p-4 md:p-6 my-2">
       <div className="flex items-center gap-4 my-4">
         <Button variant="ghost" size="icon" onClick={() => navigate(backPath)}><IoArrowBack className="w-5 h-5" /></Button>
         <Heading size="h3">Create External Task</Heading>

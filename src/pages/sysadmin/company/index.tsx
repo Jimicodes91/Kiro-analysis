@@ -27,7 +27,7 @@ const SysAdminCompanyPage: React.FC = () => {
 
   if (company.isSuccess && company.value) {
     return (
-      <div className="p-6 h-full space-y-6 flex flex-col min-h-[calc(100vh-70px)] animate-in fade-in-0 duration-700 ease-in-out">
+      <div className="p-3 sm:p-4 md:p-6 h-full space-y-6 flex flex-col min-h-[calc(100vh-70px)] animate-in fade-in-0 duration-700 ease-in-out">
         <div>
           <div className="mb-1">
             <button
