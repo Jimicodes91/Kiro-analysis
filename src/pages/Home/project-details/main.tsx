@@ -76,7 +76,7 @@ const ProjectDetail = ({
     return <div className="w-full h-[140px] bg-slate-200 rounded-lg"></div>;
   };
   return (
-    <div className="p-3 sm:p-4 md:p-6 animate-in h-full flex flex-col min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-70px)] fade-in-0 duration-700 ease-in-out">
+    <div className="p-3 sm:p-4 md:p-6 animate-in h-full flex flex-col min-h-[calc(100vh-56px)] md:min-h-[calc(100vh-70px)] fade-in-0 duration-700 ease-in-out max-w-[1440px] mx-auto w-full">
       <div>
         <div className="mb-1">
           <button
@@ -92,9 +92,9 @@ const ProjectDetail = ({
         </div>
       </div>
 
-      <div className="bg-white flex-1 h-full grid grid-cols-1 md:grid-cols-auth-layout rounded-lg border border-brand-border p-3">
+      <div className="bg-white flex-1 h-full grid grid-cols-1 lg:grid-cols-project-detail rounded-lg border border-brand-border p-3">
         <ProjectInfoSection projectDetails={projectDetails} />
-        <div className="p-0 md:p-3 md:pt-0 space-y-8">
+        <div className="p-3 lg:pt-0 space-y-8">
           <>{renderMilestone()}</>
           <ProjectTabsSection projectDetails={projectDetails} />
         </div>

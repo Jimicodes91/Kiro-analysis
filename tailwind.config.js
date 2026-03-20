@@ -79,6 +79,7 @@ export default {
       },
       gridTemplateColumns: {
         "auth-layout": "250px 1fr",
+        "project-detail": "280px 1fr",
       },
       keyframes: {
         "accordion-down": {
