@@ -61,7 +61,7 @@ export const getIsClient = () => {
 
 export const getIsAdmin = () => {
   const user = getUserSession();
-  return user?.role === "ADMIN";
+  return user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
 };
 
 export function updateUserSession(updatedUser: Partial<LoginResponse["data"]["user"]>) {

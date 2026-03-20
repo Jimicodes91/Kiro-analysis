@@ -67,7 +67,7 @@ function ContactTableRow({ contact }: { contact: Contact }) {
       case "invited":
         return <Badge variant="outline">Invited</Badge>;
       case "active":
-        return <Badge variant="active">Active</Badge>;
+        return <Badge variant="default" className="text-white">Active</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
