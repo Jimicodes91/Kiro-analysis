@@ -1,3 +1,13 @@
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +21,7 @@ import { Icons } from "@/components/ui/icons";
 import PersonAvatar from "@/components/ui/person-avatar";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useSendInvite from "@/hooks/contacts/use-send-invite";
+import useUninviteContact from "@/hooks/contacts/use-uninvite-contact";
 import { Contact } from "@/types/contact.types";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -20,7 +31,9 @@ import ContactModal from "./contact-modal-form";
 function ContactTableRow({ contact }: { contact: Contact }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMode, setCurrentMode] = useState<"create" | "view" | "edit">("view");
+  const [isUninviteDialogOpen, setIsUninviteDialogOpen] = useState(false);
   const sendInvite = useSendInvite(contact.id);
+  const uninviteContact = useUninviteContact(contact.id);
 
   const handleEditClick = () => {
     setCurrentMode("edit");
@@ -87,11 +100,54 @@ function ContactTableRow({ contact }: { contact: Contact }) {
               <Button
                 variant="outline"
                 size="sm"
+                className="text-foreground border-foreground/20"
                 onClick={handleSendInvite}
                 isLoading={sendInvite.isPending}
               >
                 Send Invite
               </Button>
+            )}
+            {contact.status === "active" && (
+              <AlertDialog open={isUninviteDialogOpen} onOpenChange={setIsUninviteDialogOpen}>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setIsUninviteDialogOpen(true)}
+                  isLoading={uninviteContact.isPending}
+                >
+                  Uninvite
+                </Button>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Uninvite Contact</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to uninvite this contact? They will
+                      lose access to the platform and will need to be re-invited.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        uninviteContact
+                          .mutateAsync({})
+                          .then(() => {
+                            toast.success("Contact uninvited successfully");
+                          })
+                          .catch((error) => {
+                            toast.error(
+                              error?.response?.data?.message ||
+                                "Failed to uninvite contact"
+                            );
+                          });
+                      }}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Uninvite
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

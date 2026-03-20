@@ -260,6 +260,7 @@ export const ENDPOINTS = {
   SEARCH_COMPANY_CONTACTS: "contacts/search",
   UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
   SEND_CONTACT_INVITE: (contactId: string) => `auth/contacts/${contactId}/send-invite`,
+  UNINVITE_CONTACT: (contactId: string) => `auth/contacts/${contactId}/uninvite`,
   GET_PENDING_INVITES: "auth/client-invite-requests/pending",
   APPROVE_INVITE: (inviteId: string) => `auth/client-invite-requests/${inviteId}/approve`,
   REJECT_INVITE: (inviteId: string) => `auth/client-invite-requests/${inviteId}/reject`,
