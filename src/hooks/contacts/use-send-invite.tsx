@@ -11,7 +11,7 @@ const useSendInvite = (contactId: string) => {
   const queryClient = useQueryClient();
   return useCustomMutation<InviteResponse, SendInviteRequest>({
     method: "post",
-    endpoint: `${ENDPOINTS.CREATE_CONTACT}/${contactId}/send-invite`,
+    endpoint: ENDPOINTS.SEND_CONTACT_INVITE(contactId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERYKEYS.GET_COMPANY_CONTACTS],

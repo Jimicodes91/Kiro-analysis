@@ -236,7 +236,7 @@ export const ENDPOINTS = {
   GET_ALL_USERS: `admin/all`,
   GET_ACTIVE_USERS: `admin/active-users`,
   GET_ALL_SYSADMINS: `admin/all-sysadmins`,
-  RESEND_INVITE: `auth/resend-invite`,
+  RESEND_INVITE: `auth/resend-invitation`,
 
   // Company Endpoints
   CREATE_COMPANY: (userId: string) => `company/create/${userId}`,
@@ -259,10 +259,10 @@ export const ENDPOINTS = {
   GET_COMPANY_CONTACTS: "contacts/company",
   SEARCH_COMPANY_CONTACTS: "contacts/search",
   UPDATE_CONTACT: (contactId: string) => `contacts/${contactId}`,
-  SEND_CONTACT_INVITE: (contactId: string) => `contacts/${contactId}/send-invite`,
-  GET_PENDING_INVITES: "contacts/invites/pending",
-  APPROVE_INVITE: (inviteId: string) => `contacts/invites/${inviteId}/approve`,
-  REJECT_INVITE: (inviteId: string) => `contacts/invites/${inviteId}/reject`,
+  SEND_CONTACT_INVITE: (contactId: string) => `auth/contacts/${contactId}/send-invite`,
+  GET_PENDING_INVITES: "auth/client-invite-requests/pending",
+  APPROVE_INVITE: (inviteId: string) => `auth/client-invite-requests/${inviteId}/approve`,
+  REJECT_INVITE: (inviteId: string) => `auth/client-invite-requests/${inviteId}/reject`,
   ACCEPT_CONTACT_INVITE: "contacts/accept-invite",
 
   // Finance Endpoints
