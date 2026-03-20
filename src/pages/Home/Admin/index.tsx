@@ -1,3 +1,4 @@
+import Heading from "@/components/ui/heading";
 import { motion } from "framer-motion";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
