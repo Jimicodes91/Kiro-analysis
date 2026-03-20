@@ -69,3 +69,20 @@ export const addPlanSchema = yup.object().shape({
 export const editProjectPipelineSchema = yup.object().shape({
   name: yup.string().required("Journey name is required").trim(),
 });
+
+export const editJourneyUnifiedSchema = yup.object().shape({
+  name: yup.string().required("Journey name is required").trim(),
+  milestones: yup
+    .array()
+    .of(
+      yup.object().shape({
+        name: yup.string().required("Name is required").trim(),
+        duration: yup
+          .number()
+          .required("Duration is required")
+          .min(1, "Must be at least 1"),
+      })
+    )
+    .min(1, "At least one milestone is required"),
+});
+
