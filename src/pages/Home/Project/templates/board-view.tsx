@@ -157,9 +157,6 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
     });
   };
 
-  // Compute responsive column width based on milestone count
-  const colCount = milestones.length;
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable
@@ -171,16 +168,7 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={cn(
-              "grid gap-3 pb-3 animate-in fade-in-0 duration-500 ease-in-out",
-              // Responsive grid: stack on mobile, auto-fit columns on larger screens
-              // On small screens show 1 col, md 2, lg 3, xl+ fill available space
-              colCount <= 3
-                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                : colCount <= 5
-                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
-                  : "flex overflow-x-auto"
-            )}
+            className="flex overflow-x-auto pb-3 gap-3 animate-in fade-in-0 duration-500 ease-in-out"
           >
             {milestones.map((milestone, index) => {
               const isReordering =
@@ -197,8 +185,7 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
                       {...provided.draggableProps}
                       className={cn(
                         "flex flex-col border border-gray-200 bg-gray-50/80 rounded-xl relative transition-shadow",
-                        // When in flex overflow mode (>5 cols), use fixed min-width
-                        colCount > 5 && "min-w-[240px] flex-shrink-0",
+                        "w-[260px] min-w-[260px] flex-shrink-0",
                         snapshot.isDragging && "opacity-70 shadow-xl ring-2 ring-primary/20"
                       )}
                     >
