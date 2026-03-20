@@ -28,9 +28,6 @@ const NonClientProjectView = () => {
 
   const projectTypes = useGetAllProjectTypes();
 
-  // Derive a safe project type ID: only resolve to a real ID once project types
-  // have loaded AND the active type exists in the list. Otherwise undefined,
-  // which keeps the projects query disabled (enabled: Boolean(projectTypeId)).
   const safeProjectType = useMemo(() => {
     if (!projectTypes.isSuccess) return undefined;
     const types = projectTypes?.value?.data ?? [];
@@ -49,7 +46,6 @@ const NonClientProjectView = () => {
     if (projectTypes.isSuccess && projectTypes.value) {
       const types = projectTypes?.value?.data ?? [];
       if (types.length === 0) {
-        // No journeys exist — clear any stale cookie
         if (changeActiveProjectType) changeActiveProjectType("");
         return;
       }
@@ -66,7 +62,7 @@ const NonClientProjectView = () => {
 
   if (projectTypes.isPending && !projectTypes.value) {
     return (
-      <div className="min-h-[calc(100vh-70px)] flex items-center">
+      <div className="min-h-[calc(100vh-70px)] flex items-center justify-center">
         <Loader />
       </div>
     );
@@ -83,7 +79,8 @@ const NonClientProjectView = () => {
   return (
     <ActiveProjectTypeProjectWrapperOnAdminView>
       <>
-        <div className="flex justify-between gap-3 flex-wrap items-center">
+        {/* Toolbar: view toggle + status filter */}
+        <div className="flex justify-between gap-3 flex-wrap items-center mb-4">
           <ViewToggle
             activeTab={viewMode}
             setActiveTab={handleTabChange}
@@ -92,29 +89,26 @@ const NonClientProjectView = () => {
               { value: "table", label: "Table" },
             ]}
           />
-          <div className="flex justify-between space-x-2">
-            <div>
-              <Select value={status} onValueChange={changeStatus}>
-                <SelectTrigger className="min-w-[150px] h-10">
-                  <SelectValue placeholder="Select status" className="capitalize" />
-                </SelectTrigger>
-                <SelectContent>
-                  {projectStatusList?.map((item) => (
-                    <SelectItem
-                      className="capitalize"
-                      key={item.value}
-                      value={`${item.value}`}
-                    >
-                      {item.text}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <Select value={status} onValueChange={changeStatus}>
+            <SelectTrigger className="min-w-[150px] h-9 text-sm">
+              <SelectValue placeholder="Select status" className="capitalize" />
+            </SelectTrigger>
+            <SelectContent>
+              {projectStatusList?.map((item) => (
+                <SelectItem
+                  className="capitalize text-sm"
+                  key={item.value}
+                  value={`${item.value}`}
+                >
+                  {item.text}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
-        <div className="mt-4 grid">
+        {/* Board or Table view */}
+        <div className="grid">
           {viewMode === "board" ? (
             <BoardLoadingWrapper projectData={allProjects} projectTypes={projectTypes} />
           ) : (

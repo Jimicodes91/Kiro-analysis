@@ -3,10 +3,10 @@ import useReorderMilestones from "@/hooks/project-modules/milestones/use-reorder
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useUpdateProjectMilestone from "@/hooks/project-modules/use-update-project-milestone";
 import {
-  cn,
-  generateBoardMilestone,
-  updateProjectMilestoneById,
-  updateProjectsIndex,
+    cn,
+    generateBoardMilestone,
+    updateProjectMilestoneById,
+    updateProjectsIndex,
 } from "@/lib/utils";
 import { useOrgProjectContext } from "@/pages/Home/Project/context/org-project-context";
 import { ProjectDetails } from "@/types/api.types";
@@ -41,7 +41,6 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
   const reorderMilestones = useReorderMilestones(activeProjectType as string);
 
   useEffect(() => {
-    // Don't sync milestones if we're currently reordering
     if (reorderMilestones.isPending || projectTypes.isFetching || projectTypes.isPending)
       return;
     if (!isLoading && projectTypes?.value?.data && activeProjectType) {
@@ -51,14 +50,11 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
       );
       const newIds = newMilestones.map((m) => m.id).join(",");
 
-      // If we just reordered and the incoming data matches our reordered order, keep our optimistic update
       if (lastReorderedIdsRef.current === newIds) {
-        // The server data matches what we optimistically set, so we can clear the ref
         lastReorderedIdsRef.current = null;
         return;
       }
 
-      // Only update if the order actually changed
       const currentIds = milestones.map((m) => m.id).join(",");
       if (currentIds !== newIds) {
         setMilestones(newMilestones);
@@ -90,8 +86,6 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
     const { destination, source, draggableId, type } = result;
     if (!destination) return;
 
-    // Handle milestone column reordering
-    // Check if draggableId starts with "milestone-" or if type is "milestone"
     if (draggableId.startsWith("milestone-") || type === "milestone") {
       if (
         destination.droppableId === source.droppableId &&
@@ -104,17 +98,13 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
       const [reorderedMilestone] = newMilestones.splice(source.index, 1);
       newMilestones.splice(destination.index, 0, reorderedMilestone);
 
-      // Optimistically update the UI
       setMilestones(newMilestones);
-      // Track which milestone is being reordered to show spinner (use the milestone ID)
       setReorderingMilestoneId(reorderedMilestone.id);
 
-      // Store the reordered IDs so we can check if server data matches
       const milestoneIds = newMilestones.map((milestone) => milestone.id);
       const reorderedIdsString = milestoneIds.join(",");
       lastReorderedIdsRef.current = reorderedIdsString;
 
-      // Call API to reorder milestones
       reorderMilestones.mutateAsync(
         { milestone_ids: milestoneIds },
         {
@@ -122,7 +112,6 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
             console.error(error);
             lastReorderedIdsRef.current = null;
             setReorderingMilestoneId(null);
-            // Revert the optimistic update on error
             if (projectTypes?.value?.data && activeProjectType) {
               const originalMilestones = generateBoardMilestone(
                 projectTypes.value.data,
@@ -132,8 +121,6 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
             }
           },
           onSuccess: () => {
-            // Clear the ref after successful reorder
-            // The query will refetch and we'll check if it matches
             setTimeout(() => {
               lastReorderedIdsRef.current = null;
               setReorderingMilestoneId(null);
@@ -144,8 +131,6 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
       return;
     }
 
-    // Handle project card dragging (existing logic)
-    // if the drop column is equal to the drag column and the index(position is still the same)
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -163,7 +148,6 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
       return;
     }
 
-    // Moving from one list to another
     setMilestoneProjects((prev) => {
       return updateProjectMilestoneById(prev, draggableId, destination.droppableId);
     });
@@ -172,6 +156,9 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
       milestoneId: destination.droppableId,
     });
   };
+
+  // Compute responsive column width based on milestone count
+  const colCount = milestones.length;
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -184,7 +171,16 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex overflow-x-auto pb-3 space-x-3 animate-in fade-in-0 duration-700 ease-in-out"
+            className={cn(
+              "grid gap-3 pb-3 animate-in fade-in-0 duration-500 ease-in-out",
+              // Responsive grid: stack on mobile, auto-fit columns on larger screens
+              // On small screens show 1 col, md 2, lg 3, xl+ fill available space
+              colCount <= 3
+                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                : colCount <= 5
+                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+                  : "flex overflow-x-auto"
+            )}
           >
             {milestones.map((milestone, index) => {
               const isReordering =
@@ -200,13 +196,15 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       className={cn(
-                        "flex flex-col border border-brand-border bg-brand-table rounded-lg w-52 flex-shrink-0 relative",
-                        snapshot.isDragging && "opacity-50 shadow-lg"
+                        "flex flex-col border border-gray-200 bg-gray-50/80 rounded-xl relative transition-shadow",
+                        // When in flex overflow mode (>5 cols), use fixed min-width
+                        colCount > 5 && "min-w-[240px] flex-shrink-0",
+                        snapshot.isDragging && "opacity-70 shadow-xl ring-2 ring-primary/20"
                       )}
                     >
                       {isReordering && (
-                        <div className="absolute top-2 right-2 z-10 bg-white rounded-full p-1.5 shadow-md">
-                          <Icons.spinner className="h-4 w-4 animate-spin text-primary" />
+                        <div className="absolute top-2.5 right-2.5 z-10 bg-white rounded-full p-1.5 shadow-sm">
+                          <Icons.spinner className="h-3.5 w-3.5 animate-spin text-primary" />
                         </div>
                       )}
                       <div
