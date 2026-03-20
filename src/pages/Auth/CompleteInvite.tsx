@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useCompleteRegistration from "@/hooks/auth/use-complete-registration";
@@ -28,6 +28,23 @@ const CompleteInvite: React.FC = () => {
   const token = searchParams.get("token");
   const completeRegistration = useCompleteRegistration();
   const navigate = useNavigate();
+  const [countdown, setCountdown] = React.useState(3);
+
+  useEffect(() => {
+    if (completeRegistration.isSuccess && completeRegistration.data) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            navigate(PAGES.LOGIN_PAGE);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [completeRegistration.isSuccess, completeRegistration.data, navigate]);
 
   const form = useForm({
     resolver: yupResolver(completeInviteSchema),
@@ -47,8 +64,8 @@ const CompleteInvite: React.FC = () => {
     return (
       <VerificationCard
         title="Invitation accepted successfully"
-        description="Your account has been registered sucessfully, please login"
-        buttonText="Back to login"
+        description={`Your account has been registered successfully. Redirecting to login in ${countdown}s...`}
+        buttonText="Go to login now"
         onButtonClick={() => navigate(PAGES.LOGIN_PAGE)}
       />
     );
