@@ -18,6 +18,7 @@ function ProjectTaskSection({
   const user = getUserSession();
 
   const isClient = getIsClient();
+  const canEdit = mode === "edit" && !isClient;
   const projectTasks = useGetProjectTasks(projectId, isClient ? user?.id : undefined);
 
   const handleAddTask = () => {
@@ -30,7 +31,7 @@ function ProjectTaskSection({
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
             <div
-              className="px-5 py-10 space-y-2 rounded-lg bg-slate-200 flex justify-between  animate-pulse"
+              className="px-5 py-10 space-y-2 rounded-lg bg-slate-200 flex justify-between animate-pulse"
               key={i}
             ></div>
           ))}
@@ -40,16 +41,21 @@ function ProjectTaskSection({
     if (projectTasks?.isError)
       return (
         <div className="py-10 px-4 rounded-lg border flex justify-center border-brand-border bg-[#F8F8F8]">
-          <p className="text-sm text-brand-fade p-0 m-0">Somthing went wrong</p>
+          <p className="text-sm text-brand-fade p-0 m-0">Something went wrong</p>
         </div>
       );
 
     if (projectTasks?.value?.data?.length === 0)
       return (
-        <div className="py-10 px-4 rounded-lg border flex justify-center border-brand-border bg-[#F8F8F8]">
+        <div className="py-10 px-4 rounded-lg border flex flex-col items-center gap-3 border-brand-border bg-[#F8F8F8]">
           <p className="text-sm text-brand-fade p-0 m-0">
             No task currently on this project
           </p>
+          {canEdit && (
+            <Button size="sm" leftIcon={<Plus />} onClick={handleAddTask}>
+              Add Task
+            </Button>
+          )}
         </div>
       );
 
@@ -61,8 +67,8 @@ function ProjectTaskSection({
   };
 
   return (
-    <div className="space-y-4 animate-in fade-in-0 duration-700 ease-in-out">
-      {mode === "edit" && (
+    <div className="space-y-4">
+      {canEdit && (
         <div className="flex justify-end gap-3 items-center">
           <Button size="sm" leftIcon={<Plus />} onClick={handleAddTask}>
             Add Task
