@@ -78,7 +78,7 @@ const SysAdminCompanyPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="pt-4 md:pt-0 h-full grid grid-cols-1 grid-rows-[auto_1fr] gap-4">
+          <div className="pt-4 md:pt-0 h-full grid grid-cols-1 grid-rows-[auto_1fr] gap-4 min-w-0">
             <div className="rounded-lg w-full p-4 border border-brand-border">
               <div className="space-y-6">
                 <Heading size="h5">Subscription plan</Heading>

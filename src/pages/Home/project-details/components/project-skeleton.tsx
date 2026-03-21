@@ -15,7 +15,7 @@ const ProjectDetailSkeleton: React.FC = () => {
 
       <div className="bg-white grid grid-cols-1 lg:grid-cols-project-detail flex-1 gap-x-3 rounded-lg border border-brand-border p-3">
         <div className="p-4 min-h-full flex-1 h-max space-y-4 rounded-lg border bg-slate-200"></div>
-        <div className="pt-0 h-full grid grid-cols-1 grid-rows-[140px_1fr] gap-2">
+        <div className="pt-0 h-full grid grid-cols-1 grid-rows-[140px_1fr] gap-2 min-w-0">
           <div className="rounded-lg w-full h-[140px] bg-slate-200"></div>
           <div className="rounded-lg w-full h-full bg-slate-200"></div>
         </div>

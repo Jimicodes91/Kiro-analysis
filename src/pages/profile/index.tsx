@@ -47,7 +47,7 @@ function ProfilePageLayout({ children }: { children?: React.ReactNode }) {
               </Button>
             </div> */}
           </div>
-          <div className="p-5 rounded-lg border min-h-[500px]">{children}</div>
+          <div className="p-5 rounded-lg border min-h-[500px] min-w-0">{children}</div>
         </div>
       </div>
     </div>
