@@ -66,7 +66,7 @@ function computeDiff(
     } else {
       currentIds.add(fm.id);
       const orig = snapshot.find((s) => s.id === fm.id);
-      if (orig && orig.is_system !== 1 && (orig.name !== fm.name || orig.duration !== fm.duration)) {
+      if (orig && orig.is_system !== 1 && (orig.name !== fm.name || Number(orig.duration) !== Number(fm.duration))) {
         milestonesToUpdate.push({ id: fm.id, name: fm.name, duration: fm.duration });
       }
     }
@@ -126,10 +126,10 @@ function EditJourneyFormModal({
       promises.push(updateProjectType.mutateAsync({ name: data.name }));
     }
     for (const m of diff.milestonesToCreate) {
-      promises.push(secureRequest({ url: `${baseUrl}/${ENDPOINTS.CREATE_MILESTONE}`, method: "post", body: m }));
+      promises.push(secureRequest({ url: `${baseUrl}/${ENDPOINTS.CREATE_MILESTONE}`, method: "post", body: { ...m, duration: String(m.duration) } }));
     }
     for (const m of diff.milestonesToUpdate) {
-      promises.push(secureRequest({ url: `${baseUrl}/${ENDPOINTS.UPDATE_MILESTONE_DETAILS(m.id)}`, method: "patch", body: { name: m.name, duration: m.duration } }));
+      promises.push(secureRequest({ url: `${baseUrl}/${ENDPOINTS.UPDATE_MILESTONE_DETAILS(m.id)}`, method: "patch", body: { name: m.name, duration: String(m.duration) } }));
     }
     for (const id of diff.milestonesToDelete) {
       promises.push(secureRequest({ url: `${baseUrl}/${ENDPOINTS.DELETE_MILESTONE(projectType.id, id)}`, method: "delete" }));
