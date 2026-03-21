@@ -23,7 +23,7 @@ const SysAdminUsersPage: React.FC = () => {
     <div className="p-3 sm:p-4 md:p-6 space-y-5">
       <div className="flex justify-between items-center my-2">
         <div className="flex items-center gap-4">
-          <Heading size="h3">User</Heading>
+          <Heading size="h3">Users</Heading>
           <div className="relative w-full min-w-[300px] bg-[#F3F3F3] rounded-full">
             <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3 text-[#808080]" />
             <Input

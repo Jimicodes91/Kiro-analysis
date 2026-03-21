@@ -1,21 +1,21 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import useSendConsultantInvite from "@/hooks/auth/use-send-consultant-invite";
 import { addUserSchema } from "@/utils/validation-schema/admin";
@@ -40,7 +40,7 @@ export default function AddCustomFieldForm({ onClose }: ModalProps) {
   };
   return (
     <div className="rounded-2xl p-4 space-y-3 bg-[#FAFAFA] border-brand-border border my-4">
-      <Heading size="h5">Create new field</Heading>
+      <Heading size="h5">Create New Field</Heading>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 ">
           <FormField

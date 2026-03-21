@@ -45,7 +45,7 @@ const SysAdminCompanySubscriptionPage: React.FC = () => {
             <IoArrowBack className="mr-2" />
             Company Information
           </button>
-          <Heading size="h3">Subscription plan</Heading>
+          <Heading size="h3">Subscription Plan</Heading>
         </div>
       </div>
 

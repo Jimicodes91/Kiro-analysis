@@ -60,13 +60,13 @@ const SysAdminCompanyPage: React.FC = () => {
                   </Badge>
                 </div>
                 <div>
-                  <h3 className="text-xs text-brand-light font-[500]">Created date</h3>
+                  <h3 className="text-xs text-brand-light font-[500]">Created Date</h3>
                   <p className="text-sm text-gray-900">
                     {format(companyDetails?.created_at ?? "", "PPP")}
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xs text-brand-light font-[500]">Activated date</h3>
+                  <h3 className="text-xs text-brand-light font-[500]">Activated Date</h3>
                   <p className="text-sm text-gray-900">03 Apr 2025</p>
                 </div>
                 <div>
@@ -81,12 +81,12 @@ const SysAdminCompanyPage: React.FC = () => {
           <div className="pt-4 md:pt-0 h-full grid grid-cols-1 grid-rows-[auto_1fr] gap-4 min-w-0">
             <div className="rounded-lg w-full p-4 border border-brand-border">
               <div className="space-y-6">
-                <Heading size="h5">Subscription plan</Heading>
+                <Heading size="h5">Subscription Plan</Heading>
                 <div className="flex justify-between items-center flex-wrap gap-4">
                   <div className="flex items-center gap-3  min-w-max md:min-w-[400px] justify-between">
                     <div className="space-y-1">
                       <h3 className="text-xs text-brand-light font-[500]">
-                        Current plan
+                        Current Plan
                       </h3>
                       <p className="text-sm text-gray-900">Premium</p>
                     </div>
@@ -96,13 +96,13 @@ const SysAdminCompanyPage: React.FC = () => {
                     </div>
                     <div className="space-y-1">
                       <h3 className="text-xs text-brand-light font-[500]">
-                        Number of user
+                        Number of Users
                       </h3>
                       <p className="text-sm text-gray-900">10</p>
                     </div>
                     <div className="space-y-1">
                       <h3 className="text-xs text-brand-light font-[500]">
-                        Total per month
+                        Total Per Month
                       </h3>
                       <p className="text-sm text-gray-900">$500</p>
                     </div>
@@ -123,7 +123,7 @@ const SysAdminCompanyPage: React.FC = () => {
             <div className="rounded-lg w-full h-full border border-brand-border p-4">
               <div className="space-y-3 grid grid-cols-1">
                 <div className="flex justify-between items-center">
-                  <h1 className="text-[16px] font-[600]">Company user </h1>
+                  <h1 className="text-[16px] font-[600]">Company Users</h1>
                   <Button
                     size="sm"
                     leftIcon={<LuPlus className="text-white" />}

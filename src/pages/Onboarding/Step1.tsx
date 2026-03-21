@@ -1,19 +1,19 @@
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import useCreateCompany from "@/hooks/company/use-create-company";
 import { companySizeList, industryList } from "@/lib/constants";
@@ -79,7 +79,7 @@ const Step1 = () => {
 
   return (
     <div>
-      <h1 className="text-[24px] font-bold mb-12">Company detail</h1>
+      <h1 className="text-[24px] font-bold mb-12">Company Details</h1>
       <div className="overflow-y-auto flex-1">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

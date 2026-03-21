@@ -77,7 +77,7 @@ const CompleteInvite: React.FC = () => {
         <div className="my-3 flex">
           <img src={Logo} alt="Logo" className="w-12" />
         </div>
-        <h1 className="text-3xl font-medium">Set up account</h1>
+        <h1 className="text-3xl font-medium">Set Up Account</h1>
         <p>Set up your account</p>
       </div>
 

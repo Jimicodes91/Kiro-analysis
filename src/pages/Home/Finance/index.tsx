@@ -34,7 +34,7 @@ const Finance: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 my-4">
           <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
             <Heading size="h3" className="whitespace-nowrap">
-              Finance and billing
+              Finance & Billing
             </Heading>
             <div className="relative flex-1 sm:flex-initial sm:min-w-[200px] md:min-w-[300px] bg-[#F3F3F3] rounded-full">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3 text-[#808080]" />

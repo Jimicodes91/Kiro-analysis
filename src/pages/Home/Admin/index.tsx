@@ -21,13 +21,13 @@ const Admin: React.FC = () => {
     setSearchParams(searchParams);
   };
   const tabsList = [
-    { text: "User", tab: "user" as const },
+    { text: "Users", tab: "user" as const },
     { text: "Journey", tab: "journey" as const },
-    { text: "Document type", tab: "document" as const },
-    { text: "Event type", tab: "event" as const },
-    { text: "Note type", tab: "note" as const },
-    { text: "Task type", tab: "task" as const },
-    { text: "Audit trail", tab: "audit-trail" as const },
+    { text: "Document Type", tab: "document" as const },
+    { text: "Event Type", tab: "event" as const },
+    { text: "Note Type", tab: "note" as const },
+    { text: "Task Type", tab: "task" as const },
+    { text: "Audit Trail", tab: "audit-trail" as const },
     { text: "Account", tab: "account" as const },
     { text: "Settings", tab: "settings" as const },
   ];

@@ -74,7 +74,7 @@ const SettingsTab = ({ projectId }: { projectId?: string }) => {
     return (
       <div className="border rounded-xl p-6 w-full max-w-6xl flex flex-wrap justify-between gap-8">
         <div>
-          <Heading size="h5">Project settings</Heading>
+          <Heading size="h5">Project Settings</Heading>
           <p className="text-sm text-brand-text">
             A list of all tabs linked to the project, <br />
             including their status

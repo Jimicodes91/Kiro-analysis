@@ -9,7 +9,7 @@ function ProjectEmptyState() {
       <div className="p-6 min-h-[calc(100vh-70px)] flex flex-col space-y-5 animate-in fade-in-0 duration-700 ease-in-out">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Heading size="h3">Project</Heading>
+            <Heading size="h3">Projects</Heading>
             <div className="relative w-full min-w-[300px]">
               <IoSearchOutline className="absolute top-[50%] -translate-y-[50%] left-3" />
               <Input placeholder="Search keyword" className="w-full pl-8" />

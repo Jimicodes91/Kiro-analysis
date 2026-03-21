@@ -13,7 +13,7 @@ function ProjectEmptyStateCard({ hasPipeline = true }: { hasPipeline?: boolean }
           <div className="grid place-items-center rounded-full h-16 w-16 bg-brand-primary/60">
             <Icons.project className="h-8 w-8" />
           </div>
-          <Heading size="h3">No project to show yet</Heading>
+          <Heading size="h3">No projects to show yet</Heading>
           {hasPipeline ? (
             <div className="space-y-4">
               <p className="text-brand-text text-sm">

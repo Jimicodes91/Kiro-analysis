@@ -67,7 +67,7 @@ const NotificationSection: React.FC = () => {
       <Separator />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <Heading size="h5">Notification Preference</Heading>
+          <Heading size="h5">Notification Preferences</Heading>
           <p className="text-sm text-[#00000066] max-w-[250px]">
             A list of all tasks linked to the project, including their status
           </p>

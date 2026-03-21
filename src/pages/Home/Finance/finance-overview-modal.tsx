@@ -2,12 +2,12 @@ import Modal from "@/components/Modal";
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table";
 import useGetIndividualFinanceRecord from "@/hooks/finance/use-get-individual-finance-record";
 import { formatCurrency } from "@/lib/utils";
@@ -176,7 +176,7 @@ const Overview = ({
           </div>
           <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-brand-border border-[1px]">
             <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-3">
-              <h3 className="text-sm text-brand-fade">Total fee</h3>
+              <h3 className="text-sm text-brand-fade">Total Fee</h3>
               <p className="text-sm font-semibold">
                 {billing?.total_project_cost
                   ? formatCurrency(billing?.total_project_cost)
@@ -190,14 +190,14 @@ const Overview = ({
                   : "N/A"}
               </p>
 
-              <h3 className="text-sm text-brand-fade">Last payment date</h3>
+              <h3 className="text-sm text-brand-fade">Last Payment Date</h3>
               <p className="text-sm font-semibold">
                 {billing?.lastPaymentDate
                   ? format(billing?.lastPaymentDate, "dd MMM yyyy")
                   : "N/A"}
               </p>
 
-              <h3 className="text-sm text-brand-fade">Next payment due date</h3>
+              <h3 className="text-sm text-brand-fade">Next Payment Due Date</h3>
               <p className="text-sm font-semibold">
                 {billing?.next_payment_due_date
                   ? format(billing?.next_payment_due_date, "dd MMM yyyy")

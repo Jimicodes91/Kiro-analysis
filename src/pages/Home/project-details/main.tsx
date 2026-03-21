@@ -89,7 +89,7 @@ const ProjectDetail = ({
           </button>
         </div>
         <div className="flex justify-between items-center mb-4">
-          <Heading size="h3">Project detail</Heading>
+          <Heading size="h3">Project Details</Heading>
         </div>
       </div>
 

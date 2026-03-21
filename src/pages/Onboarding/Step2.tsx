@@ -38,7 +38,7 @@ const Step2 = () => {
 
   return (
     <div>
-      <h1 className="text-[24px] font-bold mb-12">Invite your team</h1>
+      <h1 className="text-[24px] font-bold mb-12">Invite Your Team</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="mb-12 space-y-4">

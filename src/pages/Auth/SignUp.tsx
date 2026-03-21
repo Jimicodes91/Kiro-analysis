@@ -339,7 +339,7 @@ const SignUp: React.FC = () => {
     <div className="flex flex-col space-y-6 animate-in fade-in-0 duration-700 ease-in-out">
       <div>
         <div className="my-3 flex"><img src={Logo} alt="Logo" className="w-12" /></div>
-        <h1 className="text-3xl font-medium">Get started</h1>
+        <h1 className="text-3xl font-medium">Get Started</h1>
       </div>
       <StepIndicator current={wizard.step} />
       {wizard.step === 1 && <CredentialsStep onSuccess={goToStep2} />}

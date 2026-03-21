@@ -1,9 +1,9 @@
 import { InlineEditable } from "@/components/EditableInput";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from "@/components/ui/accordion";
 import PersonAvatar from "@/components/ui/person-avatar";
 import { ProjectStatusToggler } from "@/components/ui/project-status-toggle";
@@ -84,7 +84,7 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
       </Accordion>
       <Accordion collapsible type="single" defaultValue="item-2" className="w-full">
         <AccordionItem value="item-2">
-          <AccordionTrigger>Detail</AccordionTrigger>
+          <AccordionTrigger>Details</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4">
               <div>
