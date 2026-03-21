@@ -95,7 +95,7 @@ const ProjectDetail = ({
 
       <div className="bg-white flex-1 h-full grid grid-cols-1 lg:grid-cols-project-detail rounded-lg border border-brand-border p-3">
         <ProjectInfoSection projectDetails={projectDetails} />
-        <div className="p-3 lg:pt-0 space-y-8">
+        <div className="p-3 lg:pt-0 space-y-8 min-w-0">
           <>{renderMilestone()}</>
           <ProjectTabsSection projectDetails={projectDetails} />
         </div>
