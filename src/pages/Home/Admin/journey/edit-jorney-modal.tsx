@@ -1,3 +1,37 @@
+import Toast from "@/components/Toast";
+import { ModalProps } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import useGetAllProjectTypeMilestones, {
+    ProjectTypeMilestone,
+} from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
+import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
+import useUpdateProjectTypeDetails from "@/hooks/project-modules/project-types/use-update-project-type-details";
+import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { secureRequest } from "@/services/api.service";
+import { editJourneyUnifiedSchema } from "@/utils/validation-schema/admin";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { LuPlus, LuTrash } from "react-icons/lu";
+import { InferType } from "yup";
+import Modal from "../../../../components/Modal";
 
 interface MilestoneSnapshot {
   id: string;
