@@ -22,8 +22,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useCreateSimplifiedProject from "@/hooks/project-modules/use-create-simplified-project";
+import { QUERYKEYS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
@@ -61,6 +63,7 @@ export default function SimplifiedProjectForm({
 }: SimplifiedProjectFormProps) {
   const projectTypes = useGetAllProjectTypes();
   const createProject = useCreateSimplifiedProject();
+  const queryClient = useQueryClient();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const form = useForm<SimplifiedProjectFormData>({
@@ -110,6 +113,11 @@ export default function SimplifiedProjectForm({
       console.log("Payload being sent to API:", payload);
 
       await createProject.mutateAsync(payload);
+      
+      // Invalidate project list cache so the board shows the new project
+      await queryClient.invalidateQueries({
+        queryKey: [QUERYKEYS.GET_ALL_PROJECTS],
+      });
       
       toast.success("Project created successfully");
       
@@ -351,7 +359,7 @@ export default function SimplifiedProjectForm({
               <FormControl>
                 <Checkbox
                   checked={field.value}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(checked) => field.onChange(checked === true)}
                 />
               </FormControl>
               <div className="space-y-1 leading-none">

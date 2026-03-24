@@ -22,6 +22,7 @@ const useCreateSimplifiedProject = () => {
   return useCustomMutation<CreateSimplifiedProjectSchema, any>({
     method: "post",
     endpoint: ENDPOINTS.CREATE_SIMPLIFIED_PROJECT,
+    showSuccessToast: false,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERYKEYS.GET_ALL_PROJECTS],
