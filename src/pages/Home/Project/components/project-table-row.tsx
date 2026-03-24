@@ -1,23 +1,21 @@
 import PersonAvatar from "@/components/ui/person-avatar";
-import useDisclosure from "@/hooks/use-disclosure";
 import { getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import { Badge } from "../../../../components/ui/badge";
 import { TableCell, TableRow } from "../../../../components/ui/table";
-import ProjectModal from "./project-modal";
 
 const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const navigate = useNavigate();
 
   const clientList = project?.form_fields?.find((item) => item.slug === "project_client")
     ?.value as { name: string; email: string }[];
 
   return (
-    <>
       <TableRow
         key={project.id}
-        onClick={onOpen}
+        onClick={() => navigate(`/projects/${project.id}`)}
         className="cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
       >
         <TableCell className="font-medium text-gray-900">{project.name}</TableCell>
@@ -55,9 +53,6 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
           )}
         </TableCell>
       </TableRow>
-
-      {isOpen && <ProjectModal onClose={onClose} isOpen={isOpen} project={project} />}
-    </>
   );
 };
 

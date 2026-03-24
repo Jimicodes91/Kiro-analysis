@@ -1,15 +1,13 @@
 import { Icons } from "@/components/ui/icons";
 import PersonAvatar from "@/components/ui/person-avatar";
-import useDisclosure from "@/hooks/use-disclosure";
 import { QUERYKEYS } from "@/lib/constants";
 import { cn, getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { Draggable } from "@hello-pangea/dnd";
 import { useQueryClient } from "@tanstack/react-query";
-import { AnimatePresence } from "framer-motion";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Badge } from "../../../../components/ui/badge";
-import ProjectModal from "./project-modal";
 
 interface ProjectCardProps {
   index: number;
@@ -17,7 +15,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const isLoading = Boolean(
@@ -30,16 +28,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
     ?.value as { name: string; email: string }[];
 
   return (
-    <>
-      <Draggable key={project.id} draggableId={project.id} index={index}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            onClick={onOpen}
-            className="mb-2"
-          >
+    <Draggable key={project.id} draggableId={project.id} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          onClick={() => navigate(`/projects/${project.id}`)}
+          className="mb-2"
+        >
             <div
               className={cn(
                 "bg-white rounded-lg border border-gray-200 p-3 transition-all duration-150",
@@ -89,11 +86,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           </div>
         )}
       </Draggable>
-
-      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {isOpen && <ProjectModal isOpen={isOpen} onClose={onClose} project={project} />}
-      </AnimatePresence>
-    </>
   );
 };
 
