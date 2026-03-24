@@ -31,23 +31,7 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
                   ))}
                 </div>
               </div>
-              <div className="space-y-1">
-                <h3 className="text-sm text-brand-fade font-[500]">Company</h3>
-                <InlineEditable
-                  isLoading={updateProject?.isPending}
-                  value={projectDetails?.form_data?.client_organization}
-                  onChange={(text) => {
-                    updateProject
-                      .mutateAsync({
-                        ...projectDetails?.form_data,
-                        client_organization: text,
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                  }}
-                />
-              </div>
+
               <div className="space-y-1">
                 <h3 className="text-sm text-brand-fade font-[500]">Project Name</h3>
                 <InlineEditable

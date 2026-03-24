@@ -13,9 +13,6 @@ const ProjectInfoSection = ({ projectDetails }: { projectDetails: ProjectDetails
         <Heading size="h4" className="leading-[22px]">
           {projectDetails?.name}
         </Heading>
-        <p className="text-brand-fade text-sm font-light">
-          {projectDetails?.form_data?.client_organization}
-        </p>
       </div>
 
       <div className="bg-[#F8F8F8] p-3 rounded-lg border">
