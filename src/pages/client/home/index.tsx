@@ -44,7 +44,7 @@ export default function ClientHomePage() {
               {format(new Date(activeProject?.start_date ?? ""), "MMM d, yyyy")} -{" "}
               {addDaysUtil(
                 activeProject?.start_date,
-                +(activeProject?.project_timeline?.[0] ?? 0) as unknown as number
+                activeProject?.total_duration_days ?? 0
               )}
             </p>
           </div>

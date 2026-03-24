@@ -302,6 +302,7 @@ export interface ProjectDetails {
   timeline: string;
   milestone_status: string;
   project_timeline: string;
+  total_duration_days: number;
   form_fields: FormField[];
   setting: ProjectSettings;
 }
