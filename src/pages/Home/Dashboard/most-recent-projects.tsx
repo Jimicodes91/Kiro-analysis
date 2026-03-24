@@ -1,11 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table";
 import { getFormattedText } from "@/lib/utils";
 import React from "react";
@@ -38,9 +38,6 @@ const MostRecentProject: React.FC<MostRecentProjectCardProps> = ({ projects }) =
                 Project name
               </TableHead>
               <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
-                Company
-              </TableHead>
-              <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
                 Status
               </TableHead>
               <TableHead className="text-left py-3 px-4 font-medium text-gray-700 text-sm h-auto">
@@ -56,9 +53,6 @@ const MostRecentProject: React.FC<MostRecentProjectCardProps> = ({ projects }) =
               >
                 <TableCell className="py-4 px-4 text-sm text-gray-900 font-medium">
                   {project.name}
-                </TableCell>
-                <TableCell className="py-4 px-4 text-sm text-gray-600">
-                  {project.company}
                 </TableCell>
                 <TableCell className="py-4 px-4">
                   <Badge variant={project.status}>
