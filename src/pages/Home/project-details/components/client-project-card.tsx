@@ -1,8 +1,8 @@
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,9 +31,6 @@ export function ClientProjectCard({
               <Heading size="h4" className="leading-[22px]">
                 {projectDetails?.name}
               </Heading>
-              <p className="text-brand-fade text-sm font-medium">
-                {projectDetails?.form_data?.client_organization}
-              </p>
               <Badge variant={projectDetails?.status} className="w-fit">
                 {getFormattedText(projectDetails?.status)}
               </Badge>

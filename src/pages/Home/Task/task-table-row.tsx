@@ -49,7 +49,6 @@ function TaskTableRow({ task }: { task: Task }) {
           </span>
         </TableCell>
         <TableCell>{task.project.name}</TableCell>
-        <TableCell>{task.project?.client_organization}</TableCell>
         <TableCell>{task.end_date}</TableCell>
         <TableCell>
           <Badge variant={task.status}>

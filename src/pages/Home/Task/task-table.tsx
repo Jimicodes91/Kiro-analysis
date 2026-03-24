@@ -18,21 +18,21 @@ const TasksTable = ({ search }: { search: string }) => {
 
   const renderTable = () => {
     if (tasksResponse.isPending) {
-      return <TableSkeletonRowLoader length={7} />;
+      return <TableSkeletonRowLoader length={6} />;
     }
 
     if (tasksResponse?.isError) {
-      return <EmptyTable message="Something went wrong" length={7} />;
+      return <EmptyTable message="Something went wrong" length={6} />;
     }
 
     if (tasks.length === 0) {
-      return <EmptyTable message="No tasks found" length={7} />;
+      return <EmptyTable message="No tasks found" length={6} />;
     }
 
     return (
       <TableBody className="text-xs">
         <TableRow className="border-0 outline-none !bg-transparent">
-          <TableCell className="border-0 h-3 py-0" colSpan={7}></TableCell>
+          <TableCell className="border-0 h-3 py-0" colSpan={6}></TableCell>
         </TableRow>
         {tasks?.map((task) => <TaskTableRow key={task.id} task={task} />)}
       </TableBody>
@@ -48,7 +48,6 @@ const TasksTable = ({ search }: { search: string }) => {
               <TableHead>Task name</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Project title</TableHead>
-              <TableHead>Company</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Assigned</TableHead>

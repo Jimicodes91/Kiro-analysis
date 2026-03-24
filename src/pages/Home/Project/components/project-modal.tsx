@@ -102,9 +102,6 @@ const ProjectDetail = ({ project }: { project: ProjectDetails }) => {
         <div className="space-y-4">
           <div className="flex flex-col">
             <p className="text-[#191819] font-bold text-2xl">{project.name}</p>
-            <p className="text-brand-fade text-base font-medium">
-              {project.form_data.client_organization}
-            </p>
           </div>
           <div className="bg-[#F8F8F8] p-4 rounded-lg flex-col border-brand-border border-[1px]">
             <div className="mb-3 flex items-center gap-3 lg:gap-9 md:gap-1">
