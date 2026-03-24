@@ -17,10 +17,10 @@ interface ProjectTableProps {
 
 const ProjectTable = ({ projectData }: ProjectTableProps) => {
   const renderTableBody = () => {
-    if (projectData.isPending) return <TableSkeletonRowLoader length={7} />;
+    if (projectData.isPending) return <TableSkeletonRowLoader length={6} />;
 
     if (projectData?.value?.data?.length === 0)
-      return <EmptyTable message="No projects found" length={7} />;
+      return <EmptyTable message="No projects found" length={6} />;
 
     return (
       <TableBody className="text-sm">
@@ -38,9 +38,6 @@ const ProjectTable = ({ projectData }: ProjectTableProps) => {
           <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-200">
             <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Title
-            </TableHead>
-            <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Organization
             </TableHead>
             <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Start date

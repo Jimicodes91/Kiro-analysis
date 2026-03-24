@@ -19,9 +19,6 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
         className="cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
       >
         <TableCell className="font-medium text-gray-900">{project.name}</TableCell>
-        <TableCell className="text-gray-600">
-          {project.form_data?.client_organization || "—"}
-        </TableCell>
         <TableCell className="text-gray-600 tabular-nums">
           {project.start_date ? format(project.start_date, "PPP") : "—"}
         </TableCell>

@@ -55,16 +55,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 )}
               </div>
 
-              {/* Project name + org */}
+              {/* Project name */}
               <div className="min-h-[40px]">
                 <p className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
                   {project.name}
                 </p>
-                {project.form_data?.client_organization && (
-                  <p className="text-xs text-gray-500 mt-0.5 truncate">
-                    {project.form_data.client_organization}
-                  </p>
-                )}
               </div>
 
               {/* Client avatars */}
