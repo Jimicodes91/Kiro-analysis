@@ -29,7 +29,7 @@ const AuthLayout = () => {
       </div>
 
       {/* Right Side (Form Content) */}
-      <div className="flex flex-col w-full max-w-lg p-5 md:p-9 justify-center self-center place-self-center overflow-y-auto overflow-x-hidden">
+      <div className="flex flex-col w-full max-w-lg p-5 md:p-9 justify-start md:justify-center self-stretch place-self-center overflow-y-auto overflow-x-hidden max-h-[calc(100vh-40px)]">
         <Outlet />
       </div>
     </div>

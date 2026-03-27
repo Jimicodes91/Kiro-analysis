@@ -284,7 +284,7 @@ const ProfileCompanyStep: React.FC<{
                 <FormControl className="h-12 w-full">
                   <CountrySelect
                     containerClassName="focus-visible:outline-none focus-visible:ring-1! focus-visible:ring-ring! shadow-sm"
-                    inputClassName="flex h-20! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    inputClassName="flex h-12! w-full rounded-full! placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     onChange={(_country) => { field.onChange(_country); form.setValue("city", ""); }}
                     onTextChange={(e) => { if (!e.target.value) { form.resetField("country"); form.resetField("city"); form.clearErrors("country"); form.clearErrors("city"); } }}
                     onBlur={() => { if (field.value) { form.setValue("country", field.value); } }}
