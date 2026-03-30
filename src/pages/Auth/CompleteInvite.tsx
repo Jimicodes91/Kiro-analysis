@@ -14,7 +14,7 @@ import { PAGES } from "@/lib/constants";
 import { completeInviteSchema } from "@/utils/validation-schema/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { InferType } from "yup";
