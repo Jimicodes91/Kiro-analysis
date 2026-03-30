@@ -76,7 +76,24 @@ function computeDiff(
     .filter((s) => !currentIds.has(s.id) && s.is_system !== 1)
     .map((s) => s.id);
 
-  return { shouldUpdateName, milestonesToCreate, milestonesToUpdate, milestonesToDelete };
+  // Compute reorder: compare persisted milestone IDs in form order vs snapshot order
+  const persistedIdsInFormOrder = (formValues.milestones ?? [])
+    .filter((m) => {
+      const fm = m as MilestoneFormItem;
+      return fm.id && !fm._isNew;
+    })
+    .map((m) => (m as MilestoneFormItem).id as string);
+
+  const persistedIdsInSnapshotOrder = snapshot.map((s) => s.id);
+
+  const shouldReorder =
+    persistedIdsInFormOrder.length === persistedIdsInSnapshotOrder.length &&
+    persistedIdsInFormOrder.length > 0 &&
+    persistedIdsInFormOrder.some((id, i) => id !== persistedIdsInSnapshotOrder[i]);
+
+  const reorderIds = shouldReorder ? persistedIdsInFormOrder : [];
+
+  return { shouldUpdateName, milestonesToCreate, milestonesToUpdate, milestonesToDelete, shouldReorder, reorderIds };
 }
 
 function EditJourneyFormModal({
@@ -98,10 +115,16 @@ function EditJourneyFormModal({
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     name: "milestones",
     control: form.control,
   });
+
+  const handleDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+    if (!destination || source.index === destination.index) return;
+    move(source.index, destination.index);
+  };
 
   useEffect(() => {
     if (getMilestones.isSuccess && getMilestones.value?.data) {
@@ -133,6 +156,10 @@ function EditJourneyFormModal({
     }
     for (const id of diff.milestonesToDelete) {
       promises.push(secureRequest({ url: `${baseUrl}/${ENDPOINTS.DELETE_MILESTONE(projectType.id, id)}`, method: "delete" }));
+    }
+
+    if (diff.shouldReorder) {
+      promises.push(secureRequest({ url: `${baseUrl}/${ENDPOINTS.REORDER_MILESTONES(projectType.id)}`, method: "patch", body: { milestone_ids: diff.reorderIds } }));
     }
 
     if (promises.length === 0) { setIsSaving(false); onClose(); return; }
@@ -176,51 +203,80 @@ function EditJourneyFormModal({
               )}
             />
 
-            {fields.map((item, index) => {
-              const milestone = form.getValues(`milestones.${index}`) as MilestoneFormItem;
-              const isSystem = milestone?.is_system === 1;
-              const canRemove = !isSystem && fields.length > 1;
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="milestones">
+                {(droppableProvided) => (
+                  <div ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
+                    {fields.map((item, index) => {
+                      const milestone = form.getValues(`milestones.${index}`) as MilestoneFormItem;
+                      const isSystem = milestone?.is_system === 1;
+                      const canRemove = !isSystem && fields.length > 1;
+                      const isDragDisabled = isSystem || fields.length <= 1;
 
-              return (
-                <div className="flex gap-2" key={item.id}>
-                  <div className="w-full">
-                    <FormField
-                      control={form.control}
-                      name={`milestones.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel isRequired>Stage name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Stage name" {...field} disabled={isSystem} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      return (
+                        <Draggable
+                          key={item.id}
+                          draggableId={item.id || `new-${index}`}
+                          index={index}
+                          isDragDisabled={isDragDisabled}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              className={`flex gap-2 mb-6 ${snapshot.isDragging ? "opacity-75 shadow-lg rounded-md bg-white" : ""}`}
+                            >
+                              <div
+                                {...provided.dragHandleProps}
+                                className={`flex items-center pt-8 ${isDragDisabled ? "invisible" : "cursor-grab"}`}
+                              >
+                                <GripVertical className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                              <div className="w-full">
+                                <FormField
+                                  control={form.control}
+                                  name={`milestones.${index}.name`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel isRequired>Stage name</FormLabel>
+                                      <FormControl>
+                                        <Input placeholder="Stage name" {...field} disabled={isSystem} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                              <div className="w-full">
+                                <FormField
+                                  control={form.control}
+                                  name={`milestones.${index}.duration`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel isRequired>Duration (days)</FormLabel>
+                                      <FormControl>
+                                        <Input type="number" placeholder="Duration" {...field} disabled={isSystem} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                              {canRemove && (
+                                <Button onClick={() => remove(index)} size="icon" variant="outline" type="button" className="flex-shrink-0 mt-8">
+                                  <LuTrash />
+                                </Button>
+                              )}
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {droppableProvided.placeholder}
                   </div>
-                  <div className="w-full">
-                    <FormField
-                      control={form.control}
-                      name={`milestones.${index}.duration`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel isRequired>Duration (days)</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="Duration" {...field} disabled={isSystem} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  {canRemove && (
-                    <Button onClick={() => remove(index)} size="icon" variant="outline" type="button" className="flex-shrink-0 mt-8">
-                      <LuTrash />
-                    </Button>
-                  )}
-                </div>
-              );
-            })}
+                )}
+              </Droppable>
+            </DragDropContext>
 
             <div className="grid p-0 m-0">
               <div className="items-center gap-3 flex">
