@@ -25,8 +25,10 @@ import useUpdateProjectTypeDetails from "@/hooks/project-modules/project-types/u
 import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
 import { secureRequest } from "@/services/api.service";
 import { editJourneyUnifiedSchema } from "@/utils/validation-schema/admin";
+import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useQueryClient } from "@tanstack/react-query";
+import { GripVertical } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { LuPlus, LuTrash } from "react-icons/lu";
