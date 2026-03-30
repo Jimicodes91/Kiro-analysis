@@ -21,7 +21,9 @@ import useCreateProjectType from "@/hooks/project-modules/project-types/use-crea
 import useGetJourneyTemplates from "@/hooks/project-modules/project-types/use-get-journey-templates";
 import { getUserSession } from "@/services/api.service";
 import { addProjectPipelineSchema } from "@/utils/validation-schema/admin";
+import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { GripVertical } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { LuArrowLeft, LuFileText, LuPlus, LuTrash } from "react-icons/lu";
@@ -53,6 +55,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
     fields: stagesFields,
     append,
     remove,
+    move,
   } = useFieldArray({
     name: "stages",
     control: form.control,
@@ -195,50 +198,84 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
                   </FormItem>
                 )}
               />
-              {stagesFields.map((item, index) => (
-                <div className="flex gap-2" key={item.id}>
-                  <div className="w-full">
-                    <FormField
-                      control={form.control}
-                      name={`stages.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel isRequired>Stage name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Stage name" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="w-full">
-                    <FormField
-                      control={form.control}
-                      name={`stages.${index}.duration`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel isRequired>Duration (days)</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="Duration" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  {index >= 1 && (
-                    <Button
-                      onClick={() => remove(index)}
-                      size="icon"
-                      variant="outline"
-                      className="flex-shrink-0 mt-8"
-                    >
-                      <LuTrash />
-                    </Button>
+              {/* Milestone stages with drag-to-reorder */}
+              <DragDropContext onDragEnd={(result: DropResult) => {
+                const { source, destination } = result;
+                if (!destination || source.index === destination.index) return;
+                move(source.index, destination.index);
+              }}>
+                <Droppable droppableId="create-milestones">
+                  {(droppableProvided) => (
+                    <div ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
+                      {stagesFields.map((item, index) => (
+                        <Draggable
+                          key={item.id}
+                          draggableId={item.id}
+                          index={index}
+                          isDragDisabled={stagesFields.length <= 1}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              className={`flex gap-2 mb-6 ${snapshot.isDragging ? "opacity-75 shadow-lg rounded-md bg-white" : ""}`}
+                            >
+                              <div
+                                {...provided.dragHandleProps}
+                                className={`flex items-center pt-8 ${stagesFields.length <= 1 ? "invisible" : "cursor-grab"}`}
+                              >
+                                <GripVertical className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                              <div className="w-full">
+                                <FormField
+                                  control={form.control}
+                                  name={`stages.${index}.name`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel isRequired>Stage Name</FormLabel>
+                                      <FormControl>
+                                        <Input placeholder="Stage name" {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                              <div className="w-full">
+                                <FormField
+                                  control={form.control}
+                                  name={`stages.${index}.duration`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel isRequired>Duration (Days)</FormLabel>
+                                      <FormControl>
+                                        <Input type="number" placeholder="Duration" {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                              {index >= 1 && (
+                                <Button
+                                  onClick={() => remove(index)}
+                                  size="icon"
+                                  variant="outline"
+                                  type="button"
+                                  className="flex-shrink-0 mt-8"
+                                >
+                                  <LuTrash />
+                                </Button>
+                              )}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {droppableProvided.placeholder}
+                    </div>
                   )}
-                </div>
-              ))}
+                </Droppable>
+              </DragDropContext>
 
               <div className="grid p-0 m-0">
                 <div className="items-center gap-3 flex">
