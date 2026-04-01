@@ -14,7 +14,8 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
   const updateProject = useUpdateProject(projectDetails?.id);
   const clientList = projectDetails?.form_fields?.find(
     (item) => item.slug === "project_client"
-  )?.value as { name: string; email: string }[];
+  )?.value as { id: string; name: string; email: string; phone: string }[];
+  const [editingContactId, setEditingContactId] = useState<string | null>(null);
 
   return (
     <div>
@@ -73,9 +74,16 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Client</h3>
-                <p className="text-sm text-gray-900">
-                  {clientList?.map((client) => client.name).join(", ") || "—"}
-                </p>
+                <div className="space-y-1">
+                  {clientList?.map((client) => (
+                    <EditableClientName
+                      key={client.id}
+                      client={client}
+                      editingContactId={editingContactId}
+                      setEditingContactId={setEditingContactId}
+                    />
+                  )) || <p className="text-sm text-gray-900">—</p>}
+                </div>
               </div>
               <div className="space-y-1">
                 <h3 className="text-sm text-brand-fade font-[500]">Project Type</h3>
@@ -93,5 +101,40 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
         </AccordionItem>
       </Accordion>
     </div>
+  );
+}
+
+function EditableClientName({
+  client,
+  editingContactId,
+  setEditingContactId,
+}: {
+  client: { id: string; name: string; email: string; phone: string };
+  editingContactId: string | null;
+  setEditingContactId: (id: string | null) => void;
+}) {
+  const updateContact = useUpdateContact(client.id);
+
+  return (
+    <InlineEditable
+      value={client.name || client.email}
+      isLoading={updateContact.isPending && editingContactId === client.id}
+      onChange={(text) => {
+        setEditingContactId(client.id);
+        updateContact
+          .mutateAsync({
+            name: text,
+            email: client.email,
+            phone: client.phone,
+            company_id: "",
+            assigned_to: [],
+          })
+          .then(() => setEditingContactId(null))
+          .catch((err) => {
+            console.error("Failed to update client name:", err);
+            setEditingContactId(null);
+          });
+      }}
+    />
   );
 }
