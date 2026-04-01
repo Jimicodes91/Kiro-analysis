@@ -181,8 +181,12 @@ export const projectStatusList: { text: string; value: ProjectStatusDict | "all"
 
 export const taskStatuses: { label: string; value: string }[] = [
   {
-    label: "Pending",
-    value: "pending",
+    label: "Draft",
+    value: "draft",
+  },
+  {
+    label: "Sent",
+    value: "sent",
   },
   {
     label: "In Progress",
@@ -191,6 +195,10 @@ export const taskStatuses: { label: string; value: string }[] = [
   {
     label: "Completed",
     value: "completed",
+  },
+  {
+    label: "Archived",
+    value: "archived",
   },
 ];
 
@@ -376,6 +384,18 @@ export const ENDPOINTS = {
   UPDATE_CLIENT_TASK_RESPONSE: (taskId: string) =>
     `projects/tasks/${taskId}/client-response`,
 
+  // 5.1 Task Comments
+  GET_TASK_COMMENTS: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}/comments`,
+  ADD_TASK_COMMENT: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}/comments`,
+  DELETE_TASK_COMMENT: (projectId: string, taskId: string, commentId: string) =>
+    `projects/${projectId}/tasks/${taskId}/comments/${commentId}`,
+
+  // 5.2 Task Activity Log
+  GET_TASK_ACTIVITY: (projectId: string, taskId: string) =>
+    `projects/${projectId}/tasks/${taskId}/activity`,
+
   // 6. Documents
   UPLOAD_DOCUMENT: (projectId: string) => `projects/${projectId}/documents`,
   GET_ALL_PROJECT_DOCUMENTS: (projectId: string) => `projects/${projectId}/documents`,
@@ -517,6 +537,12 @@ export const QUERYKEYS = {
   GET_ALL_TASKS: "GET_ALL_TASKS",
   GET_TASK_DETAILS: "GET_TASK_DETAILS",
   GET_AVAILABLE_ASSIGNEES: "GET_AVAILABLE_ASSIGNEES",
+
+  // 5.1 Task Comments Query keys
+  GET_TASK_COMMENTS: "GET_TASK_COMMENTS",
+
+  // 5.2 Task Activity Log Query keys
+  GET_TASK_ACTIVITY: "GET_TASK_ACTIVITY",
 
   // 6. Documents Query keys
   GET_ALL_PROJECT_DOCUMENTS: "GET_ALL_PROJECT_DOCUMENTS",

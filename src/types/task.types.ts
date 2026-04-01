@@ -94,6 +94,12 @@ export interface Task {
     client_organization: string;
     clients: Client[];
   };
+  // Lifecycle expansion fields
+  signing_status?: SigningSubStatus;
+  task_category_type?: TaskCategoryType;
+  form_config?: FormConfig;
+  comments?: TaskComment[];
+  activity_log?: TaskActivityLogEntry[];
 }
 
 export enum TaskCategory {
@@ -191,4 +197,62 @@ export interface Client {
 export interface AssignedTo {
   id: string;
   name: string;
+}
+
+
+// ── Task Lifecycle Expansion ──
+
+export enum TaskLifecycleStatus {
+  DRAFT = "draft",
+  SENT = "sent",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  ARCHIVED = "archived",
+}
+
+export enum SigningSubStatus {
+  SENT = "sent",
+  VIEWED = "viewed",
+  SIGNED = "signed",
+  COMPLETED = "completed",
+}
+
+export enum TaskCategoryType {
+  SIGNING = "signing",
+  INFORMATION_REQUEST = "information_request",
+  DOCUMENT_UPLOAD = "document_upload",
+  REVIEW = "review",
+  APPROVAL = "approval",
+  MEETING = "meeting",
+  FOLLOW_UP = "follow_up",
+}
+
+export interface TaskComment {
+  id: string;
+  task_id: string;
+  author_id: string;
+  content: string;
+  company_id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  author?: { id: string; name: string; email: string };
+}
+
+export interface TaskActivityLogEntry {
+  id: string;
+  task_id: string;
+  action: string;
+  previous_value: string | null;
+  new_value: string | null;
+  user_id: string;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+  user?: { id: string; name: string };
+}
+
+export interface FormConfig {
+  mode: "native" | "external";
+  form_id?: string;
+  external_url?: string;
 }
