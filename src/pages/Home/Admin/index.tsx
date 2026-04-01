@@ -24,8 +24,6 @@ const Admin: React.FC = () => {
     { text: "Users", tab: "user" as const },
     { text: "Journey", tab: "journey" as const },
     { text: "Document Type", tab: "document" as const },
-    { text: "Event Type", tab: "event" as const },
-    { text: "Note Type", tab: "note" as const },
     { text: "Task Type", tab: "task" as const },
     { text: "Forms", tab: "forms" as const },
     { text: "Audit Trail", tab: "audit-trail" as const },
