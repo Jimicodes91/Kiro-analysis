@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import * as yup from "yup";
+import TypeFieldsSection, { TASK_CATEGORY_TYPE_OPTIONS } from "./type-fields";
 
 const externalTaskSchema = yup.object({
   name: yup.string().required("Task name is required").min(3, "Task name must be at least 3 characters"),

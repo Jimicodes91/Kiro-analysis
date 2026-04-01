@@ -24,13 +24,16 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { TaskStatusBadge } from "@/components/ui/task-status-badge";
 import { Textarea } from "@/components/ui/textarea";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useGetAllTaskTypes from "@/hooks/project-modules/task-types/use-get-all-task-types";
 import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
+import useUpdateTaskStatus from "@/hooks/project-modules/tasks/use-update-task-status";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { taskStatuses } from "@/lib/constants";
+import { getValidNextStatuses } from "@/lib/task-transitions";
 import getInitials, {
     cn,
     fileToBase64,
@@ -46,6 +49,8 @@ import { CalendarIcon, File, Trash, Upload } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import TaskActivityTimeline from "./task-activity-timeline";
+import TaskComments from "./task-comments";
 interface ViewEditTaskModalProps {
   onClose: () => void;
   isOpen: boolean;

@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import * as yup from "yup";
+import TypeFieldsSection, { TASK_CATEGORY_TYPE_OPTIONS } from "./type-fields";
 
 const internalTaskSchema = yup.object({
   name: yup.string().optional(),
