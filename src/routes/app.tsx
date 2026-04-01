@@ -18,6 +18,7 @@ import ClientHomePage from "@/pages/client/home";
 import ClientProjectJourney from "@/pages/client/journey";
 import ClientTaskManagement from "@/pages/client/tasks";
 import ClientTaskDetailPage from "@/pages/client/tasks/client-task-detail-page";
+import FormBuilder from "@/pages/Home/Admin/forms/form-builder";
 import PendingInvites from "@/pages/Home/Admin/pending-invites";
 import Contact from "@/pages/Home/Contact";
 import NotificationsPage from "@/pages/Home/Notifications";
