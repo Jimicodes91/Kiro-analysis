@@ -472,6 +472,25 @@ export const ENDPOINTS = {
   DELETE_PLAN: (planType: string) => `billing/plans/${planType}`,
   GET_COMPANY_SUBSCRIPTION_PLAN: (companyId: string) =>
     `subscription/${companyId}/subscription`,
+
+  // Form Engine
+  GET_FORM_TEMPLATES: "forms/templates",
+  GET_FORM_TEMPLATE: (templateId: string) => `forms/templates/${templateId}`,
+  CREATE_FORM_TEMPLATE: "forms/templates",
+  UPDATE_FORM_TEMPLATE: (templateId: string) => `forms/templates/${templateId}`,
+  DELETE_FORM_TEMPLATE: (templateId: string) => `forms/templates/${templateId}`,
+  CLONE_FORM_TEMPLATE: (templateId: string) => `forms/templates/${templateId}/clone`,
+  PUBLISH_FORM_TEMPLATE: (templateId: string) => `forms/templates/${templateId}/publish`,
+  CREATE_FORM_FIELD: (templateId: string) => `forms/templates/${templateId}/fields`,
+  UPDATE_FORM_FIELD: (templateId: string, fieldId: string) => `forms/templates/${templateId}/fields/${fieldId}`,
+  DELETE_FORM_FIELD: (templateId: string, fieldId: string) => `forms/templates/${templateId}/fields/${fieldId}`,
+  REORDER_FORM_FIELDS: (templateId: string) => `forms/templates/${templateId}/fields/reorder`,
+  GET_FORM_VERSIONS: (templateId: string) => `forms/templates/${templateId}/versions`,
+  GET_FORM_VERSION: (templateId: string, versionNumber: number) => `forms/templates/${templateId}/versions/${versionNumber}`,
+  CREATE_FORM_SUBMISSION: "forms/submissions",
+  GET_FORM_SUBMISSIONS_BY_TASK: (taskId: string) => `forms/submissions/task/${taskId}`,
+  FINALIZE_FORM_SUBMISSION: (submissionId: string) => `forms/submissions/${submissionId}/finalize`,
+  GET_FORM_PREFILL: (templateId: string, clientId: string) => `forms/prefill/${templateId}/${clientId}`,
 };
 
 // for GET requests
@@ -577,6 +596,13 @@ export const QUERYKEYS = {
   GET_ALL_PLANS: "GET_ALL_PLANS",
   GET_PLAN: "GET_PLAN",
   GET_COMPANY_SUBSCRIPTION_PLAN: "GET_COMPANY_SUBSCRIPTION_PLAN",
+
+  // Form Engine
+  GET_FORM_TEMPLATES: "GET_FORM_TEMPLATES",
+  GET_FORM_TEMPLATE: "GET_FORM_TEMPLATE",
+  GET_FORM_VERSIONS: "GET_FORM_VERSIONS",
+  GET_FORM_SUBMISSIONS_BY_TASK: "GET_FORM_SUBMISSIONS_BY_TASK",
+  GET_FORM_PREFILL: "GET_FORM_PREFILL",
 };
 
 export const PAGES = {

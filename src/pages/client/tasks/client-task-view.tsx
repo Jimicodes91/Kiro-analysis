@@ -1,3 +1,4 @@
+import FormRenderer from "@/components/forms/form-renderer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -6,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import useUpdateClientResponse from "@/hooks/project-modules/tasks/use-update-client-response";
 import { fileToBase64 } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
-import { ClientResponse } from "@/types/task.types";
+import { ClientResponse, FormConfig } from "@/types/task.types";
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
@@ -24,6 +25,8 @@ interface ClientTaskViewProps {
   task: TaskDetails & {
     required_information?: string[];
     client_responses?: ClientResponse[];
+    form_config?: FormConfig;
+    client_id?: string;
   };
 }
 
@@ -116,6 +119,20 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
           style={{ width: `${progressPercent}%` }}
         />
       </div>
+
+      {/* Native form rendering */}
+      {task.form_config?.mode === "native" && task.form_config?.form_id && (
+        <Card className="border border-gray-200 shadow-none">
+          <CardContent className="p-0">
+            <FormRenderer
+              templateId={task.form_config.form_id}
+              taskId={task.id}
+              clientId={task.client_id ?? ""}
+              projectId={task.project_id}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-4">
         {responses.map((item, idx) => (

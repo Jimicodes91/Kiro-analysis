@@ -72,9 +72,22 @@ export default function InfoRequestFields({ control }: InfoRequestFieldsProps) {
       )}
 
       {mode === "native" && (
-        <div className="rounded-md border border-dashed border-gray-300 bg-white px-4 py-6 text-center text-sm text-gray-400">
-          Form builder coming soon
-        </div>
+        <FormField
+          control={control}
+          name="form_config.form_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Form Template</FormLabel>
+              <FormControl>
+                <TemplateSelector
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       )}
 
       <FormField
