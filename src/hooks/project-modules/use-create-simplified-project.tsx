@@ -9,6 +9,7 @@ export interface CreateSimplifiedProjectSchema {
   client_email: string;
   client_phone: string;
   client_name?: string;
+  clients?: Array<{ email: string; phone: string; name?: string }>;
   project_value?: number;
   nationality?: string;
   notes?: string;

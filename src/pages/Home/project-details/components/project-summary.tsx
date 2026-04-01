@@ -74,7 +74,7 @@ export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDeta
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Client</h3>
                 <p className="text-sm text-gray-900">
-                  {clientList?.map((client) => client.name)}
+                  {clientList?.map((client) => client.name).join(", ") || "—"}
                 </p>
               </div>
               <div className="space-y-1">

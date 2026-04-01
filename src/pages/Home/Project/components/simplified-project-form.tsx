@@ -27,9 +27,9 @@ import { cn } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
@@ -37,12 +37,24 @@ const simplifiedProjectSchema = yup.object({
   name: yup.string().required("Project name is required"),
   project_type_id: yup.string().required("Journey is required"),
   start_date: yup.date().required("Start date is required").typeError("Please select a valid date"),
-  client_email: yup
-    .string()
-    .email("Please enter a valid email address")
-    .required("Client email is required"),
-  client_phone: yup.string().required("Client phone number is required"),
-  client_name: yup.string().optional(),
+  clients: yup
+    .array()
+    .of(
+      yup.object({
+        email: yup.string().email("Please enter a valid email address").required("Email is required"),
+        phone: yup.string().required("Phone number is required"),
+        name: yup.string().optional().default(""),
+      })
+    )
+    .min(1, "At least one client is required")
+    .required("At least one client is required")
+    .test("unique-emails", "Duplicate client emails are not allowed", (clients) => {
+      if (!clients) return true;
+      const emails = clients
+        .map((c) => c.email?.trim().toLowerCase())
+        .filter(Boolean);
+      return new Set(emails).size === emails.length;
+    }),
   project_value: yup.number().positive("Must be a positive number").optional().nullable().transform((value, originalValue) => originalValue === "" ? null : value),
   nationality: yup.string().optional(),
   notes: yup.string().optional(),
@@ -73,15 +85,18 @@ export default function SimplifiedProjectForm({
       name: "",
       project_type_id: "",
       start_date: undefined,
-      client_email: "",
-      client_phone: "",
-      client_name: "",
+      clients: [{ email: "", phone: "", name: "" }],
       project_value: undefined,
       nationality: "",
       notes: "",
       send_client_invite: false,
       invite_message: "",
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "clients",
   });
 
   const onSubmit = async (data: SimplifiedProjectFormData) => {
@@ -97,10 +112,12 @@ export default function SimplifiedProjectForm({
         start_date: data.start_date ? format(data.start_date, "yyyy-MM-dd") : "",
         client_organization: "N/A", // Required by database but deprecated
         
+        // Multi-client array
+        clients: data.clients,
+        // Backward compatibility: first client's email
+        client_email: data.clients?.[0]?.email || "",
+        
         // Optional fields
-        client_email: data.client_email,
-        client_phone: data.client_phone,
-        client_name: data.client_name || null,
         project_value: data.project_value || null,
         nationality: data.nationality || null,
         notes: data.notes || null,
@@ -231,65 +248,80 @@ export default function SimplifiedProjectForm({
           )}
         />
 
-        {/* Client Email */}
-        <FormField
-          control={form.control}
-          name="client_email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Client Email <span className="text-red-500">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type="email"
-                  placeholder="client@example.com"
-                  {...field}
+        {/* Dynamic Client List */}
+        <div className="space-y-3">
+          <FormLabel>
+            Clients <span className="text-red-500">*</span>
+          </FormLabel>
+          <FormDescription>
+            If a contact exists, we'll link to them. Otherwise, we'll create a new contact.
+          </FormDescription>
+          {form.formState.errors.clients?.message && (
+            <p className="text-sm text-red-500">{form.formState.errors.clients.message}</p>
+          )}
+          {fields.map((field, index) => (
+            <div key={field.id} className="flex items-start gap-2 rounded-md border p-3">
+              <div className="flex-1 space-y-2">
+                <FormField
+                  control={form.control}
+                  name={`clients.${index}.email`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input type="email" placeholder="client@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </FormControl>
-              <FormDescription>
-                If contact exists, we'll link to them. Otherwise, we'll create a new
-                contact.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Client Phone */}
-        <FormField
-          control={form.control}
-          name="client_phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Client Phone <span className="text-red-500">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="+1234567890" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Client Name (Optional) */}
-        <FormField
-          control={form.control}
-          name="client_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Client Name (Optional)</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe" {...field} />
-              </FormControl>
-              <FormDescription>
-                If not provided, we'll extract from email
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormField
+                  control={form.control}
+                  name={`clients.${index}.phone`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="+1234567890" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`clients.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Name (optional)" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {index > 0 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => remove(index)}
+                  aria-label={`Remove client ${index + 1}`}
+                >
+                  <Trash2 className="h-4 w-4 text-red-500" />
+                </Button>
+              )}
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => append({ email: "", phone: "", name: "" })}
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            Add another client
+          </Button>
+        </div>
 
         {/* Project Value (Optional) */}
         <FormField
@@ -363,9 +395,9 @@ export default function SimplifiedProjectForm({
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>Send client invitation</FormLabel>
+                <FormLabel>Send client invitations</FormLabel>
                 <FormDescription>
-                  Invite the client to access the platform
+                  Invite all listed clients to access the platform
                   {form.watch("send_client_invite") &&
                     " (requires admin approval if you're a consultant)"}
                 </FormDescription>
