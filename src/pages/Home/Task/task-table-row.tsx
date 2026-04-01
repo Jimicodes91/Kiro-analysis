@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -10,9 +9,9 @@ import {
 import { Icons } from "@/components/ui/icons";
 import PersonAvatar from "@/components/ui/person-avatar";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { TaskStatusBadge } from "@/components/ui/task-status-badge";
 import useDisclosure from "@/hooks/use-disclosure";
-import { getFormattedText } from "@/lib/utils";
-import { Task } from "@/types/task.types";
+import { Task, TaskCategory } from "@/types/task.types";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import DeleteTaskModal from "./delete-task-modal";
@@ -51,9 +50,10 @@ function TaskTableRow({ task }: { task: Task }) {
         <TableCell>{task.project.name}</TableCell>
         <TableCell>{task.end_date}</TableCell>
         <TableCell>
-          <Badge variant={task.status}>
-            <span>{getFormattedText(task.status)}</span>
-          </Badge>
+          <TaskStatusBadge
+            status={task.status}
+            signingStatus={task.task_category_type === "signing" ? task.signing_status : undefined}
+          />
         </TableCell>
         <TableCell>
           {task.task_category === TaskCategory.EXTERNAL && Array.isArray(task?.client_assignees) && task.client_assignees.length > 0 ? (

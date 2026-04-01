@@ -8,13 +8,36 @@ import {
 } from "@/components/ui/table";
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
+import { Task } from "@/types/task.types";
+import { useMemo } from "react";
 import TaskTableRow from "./task-table-row";
 
-const TasksTable = ({ search }: { search: string }) => {
+interface TasksTableProps {
+  search: string;
+  statusFilter?: string;
+  typeFilter?: string;
+  showArchived?: boolean;
+}
+
+const TasksTable = ({ search, statusFilter, typeFilter, showArchived }: TasksTableProps) => {
   const tasksResponse = useGetAllTasks(search);
-  const tasks = Array.isArray(tasksResponse?.data?.data?.data)
+  const rawTasks: Task[] = Array.isArray(tasksResponse?.data?.data?.data)
     ? tasksResponse.data.data.data
     : [];
+
+  const tasks = useMemo(() => {
+    let filtered = rawTasks;
+    if (!showArchived) {
+      filtered = filtered.filter((t) => t.status !== "archived");
+    }
+    if (statusFilter) {
+      filtered = filtered.filter((t) => t.status === statusFilter);
+    }
+    if (typeFilter) {
+      filtered = filtered.filter((t) => t.task_category_type === typeFilter);
+    }
+    return filtered;
+  }, [rawTasks, statusFilter, typeFilter, showArchived]);
 
   const renderTable = () => {
     if (tasksResponse.isPending) {

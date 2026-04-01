@@ -28,6 +28,8 @@ const externalTaskSchema = yup.object({
   description: yup.string().max(5000).optional(),
   end_date: yup.date().required("Due date is required"),
   client_ids: yup.array().of(yup.string().required()).min(1, "At least one client is required").required("Clients are required"),
+  task_category_type: yup.string().optional(),
+  form_config: yup.object().optional(),
 });
 
 type ExternalFormData = yup.InferType<typeof externalTaskSchema>;
@@ -141,12 +143,14 @@ const ExternalTaskForm = () => {
   };
   const onSubmit = async (data: ExternalFormData) => {
     if (requiredInfo.length === 0) return;
-    const { end_date, ...rest } = data;
-    const payload = {
+    const { end_date, task_category_type, form_config, ...rest } = data;
+    const payload: Record<string, any> = {
       ...rest, task_category: TaskCategory.EXTERNAL,
       end_date: getUTCISODateFormat(end_date),
       required_information: requiredInfo, is_visible_to_client: true,
     };
+    if (task_category_type) payload.task_category_type = task_category_type;
+    if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
     try { await createTask.mutateAsync(payload as any); navigate(cancelPath); } catch (error) { console.error(error); }
   };
 
@@ -189,6 +193,18 @@ const ExternalTaskForm = () => {
               <FormItem><FormLabel>Description</FormLabel>
                 <FormControl><Textarea placeholder="Description" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
+            <FormField control={form.control} name="task_category_type" render={({ field }) => (
+              <FormItem><FormLabel>Task category type</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                  <FormControl className="h-12 w-full">
+                    <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
+                      <SelectValue placeholder={<p className="text-brand-placeholder">Select category type (optional)</p>} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>{TASK_CATEGORY_TYPE_OPTIONS.map((item) => (<SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>))}</SelectContent>
+                </Select><FormMessage /></FormItem>
+            )} />
+            <TypeFieldsSection control={form.control} categoryType={form.watch("task_category_type")} />
             <FormField control={form.control} name="end_date" render={({ field }) => (
               <FormItem className="flex flex-col"><FormLabel isRequired>Due date</FormLabel>
                 <Popover><PopoverTrigger asChild><FormControl>

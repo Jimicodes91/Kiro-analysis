@@ -202,15 +202,15 @@ This plan implements the expanded task lifecycle in incremental steps, starting 
     - Show secondary signing sub-status badge when provided
     - _Requirements: 1.5, 4.6, 15.3_
 
-- [ ] 13. Type-driven task creation form fields
-  - [ ] 13.1 Create type-specific field section components
+- [x] 13. Type-driven task creation form fields
+  - [x] 13.1 Create type-specific field section components
     - `Pylott-Web-App/src/pages/Home/Task/type-fields/signing-task-fields.tsx` — document upload, signer selection, signing instructions
     - `Pylott-Web-App/src/pages/Home/Task/type-fields/info-request-fields.tsx` — mode selector, form/link field, description
     - `Pylott-Web-App/src/pages/Home/Task/type-fields/doc-upload-fields.tsx` — document name, description, accepted types, max size
     - `Pylott-Web-App/src/pages/Home/Task/type-fields/standard-task-fields.tsx` — assignee, description, due date (Review/Approval)
     - _Requirements: 6.2, 6.3, 6.4, 6.5_
 
-  - [ ] 13.2 Integrate type-specific fields into `external-task-form.tsx` and `internal-task-form.tsx`
+  - [x] 13.2 Integrate type-specific fields into `external-task-form.tsx` and `internal-task-form.tsx`
     - Conditionally render the appropriate field section based on selected `task_category_type`
     - Preserve existing form patterns
     - _Requirements: 6.1, 6.6_
@@ -243,35 +243,35 @@ This plan implements the expanded task lifecycle in incremental steps, starting 
     - `useTaskActivity(taskId)` — GET activity log
     - _Requirements: 3.4_
 
-- [ ] 16. Task detail view integration
-  - [ ] 16.1 Integrate `TaskStatusBadge`, `TaskComments`, and `TaskActivityTimeline` into the task detail view
+- [x] 16. Task detail view integration
+  - [x] 16.1 Integrate `TaskStatusBadge`, `TaskComments`, and `TaskActivityTimeline` into the task detail view
     - Add status transition dropdown showing only valid next statuses from the transition map
     - Wire status transition to PATCH `/status` endpoint
     - Show signing sub-status for signing tasks
     - _Requirements: 1.5, 2.3, 2.4, 3.4, 4.6, 8.3_
 
-- [ ] 17. Task list filtering and display updates
-  - [ ] 17.1 Add status and task type filter controls to task list views
+- [x] 17. Task list filtering and display updates
+  - [x] 17.1 Add status and task type filter controls to task list views
     - Status filter dropdown with all lifecycle statuses
     - Task type filter dropdown
     - "Show archived" toggle (off by default)
     - _Requirements: 15.1, 15.2, 15.3, 15.4, 15.6_
 
-  - [ ] 17.2 Update `task-table-row.tsx` to render `TaskStatusBadge` with distinct colors per status
+  - [x] 17.2 Update `task-table-row.tsx` to render `TaskStatusBadge` with distinct colors per status
     - Show signing sub-status alongside main status for signing tasks
     - _Requirements: 1.5, 4.6, 15.3, 15.4_
 
 - [ ] 18. Checkpoint — Frontend complete
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 19. Backward compatibility and wiring
-  - [ ] 19.1 Verify existing API contracts are preserved
+- [x] 19. Backward compatibility and wiring
+  - [x] 19.1 Verify existing API contracts are preserved
     - Ensure existing PATCH `/projects/:project_id/tasks/:task_id` still works for general updates
     - Ensure tasks without `task_category_type` follow standard lifecycle
     - Ensure `is_visible_to_client` flag is unaffected by lifecycle changes
     - _Requirements: 14.3, 14.4, 14.6_
 
-  - [ ] 19.2 Wire internal task enhancements
+  - [x] 19.2 Wire internal task enhancements
     - Ensure internal tasks support full lifecycle
     - Ensure internal task status changes trigger in-app notifications to assigned team members
     - Ensure internal tasks are only visible to assigned members and admin/super_admin

@@ -93,6 +93,8 @@ const ViewEditTaskModal = ({
   // Watch project_id to determine which updateTask hook to use
   const selectedProjectId = form.watch("project_id");
   const updateTask = useUpdateProjectTask(selectedProjectId, taskData?.id || "");
+  const updateStatus = useUpdateTaskStatus(taskData.project_id, taskData.id);
+  const validNextStatuses = getValidNextStatuses(taskData.status);
 
   const isLoading =
     taskTypes.isLoading ||
@@ -640,6 +642,51 @@ const ViewEditTaskModal = ({
                 </FormItem>
               )}
             />
+
+            {/* Status Badge & Transition */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-700">Current status:</span>
+                <TaskStatusBadge
+                  status={taskData.status}
+                  signingStatus={taskData.signing_status}
+                />
+              </div>
+              {validNextStatuses.length > 0 && !isViewMode && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">Transition to:</span>
+                  {validNextStatuses.map((s) => (
+                    <Button
+                      key={s}
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={updateStatus.isPending}
+                      onClick={async () => {
+                        try {
+                          await updateStatus.mutateAsync({ status: s });
+                          onClose();
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                    >
+                      {taskStatuses.find((ts) => ts.value === s)?.label ?? s}
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Separator />
+
+            {/* Comments */}
+            <TaskComments projectId={taskData.project_id} taskId={taskData.id} />
+
+            <Separator />
+
+            {/* Activity Timeline */}
+            <TaskActivityTimeline projectId={taskData.project_id} taskId={taskData.id} />
 
             {!isViewMode && (
               <Button type="submit" isLoading={updateTask.isPending} className="w-full">

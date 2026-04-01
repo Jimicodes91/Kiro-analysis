@@ -1,17 +1,30 @@
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import useDebounce from "@/hooks/use-debounce";
+import { taskStatuses } from "@/lib/constants";
 import React, { useState } from "react";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import TaskEmptyState from "./task-empty-state";
 import TasksTable from "./task-table";
+import { TASK_CATEGORY_TYPE_OPTIONS } from "./type-fields";
 
 const Task: React.FC = () => {
   const navigate = useNavigate();
   const [search, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
+  const [showArchived, setShowArchived] = useState(false);
 
   const debounceText = useDebounce(search, 1000);
 
@@ -52,10 +65,51 @@ const Task: React.FC = () => {
             </Button>
           </div>
         </div>
+
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[160px] h-9 rounded-full border-brand-border text-sm">
+              <SelectValue placeholder="All statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All statuses</SelectItem>
+              {taskStatuses.map((s) => (
+                <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="w-[180px] h-9 rounded-full border-brand-border text-sm">
+              <SelectValue placeholder="All types" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All types</SelectItem>
+              {TASK_CATEGORY_TYPE_OPTIONS.map((t) => (
+                <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+            <Checkbox
+              checked={showArchived}
+              onCheckedChange={(v) => setShowArchived(v === true)}
+            />
+            Show archived
+          </label>
+        </div>
+
         {Array.isArray(tasksResponse?.data?.data?.data) && tasks.length === 0 ? (
           <TaskEmptyState />
         ) : (
-          <TasksTable search={debounceText} />
+          <TasksTable
+            search={debounceText}
+            statusFilter={statusFilter === "all" ? "" : statusFilter}
+            typeFilter={typeFilter === "all" ? "" : typeFilter}
+            showArchived={showArchived}
+          />
         )}
       </div>
     </>

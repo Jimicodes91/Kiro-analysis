@@ -33,6 +33,8 @@ const internalTaskSchema = yup.object({
   end_date: yup.date().required("End date is required"),
   assignees: yup.array().of(yup.string().required()).min(1, "At least one assignee is required").required("Assignees are required"),
   attachment: yup.array().optional(),
+  task_category_type: yup.string().optional(),
+  form_config: yup.object().optional(),
 });
 
 type InternalFormData = yup.InferType<typeof internalTaskSchema>;
@@ -145,17 +147,19 @@ const InternalTaskForm = () => {
     setAdditionalInfo(additionalInfo.filter((_: string, i: number) => i !== index));
   };
   const onSubmit = async (data: InternalFormData) => {
-    const { end_date, start_date, attachment, ...rest } = data;
+    const { end_date, start_date, attachment, task_category_type, form_config, ...rest } = data;
     const attachments = Array.isArray(attachment) ? attachment : [];
     const base64FileList = await Promise.all(
       attachments.map(async (item: File) => { try { return await fileToBase64(item); } catch { return null; } })
     );
-    const payload = {
+    const payload: Record<string, any> = {
       ...rest, task_category: TaskCategory.INTERNAL,
       start_date: getUTCISODateFormat(start_date), end_date: getUTCISODateFormat(end_date),
       attachments: base64FileList.filter(Boolean),
       additional_info: additionalInfo.length > 0 ? additionalInfo : undefined,
     };
+    if (task_category_type) payload.task_category_type = task_category_type;
+    if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
     try { await createTask.mutateAsync(payload as any); navigate(cancelPath); } catch (error) { console.error(error); }
   };
 
@@ -198,6 +202,18 @@ const InternalTaskForm = () => {
               <FormItem><FormLabel>Description</FormLabel>
                 <FormControl><Textarea placeholder="Description" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
+            <FormField control={form.control} name="task_category_type" render={({ field }) => (
+              <FormItem><FormLabel>Task category type</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                  <FormControl className="h-12 w-full">
+                    <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
+                      <SelectValue placeholder={<p className="text-brand-placeholder">Select category type (optional)</p>} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>{TASK_CATEGORY_TYPE_OPTIONS.map((item) => (<SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>))}</SelectContent>
+                </Select><FormMessage /></FormItem>
+            )} />
+            <TypeFieldsSection control={form.control} categoryType={form.watch("task_category_type")} />
             <div className="flex gap-4 justify-between">
               <FormField control={form.control} name="start_date" render={({ field }) => (
                 <FormItem className="flex flex-col w-full"><FormLabel isRequired>Start date</FormLabel>
