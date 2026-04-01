@@ -7,8 +7,10 @@ import {
 } from "@/components/ui/accordion";
 import PersonAvatar from "@/components/ui/person-avatar";
 import { ProjectStatusToggler } from "@/components/ui/project-status-toggle";
+import useUpdateContact from "@/hooks/contacts/use-update-contact";
 import useUpdateProject from "@/hooks/project-modules/use-update-project";
 import { ProjectDetails } from "@/types/api.types";
+import { useState } from "react";
 
 export function ProjectSummary({ projectDetails }: { projectDetails: ProjectDetails }) {
   const updateProject = useUpdateProject(projectDetails?.id);
