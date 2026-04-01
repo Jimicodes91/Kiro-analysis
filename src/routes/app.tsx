@@ -184,6 +184,12 @@ export const appRoutes: AppRoute[] = [
     layout: AccountLayout,
   },
   {
+    path: "/admin/forms/:templateId",
+    element: <FormBuilder />,
+    roles: ["ADMIN", "SUPER_ADMIN"],
+    layout: AccountLayout,
+  },
+  {
     path: "/notifications",
     element: <NotificationsPage />,
     roles: ["ADMIN", "CONSULTANT", "SUPER_ADMIN", "CLIENT"],

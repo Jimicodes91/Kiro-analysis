@@ -27,6 +27,7 @@ const Admin: React.FC = () => {
     { text: "Event Type", tab: "event" as const },
     { text: "Note Type", tab: "note" as const },
     { text: "Task Type", tab: "task" as const },
+    { text: "Forms", tab: "forms" as const },
     { text: "Audit Trail", tab: "audit-trail" as const },
     { text: "Account", tab: "account" as const },
     { text: "Settings", tab: "settings" as const },
@@ -68,6 +69,13 @@ const Admin: React.FC = () => {
         return (
           <div>
             <TaskTab />
+          </div>
+        );
+
+      case "forms":
+        return (
+          <div>
+            <TemplateLibrary />
           </div>
         );
 
