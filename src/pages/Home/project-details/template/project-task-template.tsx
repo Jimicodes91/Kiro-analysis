@@ -21,8 +21,12 @@ function ProjectTaskSection({
   const canEdit = mode === "edit" && !isClient;
   const projectTasks = useGetProjectTasks(projectId, isClient ? user?.id : undefined);
 
-  const handleAddTask = () => {
+  const handleAddInternalTask = () => {
     navigate(`/task/new/internal?projectId=${projectId}&projectTypeId=${projectTypeId}&from=project:${projectId}`);
+  };
+
+  const handleAddExternalTask = () => {
+    navigate(`/task/new/external?projectId=${projectId}&projectTypeId=${projectTypeId}&from=project:${projectId}`);
   };
 
   const renderBody = () => {
@@ -52,8 +56,13 @@ function ProjectTaskSection({
             No task currently on this project
           </p>
           {canEdit && (
-            <Button size="sm" leftIcon={<Plus />} onClick={handleAddTask}>
-              Add Task
+            <Button size="sm" leftIcon={<Plus />} onClick={handleAddInternalTask}>
+              Add Internal Task
+            </Button>
+          )}
+          {canEdit && (
+            <Button size="sm" variant="outline" leftIcon={<Plus />} onClick={handleAddExternalTask}>
+              Add External Task
             </Button>
           )}
         </div>
@@ -70,8 +79,11 @@ function ProjectTaskSection({
     <div className="space-y-4">
       {canEdit && (
         <div className="flex justify-end gap-3 items-center">
-          <Button size="sm" leftIcon={<Plus />} onClick={handleAddTask}>
-            Add Task
+          <Button size="sm" leftIcon={<Plus />} onClick={handleAddInternalTask}>
+            Add Internal Task
+          </Button>
+          <Button size="sm" variant="outline" leftIcon={<Plus />} onClick={handleAddExternalTask}>
+            Add External Task
           </Button>
         </div>
       )}

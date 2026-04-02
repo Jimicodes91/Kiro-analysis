@@ -109,7 +109,7 @@ const ExternalTaskForm = () => {
     return "/task";
   };
   const cancelPath = getReturnPath();
-  const backPath = from ? `/task/new?from=${from}${initialProjectId ? `&projectId=${initialProjectId}` : ""}${initialProjectTypeId ? `&projectTypeId=${initialProjectTypeId}` : ""}` : "/task/new";
+  const backPath = getReturnPath();
 
   const form = useForm<ExternalFormData>({
     resolver: yupResolver(externalTaskSchema),
