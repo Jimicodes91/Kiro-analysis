@@ -141,7 +141,7 @@ const ExternalTaskForm = () => {
       project_type_id: initialProjectTypeId,
       name: `External Task - ${format(end_date, "MMM dd, yyyy")}`,
       task_category: TaskCategory.EXTERNAL,
-      end_date: getUTCISODateFormat(end_date),
+      due_date: getUTCISODateFormat(end_date),
       is_visible_to_client: true,
       required_information: ["Complete task"],
     };

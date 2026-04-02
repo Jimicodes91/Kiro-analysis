@@ -147,7 +147,7 @@ const InternalTaskForm = () => {
     const { end_date, task_category_type, form_config, ...rest } = data;
     const payload: Record<string, any> = {
       ...rest, task_category: TaskCategory.INTERNAL,
-      end_date: getUTCISODateFormat(end_date),
+      due_date: getUTCISODateFormat(end_date),
     };
     if (task_category_type) payload.task_category_type = task_category_type;
     if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
