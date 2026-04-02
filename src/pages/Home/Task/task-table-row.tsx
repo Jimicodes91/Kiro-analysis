@@ -14,11 +14,13 @@ export function getStatusRowColor(status: string): string {
 
 interface TaskTableRowProps {
   task: Task;
+  showCategory?: boolean;
   onTaskClick?: (task: Task) => void;
 }
 
-function TaskTableRow({ task, onTaskClick }: TaskTableRowProps) {
+function TaskTableRow({ task, showCategory, onTaskClick }: TaskTableRowProps) {
   const rowColor = getStatusRowColor(task.status);
+  const categoryLabel = task.task_category === "external" ? "External" : "Internal";
 
   return (
     <TableRow
@@ -27,6 +29,19 @@ function TaskTableRow({ task, onTaskClick }: TaskTableRowProps) {
     >
       <TableCell>{task.created_at}</TableCell>
       <TableCell>{task.name}</TableCell>
+      {showCategory && (
+        <TableCell>
+          <span
+            className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+              task.task_category === "external"
+                ? "bg-blue-100 text-blue-700"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {categoryLabel}
+          </span>
+        </TableCell>
+      )}
       <TableCell>{task.end_date}</TableCell>
       <TableCell>{task.pipeline?.name ?? "—"}</TableCell>
       <TableCell>{task.project?.name ?? "—"}</TableCell>

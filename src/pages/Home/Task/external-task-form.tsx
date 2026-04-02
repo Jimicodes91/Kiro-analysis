@@ -19,8 +19,6 @@ import * as yup from "yup";
 import TypeFieldsSection, { TASK_CATEGORY_TYPE_OPTIONS } from "./type-fields";
 
 const externalTaskSchema = yup.object({
-  project_type_id: yup.string().required("Pipeline is required"),
-  project_id: yup.string().required("Project is required"),
   end_date: yup.date().required("Due date is required"),
   client_ids: yup.array().of(yup.string().required()).min(1, "At least one client is required").required("Clients are required"),
   task_category_type: yup.string().optional(),
@@ -103,6 +101,16 @@ const ExternalTaskForm = () => {
   const initialProjectId = searchParams.get("projectId") ?? "";
   const initialProjectTypeId = searchParams.get("projectTypeId") ?? "";
   const from = searchParams.get("from") ?? "";
+
+  // Redirect guard: external tasks require project context
+  useEffect(() => {
+    if (!initialProjectId || !initialProjectTypeId) {
+      navigate("/task", { replace: true });
+    }
+  }, [initialProjectId, initialProjectTypeId, navigate]);
+
+  if (!initialProjectId || !initialProjectTypeId) return null;
+
   const getReturnPath = () => {
     if (from === "admin") return "/admin?selectedTab=task";
     if (from.startsWith("project:")) return `/projects/${from.split(":")[1]}`;
@@ -113,13 +121,10 @@ const ExternalTaskForm = () => {
 
   const form = useForm<ExternalFormData>({
     resolver: yupResolver(externalTaskSchema),
-    defaultValues: {
-      project_id: initialProjectId || undefined,
-      project_type_id: initialProjectTypeId || undefined,
-    },
+    defaultValues: {},
   });
 
-  const selectedProjectId = initialProjectId || form.watch("project_id") || "";
+  const selectedProjectId = initialProjectId;
   const clientsQuery = useAvailableAssignees(selectedProjectId, "external");
   const createTask = useCreateProjectTask(selectedProjectId);
 
@@ -132,6 +137,8 @@ const ExternalTaskForm = () => {
     const { end_date, task_category_type, form_config, ...rest } = data;
     const payload: Record<string, any> = {
       ...rest,
+      project_id: initialProjectId,
+      project_type_id: initialProjectTypeId,
       name: `External Task - ${format(end_date, "MMM dd, yyyy")}`,
       task_category: TaskCategory.EXTERNAL,
       end_date: getUTCISODateFormat(end_date),

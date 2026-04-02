@@ -17,11 +17,16 @@ interface TasksTableProps {
   statusFilter?: string;
   typeFilter?: string;
   showArchived?: boolean;
+  contextFilter?: "all" | "organization" | "project";
   onTaskClick?: (task: Task) => void;
 }
 
-const TasksTable = ({ search, statusFilter, typeFilter, showArchived, onTaskClick }: TasksTableProps) => {
-  const tasksResponse = useGetAllTasks(search);
+const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFilter, onTaskClick }: TasksTableProps) => {
+  const contextParam = contextFilter && contextFilter !== "all" ? contextFilter : undefined;
+  const showCategory = contextFilter === "project";
+  const columnCount = showCategory ? 7 : 6;
+
+  const tasksResponse = useGetAllTasks(search, contextParam);
   const rawTasks: Task[] = Array.isArray(tasksResponse?.data?.data?.data)
     ? tasksResponse.data.data.data
     : [];
@@ -42,24 +47,24 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, onTaskClic
 
   const renderTable = () => {
     if (tasksResponse.isPending) {
-      return <TableSkeletonRowLoader length={6} />;
+      return <TableSkeletonRowLoader length={columnCount} />;
     }
 
     if (tasksResponse?.isError) {
-      return <EmptyTable message="Something went wrong" length={6} />;
+      return <EmptyTable message="Something went wrong" length={columnCount} />;
     }
 
     if (tasks.length === 0) {
-      return <EmptyTable message="No tasks found" length={6} />;
+      return <EmptyTable message="No tasks found" length={columnCount} />;
     }
 
     return (
       <TableBody className="text-xs">
         <TableRow className="border-0 outline-none !bg-transparent">
-          <TableCell className="border-0 h-3 py-0" colSpan={6}></TableCell>
+          <TableCell className="border-0 h-3 py-0" colSpan={columnCount}></TableCell>
         </TableRow>
         {tasks?.map((task) => (
-          <TaskTableRow key={task.id} task={task} onTaskClick={onTaskClick} />
+          <TaskTableRow key={task.id} task={task} showCategory={showCategory} onTaskClick={onTaskClick} />
         ))}
       </TableBody>
     );
@@ -73,6 +78,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, onTaskClic
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
               <TableHead>Date</TableHead>
               <TableHead>Task Name</TableHead>
+              {showCategory && <TableHead>Category</TableHead>}
               <TableHead>Due Date</TableHead>
               <TableHead>Pipeline</TableHead>
               <TableHead>Project</TableHead>

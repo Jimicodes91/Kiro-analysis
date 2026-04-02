@@ -7,11 +7,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
-import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useAvailableAssignees from "@/hooks/project-modules/tasks/use-available-assignees";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
 import useCreateStandaloneTask from "@/hooks/project-modules/tasks/use-create-standalone-task";
-import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { taskStatuses } from "@/lib/constants";
 import { cn, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
 import { TaskCategory, TaskCategoryType } from "@/types/task.types";
@@ -125,7 +123,6 @@ const InternalTaskForm = () => {
   };
   const cancelPath = getReturnPath();
   const backPath = getReturnPath();
-  const projectTypes = useGetAllProjectTypes();
   const form = useForm<InternalFormData>({
     resolver: yupResolver(internalTaskSchema),
     defaultValues: {
@@ -133,9 +130,7 @@ const InternalTaskForm = () => {
       project_type_id: initialProjectTypeId || undefined,
     },
   });
-  const selectedProjectTypeId = form.watch("project_type_id");
-  const projects = useGetAllProjects(selectedProjectTypeId);
-  const selectedProjectId = form.watch("project_id") ?? "";
+  const selectedProjectId = initialProjectId;
   const assigneesQuery = useAvailableAssignees(selectedProjectId, "internal");
   const companyUsersQuery = useGetCompanyUsers();
   const createTask = useCreateProjectTask(selectedProjectId);
@@ -182,28 +177,7 @@ const InternalTaskForm = () => {
               <FormItem><FormLabel>Task name (optional)</FormLabel>
                 <FormControl><Input placeholder="Task name" {...field} value={field.value ?? ""} /></FormControl><FormMessage /></FormItem>
             )} />
-            <FormField control={form.control} name="project_type_id" render={({ field }) => (
-              <FormItem><FormLabel>Pipeline</FormLabel>
-                <Select onValueChange={(value: string) => { field.onChange(value); form.setValue("project_id", ""); }} value={field.value}>
-                  <FormControl className="h-12 w-full">
-                    <SelectTrigger isLoading={projectTypes.isLoading} className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                      <SelectValue placeholder={<p className="text-brand-placeholder">Select Pipeline</p>} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>{projectTypes?.value?.data?.map((item: any) => (<SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>))}</SelectContent>
-                </Select><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="project_id" render={({ field }) => (
-              <FormItem><FormLabel>Project</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value} disabled={!selectedProjectTypeId}>
-                  <FormControl className="h-12 w-full">
-                    <SelectTrigger isLoading={projects.isLoading} className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                      <SelectValue placeholder={<p className="text-brand-placeholder">{selectedProjectTypeId ? "Select Project" : "Select Pipeline first"}</p>} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>{projects?.value?.data?.filter((p: any) => p.project_type_id === selectedProjectTypeId).map((item: any) => (<SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>))}</SelectContent>
-                </Select><FormMessage /></FormItem>
-            )} />
+
             <FormField control={form.control} name="task_category_type" render={({ field }) => (
               <FormItem><FormLabel>Task category type</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value ?? ""}>

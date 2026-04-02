@@ -12,6 +12,7 @@ import {
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import useDebounce from "@/hooks/use-debounce";
 import { taskStatuses } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { Task } from "@/types/task.types";
 import React, { useState } from "react";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
@@ -27,6 +28,7 @@ const Task: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [showArchived, setShowArchived] = useState(false);
+  const [contextFilter, setContextFilter] = useState<"all" | "organization" | "project">("all");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [detailPanelOpen, setDetailPanelOpen] = useState(false);
 
@@ -80,6 +82,29 @@ const Task: React.FC = () => {
           </div>
         </div>
 
+        {/* Context filter tabs */}
+        <div className="flex gap-1 bg-[#F3F3F3] rounded-full p-1 w-fit mb-4">
+          {(["all", "organization", "project"] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              className={cn(
+                "px-4 py-1.5 rounded-full text-sm font-medium transition-colors",
+                contextFilter === value
+                  ? "bg-white text-black shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              )}
+              onClick={() => setContextFilter(value)}
+            >
+              {value === "all"
+                ? "All Tasks"
+                : value === "organization"
+                  ? "Organization Tasks"
+                  : "Project Tasks"}
+            </button>
+          ))}
+        </div>
+
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -123,6 +148,7 @@ const Task: React.FC = () => {
             statusFilter={statusFilter === "all" ? "" : statusFilter}
             typeFilter={typeFilter === "all" ? "" : typeFilter}
             showArchived={showArchived}
+            contextFilter={contextFilter}
             onTaskClick={handleTaskClick}
           />
         )}
