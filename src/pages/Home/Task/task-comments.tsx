@@ -13,7 +13,7 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 
 interface TaskCommentsProps {
-  projectId: string;
+  projectId: string; // pass empty string for standalone tasks (hooks auto-switch to standalone endpoints)
   taskId: string;
 }
 

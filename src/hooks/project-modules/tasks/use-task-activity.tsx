@@ -9,10 +9,14 @@ interface TaskActivityResponse {
 }
 
 export const useTaskActivity = (projectId: string, taskId: string) => {
+  const endpoint = projectId
+    ? ENDPOINTS.GET_TASK_ACTIVITY(projectId, taskId)
+    : ENDPOINTS.GET_STANDALONE_TASK_ACTIVITY(taskId);
+
   return useQueryActionHook<TaskActivityResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_TASK_ACTIVITY(projectId, taskId),
+    endpoint,
     queryKey: [QUERYKEYS.GET_TASK_ACTIVITY, projectId, taskId],
-    enabled: !!projectId && !!taskId,
+    enabled: !!taskId,
   });
 };

@@ -9,7 +9,7 @@ const DeleteTaskModal = ({
   isOpen,
   taskId,
 }: {
-  projectId: string;
+  projectId: string | null;
   taskId: string;
 } & ModalProps) => {
   const deleteTask = useDeleteTask(projectId, taskId);

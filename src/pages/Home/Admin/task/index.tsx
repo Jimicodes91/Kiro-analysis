@@ -11,7 +11,7 @@ const TaskTab: React.FC = () => {
       <div className="flex justify-between items-center my-2">
         <h1 className="text-[16px] font-[600]">Task type </h1>
         <Button
-          onClick={() => navigate("/task/new?from=admin")}
+          onClick={() => navigate("/task/new/internal?from=admin")}
           size="sm"
           leftIcon={<IoAdd className="text-white" />}
         >

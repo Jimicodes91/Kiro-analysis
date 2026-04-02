@@ -13,11 +13,19 @@ interface TaskCommentsResponse {
 }
 
 export const useTaskComments = (projectId: string, taskId: string) => {
+  const isStandalone = !projectId;
+  const endpoint = isStandalone
+    ? ENDPOINTS.GET_STANDALONE_TASK_COMMENTS(taskId)
+    : ENDPOINTS.GET_TASK_COMMENTS(projectId, taskId);
+  const queryKey = isStandalone
+    ? [QUERYKEYS.GET_STANDALONE_TASK_COMMENTS, taskId]
+    : [QUERYKEYS.GET_TASK_COMMENTS, projectId, taskId];
+
   return useQueryActionHook<TaskCommentsResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_TASK_COMMENTS(projectId, taskId),
-    queryKey: [QUERYKEYS.GET_TASK_COMMENTS, projectId, taskId],
-    enabled: !!projectId && !!taskId,
+    endpoint,
+    queryKey,
+    enabled: !!taskId,
   });
 };
 
@@ -29,13 +37,19 @@ export interface CreateTaskCommentRequest {
 
 export const useCreateTaskComment = (projectId: string, taskId: string) => {
   const queryClient = useQueryClient();
+  const isStandalone = !projectId;
+  const endpoint = isStandalone
+    ? ENDPOINTS.ADD_STANDALONE_TASK_COMMENT(taskId)
+    : ENDPOINTS.ADD_TASK_COMMENT(projectId, taskId);
+  const queryKey = isStandalone
+    ? [QUERYKEYS.GET_STANDALONE_TASK_COMMENTS, taskId]
+    : [QUERYKEYS.GET_TASK_COMMENTS, projectId, taskId];
+
   return useCustomMutation<Record<string, string>, CreateTaskCommentRequest>({
     method: "post",
-    endpoint: ENDPOINTS.ADD_TASK_COMMENT(projectId, taskId),
+    endpoint,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_TASK_COMMENTS, projectId, taskId],
-      });
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 };
@@ -48,13 +62,19 @@ export const useDeleteTaskComment = (
   commentId: string
 ) => {
   const queryClient = useQueryClient();
+  const isStandalone = !projectId;
+  const endpoint = isStandalone
+    ? ENDPOINTS.DELETE_STANDALONE_TASK_COMMENT(taskId, commentId)
+    : ENDPOINTS.DELETE_TASK_COMMENT(projectId, taskId, commentId);
+  const queryKey = isStandalone
+    ? [QUERYKEYS.GET_STANDALONE_TASK_COMMENTS, taskId]
+    : [QUERYKEYS.GET_TASK_COMMENTS, projectId, taskId];
+
   return useCustomMutation({
     method: "delete",
-    endpoint: ENDPOINTS.DELETE_TASK_COMMENT(projectId, taskId, commentId),
+    endpoint,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_TASK_COMMENTS, projectId, taskId],
-      });
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 };

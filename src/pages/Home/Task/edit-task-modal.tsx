@@ -79,8 +79,8 @@ const ViewEditTaskModal = ({
     defaultValues: {
       name: taskData.name,
       task_type_id: taskData.task_type_id,
-      project_type_id: taskData.project_type_id,
-      project_id: taskData.project_id,
+      project_type_id: taskData.project_type_id ?? "",
+      project_id: taskData.project_id ?? "",
       description: taskData.description,
       status: taskData.status,
       start_date: new Date(taskData.start_date),
@@ -686,12 +686,12 @@ const ViewEditTaskModal = ({
             <Separator />
 
             {/* Comments */}
-            <TaskComments projectId={taskData.project_id} taskId={taskData.id} />
+            <TaskComments projectId={taskData.project_id ?? ""} taskId={taskData.id} />
 
             <Separator />
 
             {/* Activity Timeline */}
-            <TaskActivityTimeline projectId={taskData.project_id} taskId={taskData.id} />
+            <TaskActivityTimeline projectId={taskData.project_id ?? ""} taskId={taskData.id} />
 
             {!isViewMode && (
               <Button type="submit" isLoading={updateTask.isPending} className="w-full">

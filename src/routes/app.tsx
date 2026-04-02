@@ -26,7 +26,6 @@ import ProjectDetailsPageWrapper from "@/pages/Home/project-details";
 import Task from "@/pages/Home/Task";
 import ExternalTaskForm from "@/pages/Home/Task/external-task-form";
 import InternalTaskForm from "@/pages/Home/Task/internal-task-form";
-import TaskTypeSelectorPage from "@/pages/Home/Task/task-type-selector";
 import NotFound from "@/pages/Notfound";
 import ProfilePageLayout from "@/pages/profile";
 import EditOrganizationDetails from "@/pages/profile/templates/org-details";
@@ -106,7 +105,7 @@ export const appRoutes: AppRoute[] = [
   },
   {
     path: "/task/new",
-    element: <TaskTypeSelectorPage />,
+    element: <InternalTaskForm />,
     roles: ["SUPER_ADMIN", "ADMIN", "CONSULTANT"],
     layout: AccountLayout,
   },

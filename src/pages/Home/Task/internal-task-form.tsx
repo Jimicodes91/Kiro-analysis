@@ -1,39 +1,43 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import DragNdrop from "@/components/ui/file-upload";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+
+import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
 import useGetAllProjectTypes from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import useAvailableAssignees from "@/hooks/project-modules/tasks/use-available-assignees";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
+import useCreateStandaloneTask from "@/hooks/project-modules/tasks/use-create-standalone-task";
 import useGetAllProjects from "@/hooks/project-modules/use-get-all-projects";
 import { taskStatuses } from "@/lib/constants";
-import { cn, fileToBase64, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
-import { TaskCategory } from "@/types/task.types";
+import { cn, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
+import { TaskCategory, TaskCategoryType } from "@/types/task.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { format } from "date-fns";
 import { CalendarIcon, Check, Search, X } from "lucide-react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import * as yup from "yup";
-import TypeFieldsSection, { TASK_CATEGORY_TYPE_OPTIONS } from "./type-fields";
+
+const INTERNAL_CATEGORY_OPTIONS = [
+  { label: "Review", value: TaskCategoryType.REVIEW },
+  { label: "Approval", value: TaskCategoryType.APPROVAL },
+  { label: "Meeting", value: TaskCategoryType.MEETING },
+  { label: "Follow Up", value: TaskCategoryType.FOLLOW_UP },
+];
 
 const internalTaskSchema = yup.object({
   name: yup.string().optional(),
-  project_type_id: yup.string().required("Pipeline is required"),
-  project_id: yup.string().required("Project is required"),
+  project_type_id: yup.string().optional(),
+  project_id: yup.string().optional(),
   status: yup.string().required("Status is required"),
-  description: yup.string().max(5000).optional(),
-  start_date: yup.date().required("Start date is required"),
   end_date: yup.date().required("End date is required"),
   assignees: yup.array().of(yup.string().required()).min(1, "At least one assignee is required").required("Assignees are required"),
-  attachment: yup.array().optional(),
   task_category_type: yup.string().optional(),
   form_config: yup.object().optional(),
 });
@@ -120,9 +124,7 @@ const InternalTaskForm = () => {
     return "/task";
   };
   const cancelPath = getReturnPath();
-  const backPath = from ? `/task/new?from=${from}${initialProjectId ? `&projectId=${initialProjectId}` : ""}${initialProjectTypeId ? `&projectTypeId=${initialProjectTypeId}` : ""}` : "/task/new";
-  const [additionalInfo, setAdditionalInfo] = useState<string[]>([]);
-  const [infoInput, setInfoInput] = useState("");
+  const backPath = getReturnPath();
   const projectTypes = useGetAllProjectTypes();
   const form = useForm<InternalFormData>({
     resolver: yupResolver(internalTaskSchema),
@@ -135,33 +137,36 @@ const InternalTaskForm = () => {
   const projects = useGetAllProjects(selectedProjectTypeId);
   const selectedProjectId = form.watch("project_id") ?? "";
   const assigneesQuery = useAvailableAssignees(selectedProjectId, "internal");
+  const companyUsersQuery = useGetCompanyUsers();
   const createTask = useCreateProjectTask(selectedProjectId);
+  const createStandaloneTask = useCreateStandaloneTask();
   const assigneeOptions = useMemo(() => {
-    const list = extractList(assigneesQuery?.value);
-    return list.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
-  }, [assigneesQuery?.value]);
-  const addInfoItem = () => {
-    const trimmed = infoInput.trim();
-    if (trimmed && !additionalInfo.includes(trimmed)) { setAdditionalInfo([...additionalInfo, trimmed]); setInfoInput(""); }
-  };
-  const removeInfoItem = (index: number) => {
-    setAdditionalInfo(additionalInfo.filter((_: string, i: number) => i !== index));
-  };
+    if (selectedProjectId) {
+      const list = extractList(assigneesQuery?.value);
+      return list.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
+    }
+    const users = companyUsersQuery?.value?.data ?? [];
+    return users.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
+  }, [selectedProjectId, assigneesQuery?.value, companyUsersQuery?.value]);
   const onSubmit = async (data: InternalFormData) => {
-    const { end_date, start_date, attachment, task_category_type, form_config, ...rest } = data;
-    const attachments = Array.isArray(attachment) ? attachment : [];
-    const base64FileList = await Promise.all(
-      attachments.map(async (item: File) => { try { return await fileToBase64(item); } catch { return null; } })
-    );
+    const { end_date, task_category_type, form_config, ...rest } = data;
     const payload: Record<string, any> = {
       ...rest, task_category: TaskCategory.INTERNAL,
-      start_date: getUTCISODateFormat(start_date), end_date: getUTCISODateFormat(end_date),
-      attachments: base64FileList.filter(Boolean),
-      additional_info: additionalInfo.length > 0 ? additionalInfo : undefined,
+      end_date: getUTCISODateFormat(end_date),
     };
     if (task_category_type) payload.task_category_type = task_category_type;
     if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
-    try { await createTask.mutateAsync(payload as any); navigate(cancelPath); } catch (error) { console.error(error); }
+    const isStandalone = !data.project_type_id && !data.project_id;
+    try {
+      if (isStandalone) {
+        payload.project_id = null;
+        payload.project_type_id = null;
+        await createStandaloneTask.mutateAsync(payload as any);
+      } else {
+        await createTask.mutateAsync(payload as any);
+      }
+      navigate(cancelPath);
+    } catch (error) { console.error(error); }
   };
 
   return (
@@ -178,7 +183,7 @@ const InternalTaskForm = () => {
                 <FormControl><Input placeholder="Task name" {...field} value={field.value ?? ""} /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="project_type_id" render={({ field }) => (
-              <FormItem><FormLabel isRequired>Pipeline</FormLabel>
+              <FormItem><FormLabel>Pipeline</FormLabel>
                 <Select onValueChange={(value: string) => { field.onChange(value); form.setValue("project_id", ""); }} value={field.value}>
                   <FormControl className="h-12 w-full">
                     <SelectTrigger isLoading={projectTypes.isLoading} className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
@@ -189,7 +194,7 @@ const InternalTaskForm = () => {
                 </Select><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="project_id" render={({ field }) => (
-              <FormItem><FormLabel isRequired>Project</FormLabel>
+              <FormItem><FormLabel>Project</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value} disabled={!selectedProjectTypeId}>
                   <FormControl className="h-12 w-full">
                     <SelectTrigger isLoading={projects.isLoading} className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
@@ -199,10 +204,6 @@ const InternalTaskForm = () => {
                   <SelectContent>{projects?.value?.data?.filter((p: any) => p.project_type_id === selectedProjectTypeId).map((item: any) => (<SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>))}</SelectContent>
                 </Select><FormMessage /></FormItem>
             )} />
-            <FormField control={form.control} name="description" render={({ field }) => (
-              <FormItem><FormLabel>Description</FormLabel>
-                <FormControl><Textarea placeholder="Description" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
             <FormField control={form.control} name="task_category_type" render={({ field }) => (
               <FormItem><FormLabel>Task category type</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value ?? ""}>
@@ -211,34 +212,20 @@ const InternalTaskForm = () => {
                       <SelectValue placeholder={<p className="text-brand-placeholder">Select category type (optional)</p>} />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>{TASK_CATEGORY_TYPE_OPTIONS.map((item) => (<SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>))}</SelectContent>
+                  <SelectContent>{INTERNAL_CATEGORY_OPTIONS.map((item) => (<SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>))}</SelectContent>
                 </Select><FormMessage /></FormItem>
             )} />
-            <TypeFieldsSection control={form.control} categoryType={form.watch("task_category_type")} />
-            <div className="flex gap-4 justify-between">
-              <FormField control={form.control} name="start_date" render={({ field }) => (
-                <FormItem className="flex flex-col w-full"><FormLabel isRequired>Start date</FormLabel>
+            <FormField control={form.control} name="end_date" render={({ field }) => (
+                <FormItem className="flex flex-col w-full"><FormLabel isRequired>Due date</FormLabel>
                   <Popover><PopoverTrigger asChild><FormControl>
-                    <Button variant="outline" className={cn("text-sm h-12 font-normal rounded-full border-brand-border border bg-transparent px-3 py-4", !field.value && "text-muted-foreground")} slotClassName="justify-start">
-                      {field.value ? format(field.value, "PPP") : <span className="text-brand-placeholder">Start date</span>}
+                    <Button variant="outline" className={cn("font-normal h-12 rounded-full border-brand-border border bg-transparent px-3 py-4 text-sm", !field.value && "text-muted-foreground")}>
+                      {field.value ? format(field.value, "PPP") : <span className="text-brand-placeholder">Due date</span>}
                       <CalendarIcon className="ml-auto h-4 w-4" />
                     </Button></FormControl></PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={getSelectableDate} initialFocus />
                     </PopoverContent></Popover><FormMessage /></FormItem>
               )} />
-              <FormField control={form.control} name="end_date" render={({ field }) => (
-                <FormItem className="flex flex-col w-full"><FormLabel isRequired>End date</FormLabel>
-                  <Popover><PopoverTrigger asChild><FormControl>
-                    <Button variant="outline" className={cn("font-normal h-12 rounded-full border-brand-border border bg-transparent px-3 py-4 text-sm", !field.value && "text-muted-foreground")}>
-                      {field.value ? format(field.value, "PPP") : <span className="text-brand-placeholder">End date</span>}
-                      <CalendarIcon className="ml-auto h-4 w-4" />
-                    </Button></FormControl></PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date: Date) => !form.watch("start_date") || date < new Date(form.watch("start_date"))} initialFocus />
-                    </PopoverContent></Popover><FormMessage /></FormItem>
-              )} />
-            </div>
             <FormField control={form.control} name="status" render={({ field }) => (
               <FormItem><FormLabel isRequired>Status</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -253,29 +240,11 @@ const InternalTaskForm = () => {
             <SearchableMultiPicker label="Assignees" options={assigneeOptions}
               selectedIds={form.watch("assignees") ?? []}
               onChange={(vals) => form.setValue("assignees", vals, { shouldValidate: true })}
-              placeholder={!selectedProjectId ? "Select a project first" : "Search team members..."}
+              placeholder={!selectedProjectId ? "Search company members..." : "Search team members..."}
               error={form.formState.errors.assignees?.message} />
-            <div>
-              <label className="text-sm font-medium">Additional Info (optional)</label>
-              <div className="flex gap-2 mt-1">
-                <Input placeholder="Add a note or info item" value={infoInput} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInfoInput(e.target.value)} onKeyDown={(e: React.KeyboardEvent) => { if (e.key === "Enter") { e.preventDefault(); addInfoItem(); } }} />
-                <Button type="button" variant="outline" onClick={addInfoItem}>Add</Button>
-              </div>
-              {additionalInfo.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {additionalInfo.map((item: string, idx: number) => (
-                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 bg-[#F3F3F3] rounded-full text-sm">
-                      {item}<button type="button" onClick={() => removeInfoItem(idx)} className="hover:text-red-500"><X className="h-3 w-3" /></button>
-                    </span>))}
-                </div>)}
-            </div>
-            <FormField control={form.control} name="attachment" render={({ field }) => (
-              <FormItem><FormLabel>Attachment</FormLabel>
-                <FormControl><DragNdrop id="internal-file-attachment" value={field.value} onChange={field.onChange} /></FormControl><FormMessage /></FormItem>
-            )} />
             <div className="flex justify-end gap-3 mt-4 mb-8">
               <Button variant="outline" type="button" onClick={() => navigate(cancelPath)}>Cancel</Button>
-              <Button type="submit" isLoading={createTask.isPending}>Create Task</Button>
+              <Button type="submit" isLoading={createTask.isPending || createStandaloneTask.isPending}>Create Task</Button>
             </div>
           </form>
         </Form>

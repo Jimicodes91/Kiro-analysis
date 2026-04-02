@@ -22,7 +22,7 @@ function ProjectTaskSection({
   const projectTasks = useGetProjectTasks(projectId, isClient ? user?.id : undefined);
 
   const handleAddTask = () => {
-    navigate(`/task/new?projectId=${projectId}&projectTypeId=${projectTypeId}&from=project:${projectId}`);
+    navigate(`/task/new/internal?projectId=${projectId}&projectTypeId=${projectTypeId}&from=project:${projectId}`);
   };
 
   const renderBody = () => {

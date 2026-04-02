@@ -2,11 +2,14 @@ import useCustomMutation from "@/hooks/use-mutationaction";
 import { QUERYKEYS } from "@/lib/constants";
 import { useQueryClient } from "@tanstack/react-query";
 
-const useUpdateTaskStatus = (projectId: string, taskId: string) => {
+const useUpdateTaskStatus = (projectId: string | null, taskId: string) => {
   const queryClient = useQueryClient();
+  const endpoint = projectId
+    ? `projects/${projectId}/tasks/${taskId}/status`
+    : `tasks/${taskId}/status`;
   return useCustomMutation<Record<string, string>, { status: string }>({
     method: "patch",
-    endpoint: `projects/${projectId}/tasks/${taskId}/status`,
+    endpoint,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS] });
       queryClient.invalidateQueries({ queryKey: [QUERYKEYS.GET_ALL_TASKS] });

@@ -17,9 +17,10 @@ interface TasksTableProps {
   statusFilter?: string;
   typeFilter?: string;
   showArchived?: boolean;
+  onTaskClick?: (task: Task) => void;
 }
 
-const TasksTable = ({ search, statusFilter, typeFilter, showArchived }: TasksTableProps) => {
+const TasksTable = ({ search, statusFilter, typeFilter, showArchived, onTaskClick }: TasksTableProps) => {
   const tasksResponse = useGetAllTasks(search);
   const rawTasks: Task[] = Array.isArray(tasksResponse?.data?.data?.data)
     ? tasksResponse.data.data.data
@@ -57,7 +58,9 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived }: TasksTab
         <TableRow className="border-0 outline-none !bg-transparent">
           <TableCell className="border-0 h-3 py-0" colSpan={6}></TableCell>
         </TableRow>
-        {tasks?.map((task) => <TaskTableRow key={task.id} task={task} />)}
+        {tasks?.map((task) => (
+          <TaskTableRow key={task.id} task={task} onTaskClick={onTaskClick} />
+        ))}
       </TableBody>
     );
   };
@@ -68,13 +71,12 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived }: TasksTab
         <Table className="overflow-auto">
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
-              <TableHead>Task name</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Project title</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Task Name</TableHead>
               <TableHead>Due Date</TableHead>
+              <TableHead>Pipeline</TableHead>
+              <TableHead>Project</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Assigned</TableHead>
-              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           {renderTable()}

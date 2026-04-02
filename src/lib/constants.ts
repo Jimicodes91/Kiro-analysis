@@ -366,6 +366,7 @@ export const ENDPOINTS = {
 
   // 5. Tasks
   CREATE_TASK: (projectId: string) => `projects/${projectId}/tasks`,
+  CREATE_STANDALONE_TASK: "projects/tasks",
   GET_ALL_PROJECT_TASKS: (projectId: string, assigneeId?: string) =>
     `projects/tasks?project_id=${projectId}${assigneeId ? `&assignee_id=${assigneeId}` : ""}`,
   // GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
@@ -392,9 +393,19 @@ export const ENDPOINTS = {
   DELETE_TASK_COMMENT: (projectId: string, taskId: string, commentId: string) =>
     `projects/${projectId}/tasks/${taskId}/comments/${commentId}`,
 
+  // 5.1.1 Standalone Task Comments (no project context)
+  GET_STANDALONE_TASK_COMMENTS: (taskId: string) => `tasks/${taskId}/comments`,
+  ADD_STANDALONE_TASK_COMMENT: (taskId: string) => `tasks/${taskId}/comments`,
+  DELETE_STANDALONE_TASK_COMMENT: (taskId: string, commentId: string) =>
+    `tasks/${taskId}/comments/${commentId}`,
+
+  // 5.1.2 Standalone Task Delete (no project context)
+  DELETE_STANDALONE_TASK: (taskId: string) => `tasks/${taskId}`,
+
   // 5.2 Task Activity Log
   GET_TASK_ACTIVITY: (projectId: string, taskId: string) =>
     `projects/${projectId}/tasks/${taskId}/activity`,
+  GET_STANDALONE_TASK_ACTIVITY: (taskId: string) => `tasks/${taskId}/activity`,
 
   // 6. Documents
   UPLOAD_DOCUMENT: (projectId: string) => `projects/${projectId}/documents`,
@@ -559,6 +570,7 @@ export const QUERYKEYS = {
 
   // 5.1 Task Comments Query keys
   GET_TASK_COMMENTS: "GET_TASK_COMMENTS",
+  GET_STANDALONE_TASK_COMMENTS: "GET_STANDALONE_TASK_COMMENTS",
 
   // 5.2 Task Activity Log Query keys
   GET_TASK_ACTIVITY: "GET_TASK_ACTIVITY",

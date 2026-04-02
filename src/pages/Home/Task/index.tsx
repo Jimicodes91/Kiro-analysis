@@ -12,9 +12,11 @@ import {
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import useDebounce from "@/hooks/use-debounce";
 import { taskStatuses } from "@/lib/constants";
+import { Task } from "@/types/task.types";
 import React, { useState } from "react";
 import { IoAdd, IoSearchOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import TaskDetailPanel from "./task-detail-panel";
 import TaskEmptyState from "./task-empty-state";
 import TasksTable from "./task-table";
 import { TASK_CATEGORY_TYPE_OPTIONS } from "./type-fields";
@@ -25,6 +27,18 @@ const Task: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [showArchived, setShowArchived] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [detailPanelOpen, setDetailPanelOpen] = useState(false);
+
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task);
+    setDetailPanelOpen(true);
+  };
+
+  const handleDetailPanelClose = () => {
+    setDetailPanelOpen(false);
+    setSelectedTask(null);
+  };
 
   const debounceText = useDebounce(search, 1000);
 
@@ -59,7 +73,7 @@ const Task: React.FC = () => {
             <Button
               size="sm"
               leftIcon={<IoAdd className="text-white w-6 h-6" />}
-              onClick={() => navigate("/task/new")}
+              onClick={() => navigate("/task/new/internal")}
             >
               Add task
             </Button>
@@ -109,6 +123,15 @@ const Task: React.FC = () => {
             statusFilter={statusFilter === "all" ? "" : statusFilter}
             typeFilter={typeFilter === "all" ? "" : typeFilter}
             showArchived={showArchived}
+            onTaskClick={handleTaskClick}
+          />
+        )}
+
+        {selectedTask && (
+          <TaskDetailPanel
+            isOpen={detailPanelOpen}
+            onClose={handleDetailPanelClose}
+            task={selectedTask}
           />
         )}
       </div>

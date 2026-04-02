@@ -67,14 +67,14 @@ export interface Task {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  project_id: string;
+  project_id: string | null;
   company_id: string;
   author_id: string;
   task_type_id: string;
-  project_type_id: string;
+  project_type_id: string | null;
   name: string;
   description: string;
-  status: "completed" | "in_progress" | "pending";
+  status: "draft" | "sent" | "in_progress" | "completed" | "archived" | "pending";
   start_date: string;
   end_date: string;
   is_visible_to_client: number;
@@ -93,7 +93,7 @@ export interface Task {
     name: string;
     client_organization: string;
     clients: Client[];
-  };
+  } | null;
   // Lifecycle expansion fields
   signing_status?: SigningSubStatus;
   task_category_type?: TaskCategoryType;
@@ -145,7 +145,7 @@ export interface InternalTaskFormData {
   assignees: string[];
   attachments?: string[];
   task_type_id?: string;
-  project_type_id: string;
+  project_type_id?: string;
   task_category: TaskCategory.INTERNAL;
   additional_info?: string[];
 }
