@@ -144,12 +144,13 @@ const InternalTaskForm = () => {
     return users.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
   }, [selectedProjectId, assigneesQuery?.value, companyUsersQuery?.value]);
   const onSubmit = async (data: InternalFormData) => {
-    const { end_date, task_category_type, form_config, ...rest } = data;
+    const { end_date, task_category_type, form_config, name, ...rest } = data;
     const payload: Record<string, any> = {
       ...rest, task_category: TaskCategory.INTERNAL,
       due_date: getUTCISODateFormat(end_date),
       is_visible_to_client: false,
     };
+    if (name) payload.name = name;
     if (task_category_type) payload.task_category_type = task_category_type;
     if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
     const isStandalone = !data.project_type_id && !data.project_id;
