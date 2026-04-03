@@ -42,7 +42,7 @@ function TaskTableRow({ task, showCategory, onTaskClick }: TaskTableRowProps) {
           </span>
         </TableCell>
       )}
-      <TableCell>{task.end_date}</TableCell>
+      <TableCell>{task.due_date ?? task.end_date ?? "—"}</TableCell>
       <TableCell>{task.pipeline?.name ?? "—"}</TableCell>
       <TableCell>{task.project?.name ?? "—"}</TableCell>
       <TableCell>

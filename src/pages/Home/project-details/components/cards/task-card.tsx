@@ -1,11 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
@@ -81,7 +81,7 @@ function TaskCard({ task }: { task: TaskDetails }) {
           <div>
             <p className="text-sm text-brand-fade p-0 m-0 pt-1">
               Due date:{" "}
-              <span className="text-primary">{format(task?.end_date, "PPP")}</span>
+              <span className="text-primary">{task?.due_date ? format(task.due_date, "PPP") : task?.end_date ? format(task.end_date, "PPP") : "Not set"}</span>
             </p>
           </div>
           <div className="flex -space-x-2">
