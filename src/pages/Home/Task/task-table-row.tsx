@@ -1,6 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { TaskStatusBadge } from "@/components/ui/task-status-badge";
 import { Task } from "@/types/task.types";
+import { format } from "date-fns";
 
 const STATUS_ROW_COLORS: Record<string, string> = {
   in_progress: "bg-amber-50",
@@ -10,6 +11,11 @@ const STATUS_ROW_COLORS: Record<string, string> = {
 
 export function getStatusRowColor(status: string): string {
   return STATUS_ROW_COLORS[status] ?? "";
+}
+
+function formatDate(value: string | undefined | null): string {
+  if (!value) return "—";
+  try { return format(new Date(value), "dd MMM, yyyy"); } catch { return "—"; }
 }
 
 interface TaskTableRowProps {
@@ -27,7 +33,7 @@ function TaskTableRow({ task, showCategory, onTaskClick }: TaskTableRowProps) {
       className={`cursor-pointer ${rowColor}`}
       onClick={() => onTaskClick?.(task)}
     >
-      <TableCell>{task.created_at}</TableCell>
+      <TableCell>{formatDate(task.created_at)}</TableCell>
       <TableCell>{task.name}</TableCell>
       {showCategory && (
         <TableCell>
@@ -42,7 +48,7 @@ function TaskTableRow({ task, showCategory, onTaskClick }: TaskTableRowProps) {
           </span>
         </TableCell>
       )}
-      <TableCell>{task.due_date ?? task.end_date ?? "—"}</TableCell>
+      <TableCell>{formatDate(task.due_date ?? task.end_date)}</TableCell>
       <TableCell>{task.pipeline?.name ?? "—"}</TableCell>
       <TableCell>{task.project?.name ?? "—"}</TableCell>
       <TableCell>
