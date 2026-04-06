@@ -18,13 +18,11 @@ interface TasksTableProps {
   typeFilter?: string;
   showArchived?: boolean;
   contextFilter?: "all" | "organization" | "project";
-  onTaskClick?: (task: Task) => void;
 }
 
-const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFilter, onTaskClick }: TasksTableProps) => {
+const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFilter }: TasksTableProps) => {
   const contextParam = contextFilter && contextFilter !== "all" ? contextFilter : undefined;
-  const showCategory = contextFilter === "project";
-  const columnCount = showCategory ? 7 : 6;
+  const columnCount = 8;
 
   const tasksResponse = useGetAllTasks(search, contextParam);
   const rawTasks: Task[] = Array.isArray(tasksResponse?.data?.data?.data)
@@ -64,7 +62,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
           <TableCell className="border-0 h-3 py-0" colSpan={columnCount}></TableCell>
         </TableRow>
         {tasks?.map((task) => (
-          <TaskTableRow key={task.id} task={task} showCategory={showCategory} onTaskClick={onTaskClick} />
+          <TaskTableRow key={task.id} task={task} />
         ))}
       </TableBody>
     );
@@ -76,9 +74,10 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
         <Table className="overflow-auto">
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
+              <TableHead className="w-10"></TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Task Name</TableHead>
-              {showCategory && <TableHead>Category</TableHead>}
+              <TableHead>Category</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Pipeline</TableHead>
               <TableHead>Project</TableHead>

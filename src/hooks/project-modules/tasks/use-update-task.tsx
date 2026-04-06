@@ -1,33 +1,26 @@
 import useCustomMutation from "@/hooks/use-mutationaction";
-import { ENDPOINTS, QUERYKEYS } from "@/lib/constants";
+import { QUERYKEYS } from "@/lib/constants";
 import { useQueryClient } from "@tanstack/react-query";
 
-interface UpdateTaskRequest {
+interface UpdateTaskPayload {
   name?: string;
-  description?: string;
-  // status: "in_progress" | "completed" | "pending";
-  status: string;
-  start_date?: string;
-  end_date?: string;
-  attachments?: string[];
-  is_visible_to_client?: boolean;
-  task_type_id?: string;
-  project_type_id?: string;
-  assignees?: string[];
+  due_date?: string;
+  status?: string;
+  task_category_type?: string;
 }
 
-const useUpdateTask = (projectId: string, taskId: string) => {
+const useUpdateTask = (projectId: string | null, taskId: string) => {
   const queryClient = useQueryClient();
-  return useCustomMutation<Record<string, string>, UpdateTaskRequest>({
+  const endpoint = projectId
+    ? `projects/${projectId}/tasks/${taskId}`
+    : `tasks/${taskId}`;
+  return useCustomMutation<Record<string, string>, UpdateTaskPayload>({
     method: "patch",
-    endpoint: ENDPOINTS.UPDATE_TASK_DETAILS(projectId, taskId),
+    endpoint,
+    showSuccessToast: false,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_ALL_TASKS],
-      });
-      queryClient.invalidateQueries({
-        queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS],
-      });
+      queryClient.invalidateQueries({ queryKey: [QUERYKEYS.GET_ALL_TASKS] });
+      queryClient.invalidateQueries({ queryKey: [QUERYKEYS.GET_ALL_PROJECT_TASKS] });
     },
   });
 };
