@@ -143,7 +143,12 @@ const InternalTaskForm = () => {
       return list.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
     }
     const users = companyUsersQuery?.value?.data ?? [];
-    return users.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
+    // Standalone tasks: only show internal employees (exclude clients)
+    const internalUsers = users.filter((u: any) => {
+      const role = (u.role || "").toLowerCase();
+      return role !== "client";
+    });
+    return internalUsers.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
   }, [selectedProjectId, assigneesQuery?.value, companyUsersQuery?.value]);
   const onSubmit = async (data: InternalFormData) => {
     const { end_date, task_category_type, form_config, name, comment, ...rest } = data;
