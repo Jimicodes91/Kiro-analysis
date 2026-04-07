@@ -22,6 +22,7 @@ import UploadDocumentModal from "../modal/upload-document-modal";
 
 function TaskCard({ task }: { task: TaskDetails }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [showComments, setShowComments] = useState(false);
   const {
     isOpen: isEditOpen,
     onOpen: onEditOpen,
@@ -94,6 +95,20 @@ function TaskCard({ task }: { task: TaskDetails }) {
             ))}
           </div>
         </div>
+        {/* Comments toggle */}
+        <button
+          type="button"
+          onClick={() => setShowComments(!showComments)}
+          className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 mt-1"
+        >
+          {showComments ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+          Comments
+        </button>
+        {showComments && (
+          <div className="mt-2 border-t pt-3">
+            <TaskComments projectId={task.project_id} taskId={task.id} />
+          </div>
+        )}
       </div>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {isOpen && (
