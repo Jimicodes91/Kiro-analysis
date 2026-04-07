@@ -31,6 +31,7 @@ const INTERNAL_CATEGORY_OPTIONS = [
 
 const internalTaskSchema = yup.object({
   name: yup.string().optional(),
+  comment: yup.string().optional(),
   project_type_id: yup.string().optional(),
   project_id: yup.string().optional(),
   status: yup.string().required("Status is required"),
@@ -144,7 +145,7 @@ const InternalTaskForm = () => {
     return users.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
   }, [selectedProjectId, assigneesQuery?.value, companyUsersQuery?.value]);
   const onSubmit = async (data: InternalFormData) => {
-    const { end_date, task_category_type, form_config, name, ...rest } = data;
+    const { end_date, task_category_type, form_config, name, comment, ...rest } = data;
     const payload: Record<string, any> = {
       ...rest, task_category: TaskCategory.INTERNAL,
       due_date: getUTCISODateFormat(end_date),
@@ -153,14 +154,27 @@ const InternalTaskForm = () => {
     if (name) payload.name = name;
     if (task_category_type) payload.task_category_type = task_category_type;
     if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
+    delete payload.comment;
     const isStandalone = !data.project_type_id && !data.project_id;
     try {
+      let result: any;
       if (isStandalone) {
         payload.project_id = null;
         payload.project_type_id = null;
-        await createStandaloneTask.mutateAsync(payload as any);
+        result = await createStandaloneTask.mutateAsync(payload as any);
       } else {
-        await createTask.mutateAsync(payload as any);
+        result = await createTask.mutateAsync(payload as any);
+      }
+      // Post comment if provided
+      const taskId = result?.data?.data?.task_id;
+      if (comment?.trim() && taskId) {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL as string;
+        const commentEndpoint = isStandalone
+          ? `${baseUrl}/tasks/${taskId}/comments`
+          : `${baseUrl}/projects/${selectedProjectId}/tasks/${taskId}/comments`;
+        try {
+          await secureRequest({ url: commentEndpoint, method: "post", body: { content: comment.trim() } });
+        } catch (e) { console.error("Failed to post comment:", e); }
       }
       navigate(cancelPath);
     } catch (error) { console.error(error); }
@@ -218,6 +232,17 @@ const InternalTaskForm = () => {
               onChange={(vals) => form.setValue("assignees", vals, { shouldValidate: true })}
               placeholder={!selectedProjectId ? "Search company members..." : "Search team members..."}
               error={form.formState.errors.assignees?.message} />
+            <FormField control={form.control} name="comment" render={({ field }) => (
+              <FormItem><FormLabel>Comment (optional)</FormLabel>
+                <FormControl>
+                  <textarea
+                    placeholder="Add a comment..."
+                    {...field}
+                    value={field.value ?? ""}
+                    className="w-full min-h-[80px] rounded-xl border border-brand-border bg-transparent px-3 py-3 text-sm placeholder:text-brand-placeholder focus:outline-none focus:ring-2 focus:ring-ring resize-y"
+                  />
+                </FormControl><FormMessage /></FormItem>
+            )} />
             <div className="flex justify-end gap-3 mt-4 mb-8">
               <Button variant="outline" type="button" onClick={() => navigate(cancelPath)}>Cancel</Button>
               <Button type="submit" isLoading={createTask.isPending || createStandaloneTask.isPending}>Create Task</Button>
