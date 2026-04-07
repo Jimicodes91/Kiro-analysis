@@ -8,13 +8,14 @@ export interface TaskListResponse {
   data: Task[];
 }
 
-const useGetAllTasks = (search?: string, context?: string) => {
+const useGetAllTasks = (search?: string, context?: string, includeArchived?: boolean) => {
   const searchKey = search ?? "";
   const contextKey = context ?? "";
+  const archivedKey = includeArchived ? "true" : "false";
   return useQueryActionHook<TaskListResponse>({
     method: "get",
-    endpoint: ENDPOINTS.GET_ALL_TASKS(search, context),
-    queryKey: [QUERYKEYS.GET_ALL_TASKS, searchKey, contextKey],
+    endpoint: ENDPOINTS.GET_ALL_TASKS(search, context, includeArchived),
+    queryKey: [QUERYKEYS.GET_ALL_TASKS, searchKey, contextKey, archivedKey],
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });

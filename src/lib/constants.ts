@@ -370,8 +370,13 @@ export const ENDPOINTS = {
   GET_ALL_PROJECT_TASKS: (projectId: string, assigneeId?: string) =>
     `projects/tasks?project_id=${projectId}${assigneeId ? `&assignee_id=${assigneeId}` : ""}`,
   // GET_ALL_PROJECT_TASKS: (projectId: string) => `projects/${projectId}/tasks`,
-  GET_ALL_TASKS: (search?: string, context?: string) =>
-    `projects/tasks${search ? `?search=${search}` : ""}${context ? `${search ? "&" : "?"}context=${context}` : ""}`,
+  GET_ALL_TASKS: (search?: string, context?: string, includeArchived?: boolean) => {
+    const params: string[] = [];
+    if (search) params.push(`search=${search}`);
+    if (context) params.push(`context=${context}`);
+    if (includeArchived) params.push(`include_archived=true`);
+    return `projects/tasks${params.length ? `?${params.join("&")}` : ""}`;
+  },
   GET_TASK_DETAILS: (projectId: string, taskId: string) =>
     `projects/${projectId}/tasks/${taskId}`,
   UPDATE_TASK_DETAILS: (projectId: string, taskId: string) =>

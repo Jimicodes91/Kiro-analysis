@@ -24,7 +24,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
   const contextParam = contextFilter && contextFilter !== "all" ? contextFilter : undefined;
   const columnCount = 8;
 
-  const tasksResponse = useGetAllTasks(search, contextParam);
+  const tasksResponse = useGetAllTasks(search, contextParam, showArchived);
   const rawTasks: Task[] = Array.isArray(tasksResponse?.data?.data?.data)
     ? tasksResponse.data.data.data
     : [];
