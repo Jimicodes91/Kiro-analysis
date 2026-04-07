@@ -14,6 +14,7 @@ import { taskStatuses } from "@/lib/constants";
 import { cn, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
 import { TaskCategory, TaskCategoryType } from "@/types/task.types";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import { format } from "date-fns";
 import { CalendarIcon, Check, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -174,7 +175,7 @@ const InternalTaskForm = () => {
           ? `${baseUrl}/tasks/${taskId}/comments`
           : `${baseUrl}/projects/${selectedProjectId}/tasks/${taskId}/comments`;
         try {
-          await secureRequest({ url: commentEndpoint, method: "post", body: { content: comment.trim() } });
+          await axios.post(commentEndpoint, { content: comment.trim() });
         } catch (e) { console.error("Failed to post comment:", e); }
       }
       navigate(cancelPath);
