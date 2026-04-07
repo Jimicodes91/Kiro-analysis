@@ -147,7 +147,7 @@ export default function TaskComments({ projectId, taskId }: TaskCommentsProps) {
           )}
         </div>
         <Button type="submit" size="sm" disabled={isLoading || !content.trim()}>
-          Send
+          Add
         </Button>
       </form>
 
