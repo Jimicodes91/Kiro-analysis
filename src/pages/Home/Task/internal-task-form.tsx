@@ -167,6 +167,7 @@ const InternalTaskForm = () => {
       }
       // Post comment if provided
       const taskId = result?.data?.data?.task_id;
+      console.log("[TASK CREATE] Result:", JSON.stringify(result?.data), "taskId:", taskId, "comment:", comment?.trim());
       if (comment?.trim() && taskId) {
         const baseUrl = import.meta.env.VITE_API_BASE_URL as string;
         const commentEndpoint = isStandalone
