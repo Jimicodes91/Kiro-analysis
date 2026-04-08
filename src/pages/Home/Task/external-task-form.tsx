@@ -28,7 +28,6 @@ const externalTaskSchema = yup.object({
   end_date: yup.date().required("Due date is required"),
   client_ids: yup.array().of(yup.string().required()).min(1, "At least one client is required").required("Clients are required"),
   task_category_type: yup.string().required("Task type is required"),
-  description: yup.string().optional(),
   form_config: yup.object().optional(),
 });
 
@@ -141,7 +140,7 @@ const ExternalTaskForm = () => {
   }, [clientsQuery?.value]);
 
   const onSubmit = async (data: ExternalFormData) => {
-    const { end_date, task_category_type, description, form_config, ...rest } = data;
+    const { end_date, task_category_type, form_config, ...rest } = data;
     // Task name = category type label (e.g. "Signing", "Information Request")
     const categoryLabel = EXTERNAL_CATEGORY_TYPES.find((c) => c.value === task_category_type)?.label ?? "External Task";
     const payload: Record<string, any> = {
@@ -155,7 +154,6 @@ const ExternalTaskForm = () => {
       is_visible_to_client: true,
       required_information: ["Complete task"],
     };
-    if (description?.trim()) payload.description = description.trim();
     if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
     try { await createTask.mutateAsync(payload as any); navigate(cancelPath); } catch (error) { console.error(error); }
   };
@@ -195,31 +193,6 @@ const ExternalTaskForm = () => {
 
             {/* Type-specific fields */}
             <TypeFieldsSection control={form.control} categoryType={form.watch("task_category_type")} />
-
-            {/* Dynamic instructions field based on category type */}
-            <FormField control={form.control} name="description" render={({ field }) => {
-              const catType = form.watch("task_category_type");
-              const fieldMeta: Record<string, { label: string; placeholder: string }> = {
-                signing: { label: "Signing instructions", placeholder: "Describe what the client needs to sign..." },
-                information_request: { label: "Information request details", placeholder: "Describe what information you need from the client..." },
-                document_upload: { label: "Document upload instructions", placeholder: "Describe which documents the client should upload..." },
-              };
-              const meta = catType ? fieldMeta[catType] : null;
-              return (
-                <FormItem>
-                  <FormLabel>{meta?.label ?? "Instructions for client"}</FormLabel>
-                  <FormControl>
-                    <textarea
-                      placeholder={meta?.placeholder ?? "Add instructions or description the client will see..."}
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      className="w-full min-h-[100px] rounded-xl border border-brand-border bg-transparent px-3 py-3 text-sm placeholder:text-brand-placeholder focus:outline-none focus:ring-2 focus:ring-ring resize-y"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }} />
 
             {/* Due Date */}
             <FormField control={form.control} name="end_date" render={({ field }) => (
