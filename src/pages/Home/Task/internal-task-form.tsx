@@ -1,48 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
+import { Textarea } from "@/components/ui/textarea";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
+import useGetCompanyContacts from "@/hooks/contacts/use-get-company-contact";
 import useAvailableAssignees from "@/hooks/project-modules/tasks/use-available-assignees";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
 import useCreateStandaloneTask from "@/hooks/project-modules/tasks/use-create-standalone-task";
-import { taskStatuses } from "@/lib/constants";
+import useGetAllCompanyProjects from "@/hooks/project-modules/use-get-all-company-projects";
 import { cn, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
 import { TaskCategory, TaskCategoryType } from "@/types/task.types";
-import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { format } from "date-fns";
-import { CalendarIcon, Check, Search, X } from "lucide-react";
+import { CalendarIcon, Check, ClipboardList, Handshake, Phone, Search, ThumbsUp, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import * as yup from "yup";
 
-const INTERNAL_CATEGORY_OPTIONS = [
-  { label: "Review", value: TaskCategoryType.REVIEW },
-  { label: "Approval", value: TaskCategoryType.APPROVAL },
-  { label: "Meeting", value: TaskCategoryType.MEETING },
-  { label: "Follow Up", value: TaskCategoryType.FOLLOW_UP },
-];
-
-const internalTaskSchema = yup.object({
-  name: yup.string().optional(),
-  comment: yup.string().optional(),
-  project_type_id: yup.string().optional(),
-  project_id: yup.string().optional(),
-  status: yup.string().required("Status is required"),
-  end_date: yup.date().required("End date is required"),
-  assignees: yup.array().of(yup.string().required()).min(1, "At least one assignee is required").required("Assignees are required"),
-  task_category_type: yup.string().optional(),
-  form_config: yup.object().optional(),
-});
-
-type InternalFormData = yup.InferType<typeof internalTaskSchema>;
+const CATEGORY_ICONS = [
+  { type: TaskCategoryType.REVIEW, label: "Review", icon: ClipboardList },
+  { type: TaskCategoryType.APPROVAL, label: "Approval", icon: ThumbsUp },
+  { type: TaskCategoryType.MEETING, label: "Meeting", icon: Handshake },
+  { type: TaskCategoryType.FOLLOW_UP, label: "Follow-up", icon: Phone },
+] as const;
 
 function extractList(raw: any): any[] {
   if (Array.isArray(raw)) return raw;
@@ -51,45 +34,93 @@ function extractList(raw: any): any[] {
   return [];
 }
 
-const SearchableMultiPicker = ({ label, options, selectedIds, onChange, placeholder, error }: {
-  label: string; options: { id: string; label: string }[]; selectedIds: string[];
-  onChange: (ids: string[]) => void; placeholder?: string; error?: string;
-}) => {
+function SearchableSinglePicker({ label, options, selectedId, onChange, placeholder, isLoading }: {
+  label: string;
+  options: { id: string; label: string; sublabel?: string }[];
+  selectedId: string | null;
+  onChange: (id: string | null) => void;
+  placeholder?: string;
+  isLoading?: boolean;
+}) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false);
-    };
+    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+  const filtered = options.filter((o) => o.label.toLowerCase().includes(search.toLowerCase()) || (o.sublabel && o.sublabel.toLowerCase().includes(search.toLowerCase())));
+  const selected = options.find((o) => o.id === selectedId);
+  return (
+    <div>
+      <label className="text-sm font-medium">{label}</label>
+      <div className="relative mt-1" ref={ref}>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input type="text" placeholder={placeholder ?? "Search..."} value={search} onChange={(e) => setSearch(e.target.value)} onFocus={() => setIsOpen(true)} className="w-full h-10 pl-9 pr-3 rounded-full border border-brand-border bg-transparent text-sm placeholder:text-brand-placeholder focus:outline-none focus:ring-2 focus:ring-ring" />
+        </div>
+        {isOpen && (
+          <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto">
+            {isLoading && <p className="px-3 py-2 text-sm text-gray-500">Loading...</p>}
+            {!isLoading && filtered.length === 0 && <p className="px-3 py-2 text-sm text-gray-500">No results found</p>}
+            {!isLoading && filtered.map((opt) => (
+              <div key={opt.id} className="flex items-center px-3 py-2 text-sm hover:bg-[#E0EFDE4D] cursor-pointer" onClick={() => { onChange(opt.id); setSearch(""); setIsOpen(false); }}>
+                <span className="flex-1">{opt.label}{opt.sublabel && <span className="text-gray-400 ml-1 text-xs">{opt.sublabel}</span>}</span>
+                {selectedId === opt.id && <Check className="w-4 h-4 text-black" />}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {selected && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#F3F3F3] rounded-full text-sm">
+            {selected.label}
+            <button type="button" onClick={() => onChange(null)} className="hover:text-red-500"><X className="h-3 w-3" /></button>
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SearchableMultiPicker({ label, options, selectedIds, onChange, placeholder }: {
+  label: string;
+  options: { id: string; label: string }[];
+  selectedIds: string[];
+  onChange: (ids: string[]) => void;
+  placeholder?: string;
+}) {
+  const [search, setSearch] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false); };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
   const filtered = options.filter((o) => o.label.toLowerCase().includes(search.toLowerCase()));
-  const toggle = (id: string) => {
-    onChange(selectedIds.includes(id) ? selectedIds.filter((v) => v !== id) : [...selectedIds, id]);
-  };
+  const toggle = (id: string) => { onChange(selectedIds.includes(id) ? selectedIds.filter((v) => v !== id) : [...selectedIds, id]); };
   const selectedItems = selectedIds.map((id) => options.find((o) => o.id === id)).filter(Boolean) as { id: string; label: string }[];
   return (
     <div>
-      <label className="text-sm font-medium">{label} <span className="text-red-500">*</span></label>
+      <label className="text-sm font-medium">{label}</label>
       <div className="relative mt-1" ref={ref}>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input type="text" placeholder={placeholder ?? "Search..."} value={search}
-            onChange={(e) => setSearch(e.target.value)} onFocus={() => setIsOpen(true)}
-            className="w-full h-12 pl-9 pr-3 rounded-full border border-brand-border bg-transparent text-sm placeholder:text-brand-placeholder focus:outline-none focus:ring-2 focus:ring-ring" />
+          <input type="text" placeholder={placeholder ?? "Search..."} value={search} onChange={(e) => setSearch(e.target.value)} onFocus={() => setIsOpen(true)} className="w-full h-10 pl-9 pr-3 rounded-full border border-brand-border bg-transparent text-sm placeholder:text-brand-placeholder focus:outline-none focus:ring-2 focus:ring-ring" />
         </div>
         {isOpen && (
           <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-y-auto">
             {filtered.length === 0 && <p className="px-3 py-2 text-sm text-gray-500">No results found</p>}
             {filtered.map((opt) => {
-              const selected = selectedIds.includes(opt.id);
+              const isSel = selectedIds.includes(opt.id);
               return (
                 <div key={opt.id} className="flex items-center px-3 py-2 text-sm hover:bg-[#E0EFDE4D] cursor-pointer" onClick={() => toggle(opt.id)}>
                   <span className="flex-1">{opt.label}</span>
-                  <div className={cn("flex items-center justify-center w-[18px] h-[18px] border rounded", selected ? "bg-black border-black" : "border-gray-500")}>
-                    {selected && <Check className="text-white w-[14px] h-[14px]" />}
+                  <div className={cn("flex items-center justify-center w-[18px] h-[18px] border rounded", isSel ? "bg-black border-black" : "border-gray-500")}>
+                    {isSel && <Check className="text-white w-[14px] h-[14px]" />}
                   </div>
                 </div>
               );
@@ -98,7 +129,7 @@ const SearchableMultiPicker = ({ label, options, selectedIds, onChange, placehol
         )}
       </div>
       {selectedItems.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-3">
+        <div className="flex flex-wrap gap-2 mt-2">
           {selectedItems.map((item) => (
             <span key={item.id} className="inline-flex items-center gap-1 px-3 py-1 bg-[#F3F3F3] rounded-full text-sm">
               {item.label}
@@ -107,10 +138,9 @@ const SearchableMultiPicker = ({ label, options, selectedIds, onChange, placehol
           ))}
         </div>
       )}
-      {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
     </div>
   );
-};
+}
 
 const InternalTaskForm = () => {
   const navigate = useNavigate();
@@ -125,43 +155,73 @@ const InternalTaskForm = () => {
   };
   const cancelPath = getReturnPath();
   const backPath = getReturnPath();
-  const form = useForm<InternalFormData>({
-    resolver: yupResolver(internalTaskSchema),
-    defaultValues: {
-      project_id: initialProjectId || undefined,
-      project_type_id: initialProjectTypeId || undefined,
-    },
-  });
+
+  const [name, setName] = useState("");
+  const [categoryType, setCategoryType] = useState<TaskCategoryType | null>(null);
+  const [dueDate, setDueDate] = useState<Date | null>(null);
+  const [notes, setNotes] = useState("");
+  const [assignees, setAssignees] = useState<string[]>([]);
+  const [projectId, setProjectId] = useState<string | null>(initialProjectId || null);
+  const [contactIds, setContactIds] = useState<string[]>([]);
+  const [markAsDone, setMarkAsDone] = useState(false);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+
   const selectedProjectId = initialProjectId;
   const assigneesQuery = useAvailableAssignees(selectedProjectId, "internal");
   const companyUsersQuery = useGetCompanyUsers();
-  const createTask = useCreateProjectTask(selectedProjectId);
+  const contactsQuery = useGetCompanyContacts();
+  const projectsQuery = useGetAllCompanyProjects();
+  const createTask = useCreateProjectTask(projectId ?? selectedProjectId ?? "");
   const createStandaloneTask = useCreateStandaloneTask();
+
   const assigneeOptions = useMemo(() => {
     if (selectedProjectId) {
       const list = extractList(assigneesQuery?.value);
       return list.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
     }
     const users = companyUsersQuery?.value?.data ?? [];
-    // Standalone tasks: only show internal employees (exclude clients)
-    const internalUsers = users.filter((u: any) => {
-      const role = (u.role || "").toLowerCase();
-      return role !== "client";
-    });
-    return internalUsers.map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
+    return users.filter((u: any) => (u.role || "").toLowerCase() !== "client").map((u: any) => ({ id: u.id, label: u.name || u.email || "Unknown" }));
   }, [selectedProjectId, assigneesQuery?.value, companyUsersQuery?.value]);
-  const onSubmit = async (data: InternalFormData) => {
-    const { end_date, task_category_type, form_config, name, comment, ...rest } = data;
+
+  const projectOptions = useMemo(() => {
+    const projects = projectsQuery?.value?.data ?? [];
+    return projects.map((p: any) => ({ id: p.id, label: p.name }));
+  }, [projectsQuery?.value]);
+
+  const contactOptions = useMemo(() => {
+    const contacts = contactsQuery?.value?.data?.contacts ?? [];
+    return contacts.map((c: any) => ({ id: c.id, label: c.name || c.email || "Unknown" }));
+  }, [contactsQuery?.value]);
+
+  const handleContactChange = (ids: string[]) => {
+    setContactIds(ids);
+    // Auto-populate subject with first selected contact's name if subject is empty
+    if (ids.length > 0 && !name.trim()) {
+      const contact = contactOptions.find((c: any) => c.id === ids[0]);
+      if (contact) setName(contact.label);
+    }
+  };
+
+  const hasProjectFromUrl = !!initialProjectId;
+  const projectName = useMemo(() => {
+    if (!initialProjectId) return "";
+    const proj = projectOptions.find((p: any) => p.id === initialProjectId);
+    return proj?.label ?? "Linked Project";
+  }, [initialProjectId, projectOptions]);
+
+  const handleSave = async () => {
+    if (!dueDate || assignees.length === 0) return;
     const payload: Record<string, any> = {
-      ...rest, task_category: TaskCategory.INTERNAL,
-      due_date: getUTCISODateFormat(end_date),
+      name: name || "Untitled Task",
+      task_category: TaskCategory.INTERNAL,
       is_visible_to_client: false,
+      status: markAsDone ? "completed" : "draft",
+      due_date: getUTCISODateFormat(dueDate),
+      assignees,
     };
-    if (name) payload.name = name;
-    if (task_category_type) payload.task_category_type = task_category_type;
-    if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
-    delete payload.comment;
-    const isStandalone = !data.project_type_id && !data.project_id;
+    if (categoryType) payload.task_category_type = categoryType;
+    if (contactIds.length > 0) payload.contact_id = contactIds[0];
+    const isStandalone = !initialProjectTypeId && !projectId;
     try {
       let result: any;
       if (isStandalone) {
@@ -169,22 +229,22 @@ const InternalTaskForm = () => {
         payload.project_type_id = null;
         result = await createStandaloneTask.mutateAsync(payload as any);
       } else {
+        if (initialProjectTypeId) payload.project_type_id = initialProjectTypeId;
         result = await createTask.mutateAsync(payload as any);
       }
-      // Post comment if provided
       const taskId = result?.data?.data?.task_id;
-      if (comment?.trim() && taskId) {
+      if (notes.trim() && taskId) {
         const baseUrl = import.meta.env.VITE_API_BASE_URL as string;
-        const commentEndpoint = isStandalone
-          ? `${baseUrl}/tasks/${taskId}/comments`
-          : `${baseUrl}/projects/${selectedProjectId}/tasks/${taskId}/comments`;
-        try {
-          await axios.post(commentEndpoint, { content: comment.trim() });
-        } catch (e) { console.error("Failed to post comment:", e); }
+        const effectiveProjectId = projectId || selectedProjectId;
+        const commentEndpoint = isStandalone ? `${baseUrl}/tasks/${taskId}/comments` : `${baseUrl}/projects/${effectiveProjectId}/tasks/${taskId}/comments`;
+        try { await axios.post(commentEndpoint, { content: notes.trim() }); } catch (e) { console.error("Failed to post comment:", e); }
       }
       navigate(cancelPath);
-    } catch (error) { console.error(error); }
+    } catch (error) { console.error("Failed to create task:", error); }
   };
+
+  const isSaving = createTask.isPending || createStandaloneTask.isPending;
+  const canSubmit = !!dueDate && assignees.length > 0;
 
   return (
     <div className="p-3 sm:p-4 md:p-6 my-2">
@@ -193,68 +253,60 @@ const InternalTaskForm = () => {
         <Heading size="h3">Create Internal Task</Heading>
       </div>
       <div className="max-w-2xl mx-auto mt-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <FormField control={form.control} name="name" render={({ field }) => (
-              <FormItem><FormLabel>Task name (optional)</FormLabel>
-                <FormControl><Input placeholder="Task name" {...field} value={field.value ?? ""} /></FormControl><FormMessage /></FormItem>
-            )} />
-
-            <FormField control={form.control} name="task_category_type" render={({ field }) => (
-              <FormItem><FormLabel>Task category type</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value ?? ""}>
-                  <FormControl className="h-12 w-full">
-                    <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                      <SelectValue placeholder={<p className="text-brand-placeholder">Select category type (optional)</p>} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>{INTERNAL_CATEGORY_OPTIONS.map((item) => (<SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>))}</SelectContent>
-                </Select><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="end_date" render={({ field }) => (
-                <FormItem className="flex flex-col w-full"><FormLabel isRequired>Due date</FormLabel>
-                  <Popover><PopoverTrigger asChild><FormControl>
-                    <Button variant="outline" className={cn("font-normal h-12 rounded-full border-brand-border border bg-transparent px-3 py-4 text-sm", !field.value && "text-muted-foreground")}>
-                      {field.value ? format(field.value, "PPP") : <span className="text-brand-placeholder">Due date</span>}
-                      <CalendarIcon className="ml-auto h-4 w-4" />
-                    </Button></FormControl></PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={getSelectableDate} initialFocus />
-                    </PopoverContent></Popover><FormMessage /></FormItem>
-              )} />
-            <FormField control={form.control} name="status" render={({ field }) => (
-              <FormItem><FormLabel isRequired>Status</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl className="h-12 w-full">
-                    <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                      <SelectValue placeholder={<p className="text-brand-placeholder">Select status</p>} />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>{taskStatuses?.map((item: any) => (<SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>))}</SelectContent>
-                </Select><FormMessage /></FormItem>
-            )} />
-            <SearchableMultiPicker label="Assignees" options={assigneeOptions}
-              selectedIds={form.watch("assignees") ?? []}
-              onChange={(vals) => form.setValue("assignees", vals, { shouldValidate: true })}
-              placeholder={!selectedProjectId ? "Search company members..." : "Search team members..."}
-              error={form.formState.errors.assignees?.message} />
-            <FormField control={form.control} name="comment" render={({ field }) => (
-              <FormItem><FormLabel>Comment (optional)</FormLabel>
-                <FormControl>
-                  <textarea
-                    placeholder="Add a comment..."
-                    {...field}
-                    value={field.value ?? ""}
-                    className="w-full min-h-[80px] rounded-xl border border-brand-border bg-transparent px-3 py-3 text-sm placeholder:text-brand-placeholder focus:outline-none focus:ring-2 focus:ring-ring resize-y"
-                  />
-                </FormControl><FormMessage /></FormItem>
-            )} />
-            <div className="flex justify-end gap-3 mt-4 mb-8">
-              <Button variant="outline" type="button" onClick={() => navigate(cancelPath)}>Cancel</Button>
-              <Button type="submit" isLoading={createTask.isPending || createStandaloneTask.isPending}>Create Task</Button>
+        <div className="flex flex-col gap-4">
+          <Input placeholder="Task subject..." value={name} onChange={(e) => setName(e.target.value)} className="text-lg font-medium h-12 border-brand-border rounded-full" />
+          <div>
+            <label className="text-sm font-medium">Category</label>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {CATEGORY_ICONS.map(({ type, label, icon: Icon }) => (
+                <button key={type} type="button" onClick={() => setCategoryType(type)} className={cn("flex flex-col items-center gap-1 px-3 py-2 rounded-lg border text-xs transition-colors", categoryType === type ? "border-black bg-black text-white" : "border-gray-200 hover:border-gray-400 text-gray-600")} title={label}>
+                  <Icon className="w-4 h-4" />
+                  <span className="text-[10px] leading-tight">{label}</span>
+                </button>
+              ))}
             </div>
-          </form>
-        </Form>
+          </div>
+          <div>
+            <label className="text-sm font-medium">Due date <span className="text-red-500">*</span></label>
+            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className={cn("w-full font-normal h-10 rounded-full border-brand-border border bg-transparent px-3 text-sm mt-1", !dueDate && "text-muted-foreground")}>
+                  {dueDate ? format(dueDate, "PPP") : <span className="text-brand-placeholder">Select due date</span>}
+                  <CalendarIcon className="ml-auto h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar mode="single" selected={dueDate ?? undefined} onSelect={(date) => { setDueDate(date ?? null); setDatePickerOpen(false); }} disabled={getSelectableDate} />
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div>
+            <label className="text-sm font-medium">Notes</label>
+            <Textarea placeholder="Add notes..." value={notes} onChange={(e) => setNotes(e.target.value)} className="mt-1 min-h-[80px] rounded-xl border-brand-border" />
+          </div>
+          <SearchableMultiPicker label="Assigned to" options={assigneeOptions} selectedIds={assignees} onChange={setAssignees} placeholder={!selectedProjectId ? "Search company members..." : "Search team members..."} />
+          {hasProjectFromUrl ? (
+            <div>
+              <label className="text-sm font-medium">Project</label>
+              <div className="flex flex-wrap gap-2 mt-1">
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#F3F3F3] rounded-full text-sm">{projectName}</span>
+              </div>
+            </div>
+          ) : (
+            <SearchableSinglePicker label="Link to Project" options={projectOptions} selectedId={projectId} onChange={setProjectId} placeholder="Search projects..." isLoading={projectsQuery.isLoading} />
+          )}
+          <SearchableMultiPicker label="Link to Contact" options={contactOptions} selectedIds={contactIds} onChange={handleContactChange} placeholder="Search contacts..." />
+          <div className="flex items-center justify-between pt-2 border-t mb-8">
+            <div className="flex items-center gap-2">
+              <Checkbox checked={markAsDone} onCheckedChange={(checked) => setMarkAsDone(checked === true)} />
+              <label className="text-sm text-gray-600">Mark as done</label>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" type="button" onClick={() => navigate(cancelPath)} disabled={isSaving}>Cancel</Button>
+              <Button type="button" onClick={handleSave} isLoading={isSaving} disabled={!canSubmit}>Create Task</Button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

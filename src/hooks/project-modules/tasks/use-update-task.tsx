@@ -7,6 +7,9 @@ interface UpdateTaskPayload {
   due_date?: string;
   status?: string;
   task_category_type?: string;
+  contact_id?: string | null;
+  priority?: string;
+  description?: string;
 }
 
 const useUpdateTask = (projectId: string | null, taskId: string) => {

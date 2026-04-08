@@ -17,9 +17,9 @@ export function getStatusRowColor(status: string): string { return STATUS_ROW_CO
 const CATEGORY_TYPE_LABELS: Record<string, string> = { signing: "Signing", information_request: "Info Request", document_upload: "Doc Upload", review: "Review", approval: "Approval", meeting: "Meeting", follow_up: "Follow-up" };
 function formatDate(value: string | undefined | null): string { if (!value) return "—"; try { return format(new Date(value), "dd MMM, yyyy"); } catch { return "—"; } }
 
-interface TaskTableRowProps { task: Task; }
+interface TaskTableRowProps { task: Task; visibleColumns: string[]; }
 
-function TaskTableRow({ task }: TaskTableRowProps) {
+function TaskTableRow({ task, visibleColumns }: TaskTableRowProps) {
   const rowColor = getStatusRowColor(task.status);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -42,7 +42,85 @@ function TaskTableRow({ task }: TaskTableRowProps) {
   const handleStatusChange = (newStatus: string) => { if (newStatus !== task.status) { updateTask.mutateAsync({ status: newStatus }).catch(() => {}); } };
 
   const categoryLabel = task.task_category_type ? CATEGORY_TYPE_LABELS[task.task_category_type] ?? task.task_category_type : "—";
-  const currentDueDate = task.due_date ?? task.end_date;
+  const currentDueDate = task.end_date;
+
+  const renderCell = (columnId: string) => {
+    switch (columnId) {
+      case "done":
+        return (
+          <TableCell key={columnId} className="w-10 cursor-pointer" onClick={(e) => {
+            e.stopPropagation();
+            const newStatus = task.status === "completed" ? "draft" : "completed";
+            updateTask.mutateAsync({ status: newStatus }).catch(() => {});
+          }}>
+            <span className={`inline-block h-4 w-4 rounded-full border-2 ${task.status === "completed" ? "bg-green-500 border-green-500" : "border-gray-400"}`} />
+          </TableCell>
+        );
+      case "subject":
+        return (
+          <TableCell key={columnId} className="cursor-pointer" onClick={handleNameClick}>
+            {isEditingName ? (
+              <div className="flex items-center gap-1">
+                <input ref={nameInputRef} type="text" value={nameValue} onChange={(e) => setNameValue(e.target.value)} onBlur={handleNameSubmit} onKeyDown={handleNameKeyDown} className="w-full rounded border border-gray-300 px-2 py-1 text-xs outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400" onClick={(e) => e.stopPropagation()} />
+                {updateTask.isPending && <Loader2 className="h-3 w-3 animate-spin text-gray-400" />}
+              </div>
+            ) : (
+              <span className="flex items-center gap-1">{task.name}{updateTask.isPending && <Loader2 className="h-3 w-3 animate-spin text-gray-400" />}</span>
+            )}
+          </TableCell>
+        );
+      case "project":
+        return <TableCell key={columnId}>{task.project?.name ?? "—"}</TableCell>;
+      case "contact_person":
+        return <TableCell key={columnId}>{task.contact?.name ?? "—"}</TableCell>;
+      case "due_date":
+        return (
+          <TableCell key={columnId} onClick={(e) => e.stopPropagation()}>
+            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <span className="cursor-pointer hover:underline">{formatDate(currentDueDate)}</span>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar mode="single" selected={currentDueDate ? new Date(currentDueDate) : undefined} onSelect={handleDateSelect} />
+              </PopoverContent>
+            </Popover>
+          </TableCell>
+        );
+      case "category":
+        return <TableCell key={columnId}>{categoryLabel}</TableCell>;
+      case "status":
+        return (
+          <TableCell key={columnId} onClick={(e) => e.stopPropagation()}>
+            <Select value={task.status} onValueChange={handleStatusChange}>
+              <SelectTrigger className="h-7 w-[130px] rounded-full border-0 bg-transparent p-0 text-xs shadow-none focus:ring-0 cursor-pointer">
+                <SelectValue>
+                  <TaskStatusBadge status={task.status} signingStatus={task.task_category_type === "signing" ? task.signing_status : undefined} />
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {taskStatuses.map((s) => (<SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>))}
+              </SelectContent>
+            </Select>
+          </TableCell>
+        );
+      case "priority":
+        return <TableCell key={columnId}>{task.priority ?? "—"}</TableCell>;
+      case "email":
+        return <TableCell key={columnId}>{task.contact?.email ?? "—"}</TableCell>;
+      case "phone":
+        return <TableCell key={columnId}>{task.contact?.phone ?? "—"}</TableCell>;
+      case "organization":
+        return <TableCell key={columnId}>{task.contact?.organization ?? "—"}</TableCell>;
+      case "assignee":
+        return <TableCell key={columnId}>{task.assignees?.map((a) => a.name ?? a.email).join(", ") || "—"}</TableCell>;
+      case "note":
+        return <TableCell key={columnId} className="max-w-[200px] truncate">{task.description || "—"}</TableCell>;
+      case "created":
+        return <TableCell key={columnId}>{formatDate(task.created_at)}</TableCell>;
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -50,46 +128,11 @@ function TaskTableRow({ task }: TaskTableRowProps) {
         <TableCell className="w-10 cursor-pointer" onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}>
           {isExpanded ? <ChevronDown className="h-4 w-4 text-gray-500" /> : <ChevronRight className="h-4 w-4 text-gray-500" />}
         </TableCell>
-        <TableCell>{formatDate(task.created_at)}</TableCell>
-        <TableCell className="cursor-pointer" onClick={handleNameClick}>
-          {isEditingName ? (
-            <div className="flex items-center gap-1">
-              <input ref={nameInputRef} type="text" value={nameValue} onChange={(e) => setNameValue(e.target.value)} onBlur={handleNameSubmit} onKeyDown={handleNameKeyDown} className="w-full rounded border border-gray-300 px-2 py-1 text-xs outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400" onClick={(e) => e.stopPropagation()} />
-              {updateTask.isPending && <Loader2 className="h-3 w-3 animate-spin text-gray-400" />}
-            </div>
-          ) : (
-            <span className="flex items-center gap-1">{task.name}{updateTask.isPending && <Loader2 className="h-3 w-3 animate-spin text-gray-400" />}</span>
-          )}
-        </TableCell>
-        <TableCell>{categoryLabel}</TableCell>
-        <TableCell onClick={(e) => e.stopPropagation()}>
-          <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-            <PopoverTrigger asChild>
-              <span className="cursor-pointer hover:underline">{formatDate(currentDueDate)}</span>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar mode="single" selected={currentDueDate ? new Date(currentDueDate) : undefined} onSelect={handleDateSelect} />
-            </PopoverContent>
-          </Popover>
-        </TableCell>
-        <TableCell>{task.pipeline?.name ?? "—"}</TableCell>
-        <TableCell>{task.project?.name ?? "—"}</TableCell>
-        <TableCell onClick={(e) => e.stopPropagation()}>
-          <Select value={task.status} onValueChange={handleStatusChange}>
-            <SelectTrigger className="h-7 w-[130px] rounded-full border-0 bg-transparent p-0 text-xs shadow-none focus:ring-0 cursor-pointer">
-              <SelectValue>
-                <TaskStatusBadge status={task.status} signingStatus={task.task_category_type === "signing" ? task.signing_status : undefined} />
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {taskStatuses.map((s) => (<SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>))}
-            </SelectContent>
-          </Select>
-        </TableCell>
+        {visibleColumns.map(renderCell)}
       </TableRow>
       {isExpanded && (
         <TableRow>
-          <TableCell colSpan={8} className="bg-gray-50 p-4">
+          <TableCell colSpan={visibleColumns.length + 1} className="bg-gray-50 p-4">
             <TaskComments projectId={task.project_id ?? ""} taskId={task.id} />
           </TableCell>
         </TableRow>

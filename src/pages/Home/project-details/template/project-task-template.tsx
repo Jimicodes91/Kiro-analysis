@@ -16,7 +16,6 @@ function ProjectTaskSection({
 }) {
   const navigate = useNavigate();
   const user = getUserSession();
-
   const isClient = getIsClient();
   const canEdit = mode === "edit" && !isClient;
   const projectTasks = useGetProjectTasks(projectId, isClient ? user?.id : undefined);

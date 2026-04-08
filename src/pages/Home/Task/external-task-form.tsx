@@ -16,12 +16,19 @@ import { useForm } from "react-hook-form";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import * as yup from "yup";
-import TypeFieldsSection, { TASK_CATEGORY_TYPE_OPTIONS } from "./type-fields";
+import TypeFieldsSection from "./type-fields";
+
+const EXTERNAL_CATEGORY_TYPES = [
+  { value: "signing", label: "Signing" },
+  { value: "information_request", label: "Information Request" },
+  { value: "document_upload", label: "Document Upload" },
+] as const;
 
 const externalTaskSchema = yup.object({
   end_date: yup.date().required("Due date is required"),
   client_ids: yup.array().of(yup.string().required()).min(1, "At least one client is required").required("Clients are required"),
-  task_category_type: yup.string().optional(),
+  task_category_type: yup.string().required("Task type is required"),
+  description: yup.string().optional(),
   form_config: yup.object().optional(),
 });
 
@@ -134,18 +141,21 @@ const ExternalTaskForm = () => {
   }, [clientsQuery?.value]);
 
   const onSubmit = async (data: ExternalFormData) => {
-    const { end_date, task_category_type, form_config, ...rest } = data;
+    const { end_date, task_category_type, description, form_config, ...rest } = data;
+    // Task name = category type label (e.g. "Signing", "Information Request")
+    const categoryLabel = EXTERNAL_CATEGORY_TYPES.find((c) => c.value === task_category_type)?.label ?? "External Task";
     const payload: Record<string, any> = {
       ...rest,
       project_id: initialProjectId,
       project_type_id: initialProjectTypeId,
-      name: `External Task - ${format(end_date, "MMM dd, yyyy")}`,
+      name: categoryLabel,
       task_category: TaskCategory.EXTERNAL,
+      task_category_type,
       due_date: getUTCISODateFormat(end_date),
       is_visible_to_client: true,
       required_information: ["Complete task"],
     };
-    if (task_category_type) payload.task_category_type = task_category_type;
+    if (description?.trim()) payload.description = description.trim();
     if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
     try { await createTask.mutateAsync(payload as any); navigate(cancelPath); } catch (error) { console.error(error); }
   };
@@ -166,21 +176,50 @@ const ExternalTaskForm = () => {
               placeholder="Search clients..." disabled={!selectedProjectId || clientsQuery.isLoading}
               error={form.formState.errors.client_ids?.message} />
 
-            {/* Task Category Type */}
+            {/* Task Category Type (required) */}
             <FormField control={form.control} name="task_category_type" render={({ field }) => (
-              <FormItem><FormLabel>Task category type</FormLabel>
+              <FormItem><FormLabel isRequired>Task type</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value ?? ""}>
                   <FormControl className="h-12 w-full">
                     <SelectTrigger className="rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm">
-                      <SelectValue placeholder={<p className="text-brand-placeholder">Select category type (optional)</p>} />
+                      <SelectValue placeholder={<p className="text-brand-placeholder">Select task type</p>} />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>{TASK_CATEGORY_TYPE_OPTIONS.map((item) => (<SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>))}</SelectContent>
+                  <SelectContent>
+                    {EXTERNAL_CATEGORY_TYPES.map((t) => (
+                      <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select><FormMessage /></FormItem>
             )} />
 
             {/* Type-specific fields */}
             <TypeFieldsSection control={form.control} categoryType={form.watch("task_category_type")} />
+
+            {/* Dynamic instructions field based on category type */}
+            <FormField control={form.control} name="description" render={({ field }) => {
+              const catType = form.watch("task_category_type");
+              const fieldMeta: Record<string, { label: string; placeholder: string }> = {
+                signing: { label: "Signing instructions", placeholder: "Describe what the client needs to sign..." },
+                information_request: { label: "Information request details", placeholder: "Describe what information you need from the client..." },
+                document_upload: { label: "Document upload instructions", placeholder: "Describe which documents the client should upload..." },
+              };
+              const meta = catType ? fieldMeta[catType] : null;
+              return (
+                <FormItem>
+                  <FormLabel>{meta?.label ?? "Instructions for client"}</FormLabel>
+                  <FormControl>
+                    <textarea
+                      placeholder={meta?.placeholder ?? "Add instructions or description the client will see..."}
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      className="w-full min-h-[100px] rounded-xl border border-brand-border bg-transparent px-3 py-3 text-sm placeholder:text-brand-placeholder focus:outline-none focus:ring-2 focus:ring-ring resize-y"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }} />
 
             {/* Due Date */}
             <FormField control={form.control} name="end_date" render={({ field }) => (

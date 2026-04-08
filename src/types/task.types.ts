@@ -62,6 +62,14 @@ export interface Company {
   name: string;
 }
 
+export interface TaskContact {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  organization: string;
+}
+
 export interface Task {
   id: string;
   created_at: string;
@@ -94,6 +102,10 @@ export interface Task {
     client_organization: string;
     clients: Client[];
   } | null;
+  // Activity / Pipedrive fields
+  contact_id?: string | null;
+  contact?: TaskContact | null;
+  priority?: string;
   // Lifecycle expansion fields
   signing_status?: SigningSubStatus;
   task_category_type?: TaskCategoryType;
