@@ -281,7 +281,6 @@ const ActivityFormModal = ({ isOpen, onClose, projectContext }: ActivityFormModa
         }
         await createProjectTask.mutateAsync(payload as any);
       } else {
-        payload.project_id = null;
         await createStandaloneTask.mutateAsync(payload as any);
       }
       resetForm();

@@ -225,8 +225,6 @@ const InternalTaskForm = () => {
     try {
       let result: any;
       if (isStandalone) {
-        payload.project_id = null;
-        payload.project_type_id = null;
         result = await createStandaloneTask.mutateAsync(payload as any);
       } else {
         if (initialProjectTypeId) payload.project_type_id = initialProjectTypeId;
