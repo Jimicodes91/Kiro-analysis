@@ -185,7 +185,7 @@ const InternalTaskForm = () => {
 
   const projectOptions = useMemo(() => {
     const projects = projectsQuery?.value?.data ?? [];
-    return projects.map((p: any) => ({ id: p.id, label: p.name }));
+    return projects.map((p: any) => ({ id: p.id, label: p.name, projectTypeId: p.project_type_id }));
   }, [projectsQuery?.value]);
 
   const contactOptions = useMemo(() => {
@@ -227,7 +227,9 @@ const InternalTaskForm = () => {
       if (isStandalone) {
         result = await createStandaloneTask.mutateAsync(payload as any);
       } else {
-        if (initialProjectTypeId) payload.project_type_id = initialProjectTypeId;
+        const typeId = initialProjectTypeId
+          || projectOptions.find((p: any) => p.id === (projectId || selectedProjectId))?.projectTypeId;
+        if (typeId) payload.project_type_id = typeId;
         result = await createTask.mutateAsync(payload as any);
       }
       const taskId = result?.data?.data?.task_id;

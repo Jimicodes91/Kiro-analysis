@@ -229,7 +229,7 @@ const ActivityFormModal = ({ isOpen, onClose, projectContext }: ActivityFormModa
 
   const projectOptions = useMemo(() => {
     const projects = projectsQuery?.value?.data ?? [];
-    return projects.map((p) => ({ id: p.id, label: p.name }));
+    return projects.map((p) => ({ id: p.id, label: p.name, projectTypeId: p.project_type_id }));
   }, [projectsQuery?.value]);
 
   const contactOptions = useMemo(() => {
@@ -276,9 +276,10 @@ const ActivityFormModal = ({ isOpen, onClose, projectContext }: ActivityFormModa
 
     try {
       if (projectId) {
-        if (projectContext?.projectTypeId) {
-          payload.project_type_id = projectContext.projectTypeId;
-        }
+        // Get project_type_id from project context or from the selected project data
+        const typeId = projectContext?.projectTypeId
+          || projectOptions.find((p) => p.id === projectId)?.projectTypeId;
+        if (typeId) payload.project_type_id = typeId;
         await createProjectTask.mutateAsync(payload as any);
       } else {
         await createStandaloneTask.mutateAsync(payload as any);
