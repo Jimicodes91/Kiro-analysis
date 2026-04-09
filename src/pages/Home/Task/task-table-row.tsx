@@ -42,7 +42,7 @@ function TaskTableRow({ task, visibleColumns }: TaskTableRowProps) {
   const handleStatusChange = (newStatus: string) => { if (newStatus !== task.status) { updateTask.mutateAsync({ status: newStatus }).catch(() => {}); } };
 
   const categoryLabel = task.task_category_type ? CATEGORY_TYPE_LABELS[task.task_category_type] ?? task.task_category_type : "—";
-  const currentDueDate = task.end_date || task.due_date;
+  const currentDueDate = task.due_date || task.end_date;
 
   const renderCell = (columnId: string) => {
     switch (columnId) {
@@ -78,7 +78,7 @@ function TaskTableRow({ task, visibleColumns }: TaskTableRowProps) {
           <TableCell key={columnId} onClick={(e) => e.stopPropagation()}>
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
-                <span className="cursor-pointer hover:underline">{formatDate(currentDueDate)}</span>
+                <span className="cursor-pointer hover:underline">{currentDueDate || "—"}</span>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar mode="single" selected={currentDueDate ? new Date(currentDueDate) : undefined} onSelect={handleDateSelect} />
