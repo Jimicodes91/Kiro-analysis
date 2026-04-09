@@ -42,7 +42,7 @@ function TaskTableRow({ task, visibleColumns }: TaskTableRowProps) {
   const handleStatusChange = (newStatus: string) => { if (newStatus !== task.status) { updateTask.mutateAsync({ status: newStatus }).catch(() => {}); } };
 
   const categoryLabel = task.task_category_type ? CATEGORY_TYPE_LABELS[task.task_category_type] ?? task.task_category_type : "—";
-  const currentDueDate = task.end_date;
+  const currentDueDate = task.end_date || task.due_date;
 
   const renderCell = (columnId: string) => {
     switch (columnId) {

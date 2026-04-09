@@ -85,6 +85,7 @@ export interface Task {
   status: "draft" | "sent" | "in_progress" | "completed" | "archived" | "pending";
   start_date: string;
   end_date: string;
+  due_date?: string;
   is_visible_to_client: number;
   task_category: TaskCategory;
   required_information?: string[];

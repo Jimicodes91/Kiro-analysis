@@ -54,7 +54,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
     if (timeFilter && timeFilter !== "all") {
       const now = new Date();
       filtered = filtered.filter((t) => {
-        const dueRaw = t.end_date ?? (t as any).due_date;
+        const dueRaw = t.end_date ?? t.due_date;
         if (!dueRaw) return timeFilter === "todo"; // no due date = todo
         const due = new Date(dueRaw);
         switch (timeFilter) {
