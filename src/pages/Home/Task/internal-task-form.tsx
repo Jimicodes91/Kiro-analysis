@@ -202,11 +202,6 @@ const InternalTaskForm = () => {
 
   const handleContactChange = (ids: string[]) => {
     setContactIds(ids);
-    // Auto-populate subject with first selected contact's name if subject is empty
-    if (ids.length > 0 && !name.trim()) {
-      const contact = contactOptions.find((c: any) => c.id === ids[0]);
-      if (contact) setName(contact.label);
-    }
   };
 
   const hasProjectFromUrl = !!initialProjectId;
