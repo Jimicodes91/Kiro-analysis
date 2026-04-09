@@ -168,6 +168,7 @@ const InternalTaskForm = () => {
 
   const selectedProjectId = initialProjectId;
   const assigneesQuery = useAvailableAssignees(selectedProjectId, "internal");
+  const clientsQuery = useAvailableAssignees(selectedProjectId, "external");
   const companyUsersQuery = useGetCompanyUsers();
   const contactsQuery = useGetCompanyContacts();
   const projectsQuery = useGetAllCompanyProjects();
@@ -189,9 +190,15 @@ const InternalTaskForm = () => {
   }, [projectsQuery?.value]);
 
   const contactOptions = useMemo(() => {
+    // When in project context, show only project's clients
+    if (selectedProjectId) {
+      const list = extractList(clientsQuery?.value);
+      return list.map((c: any) => ({ id: c.id, label: c.name || c.email || "Unknown" }));
+    }
+    // Standalone: show all company contacts
     const contacts = contactsQuery?.value?.data?.contacts ?? [];
     return contacts.map((c: any) => ({ id: c.id, label: c.name || c.email || "Unknown" }));
-  }, [contactsQuery?.value]);
+  }, [selectedProjectId, clientsQuery?.value, contactsQuery?.value]);
 
   const handleContactChange = (ids: string[]) => {
     setContactIds(ids);
