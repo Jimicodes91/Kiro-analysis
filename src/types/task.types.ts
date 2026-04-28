@@ -234,10 +234,12 @@ export enum TaskCategoryType {
   SIGNING = "signing",
   INFORMATION_REQUEST = "information_request",
   DOCUMENT_UPLOAD = "document_upload",
-  REVIEW = "review",
-  APPROVAL = "approval",
+  ACTIVITY = "activity",
   MEETING = "meeting",
+  TASK = "task",
   FOLLOW_UP = "follow_up",
+  MESSAGE = "message",
+  REVIEW = "review",
 }
 
 export interface TaskComment {

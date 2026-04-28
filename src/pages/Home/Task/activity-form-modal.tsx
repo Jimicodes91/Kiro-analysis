@@ -13,14 +13,16 @@ import useGetAllCompanyProjects from "@/hooks/project-modules/use-get-all-compan
 import { cn, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
 import { TaskCategory, TaskCategoryType } from "@/types/task.types";
 import { format } from "date-fns";
-import { CalendarIcon, Check, ClipboardList, Handshake, Phone, Search, ThumbsUp, X } from "lucide-react";
+import { CalendarIcon, Check, ClipboardList, Handshake, ListTodo, MessageSquare, Phone, Search, Star, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const CATEGORY_ICONS = [
-  { type: TaskCategoryType.REVIEW, label: "Review", icon: ClipboardList },
-  { type: TaskCategoryType.APPROVAL, label: "Approval", icon: ThumbsUp },
+  { type: TaskCategoryType.ACTIVITY, label: "Activity", icon: Star },
   { type: TaskCategoryType.MEETING, label: "Meeting", icon: Handshake },
-  { type: TaskCategoryType.FOLLOW_UP, label: "Follow-up", icon: Phone },
+  { type: TaskCategoryType.TASK, label: "Task", icon: ListTodo },
+  { type: TaskCategoryType.FOLLOW_UP, label: "Follow Up", icon: Phone },
+  { type: TaskCategoryType.MESSAGE, label: "Message", icon: MessageSquare },
+  { type: TaskCategoryType.REVIEW, label: "Review", icon: ClipboardList },
 ] as const;
 
 interface ProjectContext {
@@ -263,7 +265,7 @@ const ActivityFormModal = ({ isOpen, onClose, projectContext }: ActivityFormModa
   // Save handler — routes to standalone or project-bound endpoint
   const handleSave = async () => {
     const payload: Record<string, any> = {
-      name: name || "Untitled Activity",
+      name: name || (categoryType ? CATEGORY_ICONS.find((c) => c.type === categoryType)?.label ?? "Untitled Activity" : "Untitled Activity"),
       task_category: TaskCategory.INTERNAL,
       is_visible_to_client: false,
       status: markAsDone ? "completed" : "draft",

@@ -1,10 +1,8 @@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { TaskStatusBadge } from "@/components/ui/task-status-badge";
 import useUpdateTask from "@/hooks/project-modules/tasks/use-update-task";
-import { taskStatuses } from "@/lib/constants";
 import { getUTCISODateFormat } from "@/lib/utils";
 import { Task } from "@/types/task.types";
 import { format } from "date-fns";
@@ -14,7 +12,7 @@ import TaskComments from "./task-comments";
 
 const STATUS_ROW_COLORS: Record<string, string> = { in_progress: "bg-amber-50", completed: "bg-green-50", archived: "bg-slate-100" };
 export function getStatusRowColor(status: string): string { return STATUS_ROW_COLORS[status] ?? ""; }
-const CATEGORY_TYPE_LABELS: Record<string, string> = { signing: "Signing", information_request: "Info Request", document_upload: "Doc Upload", review: "Review", approval: "Approval", meeting: "Meeting", follow_up: "Follow-up" };
+const CATEGORY_TYPE_LABELS: Record<string, string> = { signing: "Signing", information_request: "Info Request", document_upload: "Doc Upload", activity: "Activity", review: "Review", meeting: "Meeting", task: "Task", follow_up: "Follow Up", message: "Message" };
 function formatDate(value: string | undefined | null): string { if (!value) return "—"; try { return format(new Date(value), "dd MMM, yyyy"); } catch { return "—"; } }
 
 interface TaskTableRowProps { task: Task; visibleColumns: string[]; }
@@ -91,16 +89,17 @@ function TaskTableRow({ task, visibleColumns }: TaskTableRowProps) {
       case "status":
         return (
           <TableCell key={columnId} onClick={(e) => e.stopPropagation()}>
-            <Select value={task.status} onValueChange={handleStatusChange}>
-              <SelectTrigger className="h-7 w-[130px] rounded-full border-0 bg-transparent p-0 text-xs shadow-none focus:ring-0 cursor-pointer">
-                <SelectValue>
-                  <TaskStatusBadge status={task.status} signingStatus={task.task_category_type === "signing" ? task.signing_status : undefined} />
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {taskStatuses.map((s) => (<SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>))}
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-1">
+              <TaskStatusBadge status={task.status} signingStatus={task.task_category_type === "signing" ? task.signing_status : undefined} dueDate={currentDueDate} />
+              {task.status !== "completed" && (
+                <button
+                  type="button"
+                  className="text-[10px] text-gray-400 hover:text-green-600 ml-1"
+                  title="Mark as completed"
+                  onClick={() => handleStatusChange("completed")}
+                >✓</button>
+              )}
+            </div>
           </TableCell>
         );
       case "priority":
