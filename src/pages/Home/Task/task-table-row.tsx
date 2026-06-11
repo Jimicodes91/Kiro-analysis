@@ -8,6 +8,7 @@ import { Task } from "@/types/task.types";
 import { format } from "date-fns";
 import { ChevronDown, ChevronRight, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import TaskComments from "./task-comments";
 
 const STATUS_ROW_COLORS: Record<string, string> = { in_progress: "bg-amber-50", completed: "bg-green-50", archived: "bg-slate-100" };
