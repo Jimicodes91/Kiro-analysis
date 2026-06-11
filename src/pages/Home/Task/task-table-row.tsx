@@ -68,7 +68,21 @@ function TaskTableRow({ task, visibleColumns }: TaskTableRowProps) {
           </TableCell>
         );
       case "project":
-        return <TableCell key={columnId}>{task.project?.name ?? "—"}</TableCell>;
+        return (
+          <TableCell key={columnId}>
+            {task.project ? (
+              <Link
+                to={`/projects/${task.project.id}`}
+                className="text-blue-600 hover:text-blue-800 hover:underline truncate block"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {task.project.name}
+              </Link>
+            ) : (
+              "—"
+            )}
+          </TableCell>
+        );
       case "contact_person":
         return <TableCell key={columnId}>{task.contact?.name ?? "—"}</TableCell>;
       case "due_date":

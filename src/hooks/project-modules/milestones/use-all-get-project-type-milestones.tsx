@@ -19,6 +19,8 @@ export interface ProjectTypeMilestone {
   projects: string[];
   status: string;
   description?: string;
+  estimated_start_date?: string;
+  estimated_end_date?: string;
 }
 
 const useGetAllProjectTypeMilestones = (projectTypeId: string) => {

@@ -2,15 +2,28 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { Logo, LogoWithText } from "@/assets";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { topNavData } from "@/lib/constants";
+import { useRolePermission } from "@/hooks/use-role-permission";
+import { DashboardLinkType, topNavData } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { getUserSession } from "@/services/api.service";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import AccountNav from "./account-nav";
 
 export default function Sidebar({ isCollapsed }: { isCollapsed: boolean }) {
   const user = getUserSession();
   const isMobile = useIsMobile();
+  const { role, canViewAdmin } = useRolePermission();
+
+  // Filter navigation items based on role permissions
+  const filteredLinks: DashboardLinkType[] = useMemo(() => {
+    if (!role) return [];
+    const roleLinks = topNavData[role] ?? [];
+    return roleLinks.filter((link) => {
+      if (link.title === "Admin" && !canViewAdmin) return false;
+      return true;
+    });
+  }, [role, canViewAdmin]);
 
   const parentStyle = isMobile
     ? ""
@@ -63,7 +76,7 @@ export default function Sidebar({ isCollapsed }: { isCollapsed: boolean }) {
 
         <AccountNav
           isCollapsed={isCollapsed}
-          links={user ? topNavData?.[user?.role] : []}
+          links={filteredLinks}
         />
       </div>
     </motion.div>

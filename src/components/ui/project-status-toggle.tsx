@@ -1,14 +1,15 @@
 import * as React from "react";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useAutoCloseMilestone from "@/hooks/project-modules/projects/use-auto-close-milestone";
 import useUpdateProject from "@/hooks/project-modules/use-update-project";
 import { ProjectStatus, ProjectStatusOptions } from "@/lib/constants";
 import { getFormattedText } from "@/lib/utils";
@@ -19,12 +20,17 @@ import { Badge } from "./badge";
 export function ProjectStatusToggler({
   status,
   projectId,
+  projectTypeId = "",
 }: {
   status: `${ProjectStatus}`;
   projectId: string;
+  projectTypeId?: string;
 }) {
   const [position, setPosition] = React.useState(status);
-  const updateProject = useUpdateProject(projectId);
+  const { triggerAutoClose, isTransitioning } = useAutoCloseMilestone(projectId, projectTypeId);
+  const updateProject = useUpdateProject(projectId, {
+    onStatusCompleted: triggerAutoClose,
+  });
   const isClient = getIsClient();
 
   const updateProjectStatus = (projectStatus: string) => {
@@ -53,7 +59,7 @@ export function ProjectStatusToggler({
           <Badge
             className="w-fit cursor-pointer"
             variant={status}
-            isLoading={updateProject.isPending}
+            isLoading={updateProject.isPending || isTransitioning}
           >
             {getFormattedText(position)}
           </Badge>

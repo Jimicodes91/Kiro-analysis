@@ -7,6 +7,7 @@ export interface AddProjectMember {
   user_id: string;
   is_visible_to_client: boolean;
   member_type: ProjectMemberType;
+  send_notification?: boolean;
 }
 
 const useAddProjectMember = (projectId: string) => {

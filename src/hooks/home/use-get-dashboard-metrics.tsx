@@ -12,6 +12,9 @@ const useGetDashboardMetrics = () => {
   return useQueryActionHook<DashboardResponse>({
     method: "get",
     endpoint: `${ENDPOINTS.GET_DASHBOARD_METRICS}`,
+    refetchInterval: 60000,
+    staleTime: 30000,
+    refetchOnWindowFocus: true,
   });
 };
 

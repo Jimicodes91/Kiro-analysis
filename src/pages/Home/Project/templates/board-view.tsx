@@ -185,7 +185,7 @@ const BoardView: React.FC<BoardViewProps> = ({ projects, projectTypes, isLoading
                       {...provided.draggableProps}
                       className={cn(
                         "flex flex-col border border-gray-200 bg-gray-50/80 rounded-xl relative transition-shadow",
-                        "w-[260px] min-w-[260px] flex-shrink-0",
+                        "w-[200px] min-w-[200px] flex-shrink-0",
                         snapshot.isDragging && "opacity-70 shadow-xl ring-2 ring-primary/20"
                       )}
                     >

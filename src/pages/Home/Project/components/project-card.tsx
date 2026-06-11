@@ -17,6 +17,7 @@ interface ProjectCardProps {
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { overdue, pending } = useGetProjectTaskCounts(project.id);
 
   const isLoading = Boolean(
     queryClient.isMutating({
@@ -45,11 +46,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 snapshot.isDragging && "shadow-lg rotate-[-2deg] opacity-90"
               )}
             >
-              {/* Top row: status + loading */}
+              {/* Top row: status + badges + loading */}
               <div className="flex items-center justify-between">
-                <Badge size="sm" variant={project.status}>
-                  {getFormattedText(project.status)}
-                </Badge>
+                <div className="flex items-center gap-1">
+                  <Badge size="sm" variant={project.status}>
+                    {getFormattedText(project.status)}
+                  </Badge>
+                  {overdue > 0 && (
+                    <Badge size="sm" variant="destructive" className="min-w-[20px] h-5 px-1.5 text-[10px]">
+                      {overdue}
+                    </Badge>
+                  )}
+                  {pending > 0 && (
+                    <Badge size="sm" variant="due" className="min-w-[20px] h-5 px-1.5 text-[10px]">
+                      {pending}
+                    </Badge>
+                  )}
+                </div>
                 {isLoading && (
                   <Icons.spinner className="animate-spin h-3.5 w-3.5 text-gray-400" />
                 )}

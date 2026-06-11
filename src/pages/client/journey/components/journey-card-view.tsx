@@ -113,6 +113,14 @@ function JourneyCardView({
                   {m.duration} {m.duration === 1 ? "day" : "days"}
                 </span>
               </div>
+
+              {/* Timeline dates */}
+              {(m.estimated_start_date || m.estimated_end_date) && (
+                <div className="flex gap-3 text-[11px] text-muted-foreground">
+                  <span>Start: {m.estimated_start_date ? format(new Date(m.estimated_start_date), "MMM d, yyyy") : "Not set"}</span>
+                  <span>End: {m.estimated_end_date ? format(new Date(m.estimated_end_date), "MMM d, yyyy") : "Not set"}</span>
+                </div>
+              )}
             </CardContent>
           </Card>
         );
