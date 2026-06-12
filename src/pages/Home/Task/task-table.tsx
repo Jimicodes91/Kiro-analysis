@@ -102,7 +102,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
           <TableCell className="border-0 h-3 py-0" colSpan={columnCount}></TableCell>
         </TableRow>
         {tasks?.map((task) => (
-          <TaskTableRow key={task.id} task={task} visibleColumns={visibleColumns} />
+          <TaskTableRow key={task.id} task={task} visibleColumns={visibleColumnConfigs.map(c => c.id)} />
         ))}
       </TableBody>
     );
