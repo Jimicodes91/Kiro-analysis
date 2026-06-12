@@ -2,7 +2,7 @@ import { Icons } from "@/components/ui/icons";
 import PersonAvatar from "@/components/ui/person-avatar";
 import useGetProjectTaskCounts from "@/hooks/project-modules/projects/use-get-project-task-counts";
 import { QUERYKEYS } from "@/lib/constants";
-import { cn, getFormattedText } from "@/lib/utils";
+import { cn, getComputedProjectStatus, getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { Draggable } from "@hello-pangea/dnd";
 import { useQueryClient } from "@tanstack/react-query";

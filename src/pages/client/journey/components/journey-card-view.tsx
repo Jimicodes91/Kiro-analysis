@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import { Check, Clock, Lock } from "lucide-react";
 
 function JourneyCardView({
