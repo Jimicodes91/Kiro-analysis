@@ -124,7 +124,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
                 </button>
               </TableHead>
               {visibleColumnConfigs.map((col) => (
-                <TableHead key={col.id} className={col.id === "subject" ? "min-w-[180px]" : col.id === "note" ? "min-w-[150px] max-w-[200px]" : ""}>
+                <TableHead key={col.id} className={col.id === "done" ? "w-10" : col.id === "subject" ? "min-w-[180px]" : col.id === "note" ? "min-w-[150px] max-w-[200px]" : ""}>
                   {col.label}
                 </TableHead>
               ))}
