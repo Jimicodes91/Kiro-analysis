@@ -9,9 +9,9 @@ import {
 import TableSkeletonRowLoader, { EmptyTable } from "@/components/ui/table-row-skeleton";
 import useGetAllTasks from "@/hooks/project-modules/tasks/use-get-all-tasks";
 import { Task } from "@/types/task.types";
-import { addWeeks, endOfWeek, isPast, isToday, isTomorrow, startOfWeek } from "date-fns";
+import { addWeeks, differenceInDays, endOfWeek, isPast, isToday, isTomorrow, startOfWeek } from "date-fns";
 import { Settings } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ALL_COLUMNS, getVisibleColumns, setVisibleColumns } from "./column-config";
 import ColumnCustomizerModal from "./column-customizer-modal";
 import TaskTableRow from "./task-table-row";
@@ -32,12 +32,43 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
   const [visibleColumns, setVisibleColumnsState] = useState<string[]>(getVisibleColumns);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
 
-  const columnCount = visibleColumns.length + 1; // +1 for the expand chevron column
+  const columnCount = visibleColumns.length + 2; // +1 for chevron, +1 for delete
 
   const tasksResponse = useGetAllTasks(search, contextParam, showArchived);
   const rawTasks: Task[] = Array.isArray(tasksResponse?.data?.data?.data)
     ? tasksResponse.data.data.data
     : [];
+
+  // Auto-archive: move completed tasks to "archived" after 3 days
+  const autoArchiveRef = useRef(false);
+  useEffect(() => {
+    if (autoArchiveRef.current || rawTasks.length === 0) return;
+    autoArchiveRef.current = true;
+
+    const now = new Date();
+    const tasksToArchive = rawTasks.filter((t) => {
+      if (t.status !== "completed") return false;
+      const completedDate = t.completed_at || t.updated_at;
+      if (!completedDate) return false;
+      return differenceInDays(now, new Date(completedDate)) >= 3;
+    });
+
+    if (tasksToArchive.length > 0) {
+      import("@/services/api.service").then(({ secureRequest }) => {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL as string;
+        tasksToArchive.forEach((t) => {
+          const endpoint = t.project_id
+            ? `projects/${t.project_id}/tasks/${t.id}`
+            : `tasks/${t.id}`;
+          secureRequest({
+            url: baseUrl + endpoint,
+            method: "patch",
+            body: { status: "archived" },
+          }).catch(() => {});
+        });
+      });
+    }
+  }, [rawTasks]);
 
   const tasks = useMemo(() => {
     let filtered = rawTasks;
@@ -128,6 +159,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
                   {col.label}
                 </TableHead>
               ))}
+              <TableHead className="w-10"></TableHead>
             </TableRow>
           </TableHeader>
           {renderTable()}

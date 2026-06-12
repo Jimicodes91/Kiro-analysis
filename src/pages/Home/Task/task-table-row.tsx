@@ -26,6 +26,7 @@ function TaskTableRow({ task, visibleColumns }: TaskTableRowProps) {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const updateTask = useUpdateTask(task.project_id ?? null, task.id);
+  const deleteTask = useDeleteTask(task.project_id ?? null, task.id);
 
   useEffect(() => { if (!isEditingName) setNameValue(task.name); }, [task.name, isEditingName]);
   useEffect(() => { if (isEditingName && nameInputRef.current) { nameInputRef.current.focus(); nameInputRef.current.select(); } }, [isEditingName]);
@@ -143,10 +144,24 @@ function TaskTableRow({ task, visibleColumns }: TaskTableRowProps) {
           {isExpanded ? <ChevronDown className="h-4 w-4 text-gray-500" /> : <ChevronRight className="h-4 w-4 text-gray-500" />}
         </TableCell>
         {visibleColumns.map(renderCell)}
+        <TableCell className="w-10" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            className="p-1 rounded hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+            title="Delete task"
+            onClick={() => {
+              if (confirm("Delete this task?")) {
+                deleteTask.mutateAsync({}).catch(() => {});
+              }
+            }}
+          >
+            {deleteTask.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+          </button>
+        </TableCell>
       </TableRow>
       {isExpanded && (
         <TableRow>
-          <TableCell colSpan={visibleColumns.length + 1} className="bg-gray-50 p-4">
+          <TableCell colSpan={visibleColumns.length + 2} className="bg-gray-50 p-4">
             <TaskComments projectId={task.project_id ?? ""} taskId={task.id} />
           </TableCell>
         </TableRow>
