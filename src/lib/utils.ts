@@ -18,6 +18,36 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Computes the visual project status based on dates.
+ * - "completed" stays as "completed"
+ * - Past end_date + not completed → "late"
+ * - End_date within 7 days + not completed → "due"
+ * - Otherwise → use stored status
+ */
+export function getComputedProjectStatus(
+  storedStatus: string,
+  endDate?: string | null
+): string {
+  if (!endDate) return storedStatus;
+  if (storedStatus === "completed") return "completed";
+
+  try {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const end = new Date(endDate);
+    end.setHours(0, 0, 0, 0);
+
+    const daysUntilDue = Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysUntilDue < 0) return "late";
+    if (daysUntilDue <= 7) return "due";
+    return storedStatus;
+  } catch {
+    return storedStatus;
+  }
+}
+
 export default function getInitials(name?: string) {
   if (!name) return "";
   if (name.split(" ").length === 1) return name.substring(0, 2).toUpperCase();

@@ -50,8 +50,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               {/* Top row: status + badges + loading */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Badge size="sm" variant={project.status}>
-                    {getFormattedText(project.status)}
+                  <Badge size="sm" variant={getComputedProjectStatus(project.status, project.end_date)}>
+                    {getFormattedText(getComputedProjectStatus(project.status, project.end_date))}
                   </Badge>
                   {overdue > 0 && (
                     <Badge size="sm" variant="destructive" className="min-w-[20px] h-5 px-1.5 text-[10px]">

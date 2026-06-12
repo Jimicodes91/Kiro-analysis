@@ -29,8 +29,8 @@ const ProjectTableRow = ({ project }: { project: ProjectDetails }) => {
           {project?.completed_at ? format(project.completed_at, "PPP") : "—"}
         </TableCell>
         <TableCell>
-          <Badge size="sm" variant={project.status}>
-            {getFormattedText(project.status)}
+          <Badge size="sm" variant={getComputedProjectStatus(project.status, project.end_date)}>
+            {getFormattedText(getComputedProjectStatus(project.status, project.end_date))}
           </Badge>
         </TableCell>
         <TableCell>
