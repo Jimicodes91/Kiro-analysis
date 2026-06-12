@@ -17,7 +17,7 @@ export function useRolePermission() {
     isClient,
     canManageUsers: isAdmin || isSuperAdmin,
     canManageProjects: isAdmin || isConsultant,
-    canViewAdmin: isAdmin,
+    canViewAdmin: isAdmin || isSuperAdmin,
     canEditProject: isAdmin || isConsultant,
     canViewFinance: isAdmin || isConsultant,
   };
