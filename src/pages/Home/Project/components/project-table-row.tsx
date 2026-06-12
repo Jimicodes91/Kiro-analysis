@@ -1,5 +1,5 @@
 import PersonAvatar from "@/components/ui/person-avatar";
-import { getFormattedText } from "@/lib/utils";
+import { getComputedProjectStatus, getFormattedText } from "@/lib/utils";
 import { ProjectDetails } from "@/types/api.types";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
