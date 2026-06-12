@@ -111,7 +111,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
   return (
     <div className="grid grid-cols-12 w-full">
       <div className="bg-brand-table col-span-12 rounded-lg p-1 border border-gray-200">
-        <Table className="overflow-auto">
+        <Table className="overflow-auto w-full">
           <TableHeader>
             <TableRow className="hover:bg-[#EAECEC] rounded-full border border-[#D3D4D4]">
               <TableHead className="w-10">
@@ -124,7 +124,9 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
                 </button>
               </TableHead>
               {visibleColumnConfigs.map((col) => (
-                <TableHead key={col.id}>{col.label}</TableHead>
+                <TableHead key={col.id} className={col.id === "subject" ? "min-w-[180px]" : col.id === "note" ? "min-w-[150px] max-w-[200px]" : ""}>
+                  {col.label}
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>
