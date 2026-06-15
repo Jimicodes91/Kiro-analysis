@@ -55,7 +55,7 @@ const TasksTable = ({ search, statusFilter, typeFilter, showArchived, contextFil
 
     if (tasksToArchive.length > 0) {
       import("@/services/api.service").then(({ secureRequest }) => {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL as string;
+        const baseUrl = (import.meta.env.VITE_API_BASE_URL as string).replace(/\/?$/, "/");
         tasksToArchive.forEach((t) => {
           const endpoint = t.project_id
             ? `projects/${t.project_id}/tasks/${t.id}`
