@@ -73,8 +73,10 @@ const Admin: React.FC = () => {
 
       case "forms":
         return (
-          <div>
+          <div className="space-y-10">
             <TemplateLibrary />
+            <hr className="border-gray-200" />
+            <AdminFormLinkConfig />
           </div>
         );
 
