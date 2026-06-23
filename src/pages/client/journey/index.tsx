@@ -6,6 +6,7 @@ import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { useState } from "react";
 import ProjectDurationBar from "../home/components/project-duration-bar";
+import ClientJourneyForms from "./components/ClientJourneyForms";
 import JourneyCardView from "./components/journey-card-view";
 import JourneyListView from "./components/journey-list-view";
 
@@ -97,6 +98,13 @@ export default function ClientProjectJourney() {
 
         <CardContent className="pt-5">{renderBody()}</CardContent>
       </Card>
+
+      {/* NativeForms Section */}
+      <ClientJourneyForms
+        projectId={activeProject?.id ?? ""}
+        projectTypeId={activeProject?.project_type_id ?? ""}
+        milestoneId={activeProject?.milestone?.id ?? activeProject?.milestone_id ?? ""}
+      />
     </div>
   );
 }

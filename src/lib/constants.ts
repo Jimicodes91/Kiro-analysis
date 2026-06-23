@@ -507,6 +507,16 @@ export const ENDPOINTS = {
   GET_FORM_SUBMISSIONS_BY_TASK: (taskId: string) => `forms/submissions/task/${taskId}`,
   FINALIZE_FORM_SUBMISSION: (submissionId: string) => `forms/submissions/${submissionId}/finalize`,
   GET_FORM_PREFILL: (templateId: string, clientId: string) => `forms/prefill/${templateId}/${clientId}`,
+
+  // NativeForms Integration
+  GET_NATIVEFORMS_FORM_LINKS: "nativeforms/form-links",
+  GET_NATIVEFORMS_FORM_LINK: (id: string) => `nativeforms/form-links/${id}`,
+  CREATE_NATIVEFORMS_FORM_LINK: "nativeforms/form-links",
+  UPDATE_NATIVEFORMS_FORM_LINK: (id: string) => `nativeforms/form-links/${id}`,
+  DELETE_NATIVEFORMS_FORM_LINK: (id: string) => `nativeforms/form-links/${id}`,
+  GET_NATIVEFORMS_FORM_LINKS_BY_PROJECT: (projectId: string) => `nativeforms/form-links/project/${projectId}`,
+  GET_NATIVEFORMS_SUBMISSIONS_BY_PROJECT: (projectId: string) => `nativeforms/submissions/project/${projectId}`,
+  CHECK_NATIVEFORMS_SUBMISSION: (formLinkId: string, projectId: string) => `nativeforms/submissions/check/${formLinkId}/${projectId}`,
 };
 
 // for GET requests
@@ -620,6 +630,13 @@ export const QUERYKEYS = {
   GET_FORM_VERSIONS: "GET_FORM_VERSIONS",
   GET_FORM_SUBMISSIONS_BY_TASK: "GET_FORM_SUBMISSIONS_BY_TASK",
   GET_FORM_PREFILL: "GET_FORM_PREFILL",
+
+  // NativeForms Integration
+  GET_NATIVEFORMS_FORM_LINKS: "GET_NATIVEFORMS_FORM_LINKS",
+  GET_NATIVEFORMS_FORM_LINK: "GET_NATIVEFORMS_FORM_LINK",
+  GET_NATIVEFORMS_FORM_LINKS_BY_PROJECT: "GET_NATIVEFORMS_FORM_LINKS_BY_PROJECT",
+  GET_NATIVEFORMS_SUBMISSIONS_BY_PROJECT: "GET_NATIVEFORMS_SUBMISSIONS_BY_PROJECT",
+  CHECK_NATIVEFORMS_SUBMISSION: "CHECK_NATIVEFORMS_SUBMISSION",
 };
 
 export const PAGES = {
