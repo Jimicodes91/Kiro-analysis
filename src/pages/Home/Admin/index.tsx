@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import AuditTrailTab from "./audit-trail";
 import DocumentTab from "./Document";
 import EventTab from "./Event";
+import AdminFormLinkConfig from "./forms/nativeforms";
 import TemplateLibrary from "./forms/template-library";
 import JourneyTab from "./journey";
 import NoteTab from "./note";

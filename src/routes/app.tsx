@@ -19,7 +19,6 @@ import ClientProjectJourney from "@/pages/client/journey";
 import ClientTaskManagement from "@/pages/client/tasks";
 import ClientTaskDetailPage from "@/pages/client/tasks/client-task-detail-page";
 import FormBuilder from "@/pages/Home/Admin/forms/form-builder";
-import AdminFormLinkConfig from "@/pages/Home/Admin/forms/nativeforms";
 import PendingInvites from "@/pages/Home/Admin/pending-invites";
 import Contact from "@/pages/Home/Contact";
 import NotificationsPage from "@/pages/Home/Notifications";
@@ -182,12 +181,6 @@ export const appRoutes: AppRoute[] = [
   {
     path: "/admin/pending-invites",
     element: <PendingInvites />,
-    roles: ["ADMIN", "SUPER_ADMIN"],
-    layout: AccountLayout,
-  },
-  {
-    path: "/admin/forms/nativeforms",
-    element: <AdminFormLinkConfig />,
     roles: ["ADMIN", "SUPER_ADMIN"],
     layout: AccountLayout,
   },
