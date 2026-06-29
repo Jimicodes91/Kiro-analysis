@@ -63,7 +63,7 @@ export default function SubmissionViewer({ projectId }: SubmissionViewerProps) {
   const { value: submissionsData, isLoading, error } = useGetSubmissionsByProject(projectId);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
-  const submissions: NativeFormsSubmission[] = submissionsData ?? [];
+  const submissions: NativeFormsSubmission[] = Array.isArray(submissionsData) ? submissionsData : (submissionsData as any)?.data ?? [];
 
   const toggleRow = (id: string) => {
     setExpandedRow((prev) => (prev === id ? null : id));

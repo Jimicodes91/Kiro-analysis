@@ -45,7 +45,7 @@ export default function FormLinkTable({ onEdit }: FormLinkTableProps) {
 
   const [deleteTarget, setDeleteTarget] = useState<FormLinkResponse | null>(null);
 
-  const formLinks: FormLinkResponse[] = formLinksData ?? [];
+  const formLinks: FormLinkResponse[] = Array.isArray(formLinksData) ? formLinksData : (formLinksData as any)?.data ?? [];
   const projectTypes = projectTypesData?.data ?? [];
 
   // Build lookup maps for displaying names

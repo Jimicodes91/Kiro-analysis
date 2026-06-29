@@ -23,7 +23,7 @@ export default function ClientJourneyForms({
   const [selectedFormLink, setSelectedFormLink] = useState<FormLinkResponse | null>(null);
   const queryClient = useQueryClient();
 
-  const formLinks: FormLinkResponse[] = formLinksData ?? [];
+  const formLinks: FormLinkResponse[] = Array.isArray(formLinksData) ? formLinksData : (formLinksData as any)?.data ?? [];
 
   // Filter form links that match the current project type or milestone
   const applicableFormLinks = formLinks.filter((link) => {
