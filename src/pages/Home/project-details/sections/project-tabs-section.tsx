@@ -14,6 +14,7 @@ type SubTabType =
   | "Notes"
   | "Activity"
   | "Document"
+  | "Forms"
   | "Message"
   | "Event"
   | "Project team"
@@ -28,6 +29,7 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
     "Notes",
     "Activity",
     "Document",
+    "Forms",
     "Event",
     "Project team",
   ];
@@ -58,6 +60,16 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
         return (
           <div>
             <ProjectDocumentSection projectId={projectDetails.id} />
+          </div>
+        );
+
+      case "Forms":
+        return (
+          <div>
+            <ProjectFormsSection
+              projectId={projectDetails?.id}
+              projectTypeId={projectDetails?.project_type_id}
+            />
           </div>
         );
 

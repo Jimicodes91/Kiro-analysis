@@ -514,9 +514,12 @@ export const ENDPOINTS = {
   CREATE_NATIVEFORMS_FORM_LINK: "nativeforms/form-links",
   UPDATE_NATIVEFORMS_FORM_LINK: (id: string) => `nativeforms/form-links/${id}`,
   DELETE_NATIVEFORMS_FORM_LINK: (id: string) => `nativeforms/form-links/${id}`,
+  UPDATE_NATIVEFORMS_FORM_LINK_STATUS: (id: string) => `nativeforms/form-links/${id}/status`,
   GET_NATIVEFORMS_FORM_LINKS_BY_PROJECT: (projectId: string) => `nativeforms/form-links/project/${projectId}`,
   GET_NATIVEFORMS_SUBMISSIONS_BY_PROJECT: (projectId: string) => `nativeforms/submissions/project/${projectId}`,
   CHECK_NATIVEFORMS_SUBMISSION: (formLinkId: string, projectId: string) => `nativeforms/submissions/check/${formLinkId}/${projectId}`,
+  UPDATE_NATIVEFORMS_SUBMISSION_STATUS: (id: string) => `nativeforms/submissions/${id}/status`,
+  GET_NATIVEFORMS_DASHBOARD: "nativeforms/dashboard",
 };
 
 // for GET requests
@@ -637,6 +640,7 @@ export const QUERYKEYS = {
   GET_NATIVEFORMS_FORM_LINKS_BY_PROJECT: "GET_NATIVEFORMS_FORM_LINKS_BY_PROJECT",
   GET_NATIVEFORMS_SUBMISSIONS_BY_PROJECT: "GET_NATIVEFORMS_SUBMISSIONS_BY_PROJECT",
   CHECK_NATIVEFORMS_SUBMISSION: "CHECK_NATIVEFORMS_SUBMISSION",
+  GET_NATIVEFORMS_DASHBOARD: "GET_NATIVEFORMS_DASHBOARD",
 };
 
 export const PAGES = {

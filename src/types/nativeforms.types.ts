@@ -18,6 +18,7 @@ export interface FormLinkResponse {
   project_type_id: string | null;
   milestone_id: string | null;
   sort_order: number;
+  status: FormLinkStatus;
   organization_id: string;
   created_at: string;
   updated_at: string;
@@ -53,6 +54,9 @@ export interface NativeFormsSubmission {
   submitted_data: Record<string, unknown>;
   raw_payload: Record<string, unknown>;
   submitted_at: string;
+  status: SubmissionStatus;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
   created_at: string;
 }
 
@@ -75,4 +79,15 @@ export interface ClientJourneyFormsProps {
   milestoneId: string;
 }
 
-export type FormLinkStatus = "not_started" | "completed";
+export type FormLinkStatus = "not_sent" | "sent" | "awaiting_client" | "submitted" | "under_review" | "completed";
+
+export type SubmissionStatus = "submitted" | "under_review" | "completed" | "info_requested";
+
+export interface NativeFormsDashboardStats {
+  awaiting_client_count: number;
+  recently_submitted_count: number;
+  under_review_count: number;
+  awaiting_client: FormLinkResponse[];
+  recently_submitted: NativeFormsSubmission[];
+  under_review: FormLinkResponse[];
+}
