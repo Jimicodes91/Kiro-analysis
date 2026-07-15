@@ -4,7 +4,7 @@ import ViewToggle from "@/components/ui/view-toggle";
 import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
 
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ProjectDurationBar from "../home/components/project-duration-bar";
 import ClientJourneyForms from "./components/ClientJourneyForms";
 import JourneyCardView from "./components/journey-card-view";
