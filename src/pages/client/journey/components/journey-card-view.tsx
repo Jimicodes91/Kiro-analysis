@@ -110,13 +110,15 @@ function JourneyCardView({
                 )}
               </div>
 
-              {/* Dates section — replaces old "X days" */}
+              {/* Dates — replaces old duration display */}
               {dateInfo ? (
-                <div className="space-y-1.5 pt-2 border-t border-border/50">
+                <div className="space-y-1 pt-2 border-t border-border/50">
                   {status === "completed" ? (
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Calendar className="size-3" />
-                      <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)} – {formatMilestoneDate(dateInfo.endDate)}</span>
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <Calendar className="size-3 text-muted-foreground" />
+                      <span className="font-semibold text-foreground">
+                        {formatMilestoneDate(dateInfo.startDate)} – {formatMilestoneDate(dateInfo.endDate)}
+                      </span>
                     </div>
                   ) : status === "in_progress" ? (
                     <>
@@ -141,19 +143,8 @@ function JourneyCardView({
                       </div>
                     </>
                   )}
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Clock className="size-3" />
-                    <span>{m.duration} {m.duration === 1 ? "day" : "days"}</span>
-                  </div>
                 </div>
-              ) : (
-                <div className="flex items-center gap-1.5 pt-1 border-t border-border/50">
-                  <Clock className="size-3 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">
-                    {m.duration} {m.duration === 1 ? "day" : "days"}
-                  </span>
-                </div>
-              )}
+              ) : null}
             </CardContent>
           </Card>
         );

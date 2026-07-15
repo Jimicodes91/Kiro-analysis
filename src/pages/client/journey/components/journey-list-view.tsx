@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import { cn } from "@/lib/utils";
 import { MilestoneDateInfo, formatMilestoneDate } from "@/utils/milestone-dates";
-import { Calendar, Check, Clock, Dot, Flag } from "lucide-react";
+import { Calendar, Check, Dot, Flag } from "lucide-react";
 
 function JourneyListView({
   milestones,
@@ -25,7 +25,6 @@ function JourneyListView({
           <div key={m.id ?? i} className="relative flex gap-4">
             {/* Timeline column */}
             <div className="flex flex-col items-center">
-              {/* Status circle */}
               <div
                 className={cn(
                   "flex items-center justify-center size-8 rounded-full shrink-0 z-10",
@@ -45,7 +44,6 @@ function JourneyListView({
                 )}
               </div>
 
-              {/* Connector line */}
               {!isLast && (
                 <div
                   className={cn(
@@ -59,7 +57,7 @@ function JourneyListView({
             {/* Content card */}
             <div
               className={cn(
-                "flex-1 flex flex-col gap-2 rounded-lg border p-4 mb-3",
+                "flex-1 flex items-center justify-between gap-3 flex-wrap rounded-lg border p-4 mb-3",
                 isCompleted
                   ? "border-[#00AA3B]/20 bg-[#00AA3B]/[0.02]"
                   : isCurrent
@@ -67,29 +65,30 @@ function JourneyListView({
                     : "border-gray-200 bg-gray-50/50"
               )}
             >
-              {/* Top row: name + badge */}
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-                <div className="space-y-1 min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      Step {i + 1}
-                    </span>
-                  </div>
-                  <p
-                    className={cn(
-                      "font-semibold text-sm",
-                      !isCompleted && !isCurrent && "text-muted-foreground"
-                    )}
-                  >
-                    {m.name}
-                  </p>
-                  {m?.description && (
-                    <p className="text-xs text-muted-foreground line-clamp-1">
-                      {m.description}
-                    </p>
-                  )}
+              {/* Left: milestone info */}
+              <div className="space-y-1 min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Step {i + 1}
+                  </span>
                 </div>
+                <p
+                  className={cn(
+                    "font-semibold text-sm",
+                    !isCompleted && !isCurrent && "text-muted-foreground"
+                  )}
+                >
+                  {m.name}
+                </p>
+                {m?.description && (
+                  <p className="text-xs text-muted-foreground line-clamp-1">
+                    {m.description}
+                  </p>
+                )}
+              </div>
 
+              {/* Right: badge + dates */}
+              <div className="flex flex-col items-end gap-2 shrink-0">
                 <Badge
                   variant={
                     isCompleted
@@ -106,50 +105,41 @@ function JourneyListView({
                       ? "In Progress"
                       : "Not Started"}
                 </Badge>
-              </div>
 
-              {/* Date row — replaces "X days" */}
-              {dateInfo && (
-                <div className="flex items-center gap-4 text-xs text-muted-foreground pt-1 border-t border-border/50">
-                  {isCompleted ? (
-                    // Completed: show date range
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="size-3" />
-                      <span className="font-semibold text-foreground">
+                {/* Dates — positioned where "X days" used to be */}
+                {dateInfo && (
+                  <div className="flex flex-col items-end gap-0.5 text-xs">
+                    {isCompleted ? (
+                      <span className="flex items-center gap-1 font-semibold text-foreground">
+                        <Calendar className="size-3 text-muted-foreground" />
                         {formatMilestoneDate(dateInfo.startDate)} – {formatMilestoneDate(dateInfo.endDate)}
                       </span>
-                    </div>
-                  ) : isCurrent ? (
-                    // Current: show started + est. end
-                    <>
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="size-3" />
-                        <span>Started: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)}</span></span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Flag className="size-3" />
-                        <span>Est. End: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.endDate)}</span></span>
-                      </div>
-                    </>
-                  ) : (
-                    // Future: show est. start + est. end
-                    <>
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="size-3" />
-                        <span>Est. Start: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)}</span></span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Flag className="size-3" />
-                        <span>Est. End: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.endDate)}</span></span>
-                      </div>
-                    </>
-                  )}
-                  <div className="flex items-center gap-1 ml-auto">
-                    <Clock className="size-3" />
-                    <span>{m.duration} {m.duration === 1 ? "day" : "days"}</span>
+                    ) : isCurrent ? (
+                      <>
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Calendar className="size-3" />
+                          Started: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)}</span>
+                        </span>
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Flag className="size-3" />
+                          Est. End: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.endDate)}</span>
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Calendar className="size-3" />
+                          Est. Start: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)}</span>
+                        </span>
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Flag className="size-3" />
+                          Est. End: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.endDate)}</span>
+                        </span>
+                      </>
+                    )}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         );
