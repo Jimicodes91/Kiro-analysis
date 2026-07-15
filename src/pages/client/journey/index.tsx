@@ -21,6 +21,17 @@ export default function ClientProjectJourney() {
       (milestone) => milestone.id === activeProject?.milestone?.id
     ) ?? 0;
 
+  const milestoneDates = useMemo(() => {
+    const milestones = journey?.value?.data?.milestones;
+    if (!milestones) return [];
+    return calculateMilestoneDates(
+      milestones,
+      currentMilestoneIndex,
+      activeProject?.start_date,
+      (activeProject as any)?.milestone_start_date
+    );
+  }, [journey?.value?.data?.milestones, currentMilestoneIndex, activeProject]);
+
   const renderBody = () => {
     if (journey.isPending && !journey?.value)
       return (
@@ -48,12 +59,14 @@ export default function ClientProjectJourney() {
           <JourneyListView
             milestones={journey?.value?.data?.milestones}
             currentMilestoneIndex={currentMilestoneIndex}
+            milestoneDates={milestoneDates}
           />
         ) : (
           /* --- Grid View (Flow with Arrows) --- */
           <JourneyCardView
             milestones={journey?.value?.data?.milestones}
             currentMilestoneIndex={currentMilestoneIndex}
+            milestoneDates={milestoneDates}
           />
         )}
       </div>

@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
+import { calculateMilestoneDates, formatMilestoneDate } from "@/utils/milestone-dates";
 import { LocateFixedIcon } from "lucide-react";
+import { useMemo } from "react";
 import MilestoneItem from "./milestone-item";
 
 function UpcomingMilestones() {
@@ -12,6 +14,17 @@ function UpcomingMilestones() {
     journey?.value?.data?.milestones?.findIndex(
       (milestone) => milestone.id === activeProject?.milestone?.id
     ) ?? 0;
+
+  const milestoneDates = useMemo(() => {
+    const milestones = journey?.value?.data?.milestones;
+    if (!milestones) return [];
+    return calculateMilestoneDates(
+      milestones,
+      currentMilestoneIndex,
+      activeProject?.start_date,
+      (activeProject as any)?.milestone_start_date
+    );
+  }, [journey?.value?.data?.milestones, currentMilestoneIndex, activeProject]);
 
   const renderBody = () => {
     if (journey.isPending)
@@ -29,36 +42,42 @@ function UpcomingMilestones() {
     if (journey?.isError)
       return (
         <div className="py-10 px-4 rounded-lg border flex justify-center border-brand-border bg-[#F8F8F8]">
-          <p className="text-sm text-brand-fade p-0 m-0">Somthing went wrong</p>
+          <p className="text-sm text-brand-fade p-0 m-0">Something went wrong</p>
         </div>
       );
 
     return (
       <div className="space-y-3">
-        {journey?.value?.data?.milestones?.map((milestone, index) => (
-          <MilestoneItem
-            key={milestone.id}
-            title={milestone.name}
-            status={
-              index < currentMilestoneIndex
-                ? "completed"
-                : index === currentMilestoneIndex
-                  ? "in_progress"
-                  : "blocked"
-            }
-            statusText={
-              index < currentMilestoneIndex
-                ? "completed"
-                : index === currentMilestoneIndex
-                  ? "in_progress"
-                  : "not_started"
-            }
-            info={milestone.duration.toString()}
-          />
-        ))}
+        {journey?.value?.data?.milestones?.map((milestone, index) => {
+          const dateInfo = milestoneDates[index];
+          return (
+            <MilestoneItem
+              key={milestone.id}
+              title={milestone.name}
+              duration={milestone.duration}
+              status={
+                index < currentMilestoneIndex
+                  ? "completed"
+                  : index === currentMilestoneIndex
+                    ? "in_progress"
+                    : "blocked"
+              }
+              statusText={
+                index < currentMilestoneIndex
+                  ? "completed"
+                  : index === currentMilestoneIndex
+                    ? "in_progress"
+                    : "not_started"
+              }
+              startDate={dateInfo ? formatMilestoneDate(dateInfo.startDate) : null}
+              endDate={dateInfo ? formatMilestoneDate(dateInfo.endDate) : null}
+            />
+          );
+        })}
       </div>
     );
   };
+
   return (
     <Card>
       <CardHeader className="space-y-0">
@@ -66,7 +85,6 @@ function UpcomingMilestones() {
           <LocateFixedIcon className="h-5 w-5 text-black" />
           Upcoming Milestones
         </CardTitle>
-
         <p className="text-sm text-muted-foreground">
           Key project milestones and deadlines
         </p>

@@ -2,15 +2,17 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { Check, Clock, Lock } from "lucide-react";
+import { MilestoneDateInfo, formatMilestoneDate } from "@/utils/milestone-dates";
+import { Calendar, Check, Clock, Flag, Lock } from "lucide-react";
 
 function JourneyCardView({
   milestones,
   currentMilestoneIndex,
+  milestoneDates,
 }: {
   milestones?: ProjectTypeMilestone[];
   currentMilestoneIndex: number;
+  milestoneDates?: MilestoneDateInfo[];
 }) {
   const getStatus = (index: number) => {
     if (index < currentMilestoneIndex) return "completed";
@@ -57,6 +59,7 @@ function JourneyCardView({
         const status = getStatus(index);
         const config = statusConfig[status];
         const Icon = config.icon;
+        const dateInfo = milestoneDates?.[index];
 
         return (
           <Card
@@ -107,19 +110,48 @@ function JourneyCardView({
                 )}
               </div>
 
-              {/* Duration footer */}
-              <div className="flex items-center gap-1.5 pt-1 border-t border-border/50">
-                <Clock className="size-3 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
-                  {m.duration} {m.duration === 1 ? "day" : "days"}
-                </span>
-              </div>
-
-              {/* Timeline dates */}
-              {(m.estimated_start_date || m.estimated_end_date) && (
-                <div className="flex gap-3 text-[11px] text-muted-foreground">
-                  <span>Start: {m.estimated_start_date ? format(new Date(m.estimated_start_date), "MMM d, yyyy") : "Not set"}</span>
-                  <span>End: {m.estimated_end_date ? format(new Date(m.estimated_end_date), "MMM d, yyyy") : "Not set"}</span>
+              {/* Dates section — replaces old "X days" */}
+              {dateInfo ? (
+                <div className="space-y-1.5 pt-2 border-t border-border/50">
+                  {status === "completed" ? (
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Calendar className="size-3" />
+                      <span>{formatMilestoneDate(dateInfo.startDate)} – {formatMilestoneDate(dateInfo.endDate)}</span>
+                    </div>
+                  ) : status === "in_progress" ? (
+                    <>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Calendar className="size-3" />
+                        <span>Started: {formatMilestoneDate(dateInfo.startDate)}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Flag className="size-3" />
+                        <span>Est. End: {formatMilestoneDate(dateInfo.endDate)}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Calendar className="size-3" />
+                        <span>Est. Start: {formatMilestoneDate(dateInfo.startDate)}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Flag className="size-3" />
+                        <span>Est. End: {formatMilestoneDate(dateInfo.endDate)}</span>
+                      </div>
+                    </>
+                  )}
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Clock className="size-3" />
+                    <span>{m.duration} {m.duration === 1 ? "day" : "days"}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 pt-1 border-t border-border/50">
+                  <Clock className="size-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">
+                    {m.duration} {m.duration === 1 ? "day" : "days"}
+                  </span>
                 </div>
               )}
             </CardContent>
