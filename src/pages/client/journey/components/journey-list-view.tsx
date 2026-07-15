@@ -115,7 +115,7 @@ function JourneyListView({
                     // Completed: show date range
                     <div className="flex items-center gap-1.5">
                       <Calendar className="size-3" />
-                      <span>
+                      <span className="font-semibold text-foreground">
                         {formatMilestoneDate(dateInfo.startDate)} – {formatMilestoneDate(dateInfo.endDate)}
                       </span>
                     </div>
@@ -124,11 +124,11 @@ function JourneyListView({
                     <>
                       <div className="flex items-center gap-1.5">
                         <Calendar className="size-3" />
-                        <span>Started: {formatMilestoneDate(dateInfo.startDate)}</span>
+                        <span>Started: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)}</span></span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <Flag className="size-3" />
-                        <span>Est. End: {formatMilestoneDate(dateInfo.endDate)}</span>
+                        <span>Est. End: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.endDate)}</span></span>
                       </div>
                     </>
                   ) : (
@@ -136,11 +136,11 @@ function JourneyListView({
                     <>
                       <div className="flex items-center gap-1.5">
                         <Calendar className="size-3" />
-                        <span>Est. Start: {formatMilestoneDate(dateInfo.startDate)}</span>
+                        <span>Est. Start: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)}</span></span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <Flag className="size-3" />
-                        <span>Est. End: {formatMilestoneDate(dateInfo.endDate)}</span>
+                        <span>Est. End: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.endDate)}</span></span>
                       </div>
                     </>
                   )}

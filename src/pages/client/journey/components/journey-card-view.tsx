@@ -116,28 +116,28 @@ function JourneyCardView({
                   {status === "completed" ? (
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Calendar className="size-3" />
-                      <span>{formatMilestoneDate(dateInfo.startDate)} – {formatMilestoneDate(dateInfo.endDate)}</span>
+                      <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)} – {formatMilestoneDate(dateInfo.endDate)}</span>
                     </div>
                   ) : status === "in_progress" ? (
                     <>
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Calendar className="size-3" />
-                        <span>Started: {formatMilestoneDate(dateInfo.startDate)}</span>
+                        <span>Started: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)}</span></span>
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Flag className="size-3" />
-                        <span>Est. End: {formatMilestoneDate(dateInfo.endDate)}</span>
+                        <span>Est. End: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.endDate)}</span></span>
                       </div>
                     </>
                   ) : (
                     <>
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Calendar className="size-3" />
-                        <span>Est. Start: {formatMilestoneDate(dateInfo.startDate)}</span>
+                        <span>Est. Start: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.startDate)}</span></span>
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Flag className="size-3" />
-                        <span>Est. End: {formatMilestoneDate(dateInfo.endDate)}</span>
+                        <span>Est. End: <span className="font-semibold text-foreground">{formatMilestoneDate(dateInfo.endDate)}</span></span>
                       </div>
                     </>
                   )}
