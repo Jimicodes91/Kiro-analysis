@@ -3,6 +3,9 @@ import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-p
 import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { ProjectDetails } from "@/types/api.types";
+import { calculateMilestoneDates, formatMilestoneDate } from "@/utils/milestone-dates";
+import { Calendar, Flag } from "lucide-react";
+import { useMemo } from "react";
 
 function ProjectDurationBar() {
   const { activeProject } = useClientProjectContext();
@@ -47,19 +50,49 @@ function DurationBar({
     (currentMilestoneIndex === -1 ? 0 : currentMilestoneIndex + 1) * perMilestone
   );
 
+  // Calculate overall project dates
+  const milestoneDates = useMemo(() => {
+    if (!journey?.milestones?.length) return [];
+    return calculateMilestoneDates(
+      journey.milestones,
+      currentMilestoneIndex === -1 ? 0 : currentMilestoneIndex,
+      activeProject?.start_date,
+      (activeProject as any)?.milestone_start_date
+    );
+  }, [journey?.milestones, currentMilestoneIndex, activeProject]);
+
+  const projectStartDate = activeProject?.start_date
+    ? new Date(activeProject.start_date)
+    : null;
+
+  // Overall estimated end = end date of the LAST milestone
+  const overallEndDate = milestoneDates.length > 0
+    ? milestoneDates[milestoneDates.length - 1]?.endDate
+    : null;
+
   return (
-    <div className="p-4 space-y-2 bg-[#FBFBFB] border border-[#0000000A] rounded-lg page-fade-in">
+    <div className="p-4 space-y-3 bg-[#FBFBFB] border border-[#0000000A] rounded-lg page-fade-in">
+      {/* Top row: current milestone + progress */}
       <div className="flex items-center justify-between">
-        <p className="text-sm">
-          {activeProject?.milestone?.name}{" "}
-          <span className="text-muted-foreground">
-            (duration {activeProject?.milestone?.duration} days)
-          </span>
+        <p className="text-sm font-medium">
+          {activeProject?.milestone?.name}
         </p>
-        <p className="text-sm mt-1 text-right font-medium">{progress}%</p>
+        <p className="text-sm font-semibold">{progress}%</p>
       </div>
 
       <Progress value={progress} className="h-2" />
+
+      {/* Bottom row: overall start → estimated completion */}
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <Calendar className="size-3" />
+          Start: <span className="font-semibold text-foreground">{formatMilestoneDate(projectStartDate)}</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <Flag className="size-3" />
+          Est. Completion: <span className="font-semibold text-foreground">{formatMilestoneDate(overallEndDate)}</span>
+        </span>
+      </div>
     </div>
   );
 }
