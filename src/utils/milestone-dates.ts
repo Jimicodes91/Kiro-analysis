@@ -84,7 +84,16 @@ export function calculateMilestoneDates(
     : new Date(projectStartDate);
 
   const currentDuration = milestones[currentMilestoneIndex]?.duration || 1;
-  const currentEnd = addWeekdays(currentStart, currentDuration);
+  let currentEnd = addWeekdays(currentStart, currentDuration);
+
+  // If the estimated end is in the past, recalculate from today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (currentEnd < today) {
+    // The current milestone is overdue — recalculate remaining time from today
+    currentEnd = addWeekdays(today, currentDuration);
+  }
 
   dates[currentMilestoneIndex] = {
     startDate: currentStart,
