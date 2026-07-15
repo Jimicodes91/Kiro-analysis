@@ -54,7 +54,6 @@ function UpcomingMilestones() {
             <MilestoneItem
               key={milestone.id}
               title={milestone.name}
-              duration={milestone.duration}
               status={
                 index < currentMilestoneIndex
                   ? "completed"
