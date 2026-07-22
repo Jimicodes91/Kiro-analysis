@@ -228,9 +228,7 @@ export const uploadDocumentSchema = z.object({
       message: "Document type is required",
     })
     .optional(),
-  description: z.string({
-    message: "Description is required",
-  }),
+  description: z.string().optional(),
   // is_visible_to_client: z.boolean().default(false),
   attachment: fileListSchema(
     fileSize,
