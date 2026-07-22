@@ -3,28 +3,29 @@ import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import DragNdrop from "@/components/ui/file-upload";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import useGetAllDocumentTypes from "@/hooks/project-modules/document-types/use-get-all-document-types";
 import useUploadDocument from "@/hooks/project-modules/documents/use-upload-document";
 import { fileToBase64 } from "@/lib/utils";
 import { uploadDocumentSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import Modal from "../../../../../components/Modal";
 
@@ -37,12 +38,21 @@ const UploadDocumentModal = ({
 } & ModalProps) => {
   const uploadDocument = useUploadDocument(projectId);
   const documentTypes = useGetAllDocumentTypes();
-  const form = useForm<z.infer<typeof uploadDocumentSchema>>({
+  const form = useForm<z.infer<typeof uploadDocumentSchema> & {
+    issue_date?: string;
+    expiry_date?: string;
+    does_not_expire?: boolean;
+  }>({
     resolver: zodResolver(uploadDocumentSchema),
+    defaultValues: {
+      does_not_expire: false,
+    },
   });
 
-  const onSubmit = async (data: z.infer<typeof uploadDocumentSchema>) => {
-    const { attachment, ...validData } = data;
+  const doesNotExpire = useWatch({ control: form.control, name: "does_not_expire" });
+
+  const onSubmit = async (data: any) => {
+    const { attachment, issue_date, expiry_date, does_not_expire, ...validData } = data;
     const documentFile = attachment[0];
     let base64File: string | null = null;
 
@@ -59,6 +69,9 @@ const UploadDocumentModal = ({
       .mutateAsync({
         ...validData,
         attachment: base64File,
+        issue_date: issue_date || null,
+        expiry_date: does_not_expire ? null : expiry_date || null,
+        does_not_expire: does_not_expire || false,
       })
       .then(() => {
         form.reset();
@@ -138,6 +151,63 @@ const UploadDocumentModal = ({
                 </FormItem>
               )}
             />
+
+            {/* Document Expiry Section */}
+            <div className="border rounded-lg p-3 space-y-3 bg-gray-50/50">
+              <p className="text-sm font-medium">Document Validity</p>
+
+              {/* Does not expire toggle */}
+              <FormField
+                control={form.control}
+                name="does_not_expire"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between">
+                    <FormLabel className="text-sm text-muted-foreground">
+                      This document does not expire
+                    </FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              {/* Date fields — hidden when "does not expire" is checked */}
+              {!doesNotExpire && (
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField
+                    control={form.control}
+                    name="issue_date"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Issue Date</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} value={field.value ?? ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="expiry_date"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Expiry Date</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} value={field.value ?? ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+            </div>
+
             <FormField
               control={form.control}
               name={"attachment"}
