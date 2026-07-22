@@ -86,6 +86,9 @@ export interface IDocument {
   type: string;
   description?: string;
   is_visible_to_client: number;
+  issue_date?: string;
+  expiry_date?: string;
+  does_not_expire?: boolean;
   attachments: Attachment[];
 }
 
