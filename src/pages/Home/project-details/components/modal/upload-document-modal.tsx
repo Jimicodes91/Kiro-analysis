@@ -57,6 +57,10 @@ const UploadDocumentModal = ({
 
     try {
       base64File = await fileToBase64(documentFile);
+      // Strip data URL prefix — backend expects pure base64
+      if (base64File.includes(",")) {
+        base64File = base64File.split(",")[1];
+      }
     } catch (err) {
       console.error("Error converting file:", err);
       base64File = null;
