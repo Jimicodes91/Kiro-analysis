@@ -75,6 +75,7 @@ const UploadDocumentModal = ({
         issue_date: issue_date || null,
         expiry_date: does_not_expire ? null : expiry_date || null,
         does_not_expire: does_not_expire || false,
+        is_visible_to_client: true,
       })
       .then(() => {
         form.reset();
