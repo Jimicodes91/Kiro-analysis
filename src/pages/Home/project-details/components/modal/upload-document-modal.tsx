@@ -134,9 +134,27 @@ const UploadDocumentModal = ({
               name="file_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel isRequired>File name</FormLabel>
+                  <FormLabel isRequired>Document name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Document name" {...field} />
+                    <Input placeholder="e.g. International Passport" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Short description explaining what the document is or what it is required for"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
