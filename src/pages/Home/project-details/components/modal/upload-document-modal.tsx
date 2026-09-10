@@ -19,9 +19,11 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import useGetAllDocumentTypes from "@/hooks/project-modules/document-types/use-get-all-document-types";
 import useUploadDocument from "@/hooks/project-modules/documents/use-upload-document";
 import { fileToBase64 } from "@/lib/utils";
+import { isExpiryRequired } from "@/utils/document-expiry";
 import { uploadDocumentSchema } from "@/utils/validation-schema/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
