@@ -101,7 +101,7 @@ export default function ClientDocumentCard({ document }: { document: IDocument }
                       : "—"}
                   </p>
                 </div>
-                {document.issue_date && (
+                {document.issue_date ? (
                   <div>
                     <p className="text-xs text-brand-fade font-medium">
                       Issue date
@@ -110,11 +110,11 @@ export default function ClientDocumentCard({ document }: { document: IDocument }
                       {format(new Date(document.issue_date), "dd MMM yyyy")}
                     </p>
                   </div>
-                )}
+                ) : null}
               </div>
 
               {/* Expiry callout */}
-              {document.expiry_date && !document.does_not_expire && (
+              {document.expiry_date && !document.does_not_expire ? (
                 <div
                   className={cn(
                     "flex items-center justify-between gap-2 p-3 rounded-lg border",
@@ -136,16 +136,16 @@ export default function ClientDocumentCard({ document }: { document: IDocument }
                     {format(new Date(document.expiry_date), "dd MMM yyyy")}
                   </span>
                 </div>
-              )}
+              ) : null}
 
-              {document.does_not_expire && (
+              {document.does_not_expire ? (
                 <div className="flex items-center gap-2 p-3 rounded-lg border border-[#00AA3B22] bg-[#00AA3B0A]">
                   <ShieldCheck className="size-4 text-[#00AA3B]" />
                   <span className="text-sm font-medium text-[#027A48]">
                     This document does not expire
                   </span>
                 </div>
-              )}
+              ) : null}
 
               {/* Description */}
               {document?.description && (
