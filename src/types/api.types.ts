@@ -218,6 +218,7 @@ export interface DocumentTypeDetails {
   is_system: number;
   type: string;
   description: string;
+  requires_expiry: boolean;
 }
 
 export interface EventTypeDetails {

@@ -49,9 +49,24 @@ const UploadDocumentModal = ({
   });
 
   const doesNotExpire = useWatch({ control: form.control, name: "does_not_expire" });
+  const documentTypeId = useWatch({ control: form.control, name: "document_type_id" });
 
   const onSubmit = async (data: any) => {
     const { attachment, issue_date, expiry_date, does_not_expire, ...validData } = data;
+
+    // Enforce expiry requirement for document types that require it (Req 2.1–2.4)
+    const selectedType = documentTypes?.value?.data?.find(
+      (item) => item.id === documentTypeId
+    );
+    if (isExpiryRequired(selectedType, does_not_expire) && !expiry_date) {
+      form.setError("expiry_date", {
+        type: "manual",
+        message: "Expiry date is required for this document type",
+      });
+      Toast.error("Expiry date is required for this document type");
+      return;
+    }
+
     const documentFile = attachment[0];
     let base64File: string | null = null;
 

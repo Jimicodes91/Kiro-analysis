@@ -10,6 +10,7 @@ const useCreateDocumentType = () => {
     {
       name: string;
       description: string;
+      requires_expiry?: boolean;
     }
   >({
     method: "post",

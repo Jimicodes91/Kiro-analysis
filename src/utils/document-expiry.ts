@@ -88,3 +88,17 @@ export function getExpiryBadgeLabel(status: ExpiryStatus): string {
       return "";
   }
 }
+
+/**
+ * Determine whether an expiry date must be provided for a document upload.
+ *
+ * Returns `true` if and only if the selected document type requires an expiry
+ * date (`requires_expiry === true`) AND the document is not marked as
+ * non-expiring (`doesNotExpire !== true`). Otherwise returns `false`.
+ */
+export function isExpiryRequired(
+  documentType: { requires_expiry?: boolean } | null | undefined,
+  doesNotExpire?: boolean
+): boolean {
+  return documentType?.requires_expiry === true && doesNotExpire !== true;
+}

@@ -1,14 +1,15 @@
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateDocumentType from "@/hooks/project-modules/document-types/use-create-document-type";
 import useUpdateDocumentType from "@/hooks/project-modules/document-types/use-update-document-type";
@@ -34,6 +35,7 @@ const AddDocumentModal = ({
     defaultValues: {
       description: documentType?.description ?? "",
       name: documentType?.name ?? "",
+      requires_expiry: documentType?.requires_expiry ?? false,
     },
   });
 
@@ -75,6 +77,20 @@ const AddDocumentModal = ({
                   <Textarea placeholder="Description" {...field} />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="requires_expiry"
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-between">
+                <FormLabel className="text-sm text-muted-foreground">
+                  Requires expiry date?
+                </FormLabel>
+                <FormControl>
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
               </FormItem>
             )}
           />

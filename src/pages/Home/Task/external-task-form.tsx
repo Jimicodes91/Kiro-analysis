@@ -20,14 +20,17 @@ import TypeFieldsSection from "./type-fields";
 
 const EXTERNAL_CATEGORY_TYPES = [
   { value: "signing", label: "Signing" },
-  { value: "information_request", label: "Information Request" },
+  { value: "information_request", label: "Provide Information" },
   { value: "document_upload", label: "Document Upload" },
+  { value: "task", label: "General Task" },
+  { value: "complete_form", label: "Complete Form" },
 ] as const;
 
 const externalTaskSchema = yup.object({
   end_date: yup.date().required("Due date is required"),
   client_ids: yup.array().of(yup.string().required()).min(1, "At least one client is required").required("Clients are required"),
   task_category_type: yup.string().required("Task type is required"),
+  description: yup.string().trim().optional(),
   form_config: yup.object().optional(),
 });
 
@@ -140,7 +143,7 @@ const ExternalTaskForm = () => {
   }, [clientsQuery?.value]);
 
   const onSubmit = async (data: ExternalFormData) => {
-    const { end_date, task_category_type, form_config, ...rest } = data;
+    const { end_date, task_category_type, form_config, description, ...rest } = data;
     // Task name = category type label (e.g. "Signing", "Information Request")
     const categoryLabel = EXTERNAL_CATEGORY_TYPES.find((c) => c.value === task_category_type)?.label ?? "External Task";
     const payload: Record<string, any> = {
@@ -148,6 +151,7 @@ const ExternalTaskForm = () => {
       project_id: initialProjectId,
       project_type_id: initialProjectTypeId,
       name: categoryLabel,
+      description,
       task_category: TaskCategory.EXTERNAL,
       task_category_type,
       due_date: getUTCISODateFormat(end_date),
@@ -189,6 +193,19 @@ const ExternalTaskForm = () => {
                     ))}
                   </SelectContent>
                 </Select><FormMessage /></FormItem>
+            )} />
+
+            {/* Description (optional context shown to the client) */}
+            <FormField control={form.control} name="description" render={({ field }) => (
+              <FormItem><FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Describe what the client needs to provide (e.g. upload a recent utility bill)"
+                    className="min-h-[100px] rounded-2xl border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-3 text-sm"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
+                </FormControl><FormMessage /></FormItem>
             )} />
 
             {/* Type-specific fields */}

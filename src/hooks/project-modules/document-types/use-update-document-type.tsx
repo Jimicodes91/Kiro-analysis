@@ -10,6 +10,7 @@ const useUpdateDocumentType = (documentTypeId: string) => {
     {
       name?: string;
       description?: string;
+      requires_expiry?: boolean;
     }
   >({
     method: "patch",

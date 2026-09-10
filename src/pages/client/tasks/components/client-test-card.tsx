@@ -1,7 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { getFormattedText } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
+import {
+    getDisplayedStatus,
+    getDisplayedStatusBadgeVariant,
+} from "@/utils/task-display-status";
 import { format } from "date-fns";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -20,9 +23,17 @@ function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: str
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-semibold">{task?.name || "Untitled Task"}</h2>
-              <Badge variant={task.status} className="text-xs">
-                {getFormattedText(task.status)}
-              </Badge>
+              {(() => {
+                const displayed = getDisplayedStatus(task.status, task?.end_date);
+                return (
+                  <Badge
+                    variant={getDisplayedStatusBadgeVariant(displayed) as any}
+                    className="text-xs"
+                  >
+                    {displayed}
+                  </Badge>
+                );
+              })()}
             </div>
             {task?.description && (
               <p className="text-[#19181980] text-sm line-clamp-1">{task.description}</p>

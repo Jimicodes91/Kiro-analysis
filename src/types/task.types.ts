@@ -240,6 +240,7 @@ export enum TaskCategoryType {
   FOLLOW_UP = "follow_up",
   MESSAGE = "message",
   REVIEW = "review",
+  COMPLETE_FORM = "complete_form",
 }
 
 export interface TaskComment {

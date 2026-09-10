@@ -5,8 +5,14 @@ import { useQueryClient } from "@tanstack/react-query";
 export interface UploadDocumentRequest {
   document_type_id?: string;
   file_name: string;
-  description: string;
+  description?: string;
   attachment: string;
+  is_visible_to_client?: boolean;
+  task_id?: string;
+  project_id?: string;
+  issue_date?: string | null;
+  expiry_date?: string | null;
+  does_not_expire?: boolean;
 }
 
 const useUploadDocument = (projectId: string) => {
