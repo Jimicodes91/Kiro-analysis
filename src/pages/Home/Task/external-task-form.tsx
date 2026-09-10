@@ -4,6 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import Heading from "@/components/ui/heading";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import useAvailableAssignees from "@/hooks/project-modules/tasks/use-available-assignees";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
 import { cn, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
@@ -18,7 +19,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import * as yup from "yup";
 import TypeFieldsSection from "./type-fields";
 
-const EXTERNAL_CATEGORY_TYPES = [
+export const EXTERNAL_CATEGORY_TYPES = [
   { value: "signing", label: "Signing" },
   { value: "information_request", label: "Provide Information" },
   { value: "document_upload", label: "Document Upload" },
@@ -26,7 +27,7 @@ const EXTERNAL_CATEGORY_TYPES = [
   { value: "complete_form", label: "Complete Form" },
 ] as const;
 
-const externalTaskSchema = yup.object({
+export const externalTaskSchema = yup.object({
   end_date: yup.date().required("Due date is required"),
   client_ids: yup.array().of(yup.string().required()).min(1, "At least one client is required").required("Clients are required"),
   task_category_type: yup.string().required("Task type is required"),
@@ -35,6 +36,37 @@ const externalTaskSchema = yup.object({
 });
 
 type ExternalFormData = yup.InferType<typeof externalTaskSchema>;
+
+/**
+ * Pure mapping from validated external-task form data to the create-task payload.
+ * Extracted so the payload mapping can be tested deterministically (Property 5).
+ *
+ * The selected `task_category_type` persists unchanged, the due date, assigned
+ * clients, and description are carried through, and `form_config` is only added
+ * when it holds at least one key (so `complete_form` requires no form config).
+ */
+export function buildExternalTaskPayload(
+  data: ExternalFormData,
+  context: { projectId: string; projectTypeId: string }
+): Record<string, any> {
+  const { end_date, task_category_type, form_config, description, ...rest } = data;
+  const categoryLabel =
+    EXTERNAL_CATEGORY_TYPES.find((c) => c.value === task_category_type)?.label ?? "External Task";
+  const payload: Record<string, any> = {
+    ...rest,
+    project_id: context.projectId,
+    project_type_id: context.projectTypeId,
+    name: categoryLabel,
+    description,
+    task_category: TaskCategory.EXTERNAL,
+    task_category_type,
+    due_date: getUTCISODateFormat(end_date),
+    is_visible_to_client: true,
+    required_information: ["Complete task"],
+  };
+  if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
+  return payload;
+}
 
 function extractList(raw: any): any[] {
   if (Array.isArray(raw)) return raw;
@@ -143,22 +175,10 @@ const ExternalTaskForm = () => {
   }, [clientsQuery?.value]);
 
   const onSubmit = async (data: ExternalFormData) => {
-    const { end_date, task_category_type, form_config, description, ...rest } = data;
-    // Task name = category type label (e.g. "Signing", "Information Request")
-    const categoryLabel = EXTERNAL_CATEGORY_TYPES.find((c) => c.value === task_category_type)?.label ?? "External Task";
-    const payload: Record<string, any> = {
-      ...rest,
-      project_id: initialProjectId,
-      project_type_id: initialProjectTypeId,
-      name: categoryLabel,
-      description,
-      task_category: TaskCategory.EXTERNAL,
-      task_category_type,
-      due_date: getUTCISODateFormat(end_date),
-      is_visible_to_client: true,
-      required_information: ["Complete task"],
-    };
-    if (form_config && Object.keys(form_config).length > 0) payload.form_config = form_config;
+    const payload = buildExternalTaskPayload(data, {
+      projectId: initialProjectId,
+      projectTypeId: initialProjectTypeId,
+    });
     try { await createTask.mutateAsync(payload as any); navigate(cancelPath); } catch (error) { console.error(error); }
   };
 

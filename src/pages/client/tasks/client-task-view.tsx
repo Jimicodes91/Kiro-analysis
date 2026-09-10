@@ -40,6 +40,9 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isCompleted = task.status === "completed";
+  // Centralized action-UI decision (see action-ui.ts). `actionUiKind` drives
+  // which affordance renders below; behavior matches the previous inline logic.
+  const actionUiKind = resolveActionUiKind(task.task_category_type, task.status);
   const categoryLabel = task.task_category_type
     ? CATEGORY_TYPE_LABELS[task.task_category_type] ?? task.task_category_type
     : "Task";
@@ -188,7 +191,7 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
       {!isCompleted && (
         <Card className="border border-gray-200 shadow-none">
           <CardContent className="p-4 space-y-4">
-            {task.task_category_type === "document_upload" && (
+            {actionUiKind === "document_upload" && (
               <>
                 <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
                   <Upload className="w-4 h-4" />
@@ -202,14 +205,14 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
               </>
             )}
 
-            {task.task_category_type === "signing" && (
+            {actionUiKind === "signing" && (
               <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
                 <FileText className="w-4 h-4" />
                 <span>Please review and sign the document</span>
               </div>
             )}
 
-            {task.task_category_type === "information_request" && (
+            {actionUiKind === "information_request" && (
               <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
                 <FileText className="w-4 h-4" />
                 <span>Please provide the requested information</span>
@@ -217,7 +220,7 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
             )}
 
             {/* Complete Form — placeholder UI, no external form connection */}
-            {task.task_category_type === "complete_form" &&
+            {actionUiKind === "complete_form" &&
               (task.form_config?.mode === "native" && task.form_config?.form_id ? null : (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
@@ -231,10 +234,7 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
               ))}
 
             {/* General Task and any unrecognized type → general completion UI */}
-            {task.task_category_type !== "document_upload" &&
-              task.task_category_type !== "signing" &&
-              task.task_category_type !== "information_request" &&
-              task.task_category_type !== "complete_form" && (
+            {actionUiKind === "general" && (
                 <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>
