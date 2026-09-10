@@ -46,20 +46,20 @@ The work is organized into the four cohesive areas from the design:
     - In the client document upload path (consistent with `upload-document-modal.tsx`), reject submission with a validation message when `isExpiryRequired` is true and no `expiry_date` is present; allow submission with no expiry otherwise
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-  - [ ]* 1.7 Write property test for expiry-required decision
+  - [x]* 1.7 Write property test for expiry-required decision
     - **Property 3: Expiry-required decision**
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.4**
     - Use `fast-check` + `vitest`, minimum 100 iterations
     - Generate arbitrary `requires_expiry` and `doesNotExpire` booleans; assert `isExpiryRequired` is true iff `requires_expiry === true` AND `doesNotExpire !== true`
     - Tag: `// Feature: client-documents-tasks, Property 3`
 
-  - [ ]* 1.8 Write property test for requires_expiry propagation
+  - [x]* 1.8 Write property test for requires_expiry propagation
     - **Property 6: Document-type expiry-config propagation**
     - **Validates: Requirements 1.3, 1.4, 1.5**
     - Generate arbitrary boolean toggle values; assert the submitted mutation payload's `requires_expiry` equals the toggle value
     - Tag: `// Feature: client-documents-tasks, Property 6`
 
-  - [ ]* 1.9 Write example tests for the document-type modal
+  - [x]* 1.9 Write example tests for the document-type modal
     - Render the add/edit modal; assert the expiry toggle is present (Req 1.1) and reflects the seeded value on edit (Req 1.2)
     - _Requirements: 1.1, 1.2_
 
@@ -85,13 +85,13 @@ The work is organized into the four cohesive areas from the design:
     - Add a `description` field to the external task form and its validation schema, mapping to the task `description`
     - _Requirements: 8.1, 8.2_
 
-  - [ ]* 3.5 Write property test for task-creation payload mapping
+  - [x]* 3.5 Write property test for task-creation payload mapping
     - **Property 5: Task-creation payload mapping**
     - **Validates: Requirements 3.3, 3.4, 8.2, 9.1, 9.4**
     - Generate valid form inputs (name, allowed `task_category_type`, due date, ≥1 client id, optional description); assert the create payload carries `task_category_type` unchanged, the due date, assigned clients, and description — and requires no form config when type is `complete_form`
     - Tag: `// Feature: client-documents-tasks, Property 5`
 
-  - [ ]* 3.6 Write example tests for the external task form option list
+  - [x]* 3.6 Write example tests for the external task form option list
     - Assert all five client task type options are present (Req 3.1) and selecting each shows the corresponding fields (Req 3.2)
     - Assert Yup rejects submission with no type (Req 3.5), no due date (Req 9.2), and no assigned client (Req 9.3)
     - _Requirements: 3.1, 3.2, 3.5, 9.2, 9.3_
@@ -121,18 +121,18 @@ The work is organized into the four cohesive areas from the design:
     - Keep the document associated with the task via `task_id` (Req 6.3, 7.2)
     - _Requirements: 5.2, 5.3, 6.1, 6.3, 7.1, 7.2_
 
-  - [ ]* 5.5 Write property test for action-UI resolution totality
+  - [x]* 5.5 Write property test for action-UI resolution totality
     - **Property 4: Action-UI resolution totality**
     - **Validates: Requirements 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 5.1, 6.4**
     - Generate arbitrary `task_category_type` strings (allowed set plus unknown) and arbitrary statuses; assert the resolver returns a defined UI kind, unknown types map to general completion, and `completed` status resolves to the completed state with no upload affordance
     - Tag: `// Feature: client-documents-tasks, Property 4`
 
-  - [ ]* 5.6 Write property tests for backend upload logic _(sibling repo `/Users/jimi/pylott-backend/`)_
+  - [x]* 5.6 Write property tests for backend upload logic _(sibling repo `/Users/jimi/pylott-backend/`)_
     - **Property 7: Auto-completion on upload** — for any `document_upload` task, creating a document referencing its `task_id` results in status `completed` (**Validates: Requirements 6.1, 7.1**)
     - **Property 8: Document creation and linkage on upload** — for any submission referencing a `task_id`, the created document retains that `task_id`, is associated with the task's project, and carries an `is_visible_to_client` value (**Validates: Requirements 5.2, 5.3, 6.3, 7.2**)
     - Implement in the backend repo's test suite (service code is not present in this workspace)
 
-  - [ ]* 5.7 Write integration test for document surfacing and team confirmation
+  - [x]* 5.7 Write integration test for document surfacing and team confirmation
     - After an upload-through-task, assert the document appears in the client documents list (Req 6.2) and the team task detail shows the linked document (Req 7.1)
     - _Requirements: 6.2, 7.1_
 
@@ -151,13 +151,13 @@ The work is organized into the four cohesive areas from the design:
     - Update `client-test-card.tsx` and `src/pages/client/tasks/index.tsx` to replace the raw `task.status` badge with `getDisplayedStatus(...)` output and `getDisplayedStatusBadgeVariant(...)`
     - _Requirements: 10.1, 10.2, 10.3, 10.4_
 
-  - [ ]* 7.3 Write property test for overdue computation
+  - [x]* 7.3 Write property test for overdue computation
     - **Property 1: Overdue computation**
     - **Validates: Requirements 11.1, 11.2, 11.3, 11.4**
     - Generate arbitrary statuses and due dates spanning past/today/future plus `undefined`/`null`; assert `isOverdue` is true iff a due date exists, `now` is strictly past it, and status is not `completed`
     - Tag: `// Feature: client-documents-tasks, Property 1`
 
-  - [ ]* 7.4 Write property test for displayed status mapping
+  - [x]* 7.4 Write property test for displayed status mapping
     - **Property 2: Displayed status mapping**
     - **Validates: Requirements 10.1, 10.2, 10.3, 10.4**
     - Generate arbitrary statuses and due dates; assert `getDisplayedStatus` returns "Completed" for completed, else "Overdue" when overdue, else "In Progress" for in_progress, else "Pending"
