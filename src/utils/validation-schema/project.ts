@@ -229,6 +229,11 @@ export const uploadDocumentSchema = z.object({
     })
     .optional(),
   description: z.string().optional(),
+  // Document validity / expiry (optional). Included so zodResolver does not
+  // strip them from the submitted form data.
+  issue_date: z.string().optional(),
+  expiry_date: z.string().optional(),
+  does_not_expire: z.boolean().optional(),
   // is_visible_to_client: z.boolean().default(false),
   attachment: fileListSchema(
     fileSize,
