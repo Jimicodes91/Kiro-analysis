@@ -60,10 +60,15 @@ export default function ClientDocumentList({ projectId }: { projectId: string })
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");
 
-  const documents = useMemo<IDocument[]>(
-    () => projectDocs?.value?.data ?? [],
-    [projectDocs?.value?.data]
-  );
+  const documents = useMemo<IDocument[]>(() => {
+    const list = projectDocs?.value?.data ?? [];
+    // Sort newest first by created date.
+    return [...list].sort(
+      (a, b) =>
+        new Date(b?.created_at ?? 0).getTime() -
+        new Date(a?.created_at ?? 0).getTime()
+    );
+  }, [projectDocs?.value?.data]);
 
   const stats = useMemo(() => {
     let expiring = 0;

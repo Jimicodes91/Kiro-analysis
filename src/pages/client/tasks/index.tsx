@@ -39,9 +39,15 @@ export default function ClientTaskManagement() {
         </div>
       );
 
+    const sortedTasks = [...(projectTasks?.value?.data ?? [])].sort(
+      (a, b) =>
+        new Date(b?.created_at ?? 0).getTime() -
+        new Date(a?.created_at ?? 0).getTime()
+    );
+
     return (
       <div className="space-y-3">
-        {projectTasks?.value?.data?.map((task) => (
+        {sortedTasks.map((task) => (
           <ClientTaskCard
             key={task.id}
             task={task}

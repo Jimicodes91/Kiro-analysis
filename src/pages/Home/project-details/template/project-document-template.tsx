@@ -57,9 +57,15 @@ function ProjectDocumentSection({
         </div>
       );
 
+    const sortedDocs = [...(projectDocs?.value?.data ?? [])].sort(
+      (a, b) =>
+        new Date(b?.created_at ?? 0).getTime() -
+        new Date(a?.created_at ?? 0).getTime()
+    );
+
     return (
       <div className="space-y-2">
-        {projectDocs?.value?.data?.map((document) => (
+        {sortedDocs.map((document) => (
           <DocumentCard key={document.id} document={document} isClientView={isClient} />
         ))}
       </div>
