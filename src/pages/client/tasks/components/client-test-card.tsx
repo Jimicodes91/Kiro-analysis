@@ -1,17 +1,18 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { safeFormatDate } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
 import {
     getDisplayedStatus,
     getDisplayedStatusBadgeVariant,
 } from "@/utils/task-display-status";
-import { format } from "date-fns";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: string }) {
   const navigate = useNavigate();
   const hasRequiredInfo = Array.isArray((task as any).required_information) && (task as any).required_information.length > 0;
+  const dueDate = task?.due_date ?? task?.end_date;
 
   return (
     <Card
@@ -24,7 +25,7 @@ function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: str
             <div className="flex items-center gap-2">
               <h2 className="text-base font-semibold">{task?.name || "Untitled Task"}</h2>
               {(() => {
-                const displayed = getDisplayedStatus(task.status, task?.end_date);
+                const displayed = getDisplayedStatus(task.status, dueDate);
                 return (
                   <Badge
                     variant={getDisplayedStatusBadgeVariant(displayed) as any}
@@ -39,9 +40,9 @@ function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: str
               <p className="text-[#19181980] text-sm line-clamp-1">{task.description}</p>
             )}
             <div className="flex items-center flex-wrap gap-2 text-xs text-gray-500">
-              {task?.end_date && (
+              {dueDate && (
                 <span className="px-2 py-1 rounded bg-white font-medium text-gray-700">
-                  Due: {format(new Date(task.end_date), "MMM d, yyyy")}
+                  Due: {safeFormatDate(dueDate, "MMM d, yyyy", "—")}
                 </span>
               )}
               {hasRequiredInfo && (

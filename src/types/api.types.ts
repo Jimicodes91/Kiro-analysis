@@ -61,6 +61,7 @@ export interface TaskDetails {
   status: "in_progress" | "completed" | "pending";
   start_date: string;
   end_date: string;
+  due_date?: string;
   is_visible_to_client: number;
   assignees: Author[];
   document: IDocument[];

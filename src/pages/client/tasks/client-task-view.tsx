@@ -57,9 +57,12 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
     ? CATEGORY_TYPE_LABELS[task.task_category_type] ?? task.task_category_type
     : "Task";
 
-  // Documents linked to this task (e.g. an uploaded/provided document). Shown
-  // so the client can see what has been provided, with expiry and download.
-  const linkedDocuments = Array.isArray(task.document) ? task.document : [];
+  // Documents linked to this task that actually have an uploaded file. A task
+  // always has a placeholder document record; we only surface it as "provided"
+  // once it has at least one attachment, so an empty placeholder isn't shown.
+  const linkedDocuments = (Array.isArray(task.document) ? task.document : []).filter(
+    (doc) => Array.isArray(doc.attachments) && doc.attachments.length > 0
+  );
 
   const handleDocumentUpload = async () => {
     // Req 5.4 — require at least one file before submitting
@@ -155,7 +158,7 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
       {/* Task info bar */}
       <div className="flex flex-wrap items-center gap-3">
         <span className="px-3 py-1.5 rounded-full bg-white border text-xs font-medium">
-          Due: {safeFormatDate(task.end_date, "MMM d, yyyy", "—")}
+          Due: {safeFormatDate(task.due_date ?? task.end_date, "MMM d, yyyy", "—")}
         </span>
         <TaskStatusBadge status={task.status} />
       </div>
