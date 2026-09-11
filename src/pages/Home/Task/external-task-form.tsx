@@ -7,10 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import useAvailableAssignees from "@/hooks/project-modules/tasks/use-available-assignees";
 import useCreateProjectTask from "@/hooks/project-modules/tasks/use-create-project-task";
-import { cn, getSelectableDate, getUTCISODateFormat } from "@/lib/utils";
+import { cn, getSelectableDate, getUTCISODateFormat, safeFormatDate } from "@/lib/utils";
 import { TaskCategory } from "@/types/task.types";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { format } from "date-fns";
 import { CalendarIcon, Check, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -236,7 +235,7 @@ const ExternalTaskForm = () => {
               <FormItem className="flex flex-col"><FormLabel isRequired>Due date</FormLabel>
                 <Popover><PopoverTrigger asChild><FormControl>
                   <Button variant="outline" className={cn("font-normal h-12 rounded-full border-brand-border border bg-transparent px-3 py-4 text-sm", !field.value && "text-muted-foreground")}>
-                    {field.value ? format(field.value, "PPP") : <span className="text-brand-placeholder">Due date</span>}
+                    {safeFormatDate(field.value) || <span className="text-brand-placeholder">Due date</span>}
                     <CalendarIcon className="ml-auto h-4 w-4" />
                   </Button></FormControl></PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">

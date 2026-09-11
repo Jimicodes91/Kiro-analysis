@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
+import { safeFormatDate } from "@/lib/utils";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { getUserSession } from "@/services/api.service";
-import { format } from "date-fns";
 import { CircleCheckBig } from "lucide-react";
 import TaskItem from "./task-item";
 
@@ -50,7 +50,7 @@ function RecentTaskCard() {
                 key={task.id}
                 title={task.name}
                 status={task.status}
-                due={format(new Date(task?.end_date ?? ""), "MMM d, yyyy")}
+                due={safeFormatDate(task?.end_date, "MMM d, yyyy", "No due date")}
               />
             )
         )}

@@ -1,18 +1,23 @@
 import Toast from "@/components/Toast";
 import FormRenderer from "@/components/forms/form-renderer";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import DragNdrop from "@/components/ui/file-upload";
 import { TaskStatusBadge } from "@/components/ui/task-status-badge";
 import useUploadDocument from "@/hooks/project-modules/documents/use-upload-document";
 import useUpdateClientResponse from "@/hooks/project-modules/tasks/use-update-client-response";
 import { QUERYKEYS } from "@/lib/constants";
-import { fileToBase64 } from "@/lib/utils";
+import { cn, fileToBase64, safeFormatDate, truncateMiddleWords } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
 import { ClientResponse, FormConfig } from "@/types/task.types";
+import {
+    getDocumentExpiryInfo,
+    getExpiryBadgeLabel,
+    getExpiryBadgeVariant,
+} from "@/utils/document-expiry";
 import { useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { CheckCircle2, FileText, Upload } from "lucide-react";
+import { CheckCircle2, Download, FileText, Upload } from "lucide-react";
 import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -51,6 +56,10 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
   const categoryLabel = task.task_category_type
     ? CATEGORY_TYPE_LABELS[task.task_category_type] ?? task.task_category_type
     : "Task";
+
+  // Documents linked to this task (e.g. an uploaded/provided document). Shown
+  // so the client can see what has been provided, with expiry and download.
+  const linkedDocuments = Array.isArray(task.document) ? task.document : [];
 
   const handleDocumentUpload = async () => {
     // Req 5.4 — require at least one file before submitting
@@ -146,7 +155,7 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
       {/* Task info bar */}
       <div className="flex flex-wrap items-center gap-3">
         <span className="px-3 py-1.5 rounded-full bg-white border text-xs font-medium">
-          Due: {task.end_date ? format(new Date(task.end_date), "MMM d, yyyy") : "—"}
+          Due: {safeFormatDate(task.end_date, "MMM d, yyyy", "—")}
         </span>
         <TaskStatusBadge status={task.status} />
       </div>
@@ -174,6 +183,88 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
           <CardContent className="p-4 flex items-center gap-3">
             <CheckCircle2 className="w-5 h-5 text-green-600" />
             <p className="text-sm font-medium text-green-700">This task has been completed.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Provided document(s) — shows the document info linked to this task */}
+      {linkedDocuments.length > 0 && (
+        <Card className="border border-gray-200 shadow-none">
+          <CardContent className="p-4 space-y-3">
+            <p className="text-sm font-medium text-gray-700">
+              {linkedDocuments.length > 1 ? "Provided documents" : "Provided document"}
+            </p>
+            {linkedDocuments.map((doc) => {
+              const expiryInfo = getDocumentExpiryInfo(doc);
+              const hasExpiryData = Boolean(doc.expiry_date || doc.does_not_expire);
+              return (
+                <div
+                  key={doc.id}
+                  className="rounded-lg border border-gray-200 bg-gray-50/60 p-3 space-y-2"
+                >
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <FileText className="w-4 h-4 text-gray-500 shrink-0" />
+                    <span className="text-sm font-medium text-gray-800">
+                      {doc.name || "Document"}
+                    </span>
+                    {hasExpiryData && (
+                      <Badge
+                        variant={getExpiryBadgeVariant(expiryInfo.status) as any}
+                        size="sm"
+                      >
+                        {getExpiryBadgeLabel(expiryInfo.status)}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <p className="text-xs text-gray-500">
+                    {expiryInfo.status === "no_expiry"
+                      ? "Does not expire"
+                      : expiryInfo.label}
+                    {doc.expiry_date && !doc.does_not_expire ? (
+                      <span>
+                        {" · Expires "}
+                        {safeFormatDate(doc.expiry_date, "dd MMM yyyy")}
+                      </span>
+                    ) : null}
+                  </p>
+
+                  {doc.description ? (
+                    <p className="text-xs text-gray-600">{doc.description}</p>
+                  ) : null}
+
+                  {Array.isArray(doc.attachments) && doc.attachments.length > 0 ? (
+                    <div className="space-y-1.5">
+                      {doc.attachments.map((att) => (
+                        <div
+                          key={att.id}
+                          className="flex items-center justify-between gap-2 rounded-md border border-gray-200 bg-white p-2"
+                        >
+                          <span className="text-xs text-gray-600 truncate">
+                            {truncateMiddleWords(att.media_url)}
+                          </span>
+                          <a
+                            className={cn(
+                              buttonVariants({ variant: "outline", size: "sm" }),
+                              "shrink-0 gap-1"
+                            )}
+                            href={att.media_url}
+                            download
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                            Download
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-400">No file attached</p>
+                  )}
+                </div>
+              );
+            })}
           </CardContent>
         </Card>
       )}

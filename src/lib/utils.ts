@@ -218,11 +218,33 @@ export function truncateMiddleWords(text: string, startCount = 8, endCount = 16)
   return `${startWords}.....${endWords}`;
 }
 
-export const getUTCISODateFormat = (localDate: Date) => {
-  const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+export const getUTCISODateFormat = (localDate?: Date | string | null) => {
+  if (!localDate) return undefined;
 
-  const isoUTC = formatISO(utcDate, { representation: "complete" });
-  return isoUTC;
+  const date = localDate instanceof Date ? localDate : new Date(localDate);
+
+  // Guard against invalid dates (e.g. undefined/empty after a reload) so
+  // formatISO does not throw "Invalid time value".
+  if (isNaN(date.getTime())) return undefined;
+
+  const utcDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+  return formatISO(utcDate, { representation: "complete" });
+};
+
+/**
+ * Safely format a date value for display. Returns `fallback` when the value is
+ * missing or invalid instead of throwing date-fns "Invalid time value".
+ */
+export const safeFormatDate = (
+  value: Date | string | number | null | undefined,
+  pattern: string = "PPP",
+  fallback: string = ""
+): string => {
+  if (value === null || value === undefined || value === "") return fallback;
+  const date = value instanceof Date ? value : new Date(value);
+  if (isNaN(date.getTime())) return fallback;
+  return format(date, pattern);
 };
 
 export const createTimeDateFormat = (date: Date, time: string) => {
