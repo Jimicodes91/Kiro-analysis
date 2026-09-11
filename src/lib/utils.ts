@@ -309,11 +309,13 @@ export const groupEntriesByTimePeriod = (
 };
 
 export const addDaysUtil = (rawDate = "", days = 0) => {
-  // Add 5 days
-  const newDate = addDays(new Date(rawDate ?? ""), days ?? 0);
+  if (!rawDate) return "—";
+
+  const base = new Date(rawDate);
+  if (isNaN(base.getTime())) return "—";
+
+  const newDate = addDays(base, days ?? 0);
 
   // Format result
-  const formatted = format(newDate, "MMM d, yyyy");
-
-  return formatted;
+  return format(newDate, "MMM d, yyyy");
 };

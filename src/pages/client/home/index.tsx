@@ -6,9 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Heading from "@/components/ui/heading";
 import useGetAllProjectDocuments from "@/hooks/project-modules/documents/use-get-all-documents";
 import useGetUser from "@/hooks/user/use-get-user";
-import { addDaysUtil, getFormattedText } from "@/lib/utils";
+import { addDaysUtil, getFormattedText, safeFormatDate } from "@/lib/utils";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
-import { format } from "date-fns";
 import { FolderOpen, Settings } from "lucide-react";
 import MilestoneMetricCard from "./components/milestone-metric-card";
 import ProjectDurationBar from "./components/project-duration-bar";
@@ -41,7 +40,7 @@ export default function ClientHomePage() {
           <div>
             <CardTitle>{activeProject?.name}</CardTitle>
             <p className="text-sm text-muted-foreground">
-              {format(new Date(activeProject?.start_date ?? ""), "MMM d, yyyy")} -{" "}
+              {safeFormatDate(activeProject?.start_date, "MMM d, yyyy", "—")} -{" "}
               {addDaysUtil(
                 activeProject?.start_date,
                 activeProject?.total_duration_days ?? 0
