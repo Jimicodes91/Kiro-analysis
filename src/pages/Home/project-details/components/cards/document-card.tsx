@@ -6,13 +6,13 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import Heading from "@/components/ui/heading";
+import { safeFormatDate } from "@/lib/utils";
 import { IDocument } from "@/types/api.types";
 import {
     getDocumentExpiryInfo,
     getExpiryBadgeLabel,
     getExpiryBadgeVariant,
 } from "@/utils/document-expiry";
-import { format } from "date-fns";
 import { AlertTriangle, Calendar, Clock, ShieldCheck } from "lucide-react";
 import AttachmentCard from "./attachment";
 
@@ -31,16 +31,16 @@ export default function DocumentCard({
         <AccordionItem value="item-1" defaultValue="item-1" className="border-0">
           <AccordionTrigger className="py-3 rounded-lg px-4">
             <div className="flex items-center gap-3 flex-1">
-              <Heading size="h5">{document?.name} Documents</Heading>
+              <Heading size="h5">{document?.name}</Heading>
               {/* Expiry badge */}
-              {(document.expiry_date || document.does_not_expire) && (
+              {document.expiry_date || document.does_not_expire ? (
                 <Badge
                   variant={getExpiryBadgeVariant(expiryInfo.status) as any}
                   size="sm"
                 >
                   {getExpiryBadgeLabel(expiryInfo.status)}
                 </Badge>
-              )}
+              ) : null}
             </div>
           </AccordionTrigger>
           <AccordionContent>
@@ -48,12 +48,12 @@ export default function DocumentCard({
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Date</h3>
                 <p className="text-sm text-primary">
-                  {format(document?.created_at, "PPP")}
+                  {safeFormatDate(document?.created_at, "PPP", "—")}
                 </p>
               </div>
 
               {/* Expiry information */}
-              {document.expiry_date && !document.does_not_expire && (
+              {document.expiry_date && !document.does_not_expire ? (
                 <div className="flex flex-col gap-2 p-3 rounded-lg border bg-white">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -74,31 +74,31 @@ export default function DocumentCard({
                     </Badge>
                   </div>
                   <div className="flex gap-4 text-xs text-muted-foreground">
-                    {document.issue_date && (
+                    {document.issue_date ? (
                       <span className="flex items-center gap-1">
                         <Calendar className="size-3" />
-                        Issue: <span className="font-semibold text-foreground">{format(new Date(document.issue_date), "dd MMM yyyy")}</span>
+                        Issue: <span className="font-semibold text-foreground">{safeFormatDate(document.issue_date, "dd MMM yyyy")}</span>
                       </span>
-                    )}
+                    ) : null}
                     <span className="flex items-center gap-1">
                       <Calendar className="size-3" />
-                      Expiry: <span className="font-semibold text-foreground">{format(new Date(document.expiry_date), "dd MMM yyyy")}</span>
+                      Expiry: <span className="font-semibold text-foreground">{safeFormatDate(document.expiry_date, "dd MMM yyyy")}</span>
                     </span>
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* Does not expire */}
-              {document.does_not_expire && (
+              {document.does_not_expire ? (
                 <div className="flex items-center gap-2 p-3 rounded-lg border bg-white">
                   <ShieldCheck className="size-4 text-green-500" />
                   <span className="text-sm font-medium text-green-700">Does not expire</span>
                 </div>
-              )}
+              ) : null}
 
               <div>
                 <h3 className="text-sm text-brand-fade font-[500]">Description</h3>
-                <p className="text-sm text-primary">{document?.description ?? "Nill"}</p>
+                <p className="text-sm text-primary">{document?.description || "No description"}</p>
               </div>
               <div className="space-y-2">
                 <h3 className="text-sm text-brand-fade font-[500]">Attachment</h3>
