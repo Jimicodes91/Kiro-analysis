@@ -138,7 +138,7 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
         file_url: index === 0 ? fileUrl : undefined,
       }));
 
-      await updateResponse.mutateAsync({ responses } as any);
+      await updateResponse.mutateAsync({ responses });
     } catch (error) {
       console.error(error);
     } finally {

@@ -75,28 +75,48 @@ const resolveFileKind = (response: ClientResponse): "url" | "base64" | "none" =>
   return response.file_url.startsWith("http") ? "url" : "base64";
 };
 
+/**
+ * Only allow http(s) URLs to be rendered as a clickable link. Blocks
+ * `javascript:` / `data:text/html` and other executable schemes from reaching
+ * an anchor href, which would otherwise run in the app's origin on click.
+ */
+const isSafeHttpUrl = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
 const ClientResponseFile = ({ response }: { response: ClientResponse }) => {
   const kind = resolveFileKind(response);
   if (kind === "none" || !response.file_url) return null;
 
-  // Hosted reference — open/download the URL directly.
+  // Hosted reference — open/download the URL directly, but only if it is a
+  // safe http(s) URL. Anything else is shown as plain text (never linked).
   if (kind === "url") {
+    const safe = isSafeHttpUrl(response.file_url);
     return (
       <div className="flex items-center justify-between gap-2 rounded-md border border-gray-200 bg-white p-2">
         <span className="inline-flex items-center gap-1.5 text-xs text-gray-600 truncate">
           <FileText className="w-3.5 h-3.5 shrink-0" />
           {truncateMiddleWords(response.file_url)}
         </span>
-        <a
-          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "shrink-0 gap-1")}
-          href={response.file_url}
-          download
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Download className="w-3.5 h-3.5" />
-          Download
-        </a>
+        {safe ? (
+          <a
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "shrink-0 gap-1")}
+            href={response.file_url}
+            download
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Download
+          </a>
+        ) : (
+          <span className="shrink-0 text-xs text-gray-400">Unavailable</span>
+        )}
       </div>
     );
   }
