@@ -50,6 +50,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import TaskActivityTimeline from "./task-activity-timeline";
+import TaskClientResponses from "./task-client-responses";
 import TaskComments from "./task-comments";
 interface ViewEditTaskModalProps {
   onClose: () => void;
@@ -682,6 +683,14 @@ const ViewEditTaskModal = ({
                 </div>
               )}
             </div>
+
+            {/* Client responses (read-only) — surfaced back to the requester */}
+            {taskData.client_responses && taskData.client_responses.length > 0 && (
+              <>
+                <Separator />
+                <TaskClientResponses responses={taskData.client_responses} />
+              </>
+            )}
 
             <Separator />
 

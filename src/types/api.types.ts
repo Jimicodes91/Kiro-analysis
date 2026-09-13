@@ -1,5 +1,6 @@
 import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import { ProjectStatus } from "@/lib/constants";
+import type { ClientResponse } from "@/types/task.types";
 import { QueryFunction, QueryKey } from "@tanstack/react-query";
 import { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from "axios";
 
@@ -71,6 +72,8 @@ export interface TaskDetails {
     id: string;
     name: string;
   };
+  task_category_type?: string;
+  client_responses?: ClientResponse[];
 }
 
 export interface IDocument {
