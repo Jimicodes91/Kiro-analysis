@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,14 +10,16 @@ import {
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
 import PersonAvatar from "@/components/ui/person-avatar";
+import useGetTaskDetails from "@/hooks/project-modules/tasks/use-get-task-details";
 import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
 import useDisclosure from "@/hooks/use-disclosure";
-import { getFormattedText } from "@/lib/utils";
+import { cn, getFormattedText, truncateMiddleWords } from "@/lib/utils";
+import TaskClientResponses from "@/pages/Home/Task/task-client-responses";
 import TaskComments from "@/pages/Home/Task/task-comments";
 import { TaskDetails } from "@/types/api.types";
 import { format } from "date-fns";
 import { AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Download, FileText } from "lucide-react";
 import { useState } from "react";
 import DeleteTaskModal from "../modal/delete-task-modal";
 import EditProjectTaskModal from "../modal/edit-project-task-modal";
@@ -26,6 +28,20 @@ import UploadDocumentModal from "../modal/upload-document-modal";
 function TaskCard({ task }: { task: TaskDetails }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [showComments, setShowComments] = useState(false);
+  const [showSubmissions, setShowSubmissions] = useState(false);
+
+  // The list endpoint doesn't include document/client_responses, so fetch the
+  // task detail on demand when the submissions section is expanded.
+  const taskDetail = useGetTaskDetails(showSubmissions ? task.project_id : "", showSubmissions ? task.id : "");
+  const detail = (taskDetail?.value as any)?.data as
+    | (TaskDetails & { client_responses?: import("@/types/task.types").ClientResponse[] })
+    | undefined;
+
+  // Documents linked to this task that actually have an uploaded file.
+  const providedDocuments = (Array.isArray(detail?.document) ? detail!.document : []).filter(
+    (doc) => Array.isArray(doc.attachments) && doc.attachments.length > 0
+  );
+  const clientResponses = detail?.client_responses ?? [];
   const {
     isOpen: isEditOpen,
     onOpen: onEditOpen,
@@ -110,6 +126,69 @@ function TaskCard({ task }: { task: TaskDetails }) {
         {showComments && (
           <div className="mt-2 border-t pt-3">
             <TaskComments projectId={task.project_id} taskId={task.id} />
+          </div>
+        )}
+
+        {/* Submitted files & responses toggle */}
+        <button
+          type="button"
+          onClick={() => setShowSubmissions((s) => !s)}
+          className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 mt-1"
+        >
+          {showSubmissions ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+          Submitted files & responses
+        </button>
+        {showSubmissions && (
+          <div className="mt-2 border-t pt-3 space-y-3">
+            {taskDetail.isPending ? (
+              <p className="text-xs text-gray-400">Loading…</p>
+            ) : (
+              <>
+                {providedDocuments.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-gray-700">
+                      {providedDocuments.length > 1 ? "Provided documents" : "Provided document"}
+                    </p>
+                    {providedDocuments.map((doc) => (
+                      <div key={doc.id} className="space-y-1.5">
+                        {doc.attachments.map((att) => (
+                          <div
+                            key={att.id}
+                            className="flex items-center justify-between gap-2 rounded-md border border-gray-200 bg-white p-2"
+                          >
+                            <span className="inline-flex items-center gap-1.5 text-xs text-gray-600 truncate">
+                              <FileText className="w-3.5 h-3.5 shrink-0" />
+                              {truncateMiddleWords(att.media_url)}
+                            </span>
+                            <a
+                              className={cn(
+                                buttonVariants({ variant: "outline", size: "sm" }),
+                                "shrink-0 gap-1"
+                              )}
+                              href={att.media_url}
+                              download
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              Download
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {clientResponses.length > 0 && (
+                  <TaskClientResponses responses={clientResponses} />
+                )}
+
+                {providedDocuments.length === 0 && clientResponses.length === 0 && (
+                  <p className="text-xs text-gray-400">No files or responses submitted yet.</p>
+                )}
+              </>
+            )}
           </div>
         )}
       </div>
