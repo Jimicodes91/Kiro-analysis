@@ -142,6 +142,14 @@ export interface ClientResponse {
   file_url: string | null;
   is_completed: boolean;
   comment: string | null;
+  /**
+   * Backend tag (Part A) distinguishing how `file_url` should be read:
+   * - "url": a hosted document reference (downloadable link)
+   * - "base64": a legacy raw base64 value
+   * - "none": no file attached
+   * Absent on older responses; treat missing as inferred from `file_url`.
+   */
+  file_kind?: "url" | "base64" | "none";
   client?: {
     id: string;
     name: string;

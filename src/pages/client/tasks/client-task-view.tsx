@@ -117,24 +117,28 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
 
     setIsSubmitting(true);
     try {
-      const responses = await Promise.all(
-        (task.required_information ?? ["Complete task"]).map(async (item) => {
-          let fileUrl: string | undefined;
-          if (uploadedFiles.length > 0) {
-            try {
-              fileUrl = await fileToBase64(uploadedFiles[0]);
-            } catch {
-              fileUrl = undefined;
-            }
-          }
-          return {
-            required_item: item,
-            is_completed: true,
-            file_url: fileUrl,
-          };
-        })
-      );
-      await updateResponse.mutateAsync({ responses } as any);
+      // Part A — a selected file is sent as base64 on a single response item.
+      // The backend client-response service routes it through the hardened
+      // document path (validation + storage) and persists a hosted URL
+      // reference, so the file is never stored as raw base64.
+      let fileUrl: string | undefined;
+      if (uploadedFiles.length > 0) {
+        try {
+          fileUrl = await fileToBase64(uploadedFiles[0]);
+        } catch {
+          fileUrl = undefined;
+        }
+      }
+
+      const items = task.required_information ?? ["Complete task"];
+      const responses = items.map((item, index) => ({
+        required_item: item,
+        is_completed: true,
+        // Attach the file only to the first item to avoid duplicate documents.
+        file_url: index === 0 ? fileUrl : undefined,
+      }));
+
+      await updateResponse.mutateAsync({ responses });
     } catch (error) {
       console.error(error);
     } finally {
