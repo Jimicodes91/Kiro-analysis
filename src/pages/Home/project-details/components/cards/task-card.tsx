@@ -33,9 +33,7 @@ function TaskCard({ task }: { task: TaskDetails }) {
   // The list endpoint doesn't include document/client_responses, so fetch the
   // task detail on demand when the submissions section is expanded.
   const taskDetail = useGetTaskDetails(showSubmissions ? task.project_id : "", showSubmissions ? task.id : "");
-  const detail = (taskDetail?.value as any)?.data as
-    | (TaskDetails & { client_responses?: import("@/types/task.types").ClientResponse[] })
-    | undefined;
+  const detail = taskDetail?.value?.data;
 
   // Documents linked to this task that actually have an uploaded file.
   const providedDocuments = (Array.isArray(detail?.document) ? detail!.document : []).filter(
