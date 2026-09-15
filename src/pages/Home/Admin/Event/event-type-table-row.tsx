@@ -1,19 +1,19 @@
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useDisclosure from "@/hooks/use-disclosure";
-import { DocumentTypeDetails } from "@/types/api.types";
+import { EventTypeDetails } from "@/types/api.types";
 import { AnimatePresence } from "framer-motion";
 import AddEventTypeModal from "./add-event-type-modal";
 
-function EventTypeTableRow({ eventType }: { eventType: DocumentTypeDetails }) {
+function EventTypeTableRow({ eventType }: { eventType: EventTypeDetails }) {
   const { onOpen, isOpen, onClose } = useDisclosure();
   return (
     <>

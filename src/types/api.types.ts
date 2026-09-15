@@ -1,5 +1,6 @@
 import { ProjectTypeMilestone } from "@/hooks/project-modules/milestones/use-all-get-project-type-milestones";
 import { ProjectStatus } from "@/lib/constants";
+import type { Contact } from "@/types/contact.types";
 import type { ClientResponse } from "@/types/task.types";
 import { QueryFunction, QueryKey } from "@tanstack/react-query";
 import { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from "axios";
@@ -431,7 +432,7 @@ export interface Pagination {
 }
 
 export interface ContactData {
-  contacts: ContactDetails[];
+  contacts: Contact[];
   pagination: Pagination;
 }
 

@@ -98,9 +98,10 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
       createContact
         .mutateAsync(payload)
         .then((response) => {
-          // Check if invite was sent or requires approval
-          if (response.invite) {
-            if (response.invite.requires_approval) {
+          // The mutation resolves to the Axios response; the payload is under `.data`.
+          const invite = response.data?.invite;
+          if (invite) {
+            if (invite.requires_approval) {
               toast.success("Contact created! Invite request sent to admins for approval.");
             } else {
               toast.success("Contact created and invitation sent successfully!");

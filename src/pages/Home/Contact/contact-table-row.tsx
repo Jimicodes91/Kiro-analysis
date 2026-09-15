@@ -49,7 +49,8 @@ function ContactTableRow({ contact }: { contact: Contact }) {
     sendInvite
       .mutateAsync({})
       .then((response) => {
-        if (response.requires_approval) {
+        // The mutation resolves to the Axios response; the payload is under `.data`.
+        if (response.data?.requires_approval) {
           toast.success("Invite request sent to admins for approval");
         } else {
           toast.success("Invitation sent successfully!");
