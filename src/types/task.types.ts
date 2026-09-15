@@ -74,6 +74,8 @@ export interface Task {
   id: string;
   created_at: string;
   updated_at: string;
+  // Not currently populated by the backend; auto-archive falls back to updated_at.
+  completed_at?: string;
   deleted_at: string | null;
   project_id: string | null;
   company_id: string;

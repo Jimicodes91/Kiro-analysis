@@ -12,6 +12,8 @@ export interface User {
   role: UserType;
   company_id: string;
   company_name: string;
+  // Present when the session/login payload includes it; may be undefined.
+  workspace_id?: string;
   is_blocked: number;
   is_verified: number;
   timezone: unknown;
