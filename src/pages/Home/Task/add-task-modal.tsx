@@ -61,7 +61,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
   const createTask = useCreateProjectTask(selectedProjectId);
 
   const onSubmit = async (data: TaskFormData) => {
-    const { end_date, start_date, attachment, ...validData } = data;
+    const { due_date, attachment, ...validData } = data;
 
     // Ensure attachment is an array before processing
     const attachments = Array.isArray(attachment) ? attachment : [];
@@ -78,10 +78,13 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
       })
     );
 
+    // due_date is required by the schema, so handleSubmit guarantees it here.
+    const formattedDueDate = getUTCISODateFormat(due_date);
+    if (!formattedDueDate) return;
+
     const payload = {
       ...validData,
-      start_date: getUTCISODateFormat(start_date),
-      end_date: getUTCISODateFormat(end_date),
+      due_date: formattedDueDate,
       attachments: base64FileList.filter(Boolean), // Remove nulls
     };
 
@@ -257,10 +260,10 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
           <div className="flex flex-col sm:flex-row gap-4 justify-between">
             <FormField
               control={form.control}
-              name="start_date"
+              name="due_date"
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
-                  <FormLabel isRequired>Start date</FormLabel>
+                  <FormLabel isRequired>Due date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -275,7 +278,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span className="text-brand-placeholder">Start date</span>
+                            <span className="text-brand-placeholder">Due date</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4" />
                         </Button>
@@ -287,49 +290,6 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
                         selected={field.value}
                         onSelect={field.onChange}
                         disabled={getSelectableDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="end_date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col w-full">
-                  <FormLabel isRequired>End date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "font-normal h-12 rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span className="text-brand-placeholder">End date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          !form.watch("start_date") ||
-                          date < new Date(form.watch("start_date"))
-                        }
                         initialFocus
                       />
                     </PopoverContent>

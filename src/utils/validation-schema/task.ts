@@ -20,7 +20,10 @@ export const taskFormSchema = yup.object({
   project_id: yup.string().required("Project is required"),
   status: yup
     .string()
-    .oneOf(["pending", "completed"], "Status must be either pending or completed")
+    .oneOf(
+      ["pending", "in_progress", "completed"],
+      "Status must be pending, in progress, or completed"
+    )
     .required("Status is required"),
   description: yup
     .string()
