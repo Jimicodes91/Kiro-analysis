@@ -84,9 +84,15 @@ const ViewEditTaskModal = ({
       project_type_id: taskData.project_type_id ?? "",
       project_id: taskData.project_id ?? "",
       description: taskData.description,
-      status: taskData.status,
-      start_date: new Date(taskData.start_date),
-      end_date: new Date(taskData.end_date),
+      // Schema allows pending/in_progress/completed; other lifecycle states
+      // (draft/sent/archived) fall back to pending for this edit form.
+      status: (["pending", "in_progress", "completed"] as const).includes(
+        taskData.status as "pending" | "in_progress" | "completed"
+      )
+        ? (taskData.status as "pending" | "in_progress" | "completed")
+        : "pending",
+      // Backend uses a single due_date; fall back to legacy end_date.
+      due_date: new Date((taskData as any).due_date ?? taskData.end_date),
       is_visible_to_client: Boolean(taskData.is_visible_to_client),
       assignees: taskData.assignees.map((assignee) => assignee.id),
       attachment: [],
@@ -120,7 +126,7 @@ const ViewEditTaskModal = ({
   const onSubmit = async (data: TaskFormData) => {
     if (isViewMode) return;
 
-    const { end_date, start_date, attachment, ...validData } = data;
+    const { due_date, attachment, ...validData } = data;
 
     // Ensure attachment is an array before processing
     const newAttachments = Array.isArray(attachment) ? attachment : [];
@@ -151,8 +157,7 @@ const ViewEditTaskModal = ({
 
     const payload = {
       ...validData,
-      start_date: getUTCISODateFormat(start_date),
-      end_date: getUTCISODateFormat(end_date),
+      due_date: getUTCISODateFormat(due_date),
       attachments: allAttachments,
     };
 
@@ -365,10 +370,10 @@ const ViewEditTaskModal = ({
             <div className="flex flex-col sm:flex-row gap-4 justify-between">
               <FormField
                 control={form.control}
-                name="start_date"
+                name="due_date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col w-full">
-                    <FormLabel isRequired>Start date</FormLabel>
+                    <FormLabel isRequired>Due date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -384,7 +389,7 @@ const ViewEditTaskModal = ({
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span className="text-brand-placeholder">Start date</span>
+                              <span className="text-brand-placeholder">Due date</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4" />
                           </Button>
@@ -397,52 +402,6 @@ const ViewEditTaskModal = ({
                             selected={field.value}
                             onSelect={field.onChange}
                             disabled={getSelectableDate}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      )}
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="end_date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel isRequired>End date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "font-normal h-12 rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm",
-                              !field.value && "text-muted-foreground"
-                            )}
-                            disabled={isViewMode}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span className="text-brand-placeholder">End date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      {!isViewMode && (
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              !form.watch("start_date") ||
-                              date < new Date(form.watch("start_date"))
-                            }
                             initialFocus
                           />
                         </PopoverContent>
