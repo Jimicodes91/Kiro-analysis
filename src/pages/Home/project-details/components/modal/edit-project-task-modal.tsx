@@ -65,6 +65,8 @@ const EditProjectTaskModal = ({
       // the legacy end_date for records created before the migration.
       due_date: new Date((task as any).due_date ?? task.end_date),
       is_visible_to_client: task.is_visible_to_client === 1 ? true : false,
+      // Schema requires `visibility`; derive it from the task's client-visibility.
+      visibility: task.is_visible_to_client === 1 ? "client_facing" : "inhouse",
       assignees: task?.assignees?.map((item) => ({
         label: item.name ?? item.email,
         value: item.id,
@@ -299,7 +301,17 @@ const EditProjectTaskModal = ({
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked);
+                        // Keep the schema-required `visibility` enum in sync.
+                        form.setValue(
+                          "visibility",
+                          checked ? "client_facing" : "inhouse"
+                        );
+                      }}
+                    />
                   </FormControl>
                   <FormLabel className="font-normal text-brand-fade">
                     Make visible to client
