@@ -3,21 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useGetAllEventTypes from "@/hooks/project-modules/event-types/use-get-all-event-types";
@@ -48,6 +48,11 @@ const CreateEventModal = ({
   });
 
   const onSubmit = async (data: z.infer<typeof addProjectEventSchema>) => {
+    // start_date/from/to are schema-required, so these resolve to real strings.
+    const start_datetime = createTimeDateFormat(data.start_date, data.from);
+    const end_datetime = createTimeDateFormat(data.start_date, data.to);
+    if (!start_datetime || !end_datetime) return;
+
     createEvent
       .mutateAsync({
         description: data.description,
@@ -55,8 +60,8 @@ const CreateEventModal = ({
         is_visible_to_client: data.is_visible_to_client,
         name: data.name,
         venue: data.venue,
-        start_datetime: createTimeDateFormat(data.start_date, data.from),
-        end_datetime: createTimeDateFormat(data.start_date, data.to),
+        start_datetime,
+        end_datetime,
         invites: [""],
       })
       .then(() => {
