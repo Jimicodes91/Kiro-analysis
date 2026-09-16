@@ -1,3 +1,4 @@
+import Toast from "@/components/Toast";
 import { ModalProps } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -91,10 +92,19 @@ const EditProjectTaskModal = ({
         assignees: assigneesIds,
       })
       .then(() => {
+        Toast.success("Task updated successfully");
         form.reset();
         onClose();
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error(error);
+        Toast.error(error?.message || "Failed to update task");
+      });
+  };
+
+  // Surface validation failures so the form never silently refuses to submit.
+  const onInvalid = () => {
+    Toast.error("Please fix the highlighted fields before saving");
   };
 
   return (
@@ -108,7 +118,7 @@ const EditProjectTaskModal = ({
       >
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit, onInvalid)}
             className="flex flex-col gap-4 p-4"
           >
             <FormField
