@@ -33,7 +33,7 @@ export type CredentialsServerResponseModel<T> = T;
 
 /** Standard server envelope returned in an Axios response body. */
 export interface ApiResponse<T = unknown> {
-  success: boolean;
+  status: boolean;
   message: string;
   data: T;
 }

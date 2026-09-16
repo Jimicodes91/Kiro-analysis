@@ -14,7 +14,6 @@ import MilestoneTableRow from "./milestone-table-row";
 function MilestoneTable({
   projectType,
   bg,
-  isOpen,
 }: {
   projectType: ProjectType;
   bg: string;

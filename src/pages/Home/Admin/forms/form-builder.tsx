@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-    useCreateFormField,
     useDeleteFormField,
     useReorderFormFields
 } from "@/hooks/forms/use-form-fields";
@@ -31,7 +30,7 @@ export default function FormBuilder() {
   const { templateId } = useParams<{ templateId: string }>();
   const id = templateId ?? "";
 
-  const { value, isLoading, refetch } = useQueryActionHook<any>({
+  const { value, isLoading } = useQueryActionHook<any>({
     method: "get",
     endpoint: ENDPOINTS.GET_FORM_TEMPLATE(id),
     queryKey: [QUERYKEYS.GET_FORM_TEMPLATE, id],
@@ -43,7 +42,6 @@ export default function FormBuilder() {
 
   const updateTemplate = useUpdateFormTemplate(id);
   const publishTemplate = usePublishFormTemplate(id);
-  const createField = useCreateFormField(id);
   const reorderFields = useReorderFormFields(id);
 
   const [editingField, setEditingField] = useState<FormFieldDefinition | null>(null);
