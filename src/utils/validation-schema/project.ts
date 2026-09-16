@@ -102,8 +102,8 @@ export const addProjectTaskSchema = z.object({
       message: "Task type is required",
     })
     .optional(),
-  status: z.enum(["completed", "pending"], {
-    message: "Status must be either pending or completed",
+  status: z.enum(["in_progress", "completed", "pending"], {
+    message: "Status must be pending, in progress, or completed",
   }),
   description: z
     .string()
@@ -160,8 +160,8 @@ export const editProjectTaskSchema = z.object({
       message: "Task type is required",
     })
     .optional(),
-  status: z.enum(["completed", "pending"], {
-    message: "Status must be either pending or completed",
+  status: z.enum(["in_progress", "completed", "pending"], {
+    message: "Status must be pending, in progress, or completed",
   }),
   description: z
     .string()
