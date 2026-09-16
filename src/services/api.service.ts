@@ -1,5 +1,5 @@
 import { LoginResponse } from "@/hooks/auth/use-auth-login";
-import { PAGES } from "@/lib/constants";
+import { PAGES, UserType } from "@/lib/constants";
 import { CustomMethod, SecureRequestProps } from "@/types/api.types";
 import axios from "axios";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
