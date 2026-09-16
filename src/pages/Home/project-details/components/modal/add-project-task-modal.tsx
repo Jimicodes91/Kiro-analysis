@@ -80,10 +80,14 @@ const AddProjectTaskModal = ({
 
     const assigneesIds = assignees?.map((item) => item.value);
 
+    // due_date is schema-required, so handleSubmit guarantees it here.
+    const formattedDueDate = getUTCISODateFormat(due_date);
+    if (!formattedDueDate) return;
+
     const payload = {
       ...validData,
       project_type_id: projectTypeId,
-      due_date: getUTCISODateFormat(due_date),
+      due_date: formattedDueDate,
       assignees: assigneesIds,
       attachments: base64FileList.filter(Boolean), // Remove nulls
     };

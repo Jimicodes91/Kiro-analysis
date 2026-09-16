@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useCreateContact from "@/hooks/contacts/use-create-contact";
 import useUpdateContact from "@/hooks/contacts/use-update-contact";
 import { getUserSession } from "@/services/api.service";
-import { ContactFormValues } from "@/types/contact.types";
+import { Contact, ContactFormValues } from "@/types/contact.types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -43,7 +43,8 @@ interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: "create" | "edit" | "view";
-  contactData?: ContactFormValues;
+  // Accept either raw form values or a full Contact entity (used to seed edit/view).
+  contactData?: ContactFormValues | Contact;
 }
 
 function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps) {
@@ -73,7 +74,12 @@ function ContactModal({ isOpen, onClose, mode, contactData }: ContactModalProps)
   // Load data for edit or view mode
   useEffect(() => {
     if (contactData && (mode === "edit" || mode === "view")) {
-      form.reset(contactData);
+      // Normalize to form-values shape (a full Contact has extra fields and a
+      // nullable address); RHF ignores unknown keys.
+      form.reset({
+        ...contactData,
+        address: contactData.address ?? "",
+      });
     }
   }, [contactData, form, mode]);
 
