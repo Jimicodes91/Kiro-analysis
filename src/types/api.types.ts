@@ -31,6 +31,13 @@ export type PylottResponseType<D = Record<string, unknown>> = AxiosResponse<
 
 export type CredentialsServerResponseModel<T> = T;
 
+/** Standard server envelope returned in an Axios response body. */
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
 export interface ResponseErrorType {
   message: string;
   name: string;
