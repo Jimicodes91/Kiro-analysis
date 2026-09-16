@@ -1,4 +1,5 @@
 import Modal from "@/components/Modal";
+import Toast from "@/components/Toast";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -90,11 +91,18 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
 
     try {
       await createTask.mutateAsync(payload);
+      Toast.success("Task created successfully");
       form.reset();
       onClose();
     } catch (error) {
       console.error(error);
+      Toast.error((error as Error)?.message || "Failed to create task");
     }
+  };
+
+  // Surface validation failures so the form never silently refuses to submit.
+  const onInvalid = () => {
+    Toast.error("Please fix the highlighted fields before saving");
   };
 
   return (
@@ -106,7 +114,7 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
       closeOnOverlayClick={false}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
+        <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="flex flex-col gap-4 p-4">
           <FormField
             control={form.control}
             name="name"

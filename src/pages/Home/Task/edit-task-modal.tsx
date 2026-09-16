@@ -1,4 +1,5 @@
 import Modal from "@/components/Modal";
+import Toast from "@/components/Toast";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -157,10 +158,17 @@ const ViewEditTaskModal = ({
 
     try {
       await updateTask.mutateAsync(payload);
+      Toast.success("Task updated successfully");
       onClose();
     } catch (error) {
       console.error(error);
+      Toast.error((error as Error)?.message || "Failed to update task");
     }
+  };
+
+  // Surface validation failures so the form never silently refuses to submit.
+  const onInvalid = () => {
+    Toast.error("Please fix the highlighted fields before saving");
   };
 
   // Get existing attachments from API data and filter deleted ones
@@ -183,7 +191,7 @@ const ViewEditTaskModal = ({
       ) : (
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit, onInvalid)}
             className="flex flex-col gap-4 p-4"
           >
             <FormField
