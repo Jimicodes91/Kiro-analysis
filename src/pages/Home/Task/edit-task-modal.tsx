@@ -94,6 +94,8 @@ const ViewEditTaskModal = ({
       // Backend uses a single due_date; fall back to legacy end_date.
       due_date: new Date((taskData as any).due_date ?? taskData.end_date),
       is_visible_to_client: Boolean(taskData.is_visible_to_client),
+      // Schema requires `visibility`; derive it from the task's client-visibility.
+      visibility: taskData.is_visible_to_client ? "client_facing" : "inhouse",
       assignees: taskData.assignees.map((assignee) => assignee.id),
       attachment: [],
     },
@@ -605,7 +607,14 @@ const ViewEditTaskModal = ({
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      onCheckedChange={field.onChange}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked);
+                        // Keep the schema-required `visibility` enum in sync.
+                        form.setValue(
+                          "visibility",
+                          checked ? "client_facing" : "inhouse"
+                        );
+                      }}
                       disabled={isViewMode}
                     />
                   </FormControl>

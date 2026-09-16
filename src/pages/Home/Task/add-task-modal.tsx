@@ -50,6 +50,12 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
 
   const form = useForm<TaskFormData>({
     resolver: yupResolver(taskFormSchema),
+    defaultValues: {
+      // Schema requires `visibility`; default to inhouse until the client-
+      // visibility checkbox is toggled.
+      visibility: "inhouse",
+      is_visible_to_client: false,
+    },
   });
   const projectId = form.watch("project_id") ?? [];
   const projectMembers = useGetProjectMembers(projectId);
@@ -397,7 +403,17 @@ const AddTaskModal = ({ onClose, isOpen }: AddTaskModalProps) => {
             render={({ field }) => (
               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
-                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked);
+                      // Keep the schema-required `visibility` enum in sync.
+                      form.setValue(
+                        "visibility",
+                        checked ? "client_facing" : "inhouse"
+                      );
+                    }}
+                  />
                 </FormControl>
                 <FormLabel className="font-normal text-[#00000099]">
                   Make visible to client
