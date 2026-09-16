@@ -5,6 +5,7 @@ import React from "react";
 import ActivitLogSection from "../template/project-activity-template";
 import ProjectDocumentSection from "../template/project-document-template";
 import ProjectEventSection from "../template/project-event-template";
+import ProjectFormsSection from "../template/project-forms-template";
 import ProjectNoteSection from "../template/project-note-template";
 import ProjectTaskSection from "../template/project-task-template";
 import ProjectTeamSection from "../template/project-team-template";
