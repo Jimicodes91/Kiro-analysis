@@ -35,7 +35,7 @@ const STATUS_CONFIG: Record<
   completed: { label: "Completed", variant: "completed", icon: CheckCircle },
 };
 
-export default function ProjectFormsSection({ projectId, projectTypeId }: ProjectFormsSectionProps) {
+export default function ProjectFormsSection({ projectId }: ProjectFormsSectionProps) {
   const { value: formLinksData, isLoading: linksLoading } = useGetFormLinksByProject(projectId);
   const { value: submissionsData, isLoading: subsLoading } = useGetSubmissionsByProject(projectId);
 
