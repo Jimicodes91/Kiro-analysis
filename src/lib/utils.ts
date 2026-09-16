@@ -1,5 +1,7 @@
+import { badgeVariants } from "@/components/ui/badge";
 import { ProjectType } from "@/hooks/project-modules/project-types/use-get-all-project-types";
 import { ProjectDetails, Trail } from "@/types/api.types";
+import { type VariantProps } from "class-variance-authority";
 import { clsx, type ClassValue } from "clsx";
 import { addDays, format, formatISO, isToday, parseISO, startOfDay } from "date-fns";
 import { twMerge } from "tailwind-merge";
@@ -25,11 +27,23 @@ export function cn(...inputs: ClassValue[]) {
  * - End_date within 7 days + not completed → "due"
  * - Otherwise → use stored status
  */
+type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>["variant"]>;
+
+// Known Badge variants, used to safely coerce an arbitrary stored status.
+const BADGE_VARIANTS = new Set<string>([
+  "default", "secondary", "destructive", "blocked", "outline", "success",
+  "on_track", "completed", "active", "inactive", "due", "deactivated",
+  "late", "not_started", "pending", "in_progress",
+]);
+
+const toBadgeVariant = (status: string): BadgeVariant =>
+  (BADGE_VARIANTS.has(status) ? status : "default") as BadgeVariant;
+
 export function getComputedProjectStatus(
   storedStatus: string,
   endDate?: string | null
-): string {
-  if (!endDate) return storedStatus;
+): BadgeVariant {
+  if (!endDate) return toBadgeVariant(storedStatus);
   if (storedStatus === "completed") return "completed";
 
   try {
@@ -42,9 +56,9 @@ export function getComputedProjectStatus(
 
     if (daysUntilDue < 0) return "late";
     if (daysUntilDue <= 7) return "due";
-    return storedStatus;
+    return toBadgeVariant(storedStatus);
   } catch {
-    return storedStatus;
+    return toBadgeVariant(storedStatus);
   }
 }
 
