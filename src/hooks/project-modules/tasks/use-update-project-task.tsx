@@ -6,6 +6,9 @@ interface UpdateTaskRequest {
   name?: string;
   description?: string;
   status?: string;
+  // Backend uses due_date; start_date/end_date are legacy and kept optional
+  // for any callers not yet migrated.
+  due_date?: string;
   start_date?: string;
   end_date?: string;
   attachments?: string[];

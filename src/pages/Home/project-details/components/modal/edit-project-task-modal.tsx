@@ -3,22 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import CustomMultiSelect from "@/components/ui/multi-lol";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useGetCompanyUsers from "@/hooks/company-admin/use-get-company-users";
@@ -60,8 +60,9 @@ const EditProjectTaskModal = ({
       task_type_id: task.task_type_id,
       description: task.description,
       status: task.status,
-      end_date: new Date(task.end_date),
-      start_date: new Date(task.start_date),
+      // Backend uses a single due_date (start_date was dropped); fall back to
+      // the legacy end_date for records created before the migration.
+      due_date: new Date((task as any).due_date ?? task.end_date),
       is_visible_to_client: task.is_visible_to_client === 1 ? true : false,
       assignees: task?.assignees?.map((item) => ({
         label: item.name ?? item.email,
@@ -71,25 +72,22 @@ const EditProjectTaskModal = ({
   });
 
   const onSubmit = async (data: z.infer<typeof editProjectTaskSchema>) => {
-    const { assignees, end_date, start_date, attachment, ...validData } = data;
-    let base64File = "";
+    const { assignees, due_date, attachment, ...validData } = data;
 
     if (attachment) {
       try {
-        const base64String = await fileToBase64(attachment);
-        base64File = base64String;
+        await fileToBase64(attachment);
       } catch (err) {
         console.error("Error converting file:", err);
       }
     }
-    console.log(base64File);
+
     const assigneesIds = assignees?.map((item) => item.value);
 
     updateTask
       .mutateAsync({
         ...validData,
-        start_date: getUTCISODateFormat(start_date),
-        end_date: getUTCISODateFormat(end_date),
+        due_date: getUTCISODateFormat(due_date),
         assignees: assigneesIds,
       })
       .then(() => {
@@ -173,10 +171,10 @@ const EditProjectTaskModal = ({
             <div className="flex gap-4 justify-between">
               <FormField
                 control={form.control}
-                name="start_date"
+                name="due_date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col w-full">
-                    <FormLabel isRequired>Start date</FormLabel>
+                    <FormLabel isRequired>Due date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -191,7 +189,7 @@ const EditProjectTaskModal = ({
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span className="text-brand-placeholder">Start date</span>
+                              <span className="text-brand-placeholder">Due date</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4" />
                           </Button>
@@ -203,45 +201,6 @@ const EditProjectTaskModal = ({
                           selected={field.value}
                           onSelect={field.onChange}
                           disabled={getSelectableDate}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="end_date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col w-full">
-                    <FormLabel isRequired>End date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "font-normal h-12 rounded-full border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-4 text-sm",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span className="text-brand-placeholder">End date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date < new Date(form.watch("start_date"))}
                           initialFocus
                         />
                       </PopoverContent>
