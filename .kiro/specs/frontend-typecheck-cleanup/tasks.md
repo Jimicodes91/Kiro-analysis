@@ -1,57 +1,45 @@
 # Implementation Plan: Frontend Type-Check Cleanup
 
-Restore the `tsc -b` gate to green without runtime regressions, then enforce it. Do the work on a dedicated branch, in small PRs, re-measuring after each so the error count trends down. Baseline after Tier 1 (already merged): **229 errors** (156 test, 73 app).
+Restore the `tsc -b` gate to green without runtime regressions, then enforce it.
+Progress: **642 → 156 errors**, and **all remaining 156 are in test files** — application code type-checks clean.
 
 ## Tasks
 
 - [x] 0. Tier 1 — install missing test dev-dependencies
-  - `@fast-check/vitest`, `@testing-library/user-event`; dropped 642 → 229, no app code changed
-  - _Merged to `v1`._
+  - `@fast-check/vitest`, `@testing-library/user-event`; dropped 642 → 229, no app code changed. _Merged to `v1`._
 
-### Tier 2 — Application code (dedicated branch)
+### Tier 2 — Application code — DONE (merged to `v1`)
 
-- [ ] 1. Type the query hooks and fix `.value.data` → `.value` call sites — **[HIGH VALUE / HIGH RIPPLE]**
-  - Add generics to the wrapper query hooks (start with `useGetTaskDetails`, project-task/list hooks)
-  - Correct all ~180 `.value.data` call sites across 73 files to `.value`
-  - Do NOT use `as any`; fix hooks and their consumers in the same PR
-  - Re-measure after each hook so the count trends down monotonically by PR end
-  - Manually verify task detail, task list, project details, dashboard still render
-  - _Requirements: 1.1, 1.2, 1.3, 1.4_
+Tier 2 turned out smaller/different than estimated. The feared "~180 `.value.data` across 73 files" rewrite was unnecessary (those accesses were already correct against the response wrappers), and the react-hook-form `Control` (TS2719) cluster was **not** a version-bump problem — those errors lived in the task-modal files and cleared as a side effect of fixing the forms. Each fix was investigated; several were **real runtime bugs**, not strictness.
 
-- [ ] 2. Add missing type fields — **[LOW RIPPLE]**
-  - Per type, after confirming the API returns the field: e.g. `User.workspace_id`, `Contact`/`ContactDetails` reconciliation, `EventTypeDetails` vs `DocumentTypeDetails`
-  - _Requirements: 2.1, 2.2_
+- [x] 1. Query-hook typing / `.value.data` reads
+  - Typed `useGetTaskDetails` with a proper response wrapper. Fixed the signup OTP token read (`response.data.data` → `response.data`, was `undefined`) and the contact-invite response reads (`response.invite` → `response.data.invite`, toasts never fired).
+- [x] 2. Missing type fields / imports
+  - `api.service` `UserType` import; `ApiResponse` envelope defined (corrected to `status`); Badge-variant typing on `getComputedProjectStatus`; `ContactData.contacts` → `Contact[]`; `event-type` row/modal entity type; `contact-modal-form` accepts `Contact`.
+- [x] 3. Task form/modal fixes (real save bugs)
+  - All three task modals moved to the backend's single `due_date` model (they were sending dropped `start_date`/`end_date`), `in_progress` status allowed, and the required `visibility` field set — these caused task **create/edit to silently fail to save**. Also added success/error/`onInvalid` toasts.
+- [x] 4. Misc: Forms tab import (broken render), create-event datetime guard, unused-var removals.
+- [x] 5. Checkpoint — `tsc -b` reports **0 non-test errors**. Verified.
 
-- [ ] 3. Reconcile form/modal types — **[LOW VALUE / FIDDLY]**
-  - Align RHF resolver/schema types in `edit-project-task-modal.tsx`, `edit-task-modal.tsx`, `add-task-modal.tsx`
-  - Verify forms still submit
-  - _Requirements: 3.1_
+### Tier 3 — Test-file policy (team decision) — REMAINING
 
-- [ ] 4. Remove unused declarations (TS6133) — **[TRIVIAL]**
-  - _Requirements: 4.1_
-
-- [ ] 5. Checkpoint — app-code errors at zero
-  - `tsc -b` reports no errors outside test files
-
-### Tier 3 — Test-file policy (team decision)
+All 156 remaining errors are in test files (mock-data shape mismatches TS2741/TS2352/TS2353, test-runner globals TS2582 "Cannot find name 'it'", possibly-null TS18047, unused TS6133).
 
 - [ ] 6. Decide and apply the test-file gate policy — **[POLICY]**
-  - Recommended: exclude test globs from the `tsc -b` gate (dedicated `tsconfig.build.json` or `exclude`); tests still run under Vitest
+  - Recommended: exclude test globs from the `tsc -b` gate (dedicated `tsconfig.build.json` or `exclude`); tests still run under Vitest.
   - _Requirements: 5.1_
-
 - [ ] 7. Triage the intentionally-failing `*.bugcondition*` tests
-  - Keep as bug documentation, fix the underlying bugs, or quarantine
+  - Keep as bug documentation, fix the underlying bugs, or quarantine.
   - _Requirements: 5.2_
 
-### Enforcement
+### Enforcement — REMAINING
 
 - [ ] 8. Make `tsc -b` an enforced CI check and stop routine `--no-verify`
-  - Only after in-scope errors reach zero; communicate the workflow change
+  - Achievable once the Tier 3 test-file policy is applied (app code is already clean).
   - _Requirements: 6.1_
 
 ## Notes
 
-- Task 1 is the large, risky one — size it as its own ticket. Expect the error count to rise before it falls while typing hooks; that is normal and must be resolved within the same PR by fixing call sites.
-- Tasks 2–4 are independent, low-risk follow-ups suitable for small PRs.
-- Tier 3 is a policy call, not code risk.
-- Enforcement (task 8) is last so the gate is only turned on once it can pass.
+- Application code is type-clean; the gate is red only because of test files. Tier 3 is the last thing between here and a green, enforceable gate.
+- Behavioral fixes shipped during Tier 2 (task save, signup OTP, Forms tab, contact toasts) build and type-check, but warrant a staging smoke test since they change runtime behavior.
+- Repo friction observed throughout: the editor's auto-format-on-save repeatedly pruned in-use imports mid-edit (~9 files). Worth fixing the organize-imports config.

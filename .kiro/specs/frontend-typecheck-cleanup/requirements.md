@@ -8,10 +8,14 @@ Work is organized into three tiers by cost, risk, and value.
 
 ## Current State (measured)
 
-- **Tier 1 — DONE (merged to `v1`):** installed missing test dev-dependencies (`@fast-check/vitest`, `@testing-library/user-event`). Error count dropped **642 → 229** with no application code changed.
-- Remaining **229** errors: **156 in test files**, **73 in application code**.
-- Application-code error codes: TS2322 (26), TS2339 (14), TS2769 (8), TS2719 (8), TS2345 (6), TS6133 (5), TS2741 (2), plus a few singletons.
-- **180 `.value.data` call sites across 73 files** currently pass only because the query hooks' `value` is untyped; typing the hooks will surface these.
+- **Tier 1 — DONE (merged to `v1`):** installed missing test dev-dependencies (`@fast-check/vitest`, `@testing-library/user-event`). Dropped **642 → 229** with no application code changed.
+- **Tier 2 — DONE (merged to `v1`):** all application-code type errors resolved. `tsc -b` now reports **0 non-test errors**. Many were real runtime bugs, not just strictness:
+  - query-hook typing / `.value.data` double-unwraps (incl. the signup OTP token read that was `undefined`, and the contact-invite toast that never fired)
+  - task modals: wrong date model (`start_date`/`end_date` vs backend `due_date`), missing `in_progress` status, and an unset required `visibility` field — all three caused **task create/edit to silently fail to save**
+  - the project-details **Forms tab** referenced a component that was never imported (broken render)
+  - missing type imports in core files (`api.service` `UserType`), a mistyped `ApiResponse` envelope, Badge-variant typing, etc.
+- **Correction to the earlier estimate:** the feared "~180 `.value.data` across 73 files" rewrite and the "react-hook-form `Control` version cluster" did **not** require the anticipated large refactor. The `.value.data` accesses were already correct against the response wrappers; the `Control` (TS2719) errors lived in the task-modal files and cleared as a side effect of fixing those forms. There is **no remaining `Control` cluster in app code**.
+- **Remaining: 156 errors, all in test files.** Codes: TS2741 (47), TS2352 (25), TS2339 (16), TS6133 (13), TS18047 (12), TS2353 (10), TS2582 (8, "Cannot find name 'it'"), plus a few others. These are mock-data shape mismatches and test-runner typing — no application code involved.
 
 ## Glossary
 
