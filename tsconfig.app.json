@@ -27,5 +27,17 @@
         "./src/*"
       ]
     }
-  }
+  },
+  "include": ["src"],
+  /*
+   * Test files are excluded from the production type-check gate (tsc -b) so the
+   * gate reflects shipped application code. Tests still type-check-run under
+   * Vitest, which uses its own config.
+   */
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx"
+  ]
 }
