@@ -120,22 +120,21 @@ describe("Document surfacing after upload-through-task (Req 6.2)", () => {
     renderWithProviders(<ClientDocumentList projectId={PROJECT_ID} />);
 
     // The document created via the task (carrying its task_id) surfaces in the
-    // client's documents list by name.
-    expect(screen.getByText(DOCUMENT_NAME)).toBeInTheDocument();
+    // client's documents list by name. The redesigned list renders both a
+    // desktop table row and a mobile card (CSS-hidden by breakpoint but both
+    // present in jsdom), so the name appears once per layout.
+    expect(screen.getAllByText(DOCUMENT_NAME).length).toBeGreaterThan(0);
   });
 
-  it("exposes a download affordance for the uploaded attachment", async () => {
+  it("exposes a download affordance for the uploaded attachment", () => {
     renderWithProviders(<ClientDocumentList projectId={PROJECT_ID} />);
 
-    // Expand the document card to reveal its attachment/download affordance.
-    const { fireEvent, waitFor } = await import("@testing-library/react");
-    fireEvent.click(screen.getByText(DOCUMENT_NAME));
-
-    await waitFor(() => {
-      const downloadLink = screen.getByRole("link", { name: /download/i });
-      expect(downloadLink).toBeInTheDocument();
-      expect(downloadLink).toHaveAttribute("href", ATTACHMENT_URL);
-    });
+    // The redesigned table surfaces the download affordance inline (no
+    // expand/accordion step). Assert at least one Download link points at the
+    // uploaded attachment.
+    const downloadLinks = screen.getAllByRole("link", { name: /download/i });
+    expect(downloadLinks.length).toBeGreaterThan(0);
+    expect(downloadLinks[0]).toHaveAttribute("href", ATTACHMENT_URL);
   });
 });
 
@@ -148,8 +147,9 @@ describe("Team confirmation of the provided document (Req 7.1)", () => {
   it("renders the task-linked document in the team task detail card", () => {
     renderWithProviders(<DocumentCard document={linkedDocument} />);
 
-    // The team-facing card surfaces the provided document by name.
-    expect(screen.getByText(`${DOCUMENT_NAME} Documents`)).toBeInTheDocument();
+    // The team-facing card surfaces the provided document by name. DocumentCard
+    // renders the raw document name as its heading.
+    expect(screen.getByText(DOCUMENT_NAME)).toBeInTheDocument();
   });
 
   it("surfaces the linked document's attachment with a download affordance", () => {
