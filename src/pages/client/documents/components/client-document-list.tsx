@@ -285,11 +285,12 @@ export default function ClientDocumentList({
               key={f.key}
               type="button"
               onClick={() => setFilter(f.key)}
+              aria-pressed={filter === f.key}
               className={cn(
-                "whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                "whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
                 filter === f.key
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-brand-border bg-white text-brand-fade hover:bg-gray-50"
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-brand-border bg-white text-brand-fade hover:bg-gray-50 hover:text-primary"
               )}
             >
               {f.label}
