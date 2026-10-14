@@ -8,11 +8,13 @@ import { calculateMilestoneDates } from "@/utils/milestone-dates";
 import { useMemo, useState } from "react";
 import ProjectDurationBar from "../home/components/project-duration-bar";
 import ClientJourneyForms from "./components/ClientJourneyForms";
+import CurrentStageCard from "./components/current-stage-card";
 import JourneyCardView from "./components/journey-card-view";
 import JourneyListView from "./components/journey-list-view";
+import JourneyTimelineView from "./components/journey-timeline-view";
 
 export default function ClientProjectJourney() {
-  const [view, setView] = useState<string>("list");
+  const [view, setView] = useState<string>("timeline");
   const { activeProject } = useClientProjectContext();
   const journey = useGetProjectTypeDetails(activeProject?.project_type_id ?? "");
   const journeyLength = journey?.value?.data?.milestones?.length || 1;
@@ -22,16 +24,21 @@ export default function ClientProjectJourney() {
       (milestone) => milestone.id === activeProject?.milestone?.id
     ) ?? 0;
 
+  const safeIndex = currentMilestoneIndex === -1 ? 0 : currentMilestoneIndex;
+
   const milestoneDates = useMemo(() => {
     const milestones = journey?.value?.data?.milestones;
     if (!milestones) return [];
     return calculateMilestoneDates(
       milestones,
-      currentMilestoneIndex,
+      safeIndex,
       activeProject?.start_date,
       (activeProject as any)?.milestone_start_date
     );
-  }, [journey?.value?.data?.milestones, currentMilestoneIndex, activeProject]);
+  }, [journey?.value?.data?.milestones, safeIndex, activeProject]);
+
+  const currentMilestone = journey?.value?.data?.milestones?.[safeIndex];
+  const currentMilestoneDates = milestoneDates[safeIndex];
 
   const renderBody = () => {
     if (journey.isPending && !journey?.value)
@@ -55,18 +62,25 @@ export default function ClientProjectJourney() {
 
     return (
       <div className="space-y-3">
-        {view === "list" ? (
-          /* --- List View (Timeline) --- */
+        {view === "timeline" ? (
+          /* --- Timeline View (horizontal stages) --- */
+          <JourneyTimelineView
+            milestones={journey?.value?.data?.milestones}
+            currentMilestoneIndex={safeIndex}
+            milestoneDates={milestoneDates}
+          />
+        ) : view === "list" ? (
+          /* --- List View --- */
           <JourneyListView
             milestones={journey?.value?.data?.milestones}
-            currentMilestoneIndex={currentMilestoneIndex}
+            currentMilestoneIndex={safeIndex}
             milestoneDates={milestoneDates}
           />
         ) : (
           /* --- Grid View (Flow with Arrows) --- */
           <JourneyCardView
             milestones={journey?.value?.data?.milestones}
-            currentMilestoneIndex={currentMilestoneIndex}
+            currentMilestoneIndex={safeIndex}
             milestoneDates={milestoneDates}
           />
         )}
@@ -103,6 +117,7 @@ export default function ClientProjectJourney() {
               activeTab={view}
               setActiveTab={setView}
               options={[
+                { value: "timeline", label: "Timeline" },
                 { value: "list", label: "List view " },
                 { value: "grid", label: "Grid view" },
               ]}
@@ -112,6 +127,14 @@ export default function ClientProjectJourney() {
 
         <CardContent className="pt-5">{renderBody()}</CardContent>
       </Card>
+
+      {/* Current stage */}
+      {journey?.value?.data?.milestones?.length ? (
+        <CurrentStageCard
+          currentMilestone={currentMilestone}
+          currentMilestoneDates={currentMilestoneDates}
+        />
+      ) : null}
 
       {/* NativeForms Section */}
       <ClientJourneyForms
