@@ -25,16 +25,18 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
   const storeActiveProject = getCookie(STOREDCOOKIEKEY);
   const [activeProject, setActiveProject] = React.useState<ProjectDetails | undefined>(
     () => {
-      if (storeActiveProject) {
-        try {
-          return typeof storeActiveProject === "string"
-            ? JSON.parse(storeActiveProject)
-            : undefined;
-        } catch {
-          return undefined;
-        }
+      if (typeof storeActiveProject !== "string") return undefined;
+      try {
+        const parsed = JSON.parse(storeActiveProject) as ProjectDetails;
+        // Only restore a usable project. A legacy/malformed cookie (e.g. a
+        // raw object stringified to "[object Object]") parses to something
+        // without an id; treat that as empty so the auto-select effect below
+        // can repopulate it instead of leaving the client stuck with no
+        // active project (which showed empty documents).
+        return parsed && parsed.id ? parsed : undefined;
+      } catch {
+        return undefined;
       }
-      return undefined;
     }
   );
 
@@ -55,9 +57,13 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
   const allProjects = useGetClientProjects(user?.id ?? "");
   useEffect(() => {
     if (allProjects?.value?.data?.length && !activeProject) {
-      setActiveProject(allProjects?.value?.data?.[0]);
-      setCookie(STOREDCOOKIEKEY, allProjects?.value?.data?.[0], {
-        httpOnly: true,
+      const firstProject = allProjects.value.data[0];
+      setActiveProject(firstProject);
+      // Store as a JSON string so it round-trips with the JSON.parse on read.
+      // Do NOT set httpOnly: this cookie is both written and read by the
+      // client, and an httpOnly cookie is invisible to JS on the next load
+      // (which previously left activeProject undefined -> empty project data).
+      setCookie(STOREDCOOKIEKEY, JSON.stringify(firstProject), {
         path: "/",
         maxAge: 60 * 60 * 24, // 24 hours
         sameSite: "strict", // Prevent cross-site scripting attacks
