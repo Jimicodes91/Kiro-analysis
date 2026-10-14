@@ -2,7 +2,7 @@ import Heading from "@/components/ui/heading";
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { getUserSession } from "@/services/api.service";
-import ClientTaskCard from "./components/client-test-card";
+import ClientTaskBoard from "./components/client-task-board";
 
 export default function ClientTaskManagement() {
   const { activeProject } = useClientProjectContext();
@@ -13,12 +13,16 @@ export default function ClientTaskManagement() {
   const renderBody = () => {
     if (projectTasks.isPending)
       return (
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+          {[1, 2, 3].map((col) => (
             <div
-              className="px-5 py-10 space-y-2 h-[150px] border rounded-lg bg-slate-200 flex justify-between  animate-pulse"
-              key={i}
-            ></div>
+              key={col}
+              className="rounded-xl border border-brand-border bg-[#F8F8F8] p-3 space-y-3"
+            >
+              <div className="h-5 w-28 rounded bg-slate-200 animate-pulse" />
+              <div className="h-[110px] rounded-lg bg-slate-200 animate-pulse" />
+              <div className="h-[110px] rounded-lg bg-slate-200 animate-pulse" />
+            </div>
           ))}
         </div>
       );
@@ -46,15 +50,10 @@ export default function ClientTaskManagement() {
     );
 
     return (
-      <div className="space-y-3">
-        {sortedTasks.map((task) => (
-          <ClientTaskCard
-            key={task.id}
-            task={task}
-            projectId={activeProject?.id as string}
-          />
-        ))}
-      </div>
+      <ClientTaskBoard
+        tasks={sortedTasks}
+        projectId={activeProject?.id as string}
+      />
     );
   };
 
@@ -72,14 +71,11 @@ export default function ClientTaskManagement() {
           )}
         </Heading>
         <p className="text-[#19181980] text-sm">
-          Manage your assigned tasks and track progress
+          Grouped by status so you can see what needs action first.
         </p>
       </div>
 
-      {/* Review project requirements document */}
-      <div className="bg-white space-y-7 p-4 rounded-xl">
-        <div>{renderBody()}</div>
-      </div>
+      {renderBody()}
     </div>
   );
 }
