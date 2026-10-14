@@ -1,18 +1,34 @@
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import useGetAllProjectDocuments from "@/hooks/project-modules/documents/use-get-all-documents";
-import { cn } from "@/lib/utils";
+import { cn, truncateMiddleWords } from "@/lib/utils";
 import { IDocument } from "@/types/api.types";
-import { ExpiryStatus, getDocumentExpiryInfo } from "@/utils/document-expiry";
+import {
+    ExpiryStatus,
+    getDocumentExpiryInfo,
+    getExpiryBadgeLabel,
+    getExpiryBadgeVariant,
+} from "@/utils/document-expiry";
+import { format } from "date-fns";
 import {
     AlertTriangle,
     Clock,
+    Download,
     FileText,
     FileX,
     Search,
     ShieldCheck,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import ClientDocumentCard from "./client-document-card";
 
 type FilterKey = "all" | ExpiryStatus;
 
@@ -44,7 +60,12 @@ function StatCard({
 
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl border border-brand-border bg-white">
-      <div className={cn("flex size-10 items-center justify-center rounded-lg", toneClass)}>
+      <div
+        className={cn(
+          "flex size-10 items-center justify-center rounded-lg",
+          toneClass
+        )}
+      >
         {icon}
       </div>
       <div>
@@ -55,7 +76,88 @@ function StatCard({
   );
 }
 
-export default function ClientDocumentList({ projectId }: { projectId: string }) {
+/** The expiry date cell content — the hard date plus a relative hint. */
+function ExpiryCell({ document }: { document: IDocument }) {
+  const info = getDocumentExpiryInfo(document);
+
+  if (info.status === "no_expiry") {
+    return (
+      <div className="flex flex-col">
+        <span className="text-sm text-primary">Does not expire</span>
+      </div>
+    );
+  }
+
+  const toneClass =
+    info.status === "expired"
+      ? "text-[#FB002B]"
+      : info.status === "approaching"
+        ? "text-[#B78026]"
+        : "text-brand-fade";
+
+  return (
+    <div className="flex flex-col">
+      <span className="text-sm text-primary">
+        {document.expiry_date
+          ? format(new Date(document.expiry_date), "dd MMM yyyy")
+          : "—"}
+      </span>
+      <span className={cn("text-xs", toneClass)}>{info.label}</span>
+    </div>
+  );
+}
+
+/** The first download link for a document, or a "no file" hint. */
+function DownloadCell({ document }: { document: IDocument }) {
+  const attachments = document?.attachments ?? [];
+
+  if (attachments.length === 0) {
+    return <span className="text-xs text-brand-fade">No file</span>;
+  }
+
+  const primary = attachments[0];
+  const extra = attachments.length - 1;
+
+  return (
+    <div className="flex items-center gap-2">
+      <a
+        className={cn(
+          buttonVariants({ variant: "outline", size: "sm" }),
+          "shrink-0 gap-1"
+        )}
+        href={primary?.media_url}
+        download
+        target="_blank"
+        rel="noreferrer"
+        title={truncateMiddleWords(primary?.media_url)}
+      >
+        <Download className="size-4" />
+        Download
+      </a>
+      {extra > 0 && (
+        <span className="text-xs text-brand-fade whitespace-nowrap">
+          +{extra} more
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** Status pill reused in both the table and mobile card. */
+function StatusPill({ document }: { document: IDocument }) {
+  const info = getDocumentExpiryInfo(document);
+  return (
+    <Badge variant={getExpiryBadgeVariant(info.status) as any} size="sm">
+      {getExpiryBadgeLabel(info.status)}
+    </Badge>
+  );
+}
+
+export default function ClientDocumentList({
+  projectId,
+}: {
+  projectId: string;
+}) {
   const projectDocs = useGetAllProjectDocuments(projectId);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");
@@ -101,7 +203,10 @@ export default function ClientDocumentList({ projectId }: { projectId: string })
       <div className="space-y-3">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-16 rounded-xl bg-slate-200 animate-pulse" />
+            <div
+              key={i}
+              className="h-16 rounded-xl bg-slate-200 animate-pulse"
+            />
           ))}
         </div>
         {[1, 2, 3].map((i) => (
@@ -121,6 +226,17 @@ export default function ClientDocumentList({ projectId }: { projectId: string })
       </div>
     );
   }
+
+  const emptyState = (
+    <div className="py-12 px-4 rounded-xl border border-brand-border bg-[#F8F8F8] flex flex-col items-center gap-2">
+      <FileX className="size-6 text-brand-fade" />
+      <p className="text-sm text-brand-fade">
+        {documents.length === 0
+          ? "No documents on this project yet."
+          : "No documents match your search."}
+      </p>
+    </div>
+  );
 
   return (
     <div className="space-y-5">
@@ -182,22 +298,107 @@ export default function ClientDocumentList({ projectId }: { projectId: string })
         </div>
       </div>
 
-      {/* List */}
       {filtered.length === 0 ? (
-        <div className="py-12 px-4 rounded-xl border border-brand-border bg-[#F8F8F8] flex flex-col items-center gap-2">
-          <FileX className="size-6 text-brand-fade" />
-          <p className="text-sm text-brand-fade">
-            {documents.length === 0
-              ? "No documents on this project yet."
-              : "No documents match your search."}
-          </p>
-        </div>
+        emptyState
       ) : (
-        <div className="space-y-3">
-          {filtered.map((document) => (
-            <ClientDocumentCard key={document.id} document={document} />
-          ))}
-        </div>
+        <>
+          {/* Desktop / tablet: scannable table */}
+          <div className="hidden md:block rounded-xl border border-brand-border overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Document</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Expiry</TableHead>
+                  <TableHead className="text-right">File</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((document) => (
+                  <TableRow key={document.id}>
+                    <TableCell className="max-w-[380px] whitespace-normal">
+                      <div className="flex items-start gap-3">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/5">
+                          <FileText className="size-4 text-primary" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-sm text-primary">
+                            {document?.name}
+                          </p>
+                          {document?.description ? (
+                            <p className="text-xs text-brand-fade mt-0.5 line-clamp-2">
+                              {document.description}
+                            </p>
+                          ) : (
+                            <p className="text-xs text-brand-fade/60 mt-0.5 italic">
+                              No description provided
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <StatusPill document={document} />
+                    </TableCell>
+                    <TableCell>
+                      <ExpiryCell document={document} />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end">
+                        <DownloadCell document={document} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Mobile: stacked cards (same data, scannable without horizontal scroll) */}
+          <div className="md:hidden space-y-3">
+            {filtered.map((document) => (
+              <div
+                key={document.id}
+                className="rounded-xl border border-brand-border bg-white p-4 space-y-3"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3 min-w-0">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/5">
+                      <FileText className="size-4 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-sm text-primary">
+                        {document?.name}
+                      </p>
+                      {document?.description ? (
+                        <p className="text-xs text-brand-fade mt-0.5">
+                          {document.description}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-brand-fade/60 mt-0.5 italic">
+                          No description provided
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <StatusPill document={document} />
+                </div>
+
+                <div className="flex items-center justify-between gap-3 pt-1 border-t border-brand-border">
+                  <div className="pt-3">
+                    <p className="text-xs text-brand-fade font-medium">
+                      Expiry
+                    </p>
+                    <ExpiryCell document={document} />
+                  </div>
+                  <div className="pt-3">
+                    <DownloadCell document={document} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
