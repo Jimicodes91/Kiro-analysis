@@ -59,20 +59,17 @@ export default function usePylottData(): {
       projectEndDate = dates[dates.length - 1]?.endDate ?? null;
     }
 
-    // Only treat an area as hidden when the team explicitly switched it off
-    // (setting === 0). A missing setting never hides anything.
-    const hidden = {
-      tasks: activeProject?.setting?.client_can_view_task === 0,
-      documents: activeProject?.setting?.client_can_view_documents === 0,
-    };
-
+    // Visibility is decided by the backend, which already limits what a client
+    // can fetch (e.g. only tasks marked visible to and assigned to them). We use
+    // exactly what it returns, the same as the Tasks and Documents pages, and
+    // do not apply our own visibility rule on top. A second rule here caused
+    // Pylott to ignore tasks the Tasks page was showing.
     return {
       projectId,
-      tasks: !hidden.tasks && Array.isArray(tasksData) ? tasksData : null,
-      documents: !hidden.documents && Array.isArray(docsData) ? docsData : null,
+      tasks: Array.isArray(tasksData) ? tasksData : null,
+      documents: Array.isArray(docsData) ? docsData : null,
       stage,
       projectEndDate,
-      hidden,
     };
   }, [projectId, tasksData, docsData, milestones, activeProject]);
 

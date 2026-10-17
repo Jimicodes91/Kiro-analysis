@@ -238,24 +238,6 @@ describe("unavailable data and unknown questions", () => {
     expect(answer.text).toMatch(/can't see your documents/i);
   });
 
-  it("says the team hasn't shared tasks, instead of implying an error", () => {
-    const answer = answerQuestion(
-      "what do I need to do next",
-      data({ tasks: null, hidden: { tasks: true } }),
-      NOW
-    );
-    expect(answer.text).toMatch(/hasn't shared your tasks/i);
-    expect(answer.text).not.toMatch(/try again/i);
-  });
-
-  it("says the team hasn't shared documents, instead of implying an error", () => {
-    const answer = answerQuestion(
-      "how many documents do I have",
-      data({ documents: null, hidden: { documents: true } })
-    );
-    expect(answer.text).toMatch(/hasn't shared your documents/i);
-  });
-
   it("admits when it cannot answer", () => {
     const answer = answerQuestion("can you book me a flight", data());
     expect(answer.text).toMatch(/can't answer that/i);

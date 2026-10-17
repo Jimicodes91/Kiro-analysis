@@ -32,7 +32,7 @@ export interface PylottStage {
 
 /**
  * The project facts Pylott may use. `null` means "not available" (still
- * loading, failed to load, or hidden from the client), which is different from
+ * loading, or failed to load), which is different from
  * an empty list ("loaded, and there are none").
  */
 export interface PylottData {
@@ -42,8 +42,6 @@ export interface PylottData {
   stage: PylottStage | null;
   /** Estimated end of the final stage, or null if it can't be worked out. */
   projectEndDate: Date | null;
-  /** Areas the team has chosen not to share with this client. */
-  hidden?: { tasks?: boolean; documents?: boolean };
 }
 
 export interface PylottItem {
@@ -211,17 +209,7 @@ function documentsWithFiles(documents: IDocument[]): IDocument[] {
   return documents.filter((doc) => (doc.attachments?.length ?? 0) > 0);
 }
 
-function unavailable(
-  what: "tasks" | "documents" | "stage",
-  data: PylottData
-): PylottAnswer {
-  // The team chose not to share this area: say that, rather than imply an error.
-  if (what !== "stage" && data.hidden?.[what]) {
-    return {
-      text: `Your team hasn't shared your ${what} on this project, so I can't answer questions about them.`,
-    };
-  }
-
+function unavailable(what: "tasks" | "documents" | "stage"): PylottAnswer {
   const route = what === "tasks" ? "/tasks" : what === "documents" ? "/documents" : "/journey";
   const label = what === "tasks" ? "Open tasks" : what === "documents" ? "Open documents" : "Open journey";
   const noun = what === "stage" ? "your project stage" : `your ${what}`;
@@ -275,7 +263,7 @@ function taskList(
 }
 
 function answerTasks(data: PylottData, now: Date): PylottAnswer {
-  if (!data.tasks) return unavailable("tasks", data);
+  if (!data.tasks) return unavailable("tasks");
 
   const open = openTasks(data.tasks);
   if (open.length === 0) {
@@ -294,7 +282,7 @@ function answerTasks(data: PylottData, now: Date): PylottAnswer {
 }
 
 function answerOverdue(data: PylottData, now: Date): PylottAnswer {
-  if (!data.tasks) return unavailable("tasks", data);
+  if (!data.tasks) return unavailable("tasks");
 
   const overdue = openTasks(data.tasks).filter(
     (task) => getDisplayedStatus(task.status, getTaskDueDate(task), now) === "Overdue"
@@ -316,7 +304,7 @@ function answerOverdue(data: PylottData, now: Date): PylottAnswer {
 }
 
 function answerDue(data: PylottData, now: Date): PylottAnswer {
-  if (!data.tasks) return unavailable("tasks", data);
+  if (!data.tasks) return unavailable("tasks");
 
   const open = openTasks(data.tasks);
   const dated = open.filter((task) => dueTime(task) !== null);
@@ -346,7 +334,7 @@ function answerDue(data: PylottData, now: Date): PylottAnswer {
 }
 
 function answerDocsCount(data: PylottData): PylottAnswer {
-  if (!data.documents) return unavailable("documents", data);
+  if (!data.documents) return unavailable("documents");
 
   const withFiles = documentsWithFiles(data.documents);
   const awaiting = data.documents.length - withFiles.length;
@@ -360,7 +348,7 @@ function answerDocsCount(data: PylottData): PylottAnswer {
 }
 
 function answerDocsSummary(data: PylottData): PylottAnswer {
-  if (!data.documents) return unavailable("documents", data);
+  if (!data.documents) return unavailable("documents");
 
   const withFiles = documentsWithFiles(data.documents);
   let expired = 0;
@@ -382,7 +370,7 @@ function answerDocsSummary(data: PylottData): PylottAnswer {
 }
 
 function answerDocsExpiry(data: PylottData): PylottAnswer {
-  if (!data.documents) return unavailable("documents", data);
+  if (!data.documents) return unavailable("documents");
 
   const withFiles = documentsWithFiles(data.documents);
 
@@ -427,7 +415,7 @@ function answerDocsExpiry(data: PylottData): PylottAnswer {
 }
 
 function answerDocsNeeded(data: PylottData, now: Date): PylottAnswer {
-  if (!data.tasks) return unavailable("tasks", data);
+  if (!data.tasks) return unavailable("tasks");
 
   const requests = openTasks(data.tasks).filter(
     (task) => task.task_category_type === "document_upload"
@@ -461,7 +449,7 @@ function stageSentence(stage: PylottStage): string {
 }
 
 function answerStage(data: PylottData): PylottAnswer {
-  if (!data.stage) return unavailable("stage", data);
+  if (!data.stage) return unavailable("stage");
 
   const { stage } = data;
   return {

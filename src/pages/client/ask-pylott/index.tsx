@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import Heading from "@/components/ui/heading";
 import { cn } from "@/lib/utils";
+import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import {
     PYLOTT_SUGGESTIONS,
     PylottAnswer,
@@ -32,8 +33,19 @@ const WELCOME: PylottAnswer = {
   suggestions: PYLOTT_SUGGESTIONS,
 };
 
+/**
+ * Keyed by project so switching projects starts a fresh conversation. Without
+ * this, answers about the previous project would stay on screen and read as if
+ * they applied to the new one.
+ */
 export default function ClientAskPylott() {
+  const { activeProject } = useClientProjectContext();
+  return <PylottChat key={activeProject?.id ?? "none"} />;
+}
+
+function PylottChat() {
   const navigate = useNavigate();
+  const { activeProject } = useClientProjectContext();
   const { data, isLoading } = usePylottData();
 
   const nextId = useRef(1);
@@ -77,7 +89,9 @@ export default function ClientAskPylott() {
             Ask Pylott
           </Heading>
           <p className="text-[#19181980] text-sm">
-            Quick answers about your tasks, documents and project stage.
+            {activeProject?.name
+              ? `Quick answers about ${activeProject.name}.`
+              : "Quick answers about your tasks, documents and project stage."}
           </p>
         </div>
         <Badge variant="pending" size="sm">
