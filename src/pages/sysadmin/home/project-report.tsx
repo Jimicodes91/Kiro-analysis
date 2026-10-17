@@ -26,7 +26,7 @@ const ProjectCard: React.FC<{ cardDetails: CardDetails }> = ({ cardDetails }) =>
             className={`text-xs flex items-center ${increase >= 0 ? "text-[#00AA3B]" : "text-red-500"}`}
           >
             {increase >= 0 ? "↑" : "↓"} {Math.abs(increase)}%{" "}
-            <span className="text-[#191819] ml-2"> increassdse from last month</span>
+            <span className="text-[#191819] ml-2"> increase from last month</span>
           </div>
         )}
       </CardContent>
