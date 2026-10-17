@@ -51,7 +51,7 @@ const SettingsTab = ({ projectId }: { projectId?: string }) => {
     if (projectSettings?.isError)
       return (
         <div className="py-10 px-4 rounded-lg border flex justify-center border-brand-border bg-[#F8F8F8]">
-          <p className="text-sm text-brand-fade p-0 m-0">Somthing went wrong</p>
+          <p className="text-sm text-brand-fade p-0 m-0">Something went wrong</p>
         </div>
       );
 

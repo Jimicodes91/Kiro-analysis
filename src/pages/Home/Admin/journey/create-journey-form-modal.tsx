@@ -293,7 +293,7 @@ function JourneyFormModal({ onClose, isOpen }: ModalProps) {
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent arrowPadding={4} className="text-white p-2">
-                        <p>Add the stages/milestons to a project type</p>
+                        <p>Add the stages/milestones to a project type</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>

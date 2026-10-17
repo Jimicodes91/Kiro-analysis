@@ -19,7 +19,7 @@ const JourneyTable = () => {
       return <EmptyTable message="Something went wrong" length={4} />;
 
     if (projectTypes?.value?.data?.length === 0)
-      return <EmptyTable message="No pipline found" length={4} />;
+      return <EmptyTable message="No pipeline found" length={4} />;
 
     return (
       <TableBody>

@@ -65,7 +65,7 @@ const ContactsTable = ({ search }: { search: string }) => {
               <TableHead>No of project</TableHead>
               <TableHead>Active project</TableHead>
               <TableHead>Closed project</TableHead>
-              <TableHead>Assigne</TableHead>
+              <TableHead>Assignee</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
