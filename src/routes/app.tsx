@@ -13,6 +13,7 @@ import AccountLayout from "@/layouts/dashboard-layout/lol";
 import Home from "../pages/Home";
 
 import ClientAccountLayout from "@/layouts/dashboard-layout/client-layout";
+import ClientAskPylott from "@/pages/client/ask-pylott";
 import ClientDocumentManagement from "@/pages/client/documents";
 import ClientHomePage from "@/pages/client/home";
 import ClientProjectJourney from "@/pages/client/journey";
@@ -69,6 +70,12 @@ export const appRoutes: AppRoute[] = [
   {
     path: "/documents",
     element: <ClientDocumentManagement />,
+    roles: ["CLIENT"],
+    layout: ClientAccountLayout,
+  },
+  {
+    path: "/ask-pylott",
+    element: <ClientAskPylott />,
     roles: ["CLIENT"],
     layout: ClientAccountLayout,
   },
