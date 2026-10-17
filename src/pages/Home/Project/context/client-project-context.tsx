@@ -4,8 +4,8 @@ import useGetClientProjects from "@/hooks/project-modules/use-get-client-project
 import { LayoutWithoutContext } from "@/layouts/dashboard-layout/client-layout";
 import { getUserSession } from "@/services/api.service";
 import { ProjectDetails } from "@/types/api.types";
-import { getCookie, setCookie } from "cookies-next";
-import React, { useEffect } from "react";
+import { deleteCookie, getCookie } from "cookies-next";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
 interface ClientProjectContextInterface {
@@ -19,70 +19,81 @@ const ClientProjectContext = React.createContext<ClientProjectContextInterface>(
   {} as ClientProjectContextInterface
 );
 
-const STOREDCOOKIEKEY = "client_active_project";
+/** Where the chosen project's id is remembered across refreshes. */
+const STORED_PROJECT_ID_KEY = "client_active_project_id";
+
+/**
+ * The previous version saved the ENTIRE project object in this cookie. A full
+ * project (form fields, project type and stages, settings) is often larger than
+ * the ~4 KB a browser allows for a cookie, and browsers drop an oversized cookie
+ * silently, so the client's choice was lost on refresh and they landed back on
+ * the default project. We now save only the id; this cookie is read once so
+ * existing users keep their selection, then removed.
+ */
+const LEGACY_COOKIE_KEY = "client_active_project";
+
+function readStoredProjectId(): string | undefined {
+  try {
+    const id = window.localStorage.getItem(STORED_PROJECT_ID_KEY);
+    if (id) return id;
+  } catch {
+    // Storage unavailable (e.g. blocked in private mode): fall through.
+  }
+
+  // One-time migration from the old cookie.
+  try {
+    const legacy = getCookie(LEGACY_COOKIE_KEY);
+    if (typeof legacy === "string" && legacy) {
+      const parsed = JSON.parse(legacy) as { id?: unknown };
+      return typeof parsed?.id === "string" && parsed.id ? parsed.id : undefined;
+    }
+  } catch {
+    // Corrupt or non-JSON legacy value: ignore it.
+  }
+  return undefined;
+}
+
+function writeStoredProjectId(id: string) {
+  try {
+    window.localStorage.setItem(STORED_PROJECT_ID_KEY, id);
+  } catch {
+    // Storage unavailable: the choice still works for this session.
+  }
+}
 
 const ClientProjectContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const storeActiveProject = getCookie(STOREDCOOKIEKEY);
-  const [activeProject, setActiveProject] = React.useState<ProjectDetails | undefined>(
-    () => {
-      if (typeof storeActiveProject !== "string") return undefined;
-      try {
-        const parsed = JSON.parse(storeActiveProject) as ProjectDetails;
-        // Only restore a usable project. A legacy/malformed cookie (e.g. a
-        // raw object stringified to "[object Object]") parses to something
-        // without an id; treat that as empty so the auto-select effect below
-        // can repopulate it instead of leaving the client stuck with no
-        // active project (which showed empty documents).
-        return parsed && parsed.id ? parsed : undefined;
-      } catch {
-        return undefined;
-      }
-    }
-  );
-
+  const [selectedId, setSelectedId] = React.useState<string | undefined>(readStoredProjectId);
   const [search, setSearch] = React.useState("");
 
+  const user = getUserSession();
+  const { pathname } = useLocation();
+  const allProjects = useGetClientProjects(user?.id ?? "");
+  const projects = allProjects?.value?.data;
+
+  // The active project is always resolved from the latest project list, never
+  // from a saved copy, so it can't be stale (e.g. after staff move it to a new
+  // milestone). If the saved id is missing or no longer assigned to this client,
+  // fall back to their first project.
+  const activeProject = React.useMemo(() => {
+    if (!projects?.length) return undefined;
+    return projects.find((p) => p.id === selectedId) ?? projects[0];
+  }, [projects, selectedId]);
+
+  // Once we have a valid project, remember it and retire the old oversized cookie.
+  React.useEffect(() => {
+    if (!activeProject) return;
+    writeStoredProjectId(activeProject.id);
+    deleteCookie(LEGACY_COOKIE_KEY, { path: "/" });
+  }, [activeProject]);
+
   const changeActiveProject = (project: ProjectDetails) => {
-    setActiveProject(project);
-    setCookie(STOREDCOOKIEKEY, JSON.stringify(project));
+    setSelectedId(project.id);
+    writeStoredProjectId(project.id);
   };
 
   const handleSearch = (query: string) => {
     setSearch(query);
   };
-
-  const user = getUserSession();
-  const { pathname } = useLocation();
-
-  const allProjects = useGetClientProjects(user?.id ?? "");
-
-  // The saved (cookie) project can be out of date: staff may move the project
-  // to a new milestone after the client last picked it. Prefer the fresh copy
-  // from the project list (which refetches on window focus), matched by id.
-  // Until the list has loaded we fall back to the saved copy.
-  const freshActiveProject = React.useMemo(
-    () =>
-      activeProject
-        ? allProjects?.value?.data?.find((p) => p.id === activeProject.id)
-        : undefined,
-    [activeProject, allProjects?.value?.data]
-  );
-
-  useEffect(() => {
-    if (allProjects?.value?.data?.length && !activeProject) {
-      const firstProject = allProjects.value.data[0];
-      setActiveProject(firstProject);
-      // Store as a JSON string so it round-trips with the JSON.parse on read.
-      // Do NOT set httpOnly: this cookie is both written and read by the
-      // client, and an httpOnly cookie is invisible to JS on the next load
-      // (which previously left activeProject undefined -> empty project data).
-      setCookie(STOREDCOOKIEKEY, JSON.stringify(firstProject), {
-        path: "/",
-        maxAge: 60 * 60 * 24, // 24 hours
-        sameSite: "strict", // Prevent cross-site scripting attacks
-      });
-    }
-  }, [allProjects?.value, activeProject]);
 
   if (allProjects.isLoading && !activeProject) {
     return (
@@ -94,7 +105,7 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
     );
   }
 
-  if (allProjects?.value?.data?.length === 0 && !pathname.includes("profile-settings")) {
+  if (projects?.length === 0 && !pathname.includes("profile-settings")) {
     return (
       <LayoutWithoutContext>
         <div className="flex items-center justify-center min-h-[calc(100vh-70px)] ">
@@ -104,10 +115,7 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
     );
   }
 
-  if (
-    allProjects?.value?.data?.length === 0 &&
-    pathname.startsWith("/profile-settings")
-  ) {
+  if (projects?.length === 0 && pathname.startsWith("/profile-settings")) {
     return <>{children}</>;
   }
 
@@ -115,7 +123,7 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
     return (
       <ClientProjectContext.Provider
         value={{
-          activeProject: freshActiveProject ?? activeProject,
+          activeProject,
           changeActiveProject,
           search,
           handleSearch,
