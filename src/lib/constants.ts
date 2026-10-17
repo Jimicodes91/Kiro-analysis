@@ -1,5 +1,5 @@
 import { IconProps, Icons } from "@/components/ui/icons";
-import { CircleCheckBig, Files, Icon, Plane } from "lucide-react";
+import { CircleCheckBig, Files, Icon, Plane, Sparkles } from "lucide-react";
 import { JSX } from "react";
 
 export type UserType = "ADMIN" | "SUPER_ADMIN" | "CLIENT" | "CONSULTANT";
@@ -62,6 +62,11 @@ export const topNavData: Record<UserType, DashboardLinkType[]> = {
       title: "Documents",
       icon: Files,
       path: "/documents",
+    },
+    {
+      title: "Ask Pylott",
+      icon: Sparkles,
+      path: "/ask-pylott",
     },
   ],
   CONSULTANT: [...universalRoutes],
