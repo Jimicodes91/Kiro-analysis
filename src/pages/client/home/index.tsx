@@ -13,6 +13,7 @@ import { useClientProjectContext } from "@/pages/Home/Project/context/client-pro
 import { getUserSession } from "@/services/api.service";
 import { buildGreeting } from "@/utils/greeting";
 import { calculateMilestoneDates, formatMilestoneDate } from "@/utils/milestone-dates";
+import { getTaskDueDate } from "@/utils/task-dates";
 import {
     CheckCircle2,
     ChevronRight,
@@ -202,7 +203,7 @@ export default function ClientHomePage() {
                         {task.name}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {safeFormatDate(task?.end_date, "MMM d, yyyy", "No due date")}
+                        {safeFormatDate(getTaskDueDate(task), "MMM d, yyyy", "No due date")}
                       </p>
                     </div>
                   </div>

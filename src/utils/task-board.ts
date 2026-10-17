@@ -1,4 +1,5 @@
 import { TaskDetails } from "@/types/api.types";
+import { getTaskDueDate } from "@/utils/task-dates";
 import { getDisplayedStatus } from "@/utils/task-display-status";
 
 export type BoardColumnKey = "needs_action" | "in_progress" | "completed";
@@ -18,7 +19,7 @@ export interface BoardColumns {
  * - "Pending" | "Overdue"  -> needs_action (both require the client to act)
  */
 export function getBoardColumn(task: TaskDetails, now: Date = new Date()): BoardColumnKey {
-  const dueDate = task?.due_date ?? task?.end_date;
+  const dueDate = getTaskDueDate(task);
   const displayed = getDisplayedStatus(task.status, dueDate, now);
 
   if (displayed === "Completed") return "completed";
