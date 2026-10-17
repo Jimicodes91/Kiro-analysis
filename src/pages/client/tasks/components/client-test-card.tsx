@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { safeFormatDate } from "@/lib/utils";
 import { TaskDetails } from "@/types/api.types";
+import { getTaskDueDate } from "@/utils/task-dates";
 import {
     getDisplayedStatus,
     getDisplayedStatusBadgeVariant,
@@ -12,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 function ClientTaskCard({ task, projectId }: { task: TaskDetails; projectId: string }) {
   const navigate = useNavigate();
   const hasRequiredInfo = Array.isArray((task as any).required_information) && (task as any).required_information.length > 0;
-  const dueDate = task?.due_date ?? task?.end_date;
+  const dueDate = getTaskDueDate(task);
 
   return (
     <Card

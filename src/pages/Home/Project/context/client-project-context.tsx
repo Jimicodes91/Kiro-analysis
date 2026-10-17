@@ -55,6 +55,19 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
   const { pathname } = useLocation();
 
   const allProjects = useGetClientProjects(user?.id ?? "");
+
+  // The saved (cookie) project can be out of date: staff may move the project
+  // to a new milestone after the client last picked it. Prefer the fresh copy
+  // from the project list (which refetches on window focus), matched by id.
+  // Until the list has loaded we fall back to the saved copy.
+  const freshActiveProject = React.useMemo(
+    () =>
+      activeProject
+        ? allProjects?.value?.data?.find((p) => p.id === activeProject.id)
+        : undefined,
+    [activeProject, allProjects?.value?.data]
+  );
+
   useEffect(() => {
     if (allProjects?.value?.data?.length && !activeProject) {
       const firstProject = allProjects.value.data[0];
@@ -102,7 +115,7 @@ const ClientProjectContextProvider = ({ children }: { children: React.ReactNode 
     return (
       <ClientProjectContext.Provider
         value={{
-          activeProject,
+          activeProject: freshActiveProject ?? activeProject,
           changeActiveProject,
           search,
           handleSearch,

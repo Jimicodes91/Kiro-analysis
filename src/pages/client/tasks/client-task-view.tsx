@@ -16,6 +16,7 @@ import {
     getExpiryBadgeLabel,
     getExpiryBadgeVariant,
 } from "@/utils/document-expiry";
+import { getTaskDueDate } from "@/utils/task-dates";
 import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Download, FileText, Upload } from "lucide-react";
 import { useState } from "react";
@@ -162,7 +163,7 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
       {/* Task info bar */}
       <div className="flex flex-wrap items-center gap-3">
         <span className="px-3 py-1.5 rounded-full bg-white border text-xs font-medium">
-          Due: {safeFormatDate(task.due_date ?? task.end_date, "MMM d, yyyy", "—")}
+          Due: {safeFormatDate(getTaskDueDate(task), "MMM d, yyyy", "—")}
         </span>
         <TaskStatusBadge status={task.status} />
       </div>
