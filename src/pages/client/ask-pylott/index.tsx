@@ -101,7 +101,7 @@ export default function ClientAskPylott() {
               className={cn(
                 "max-w-[85%] rounded-2xl px-4 py-3 text-sm space-y-3",
                 message.role === "user"
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-white"
                   : "bg-white border border-brand-border text-primary"
               )}
             >
@@ -190,7 +190,7 @@ export default function ClientAskPylott() {
             type="submit"
             disabled={isLoading || !input.trim()}
             aria-label="Send question"
-            className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-30"
+            className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-30"
           >
             <ArrowUp className="size-4" />
           </button>
