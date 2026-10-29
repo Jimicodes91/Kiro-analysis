@@ -39,13 +39,13 @@ export default function DocUploadFields({ control }: DocUploadFieldsProps) {
 
       <FormField
         control={control}
-        name="form_config.document_description"
+        name="description"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Describe the document requirements…"
+                placeholder="Describe what the client needs to upload (e.g. a recent utility bill)"
                 {...field}
                 value={field.value ?? ""}
               />
