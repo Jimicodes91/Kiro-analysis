@@ -214,18 +214,23 @@ const ExternalTaskForm = () => {
                 </Select><FormMessage /></FormItem>
             )} />
 
-            {/* Description (optional context shown to the client) */}
-            <FormField control={form.control} name="description" render={({ field }) => (
-              <FormItem><FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe what the client needs to provide (e.g. upload a recent utility bill)"
-                    className="min-h-[100px] rounded-2xl border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-3 text-sm"
-                    {...field}
-                    value={field.value ?? ""}
-                  />
-                </FormControl><FormMessage /></FormItem>
-            )} />
+            {/* Description (optional context shown to the client).
+                Not rendered for Document Upload: that type has its own Description box
+                inside "Document Upload Configuration", which saves to this same
+                `description` field, so staff see exactly one box. */}
+            {form.watch("task_category_type") !== "document_upload" && (
+              <FormField control={form.control} name="description" render={({ field }) => (
+                <FormItem><FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe what the client needs to provide (e.g. upload a recent utility bill)"
+                      className="min-h-[100px] rounded-2xl border-brand-border placeholder:text-brand-placeholder border bg-transparent px-3 py-3 text-sm"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
+                  </FormControl><FormMessage /></FormItem>
+              )} />
+            )}
 
             {/* Type-specific fields */}
             <TypeFieldsSection control={form.control} categoryType={form.watch("task_category_type")} />

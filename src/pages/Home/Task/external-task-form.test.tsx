@@ -34,6 +34,28 @@ vi.mock("@/hooks/project-modules/tasks/use-available-assignees", () => ({
   }),
 }));
 
+// After a successful save the form navigates away. This test has no real routes, so the form
+// would stay mounted on a URL with no project info and trip its own guard. Stub navigation.
+const navigateMock = vi.fn();
+vi.mock("react-router-dom", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-router-dom")>();
+  return { ...actual, useNavigate: () => navigateMock };
+});
+
+// The real calendar widget does not respond to clicks in jsdom, and these tests are not
+// about the calendar. Replace it with a single button that picks a fixed date.
+vi.mock("@/components/ui/calendar", async () => {
+  const React = await import("react");
+  return {
+    Calendar: ({ onSelect }: { onSelect: (d: Date) => void }) =>
+      React.createElement(
+        "button",
+        { type: "button", onClick: () => onSelect(new Date(2030, 5, 15)) },
+        "Pick test date"
+      ),
+  };
+});
+
 import ExternalTaskForm from "./external-task-form";
 
 // Radix Select relies on a few DOM APIs jsdom does not implement.
@@ -139,6 +161,69 @@ describe("ExternalTaskForm — type-specific fields (Req 3.2)", () => {
     expect(screen.queryByText("Signing Details")).not.toBeInTheDocument();
     expect(screen.queryByText("Information Request Details")).not.toBeInTheDocument();
     expect(screen.queryByText("Document Upload Configuration")).not.toBeInTheDocument();
+  });
+});
+
+describe("ExternalTaskForm — one Description box for Document Upload", () => {
+  const descriptionLabels = () =>
+    screen.queryAllByText((_, el) => el?.tagName === "LABEL" && el.textContent === "Description");
+
+  beforeEach(() => {
+    mutateAsync.mockClear();
+  });
+
+  it("shows a single Description box for Document Upload, inside the configuration block", () => {
+    renderForm();
+    selectTaskType("Document Upload");
+
+    const labels = descriptionLabels();
+    expect(labels).toHaveLength(1);
+    // The one box that remains belongs to the Document Upload Configuration block.
+    const block = screen.getByText("Document Upload Configuration").parentElement as HTMLElement;
+    expect(block).toContainElement(labels[0]);
+  });
+
+  it("does not leave the top-level Description box in the page (removed, not hidden)", () => {
+    renderForm();
+    selectTaskType("Document Upload");
+    expect(
+      screen.queryByPlaceholderText(/Describe what the client needs to provide/i)
+    ).not.toBeInTheDocument();
+  });
+
+  it("still shows the normal Description box for other task types", () => {
+    renderForm();
+    selectTaskType("General Task");
+    expect(descriptionLabels()).toHaveLength(1);
+    expect(
+      screen.getByPlaceholderText(/Describe what the client needs to provide/i)
+    ).toBeInTheDocument();
+  });
+
+  it("sends the Document Upload description as the task description, so the client sees it", async () => {
+    renderForm();
+    selectTaskType("Document Upload");
+
+    const picker = screen.getByPlaceholderText("Search clients...");
+    fireEvent.focus(picker);
+    fireEvent.click(screen.getByText("Alice Client"));
+
+    fireEvent.change(screen.getByPlaceholderText(/what the client needs to upload/i), {
+      target: { value: "A recent utility bill, dated in the last 3 months" },
+    });
+
+    // Pick a due date. "Due date" is both the label and the button text, so click the button.
+    fireEvent.click(screen.getByRole("button", { name: /due date/i }));
+    fireEvent.click(await screen.findByText("Pick test date"));
+
+    fireEvent.click(screen.getByRole("button", { name: "Create Task" }));
+
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalledTimes(1));
+    const payload = mutateAsync.mock.calls[0][0];
+    expect(payload.description).toBe("A recent utility bill, dated in the last 3 months");
+    expect(payload.task_category_type).toBe("document_upload");
+    // The old nested copy is gone, so nothing is saved twice.
+    expect(payload.form_config?.document_description).toBeUndefined();
   });
 });
 
