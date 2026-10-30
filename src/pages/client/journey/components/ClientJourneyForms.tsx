@@ -188,7 +188,7 @@ function FormCard({
               Completed
             </Badge>
           ) : (
-            <Badge variant="not_started" size="sm">
+            <Badge variant="todo" size="sm">
               Not Started
             </Badge>
           )}
