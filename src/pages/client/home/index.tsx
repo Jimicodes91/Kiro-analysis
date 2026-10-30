@@ -23,7 +23,7 @@ import {
     TrendingUp,
 } from "lucide-react";
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 /** A single colour-coded stat tile in the attention row. */
 function StatCard({
@@ -32,12 +32,15 @@ function StatCard({
   icon,
   tone,
   isLoading,
+  to,
 }: {
   value: React.ReactNode;
   label: string;
   icon: React.ReactNode;
   tone: "primary" | "amber" | "green";
   isLoading?: boolean;
+  /** The page this card opens. The whole card is the link. */
+  to: string;
 }) {
   const toneClass = {
     primary: "bg-primary/5 text-primary",
@@ -46,23 +49,29 @@ function StatCard({
   }[tone];
 
   return (
-    <Card>
-      <CardContent className="flex items-center gap-4 p-5">
-        <div
-          className={`flex size-11 items-center justify-center rounded-xl ${toneClass}`}
-        >
-          {icon}
-        </div>
-        <div className="space-y-1">
-          {isLoading ? (
-            <div className="h-7 w-14 rounded bg-slate-200 animate-pulse" />
-          ) : (
-            <p className="text-2xl font-bold text-primary leading-none">{value}</p>
-          )}
-          <p className="text-sm text-muted-foreground">{label}</p>
-        </div>
-      </CardContent>
-    </Card>
+    <Link
+      to={to}
+      className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+    >
+      <Card className="transition-shadow group-hover:shadow-md group-hover:border-gray-300">
+        <CardContent className="flex items-center gap-4 p-5">
+          <div
+            className={`flex size-11 items-center justify-center rounded-xl ${toneClass}`}
+          >
+            {icon}
+          </div>
+          <div className="space-y-1">
+            {isLoading ? (
+              <div className="h-7 w-14 rounded bg-slate-200 animate-pulse" />
+            ) : (
+              <p className="text-2xl font-bold text-primary leading-none">{value}</p>
+            )}
+            <p className="text-sm text-muted-foreground">{label}</p>
+          </div>
+          <ChevronRight className="ml-auto size-4 shrink-0 text-brand-fade transition-transform group-hover:translate-x-0.5" />
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 
@@ -133,6 +142,7 @@ export default function ClientHomePage() {
             outstandingTasks.length === 1 ? "Task to complete" : "Tasks to complete"
           }
           isLoading={projectTasks?.isPending}
+          to="/tasks"
         />
         <StatCard
           tone="primary"
@@ -142,6 +152,7 @@ export default function ClientHomePage() {
             (projectDocs?.value?.data?.length ?? 0) === 1 ? "Document" : "Documents"
           }
           isLoading={projectDocs?.isPending}
+          to="/documents"
         />
         <StatCard
           tone="green"
@@ -149,6 +160,7 @@ export default function ClientHomePage() {
           value={`${progress}%`}
           label="Project progress"
           isLoading={journey?.isPending}
+          to="/journey"
         />
       </div>
 
