@@ -57,7 +57,7 @@ describe('BUG-7: Role-Based UI Restrictions - Bug Condition Exploration', () => 
       );
       
       expect(hasAdminLink).toBe(false);
-      expect(clientNav.length).toBe(4);
+      expect(clientNav.length).toBe(5); // Home, Journey, Tasks, Documents, Ask Pylott
     });
 
     test('appRoutes correctly restrict /admin to ADMIN role (routing IS correct)', () => {
@@ -178,16 +178,28 @@ describe('BUG-7: Role-Based UI Restrictions - Bug Condition Exploration', () => 
     });
 
     test('role hierarchy enforced in navigation: CLIENT < CONSULTANT < ADMIN', () => {
-      const clientCount = topNavData.CLIENT.length;
-      const consultantCount = topNavData.CONSULTANT.length;
-      const adminCount = topNavData.ADMIN.length;
+      // Menu length is not a reliable measure of access (the customer menu grew to 5 with
+      // Ask Pylott, the same length as the consultant's), so compare what each role can reach.
+      const clientPaths = topNavData.CLIENT.map(link => link.path);
+      const consultantPaths = topNavData.CONSULTANT.map(link => link.path);
+      const adminPaths = topNavData.ADMIN.map(link => link.path);
       
-      expect(clientCount).toBe(4);
-      expect(consultantCount).toBe(5);
-      expect(adminCount).toBe(6);
+      expect(topNavData.CONSULTANT.length).toBe(5);
+      expect(topNavData.ADMIN.length).toBe(6);
       
-      expect(clientCount).toBeLessThan(consultantCount);
-      expect(consultantCount).toBeLessThan(adminCount);
+      // Customers reach none of the staff pages (Home is shared by every role).
+      const staffOnly = ['/projects', '/task', '/contact', '/finance', '/admin'];
+      staffOnly.forEach(path => expect(clientPaths).not.toContain(path));
+      
+      // Consultants get the staff pages but not the admin panel.
+      ['/projects', '/task', '/contact', '/finance'].forEach(path =>
+        expect(consultantPaths).toContain(path)
+      );
+      expect(consultantPaths).not.toContain('/admin');
+      
+      // Admins get everything a consultant has, plus the admin panel.
+      consultantPaths.forEach(path => expect(adminPaths).toContain(path));
+      expect(adminPaths).toContain('/admin');
     });
 
     test('admin-only paths properly separated from universal routes', () => {

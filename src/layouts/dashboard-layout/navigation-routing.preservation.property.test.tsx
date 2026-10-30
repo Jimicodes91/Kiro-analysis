@@ -64,16 +64,16 @@ describe('Navigation Routing Preservation Property Tests (BUG-7)', () => {
     /**
      * **Validates: Requirements 3.4**
      *
-     * Property: CONSULTANT routes SHALL include universal routes (Home, Projects, Contact, Tasks, Finance)
+     * Property: CONSULTANT routes SHALL include universal routes (Home, Projects, Tasks, Contact, Billing)
      */
-    it('CONSULTANT has universal routes (Home, Projects, Contact, Tasks, Finance)', () => {
+    it('CONSULTANT has universal routes (Home, Projects, Tasks, Contact, Billing)', () => {
       const consultantNav = topNavData.CONSULTANT;
       const titles = consultantNav.map((link) => link.title);
       const paths = consultantNav.map((link) => link.path);
 
       expect(consultantNav).toHaveLength(5);
-      expect(titles).toEqual(['Home', 'Projects', 'Contact', 'Tasks', 'Finance']);
-      expect(paths).toEqual(['/home', '/projects', '/contact', '/task', '/finance']);
+      expect(titles).toEqual(['Home', 'Projects', 'Tasks', 'Contact', 'Billing']);
+      expect(paths).toEqual(['/home', '/projects', '/task', '/contact', '/finance']);
     });
 
     /**
@@ -87,23 +87,25 @@ describe('Navigation Routing Preservation Property Tests (BUG-7)', () => {
       const paths = adminNav.map((link) => link.path);
 
       expect(adminNav).toHaveLength(6);
-      expect(titles).toEqual(['Home', 'Projects', 'Contact', 'Tasks', 'Finance', 'Admin']);
-      expect(paths).toEqual(['/home', '/projects', '/contact', '/task', '/finance', '/admin']);
+      // Admin sits third, between Projects and Tasks (matches the sidebar order in the deploy checklist).
+      expect(titles).toEqual(['Home', 'Projects', 'Admin', 'Tasks', 'Contact', 'Billing']);
+      expect(paths).toEqual(['/home', '/projects', '/admin', '/task', '/contact', '/finance']);
     });
 
     /**
      * **Validates: Requirements 3.4**
      *
-     * Property: SUPER_ADMIN routes SHALL include sysadmin-specific routes
+     * Property: SUPER_ADMIN gets the same sidebar as ADMIN. This was a deliberate product
+     * decision (commit c1fdea7, "SUPER_ADMIN gets same UI as ADMIN"), which replaced the old
+     * separate sysadmin menu (Home, Users, Subscription).
      */
-    it('SUPER_ADMIN has sysadmin routes (Home, Users, Subscription)', () => {
+    it('SUPER_ADMIN has the same navigation as ADMIN', () => {
       const superAdminNav = topNavData.SUPER_ADMIN;
-      const titles = superAdminNav.map((link) => link.title);
-      const paths = superAdminNav.map((link) => link.path);
+      const adminNav = topNavData.ADMIN;
 
-      expect(superAdminNav).toHaveLength(3);
-      expect(titles).toEqual(['Home', 'Users', 'Subscription']);
-      expect(paths).toEqual(['/sysadmin', '/sysadmin/users', '/sysadmin/subscription']);
+      expect(superAdminNav.map((link) => link.title)).toEqual(adminNav.map((link) => link.title));
+      expect(superAdminNav.map((link) => link.path)).toEqual(adminNav.map((link) => link.path));
+      expect(superAdminNav.map((link) => link.title)).not.toContain('Users');
     });
   });
 
