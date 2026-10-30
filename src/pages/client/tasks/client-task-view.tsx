@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import DragNdrop from "@/components/ui/file-upload";
-import { TaskStatusBadge } from "@/components/ui/task-status-badge";
+import { TaskDisplayBadge } from "@/components/ui/task-display-badge";
 import useUploadDocument from "@/hooks/project-modules/documents/use-upload-document";
 import useUpdateClientResponse from "@/hooks/project-modules/tasks/use-update-client-response";
 import { QUERYKEYS } from "@/lib/constants";
@@ -165,7 +165,7 @@ const ClientTaskView = ({ task }: ClientTaskViewProps) => {
         <span className="px-3 py-1.5 rounded-full bg-white border text-xs font-medium">
           Due: {safeFormatDate(getTaskDueDate(task), "MMM d, yyyy", "—")}
         </span>
-        <TaskStatusBadge status={task.status} />
+        <TaskDisplayBadge status={task.status} dueDate={getTaskDueDate(task)} />
       </div>
 
       {/* Admin instructions (read-only) — label adapts to category type */}

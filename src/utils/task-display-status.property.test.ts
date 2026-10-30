@@ -78,7 +78,7 @@ describe('task-display-status property tests', () => {
   });
 
   // Feature: client-documents-tasks, Property 2
-  it('Property 2: Displayed status mapping — completed → "Completed"; else overdue → "Overdue"; else in_progress → "In Progress"; else "Pending"', () => {
+  it('Property 2: Displayed status mapping — completed → "Completed"; else overdue → "Overdue"; else in_progress → "In Progress"; else "Not started"', () => {
     fc.assert(
       fc.property(statusArb, dueDateArb, (status, dueDate) => {
         const actual = getDisplayedStatus(status, dueDate, NOW);
@@ -92,7 +92,8 @@ describe('task-display-status property tests', () => {
         } else if (status === 'in_progress') {
           expected = 'In Progress';
         } else {
-          expected = 'Pending';
+          // "Not started" is a display label for pending, sent, draft or any other unstarted status.
+          expected = 'Not started';
         }
 
         expect(actual).toBe(expected);
