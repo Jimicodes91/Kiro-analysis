@@ -27,6 +27,9 @@ const badgeVariants = cva(
         deactivated: "border-transparent text-[#FF3B30] bg-[#F7EEE2]",
         late: "border-[#FF3B3033] text-[#FF3B30] bg-[#F7EEE2]",
         not_started: "border-transparent bg-blue-100 text-blue-600",
+        // Task "Not started": neutral grey. (Separate from the blue `not_started`, which
+        // project and form badges still use.)
+        todo: "border-gray-200 bg-gray-100 text-gray-600 py-1",
         // pending: "border-transparent bg-blue-100 text-blue-600",
         pending: "border-[#B7802611] bg-[#F1E6D4] text-[#B78026] py-1",
         in_progress: "border-[#994C1C22] bg-[#FEF4C7] text-[#994C1C] py-1",

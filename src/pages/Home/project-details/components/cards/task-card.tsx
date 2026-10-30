@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -10,10 +9,11 @@ import {
 import Heading from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
 import PersonAvatar from "@/components/ui/person-avatar";
+import { TaskDisplayBadge } from "@/components/ui/task-display-badge";
 import useGetTaskDetails from "@/hooks/project-modules/tasks/use-get-task-details";
 import useUpdateProjectTask from "@/hooks/project-modules/tasks/use-update-project-task";
 import useDisclosure from "@/hooks/use-disclosure";
-import { cn, getFormattedText, truncateMiddleWords } from "@/lib/utils";
+import { cn, truncateMiddleWords } from "@/lib/utils";
 import TaskClientResponses from "@/pages/Home/Task/task-client-responses";
 import TaskComments from "@/pages/Home/Task/task-comments";
 import { TaskDetails } from "@/types/api.types";
@@ -65,7 +65,10 @@ function TaskCard({ task }: { task: TaskDetails }) {
     <>
       <div className="px-5 py-3 space-y-2 rounded-lg border border-brand-border bg-[#F8F8F8]">
         <div className="flex items-center justify-between">
-          <Badge variant={task?.status}>{getFormattedText(task?.status)}</Badge>
+          <TaskDisplayBadge
+            status={task?.status}
+            dueDate={task?.due_date || task?.end_date}
+          />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" isLoading={updateTask.isPending}>

@@ -1,9 +1,9 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Heading from "@/components/ui/heading";
 import { Progress } from "@/components/ui/progress";
+import { TaskDisplayBadge } from "@/components/ui/task-display-badge";
 import useGetAllProjectDocuments from "@/hooks/project-modules/documents/use-get-all-documents";
 import useGetProjectTypeDetails from "@/hooks/project-modules/project-types/use-get-project-type-details";
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
@@ -14,6 +14,7 @@ import { getUserSession } from "@/services/api.service";
 import { buildGreeting } from "@/utils/greeting";
 import { calculateMilestoneDates, formatMilestoneDate } from "@/utils/milestone-dates";
 import { getTaskDueDate } from "@/utils/task-dates";
+import { getDisplayedStatus } from "@/utils/task-display-status";
 import {
     CheckCircle2,
     ChevronRight,
@@ -193,9 +194,12 @@ export default function ClientHomePage() {
                   <div className="flex items-center gap-3 min-w-0">
                     <span
                       className={`size-2.5 shrink-0 rounded-full ${
-                        task.status === "in_progress"
-                          ? "bg-[#B78026]"
-                          : "bg-primary"
+                        {
+                          Overdue: "bg-[#FB002B]",
+                          "In Progress": "bg-[#B78026]",
+                          "Not started": "bg-gray-400",
+                          Completed: "bg-[#00AA3B]",
+                        }[getDisplayedStatus(task.status, getTaskDueDate(task))]
                       }`}
                     />
                     <div className="min-w-0">
@@ -208,9 +212,11 @@ export default function ClientHomePage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge variant={task.status} size="sm">
-                      {task.status === "in_progress" ? "In Progress" : "Action required"}
-                    </Badge>
+                    <TaskDisplayBadge
+                      status={task.status}
+                      dueDate={getTaskDueDate(task)}
+                      size="sm"
+                    />
                     <ChevronRight className="size-4 text-brand-fade" />
                   </div>
                 </button>
