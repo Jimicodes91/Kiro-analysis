@@ -48,7 +48,7 @@ function JourneyCardView({
       cardBorder: "border-gray-200",
       cardBg: "bg-gray-50/50",
       accentBar: "bg-gray-300",
-      badge: "blocked" as const,
+      badge: "todo" as const,
       label: "Not Started",
     },
   };

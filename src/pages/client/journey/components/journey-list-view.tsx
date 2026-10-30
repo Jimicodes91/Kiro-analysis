@@ -95,7 +95,7 @@ function JourneyListView({
                       ? "completed"
                       : isCurrent
                         ? "in_progress"
-                        : "blocked"
+                        : "todo"
                   }
                   size="sm"
                 >
