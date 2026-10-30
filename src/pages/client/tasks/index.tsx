@@ -1,10 +1,14 @@
 import Heading from "@/components/ui/heading";
+import ViewToggle from "@/components/ui/view-toggle";
 import useGetProjectTasks from "@/hooks/project-modules/tasks/use-get-project-tasks";
 import { useClientProjectContext } from "@/pages/Home/Project/context/client-project-context";
 import { getUserSession } from "@/services/api.service";
+import { useState } from "react";
 import ClientTaskBoard from "./components/client-task-board";
+import ClientTaskGrid from "./components/client-task-grid";
 
 export default function ClientTaskManagement() {
+  const [view, setView] = useState<string>("board");
   const { activeProject } = useClientProjectContext();
   const user = getUserSession();
 
@@ -49,30 +53,46 @@ export default function ClientTaskManagement() {
         new Date(a?.created_at ?? 0).getTime()
     );
 
-    return (
-      <ClientTaskBoard
-        tasks={sortedTasks}
-        projectId={activeProject?.id as string}
-      />
+    return view === "grid" ? (
+      <ClientTaskGrid tasks={sortedTasks} projectId={activeProject?.id as string} />
+    ) : (
+      <ClientTaskBoard tasks={sortedTasks} projectId={activeProject?.id as string} />
     );
   };
 
+  const hasTasks = (projectTasks?.value?.data?.length ?? 0) > 0;
+
   return (
     <div className="p-3 sm:p-4 md:p-6 space-y-4 bg-gray-50 page-fade-in">
-      <div className="space-y-1 mb-10">
-        <Heading size="h3" className="flex items-center gap-2">
-          Task Management
-          {projectTasks?.isPending ? (
-            <div className="h-6 w-[40px] bg-slate-300 animate-pulse"></div>
-          ) : (
-            <span className="text-lg font-medium">
-              ({projectTasks?.value?.data?.length})
-            </span>
-          )}
-        </Heading>
-        <p className="text-[#19181980] text-sm">
-          Grouped by status so you can see what needs action first.
-        </p>
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-1">
+          <Heading size="h3" className="flex items-center gap-2">
+            Task Management
+            {projectTasks?.isPending ? (
+              <div className="h-6 w-[40px] bg-slate-300 animate-pulse"></div>
+            ) : (
+              <span className="text-lg font-medium">
+                ({projectTasks?.value?.data?.length})
+              </span>
+            )}
+          </Heading>
+          <p className="text-[#19181980] text-sm">
+            {view === "grid"
+              ? "Needs action first, then in progress, then completed."
+              : "Grouped by status so you can see what needs action first."}
+          </p>
+        </div>
+
+        {hasTasks && (
+          <ViewToggle
+            activeTab={view}
+            setActiveTab={setView}
+            options={[
+              { value: "board", label: "Board" },
+              { value: "grid", label: "Grid" },
+            ]}
+          />
+        )}
       </div>
 
       {renderBody()}
