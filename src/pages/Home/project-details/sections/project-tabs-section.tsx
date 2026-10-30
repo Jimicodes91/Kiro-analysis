@@ -13,7 +13,7 @@ import ProjectTeamSection from "../template/project-team-template";
 type SubTabType =
   | "Task"
   | "Notes"
-  | "Activity log"
+  | "Activity Logs"
   | "Document"
   | "Forms"
   | "Message"
@@ -28,7 +28,7 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
   const subTabs: SubTabType[] = [
     "Task",
     "Notes",
-    "Activity log",
+    "Activity Logs",
     "Document",
     "Forms",
     "Event",
@@ -51,7 +51,7 @@ function ProjectTabsSection({ projectDetails }: { projectDetails: ProjectDetails
             <ProjectNoteSection projectId={projectDetails?.id} />
           </div>
         );
-      case "Activity log":
+      case "Activity Logs":
         return (
           <div>
             <ActivitLogSection projectId={projectDetails?.id} />
