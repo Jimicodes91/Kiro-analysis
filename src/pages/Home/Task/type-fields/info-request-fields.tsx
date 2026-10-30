@@ -93,13 +93,13 @@ export default function InfoRequestFields({ control }: InfoRequestFieldsProps) {
 
       <FormField
         control={control}
-        name="form_config.request_description"
+        name="description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Request description</FormLabel>
+            <FormLabel>Description</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Describe what information is needed…"
+                placeholder="Describe what information the client needs to provide"
                 {...field}
                 value={field.value ?? ""}
               />

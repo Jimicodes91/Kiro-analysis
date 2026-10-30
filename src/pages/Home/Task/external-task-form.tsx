@@ -26,6 +26,12 @@ export const EXTERNAL_CATEGORY_TYPES = [
   { value: "complete_form", label: "Complete Form" },
 ] as const;
 
+/**
+ * Task types whose configuration block already contains its own Description box
+ * (saved to the task `description`). The top-level Description is removed for these.
+ */
+const TYPES_WITH_OWN_DESCRIPTION: string[] = ["document_upload", "information_request"];
+
 export const externalTaskSchema = yup.object({
   end_date: yup.date().required("Due date is required"),
   client_ids: yup.array().of(yup.string().required()).min(1, "At least one client is required").required("Clients are required"),
@@ -215,10 +221,10 @@ const ExternalTaskForm = () => {
             )} />
 
             {/* Description (optional context shown to the client).
-                Not rendered for Document Upload: that type has its own Description box
-                inside "Document Upload Configuration", which saves to this same
-                `description` field, so staff see exactly one box. */}
-            {form.watch("task_category_type") !== "document_upload" && (
+                Not rendered for Document Upload or Provide Information: those types have
+                their own Description box inside their configuration block, which saves to
+                this same `description` field, so staff see exactly one box. */}
+            {!TYPES_WITH_OWN_DESCRIPTION.includes(form.watch("task_category_type") ?? "") && (
               <FormField control={form.control} name="description" render={({ field }) => (
                 <FormItem><FormLabel>Description</FormLabel>
                   <FormControl>

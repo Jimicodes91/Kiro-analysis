@@ -227,6 +227,67 @@ describe("ExternalTaskForm — one Description box for Document Upload", () => {
   });
 });
 
+describe("ExternalTaskForm — one Description box for Provide Information", () => {
+  const descriptionLabels = () =>
+    screen.queryAllByText((_, el) => el?.tagName === "LABEL" && el.textContent === "Description");
+
+  beforeEach(() => {
+    mutateAsync.mockClear();
+  });
+
+  it("shows a single Description box, inside the Information Request block", () => {
+    renderForm();
+    selectTaskType("Provide Information");
+
+    const labels = descriptionLabels();
+    expect(labels).toHaveLength(1);
+    const block = screen.getByText("Information Request Details").parentElement as HTMLElement;
+    expect(block).toContainElement(labels[0]);
+  });
+
+  it("does not leave the top-level Description box in the page (removed, not hidden)", () => {
+    renderForm();
+    selectTaskType("Provide Information");
+    expect(
+      screen.queryByPlaceholderText(/Describe what the client needs to provide/i)
+    ).not.toBeInTheDocument();
+  });
+
+  it("brings the normal Description box back if the type changes away from Provide Information", () => {
+    renderForm();
+    selectTaskType("Provide Information");
+    fireEvent.click(screen.getAllByRole("combobox")[0]);
+    fireEvent.click(screen.getByRole("option", { name: "General Task" }));
+    expect(
+      screen.getByPlaceholderText(/Describe what the client needs to provide/i)
+    ).toBeInTheDocument();
+    expect(descriptionLabels()).toHaveLength(1);
+  });
+
+  it("sends the description as the task description, so the client sees it", async () => {
+    renderForm();
+    selectTaskType("Provide Information");
+
+    const picker = screen.getByPlaceholderText("Search clients...");
+    fireEvent.focus(picker);
+    fireEvent.click(screen.getByText("Alice Client"));
+
+    fireEvent.change(screen.getByPlaceholderText(/what information the client needs to provide/i), {
+      target: { value: "Your employer's name and your start date" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /due date/i }));
+    fireEvent.click(await screen.findByText("Pick test date"));
+    fireEvent.click(screen.getByRole("button", { name: "Create Task" }));
+
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalledTimes(1));
+    const payload = mutateAsync.mock.calls[0][0];
+    expect(payload.description).toBe("Your employer's name and your start date");
+    expect(payload.task_category_type).toBe("information_request");
+    expect(payload.form_config?.request_description).toBeUndefined();
+  });
+});
+
 describe("ExternalTaskForm — validation (Req 3.5, 9.2, 9.3)", () => {
   beforeEach(() => {
     mutateAsync.mockClear();
